@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "plugins": [
+    "prettier-plugin-java"
+  ],
+  "tabWidth": 4,
+  "useTabs": false
+}
