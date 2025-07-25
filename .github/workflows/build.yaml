@@ -1,0 +1,17 @@
+name: Github Actions Build
+run-name: ${{ github.actor }} is Build out Github Actions 🚀
+on:
+  push:
+    branches:
+      - master
+jobs:
+  Build:
+    runs-on: ubuntu-dev
+    steps:
+      - name: Check out repository code
+        uses: checkout@v4
+
+      - name: build
+        run: |
+          ./gradlew
+          ./gradlew build
