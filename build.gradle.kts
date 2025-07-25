@@ -59,6 +59,10 @@ tasks.withType<Javadoc> {
     options.encoding = "UTF-8"
 }
 
+repositories {
+    mavenCentral()
+}
+
 publishing {
     repositories {
         maven {
