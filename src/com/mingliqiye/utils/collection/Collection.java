@@ -160,7 +160,6 @@ public class Collection {
         // 调整边界
         fromIndex = Math.max(0, fromIndex);
         toIndex = Math.min(size, toIndex);
-
         if (fromIndex >= toIndex) {
             return Collections.emptyList();
         }
