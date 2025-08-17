@@ -1,15 +1,14 @@
 package com.mingliqiye.utils.uuid.typehandlers;
 
 import com.mingliqiye.utils.uuid.UUID;
-import org.apache.ibatis.type.BaseTypeHandler;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
-import org.apache.ibatis.type.MappedTypes;
-
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedJdbcTypes;
+import org.apache.ibatis.type.MappedTypes;
 
 /**
  * UUIDBinaryTypeHandler 类用于处理 UUID 类型与数据库 BINARY 类型之间的转换
@@ -18,8 +17,8 @@ import java.sql.SQLException;
  * @author MingLiPro
  */
 @MappedTypes({ UUID.class })
-@MappedJdbcTypes(JdbcType.BINARY)
-public class UUIDBinaryTypeHandler extends BaseTypeHandler<UUID> {
+@MappedJdbcTypes(JdbcType.VARCHAR)
+public class UUIDStringTypeHandler extends BaseTypeHandler<UUID> {
 
 	/**
 	 * 设置非空参数到 PreparedStatement 中
@@ -37,7 +36,7 @@ public class UUIDBinaryTypeHandler extends BaseTypeHandler<UUID> {
 		UUID parameter,
 		JdbcType jdbcType
 	) throws SQLException {
-		ps.setBytes(i, UUIDConverter.UUID_TO_BIN(parameter));
+		ps.setString(i, UUIDConverter.UUID_TO_STR(parameter));
 	}
 
 	/**
@@ -51,7 +50,7 @@ public class UUIDBinaryTypeHandler extends BaseTypeHandler<UUID> {
 	@Override
 	public UUID getNullableResult(ResultSet rs, String columnName)
 		throws SQLException {
-		return UUIDConverter.BIN_TO_UUID(rs.getBytes(columnName));
+		return UUIDConverter.STR_TO_UUID(rs.getString(columnName));
 	}
 
 	/**
@@ -65,7 +64,7 @@ public class UUIDBinaryTypeHandler extends BaseTypeHandler<UUID> {
 	@Override
 	public UUID getNullableResult(ResultSet rs, int columnIndex)
 		throws SQLException {
-		return UUIDConverter.BIN_TO_UUID(rs.getBytes(columnIndex));
+		return UUIDConverter.STR_TO_UUID(rs.getString(columnIndex));
 	}
 
 	/**
@@ -79,6 +78,6 @@ public class UUIDBinaryTypeHandler extends BaseTypeHandler<UUID> {
 	@Override
 	public UUID getNullableResult(CallableStatement cs, int columnIndex)
 		throws SQLException {
-		return UUIDConverter.BIN_TO_UUID(cs.getBytes(columnIndex));
+		return UUIDConverter.STR_TO_UUID(cs.getString(columnIndex));
 	}
 }

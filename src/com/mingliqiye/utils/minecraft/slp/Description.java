@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class Description {
 
-    private String text;
-    private Extra[] extra;
+	private String text;
+	private Extra[] extra;
 }

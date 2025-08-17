@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class Extra {
 
-    private String text;
-    private String color;
-    private Boolean bold;
-    private Boolean italic;
+	private String text;
+	private String color;
+	private Boolean bold;
+	private Boolean italic;
 }

@@ -4,5 +4,5 @@
     "prettier-plugin-java"
   ],
   "tabWidth": 4,
-  "useTabs": false
+  "useTabs": true
 }
