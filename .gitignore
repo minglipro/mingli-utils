@@ -5,18 +5,14 @@ build/
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea
+!.idea/icon.png
 *.iws
 *.iml
 *.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-
-!.idea/icon.png
 
 ### Eclipse ###
 .apt_generated
@@ -47,5 +43,5 @@ bin/
 log
 .idea
 node_modules
-pnpm-lock.yaml
+*lock*
 

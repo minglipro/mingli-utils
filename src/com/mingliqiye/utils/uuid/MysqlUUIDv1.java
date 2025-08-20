@@ -11,12 +11,12 @@ import lombok.var;
 public class MysqlUUIDv1 {
 
 	/**
-	 * 将MySQL格式的UUID转换为标准UUID格式
+	 * 将标准UUID格式转换为MySQL格式的UUID
 	 *
-	 * @param uuid MySQL格式的UUID字节数组，长度必须为16字节
-	 * @return 标准UUID格式的字节数组，长度为16字节
+	 * @param uuid 标准UUID格式的字节数组，长度必须为16字节
+	 * @return MySQL格式的UUID字节数组，长度为16字节
 	 */
-	public static byte[] mysqlToUuid(byte[] uuid) {
+	public static byte[] uuidToMysql(byte[] uuid) {
 		var reuuid = new byte[16];
 		// 转换时间戳低位部分
 		reuuid[4] = uuid[0];
@@ -38,12 +38,12 @@ public class MysqlUUIDv1 {
 	}
 
 	/**
-	 * 将标准UUID格式转换为MySQL格式的UUID
+	 * 将MySQL格式的UUID转换为标准UUID格式
 	 *
-	 * @param uuid 标准UUID格式的字节数组，长度必须为16字节
-	 * @return MySQL格式的UUID字节数组，长度为16字节
+	 * @param uuid MySQL格式的UUID字节数组，长度必须为16字节
+	 * @return 标准UUID格式的字节数组，长度为16字节
 	 */
-	public static byte[] uuidToMysql(byte[] uuid) {
+	public static byte[] mysqlToUuid(byte[] uuid) {
 		var reuuid = new byte[16];
 		// 转换时间戳高位部分
 		reuuid[6] = uuid[0];

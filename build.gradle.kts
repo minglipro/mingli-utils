@@ -66,8 +66,8 @@ repositories {
 publishing {
     repositories {
         maven {
-            name = "localMaven"
-            url = uri("D:/git/maven-repository-raw")
+            name = "MavenRepositoryRaw"
+            url = uri("C:/data/git/maven-repository-raw")
         }
     }
     publications {

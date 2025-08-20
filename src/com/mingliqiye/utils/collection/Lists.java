@@ -2,6 +2,7 @@ package com.mingliqiye.utils.collection;
 
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Lists工具类提供了一系列创建List实现的便捷方法。
@@ -244,5 +245,17 @@ public class Lists {
 			newList.add(t == null ? "null" : t.toString());
 		}
 		return newList.toArray(new String[0]);
+	}
+
+	@Nullable
+	public static <T> T[] toArray(List<T> ts) {
+		if (ts == null) {
+			return null;
+		}
+		T[] items = (T[]) new Object[ts.size()];
+		ForEach.forEach(ts, (t, i) -> {
+			items[i] = t;
+		});
+		return items;
 	}
 }

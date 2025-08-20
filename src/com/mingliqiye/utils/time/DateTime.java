@@ -4,18 +4,27 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.var;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 时间工具类，用于处理日期时间的转换、格式化等操作。
  * 提供了多种静态方法来创建 DateTime 实例，并支持与 Date、LocalDateTime 等类型的互转。
  *
  * @author MingLiPro
+ * @see java.time
  * @see LocalDateTime
+ * @see ChronoUnit
+ * @see Date
+ * @see DateTimeFormatter
+ * @see ZoneId
+ * @see Instant
  */
+
 public final class DateTime {
 
 	@Getter
@@ -71,6 +80,16 @@ public final class DateTime {
 		return new DateTime(
 			date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
 		);
+	}
+
+	/**
+	 * 根据 LocalDateTime 创建 DateTime 实例。
+	 *
+	 * @param localDateTime LocalDateTime 对象
+	 * @return 返回对应的 DateTime 实例
+	 */
+	public static DateTime of(LocalDateTime localDateTime) {
+		return new DateTime(localDateTime);
 	}
 
 	/**
@@ -307,11 +326,12 @@ public final class DateTime {
 	 * @return 返回修改后的 DateTime 实例
 	 */
 	public DateTime add(DateTimeOffset dateTimeOffset) {
-		this.localDateTime = this.localDateTime.plus(
-			dateTimeOffset.getOffset(),
-			dateTimeOffset.getOffsetType()
+		return new DateTime(
+			this.localDateTime.plus(
+				dateTimeOffset.getOffset(),
+				dateTimeOffset.getOffsetType()
+			)
 		);
-		return this;
 	}
 
 	/**
@@ -321,11 +341,12 @@ public final class DateTime {
 	 * @return 返回修改后的 DateTime 实例
 	 */
 	public DateTime sub(DateTimeOffset dateTimeOffset) {
-		this.localDateTime = this.localDateTime.plus(
-			-dateTimeOffset.getOffset(),
-			dateTimeOffset.getOffsetType()
+		return new DateTime(
+			this.localDateTime.plus(
+				-dateTimeOffset.getOffset(),
+				dateTimeOffset.getOffsetType()
+			)
 		);
-		return this;
 	}
 
 	/**
@@ -407,7 +428,41 @@ public final class DateTime {
 		return false;
 	}
 
+	/**
+	 * 将当前 DateTime 转换为 Instant 对象。
+	 *
+	 * @return 返回 Instant 对象
+	 */
+	@NotNull
 	public Instant toInstant() {
 		return localDateTime.atZone(zoneId).toInstant();
+	}
+
+	/**
+	 * 判断当前时间是否在指定时间之后。
+	 *
+	 * @param dateTime 指定时间
+	 * @return 如果当前时间在指定时间之后则返回 true，否则返回 false
+	 */
+
+	public boolean isAfter(DateTime dateTime) {
+		if (dateTime == null) {
+			return false;
+		}
+		return toInstant().isAfter(dateTime.toInstant());
+	}
+
+	/**
+	 * 判断当前时间是否在指定时间之前。
+	 *
+	 * @param dateTime 指定时间
+	 * @return 如果当前时间在指定时间之前则返回 true，否则返回 false
+	 */
+
+	public boolean isBefore(DateTime dateTime) {
+		if (dateTime == null) {
+			return false;
+		}
+		return toInstant().isBefore(dateTime.toInstant());
 	}
 }

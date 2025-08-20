@@ -6,7 +6,6 @@
 		"buildw": "gradlew build-jar",
 		"format": "prettier --write \"**/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,vue,astro,json,java}\""
 	},
-	"packageManager": "pnpm@10.4.1",
 	"devDependencies": {
 		"prettier-plugin-java": "^2.7.1",
 		"prettier": "^3.6.2"
