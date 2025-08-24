@@ -4,13 +4,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.WritableTypeId;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.mingliqiye.utils.time.DateTime;
 import com.mingliqiye.utils.time.Formatter;
+
 import java.io.IOException;
 
 /**
@@ -19,6 +18,19 @@ import java.io.IOException;
  * @author MingLiPro
  */
 public class Jackson {
+
+	/**
+	 * 为ObjectMapper添加自定义的 DateTime 序列化器和反序列化器
+	 *
+	 * @param objectMapper 用于注册自定义序列化模块的ObjectMapper实例
+	 */
+	public static void addSerializers(ObjectMapper objectMapper) {
+		// 创建SimpleModule并添加DateTime类型的序列化器和反序列化器
+		SimpleModule module = new SimpleModule()
+			.addSerializer(DateTime.class, new DateTimeJsonSerializerM7())
+			.addDeserializer(DateTime.class, new DateTimeJsonDeserializerM7());
+		objectMapper.registerModule(module);
+	}
 
 	/**
 	 * yyyy-MM-dd HH:mm:ss.SSSSSSS 的反序列化适配器

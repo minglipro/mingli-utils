@@ -4,13 +4,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.WritableTypeId;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.mingliqiye.utils.uuid.UUID;
 import com.mingliqiye.utils.uuid.UUIDException;
+
 import java.io.IOException;
 
 /**
@@ -19,6 +18,19 @@ import java.io.IOException;
  * @author MingLiPro
  */
 public class Jackson {
+
+	/**
+	 * 为ObjectMapper添加UUID序列化和反序列化器
+	 *
+	 * @param objectMapper ObjectMapper实例，用于注册自定义序列化模块
+	 */
+		public static void addSerializers(ObjectMapper objectMapper) {
+			// 创建SimpleModule并添加UUID的序列化器和反序列化器
+			SimpleModule module = new SimpleModule()
+				.addSerializer(UUID.class, new UUIDJsonSerializer())
+				.addDeserializer(UUID.class, new UUIDJsonDeserializer());
+			objectMapper.registerModule(module);
+		}
 
 	/**
 	 * UUID 反序列化器
