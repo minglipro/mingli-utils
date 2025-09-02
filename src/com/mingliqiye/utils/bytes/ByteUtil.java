@@ -11,6 +11,16 @@ import java.util.stream.Collectors;
  */
 public class ByteUtil {
 
+	public static final byte ESC_ASC = 0x1A;
+	public static final byte ESC_DESC = 0x1B;
+	public static final byte ESC_NONE = 0x00;
+	public static final byte ESC_START = 0x01;
+	public static final byte ESC_END = 0x02;
+	public static final byte ESC_ESC = 0x03;
+	public static final byte ESC_CONTROL = 0x04;
+	public static final byte ESC_DATA = 0x05;
+	public static final byte ESC_RESERVED = 0x06;
+
 	/**
 	 * 将字节数组转换为十六进制字符串列表
 	 * <p>

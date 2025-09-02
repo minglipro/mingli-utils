@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * ListsAMaps 工具类提供对集合和映射的增强遍历功能。
  * 包含多个重载的 forEach 方法，支持带索引的遍历操作。
+ * @author MingLiPro
  */
 public class ForEach {
 
@@ -162,6 +163,191 @@ public class ForEach {
 			for (Map.Entry<K, V> entry : map.entrySet()) {
 				action.accept(entry.getKey(), entry.getValue());
 			}
+		}
+	}
+
+	public static <T> void forEach(Consumer<? super T> action, T... objects) {
+		int i = 0;
+		while (i < objects.length) {
+			T object = objects[i];
+			action.call(object, i);
+			i++;
+		}
+	}
+
+	public static <T> void forEach(T[] objects, Consumer<? super T> action) {
+		forEach(action, objects);
+	}
+
+	public static <T> void forEach(
+		T[] objects,
+		java.util.function.Consumer<? super T> action
+	) {
+		forEach(action, objects);
+	}
+
+	public static <T> void forEach(
+		java.util.function.Consumer<? super T> action,
+		T... objects
+	) {
+		forEach((t, i) -> action.accept(t), objects);
+	}
+
+	public static void forEach(int[] objects, Consumer<Integer> action) {
+		forEach(action, objects);
+	}
+
+	private static void forEach(Consumer<Integer> action, int... objects) {
+		for (int i = 0; i < objects.length; i++) {
+			action.call(objects[i], i);
+		}
+	}
+
+	private static void forEach(
+		java.util.function.Consumer<Integer> action,
+		int... objects
+	) {
+		for (Integer object : objects) {
+			action.accept(object);
+		}
+	}
+
+	public static void forEach(byte[] objects, Consumer<Byte> action) {
+		forEach(action, objects);
+	}
+
+	private static void forEach(Consumer<Byte> action, byte... objects) {
+		for (int i = 0; i < objects.length; i++) {
+			action.call(objects[i], i);
+		}
+	}
+
+	private static void forEach(
+		java.util.function.Consumer<Byte> action,
+		byte... objects
+	) {
+		for (Byte object : objects) {
+			action.accept(object);
+		}
+	}
+
+	// short类型
+	public static void forEach(short[] objects, Consumer<Short> action) {
+		forEach(action, objects);
+	}
+
+	private static void forEach(Consumer<Short> action, short... objects) {
+		for (int i = 0; i < objects.length; i++) {
+			action.call(objects[i], i);
+		}
+	}
+
+	private static void forEach(
+		java.util.function.Consumer<Short> action,
+		short... objects
+	) {
+		for (short object : objects) {
+			action.accept(object);
+		}
+	}
+
+	// long类型
+	public static void forEach(long[] objects, Consumer<Long> action) {
+		forEach(action, objects);
+	}
+
+	private static void forEach(Consumer<Long> action, long... objects) {
+		for (int i = 0; i < objects.length; i++) {
+			action.call(objects[i], i);
+		}
+	}
+
+	private static void forEach(
+		java.util.function.Consumer<Long> action,
+		long... objects
+	) {
+		for (long object : objects) {
+			action.accept(object);
+		}
+	}
+
+	// float类型
+	public static void forEach(float[] objects, Consumer<Float> action) {
+		forEach(action, objects);
+	}
+
+	private static void forEach(Consumer<Float> action, float... objects) {
+		for (int i = 0; i < objects.length; i++) {
+			action.call(objects[i], i);
+		}
+	}
+
+	private static void forEach(
+		java.util.function.Consumer<Float> action,
+		float... objects
+	) {
+		for (float object : objects) {
+			action.accept(object);
+		}
+	}
+
+	// double类型
+	public static void forEach(double[] objects, Consumer<Double> action) {
+		forEach(action, objects);
+	}
+
+	private static void forEach(Consumer<Double> action, double... objects) {
+		for (int i = 0; i < objects.length; i++) {
+			action.call(objects[i], i);
+		}
+	}
+
+	private static void forEach(
+		java.util.function.Consumer<Double> action,
+		double... objects
+	) {
+		for (double object : objects) {
+			action.accept(object);
+		}
+	}
+
+	// char类型
+	public static void forEach(char[] objects, Consumer<Character> action) {
+		forEach(action, objects);
+	}
+
+	private static void forEach(Consumer<Character> action, char... objects) {
+		for (int i = 0; i < objects.length; i++) {
+			action.call(objects[i], i);
+		}
+	}
+
+	private static void forEach(
+		java.util.function.Consumer<Character> action,
+		char... objects
+	) {
+		for (char object : objects) {
+			action.accept(object);
+		}
+	}
+
+	// boolean类型
+	public static void forEach(boolean[] objects, Consumer<Boolean> action) {
+		forEach(action, objects);
+	}
+
+	private static void forEach(Consumer<Boolean> action, boolean... objects) {
+		for (int i = 0; i < objects.length; i++) {
+			action.call(objects[i], i);
+		}
+	}
+
+	private static void forEach(
+		java.util.function.Consumer<Boolean> action,
+		boolean... objects
+	) {
+		for (boolean object : objects) {
+			action.accept(object);
 		}
 	}
 

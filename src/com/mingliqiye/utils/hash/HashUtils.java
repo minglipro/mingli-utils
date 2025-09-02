@@ -39,7 +39,7 @@ public class HashUtils {
 		MessageDigest digest = MessageDigest.getInstance(algorithm);
 
 		try (FileInputStream fis = new FileInputStream(file)) {
-			byte[] buffer = new byte[8192]; // 8KB 缓冲区
+			byte[] buffer = new byte[8192];
 			int bytesRead;
 
 			// 分块读取文件内容并更新摘要

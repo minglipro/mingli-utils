@@ -19,13 +19,13 @@ public class Factory {
 	/**
 	 * 存储所有已注册的Bean实例，键为Bean名称，值为Bean实例
 	 */
-	public static final ConcurrentMap<String, Object> beans =
+	public static final ConcurrentMap<String, Object> BEANS =
 		new ConcurrentHashMap<>();
 
 	/**
 	 * 存储按类型查找的Bean实例，键为Bean的Class对象，值为Bean实例
 	 */
-	private static final ConcurrentMap<Class<?>, Object> typeBeans =
+	private static final ConcurrentMap<Class<?>, Object> TYPE_BEANS =
 		new ConcurrentHashMap<>();
 
 	/**
@@ -114,11 +114,11 @@ public class Factory {
 				? clazz.getName()
 				: component.value();
 			Object instance = clazz.getDeclaredConstructor().newInstance();
-			beans.put(name, instance);
-			typeBeans.put(clazz, instance);
+			BEANS.put(name, instance);
+			TYPE_BEANS.put(clazz, instance);
 
 			for (Class<?> interfaceClass : clazz.getInterfaces()) {
-				typeBeans.putIfAbsent(interfaceClass, instance);
+				TYPE_BEANS.putIfAbsent(interfaceClass, instance);
 			}
 		}
 	}
@@ -129,7 +129,7 @@ public class Factory {
 	 * @throws Exception 如果在注入过程中发生异常
 	 */
 	private static void injectDependencies() throws Exception {
-		for (Object bean : beans.values()) {
+		for (Object bean : BEANS.values()) {
 			for (Field field : bean.getClass().getDeclaredFields()) {
 				if (field.isAnnotationPresent(InjectBean.class)) {
 					InjectBean inject = field.getAnnotation(InjectBean.class);
@@ -161,17 +161,17 @@ public class Factory {
 	 */
 	private static Object findDependency(Class<?> type, String name) {
 		if (!name.isEmpty()) {
-			return beans.get(name);
+			return BEANS.get(name);
 		}
 
-		Object dependency = typeBeans.get(type);
+		Object dependency = TYPE_BEANS.get(type);
 		if (dependency != null) {
 			return dependency;
 		}
 
-		for (Class<?> interfaceType : typeBeans.keySet()) {
+		for (Class<?> interfaceType : TYPE_BEANS.keySet()) {
 			if (type.isAssignableFrom(interfaceType)) {
-				return typeBeans.get(interfaceType);
+				return TYPE_BEANS.get(interfaceType);
 			}
 		}
 
@@ -187,8 +187,8 @@ public class Factory {
 	public static void add(Object object) {
 		Class<?> clazz = object.getClass();
 		String name = clazz.getName();
-		beans.put(name, object);
-		typeBeans.put(clazz, object);
+		BEANS.put(name, object);
+		TYPE_BEANS.put(clazz, object);
 		try {
 			injectDependencies();
 		} catch (Exception e) {
@@ -204,8 +204,8 @@ public class Factory {
 	 * @throws RuntimeException 如果在注入依赖时发生异常
 	 */
 	public static void add(String name, Object object) {
-		beans.put(name, object);
-		typeBeans.put(object.getClass(), object);
+		BEANS.put(name, object);
+		TYPE_BEANS.put(object.getClass(), object);
 		try {
 			injectDependencies();
 		} catch (Exception e) {
@@ -221,7 +221,7 @@ public class Factory {
 	 * @return 对应类型的Bean实例，未找到则返回null
 	 */
 	public static <T> T get(Class<T> objclass) {
-		return objclass.cast(typeBeans.get(objclass));
+		return objclass.cast(TYPE_BEANS.get(objclass));
 	}
 
 	/**
@@ -233,7 +233,7 @@ public class Factory {
 	 * @return 对应名称和类型的Bean实例，未找到则返回null
 	 */
 	public static <T> T get(String name, Class<T> objclass) {
-		return objclass.cast(beans.get(name));
+		return objclass.cast(BEANS.get(name));
 	}
 
 	/**
@@ -243,6 +243,6 @@ public class Factory {
 	 * @return 对应名称的Bean实例，未找到则返回null
 	 */
 	public static Object get(String name) {
-		return beans.get(name);
+		return BEANS.get(name);
 	}
 }

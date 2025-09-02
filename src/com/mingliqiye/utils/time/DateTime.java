@@ -1,5 +1,6 @@
 package com.mingliqiye.utils.time;
 
+import com.mingliqiye.utils.jna.time.WinKernel32;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -24,11 +25,23 @@ import org.jetbrains.annotations.NotNull;
  * @see ZoneId
  * @see Instant
  */
-
+@Setter
 public final class DateTime {
 
+	private static final String version = System.getProperty("java.version");
+	private static final WinKernel32 WIN_KERNEL_32;
+	private static final long FILETIME_EPOCH_OFFSET = -116444736000000000L;
+	private static final long NANOS_PER_100NS = 100;
+
+	static {
+		if (version.startsWith("1.8")) {
+			WIN_KERNEL_32 = WinKernel32.load();
+		} else {
+			WIN_KERNEL_32 = null;
+		}
+	}
+
 	@Getter
-	@Setter
 	private ZoneId zoneId = ZoneId.systemDefault();
 
 	@Getter
@@ -52,11 +65,38 @@ public final class DateTime {
 
 	/**
 	 * 获取当前时间的 DateTime 实例。
+	 * 如果运行在 Java 1.8 环境下，则通过 WinKernel32 获取高精度时间。
 	 *
 	 * @return 返回当前时间的 DateTime 实例
 	 */
 	public static DateTime now() {
+		if (WIN_KERNEL_32 != null) {
+			byte[] fileTimeBuffer = new byte[8];
+			WIN_KERNEL_32.GetSystemTimePreciseAsFileTime(fileTimeBuffer);
+			long fileTime =
+				(long) (fileTimeBuffer[0] & 0xFF) |
+				((long) (fileTimeBuffer[1] & 0xFF) << 8) |
+				((long) (fileTimeBuffer[2] & 0xFF) << 16) |
+				((long) (fileTimeBuffer[3] & 0xFF) << 24) |
+				((long) (fileTimeBuffer[4] & 0xFF) << 32) |
+				((long) (fileTimeBuffer[5] & 0xFF) << 40) |
+				((long) (fileTimeBuffer[6] & 0xFF) << 48) |
+				((long) (fileTimeBuffer[7] & 0xFF) << 56);
+			long unixNanos =
+				(fileTime + FILETIME_EPOCH_OFFSET) * NANOS_PER_100NS;
+			Instant instant = Instant.ofEpochSecond(
+				unixNanos / 1_000_000_000L,
+				unixNanos % 1_000_000_000L
+			);
+			return DateTime.of(
+				instant.atZone(ZoneId.systemDefault()).toLocalDateTime()
+			);
+		}
 		return new DateTime();
+	}
+
+	public static void main(String[] args) {
+		System.out.println(DateTime.now());
 	}
 
 	/**
@@ -216,6 +256,26 @@ public final class DateTime {
 	}
 
 	/**
+	 * 将 FILETIME 转换为 LocalDateTime。
+	 *
+	 * @param fileTime FILETIME 时间戳（100纳秒单位自1601年1月1日起）
+	 * @return 转换后的 LocalDateTime 实例
+	 */
+	public static LocalDateTime fileTimeToLocalDateTime(long fileTime) {
+		// 1. 将 FILETIME (100ns间隔 since 1601) 转换为 Unix 时间戳 (纳秒 since 1970)
+		long unixNanos = (fileTime + FILETIME_EPOCH_OFFSET) * NANOS_PER_100NS;
+
+		// 2. 从纳秒时间戳创建 Instant
+		Instant instant = Instant.ofEpochSecond(
+			unixNanos / 1_000_000_000L,
+			unixNanos % 1_000_000_000L
+		);
+
+		// 3. 转换为系统默认时区的 LocalDateTime
+		return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+	}
+
+	/**
 	 * 根据年、月、日、时、分、秒创建 DateTime 实例
 	 *
 	 * @param year   年份
@@ -290,15 +350,6 @@ public final class DateTime {
 		return new DateTime(
 			Instant.ofEpochMilli(epochMilli).atZone(zoneId).toLocalDateTime()
 		);
-	}
-
-	/**
-	 * 设置 LocalDateTime 实例。
-	 *
-	 * @param localDateTime LocalDateTime 对象
-	 */
-	public void setLocalDateTime(LocalDateTime localDateTime) {
-		this.localDateTime = localDateTime;
 	}
 
 	/**
@@ -444,7 +495,6 @@ public final class DateTime {
 	 * @param dateTime 指定时间
 	 * @return 如果当前时间在指定时间之后则返回 true，否则返回 false
 	 */
-
 	public boolean isAfter(DateTime dateTime) {
 		if (dateTime == null) {
 			return false;
@@ -458,7 +508,6 @@ public final class DateTime {
 	 * @param dateTime 指定时间
 	 * @return 如果当前时间在指定时间之前则返回 true，否则返回 false
 	 */
-
 	public boolean isBefore(DateTime dateTime) {
 		if (dateTime == null) {
 			return false;

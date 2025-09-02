@@ -1,0 +1,7 @@
+buildTime=$buildTime
+groupId=$GROUPSID
+artifactId=$ARTIFACTID
+version=$VERSIONS
+buildJdkVersion=$JDKVERSIONS
+author=MingLiPro
+website=mingliqiye.com
