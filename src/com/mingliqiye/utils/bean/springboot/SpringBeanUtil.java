@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class SpringBeanUtil implements ApplicationContextAware {
 
 	public static final String PACKAGE_NAME =
-		SpringBeanUtil.class.getPackage().getName();
+		"com.mingliqiye.utils.bean.springboot";
 
 	/**
 	 * 获取applicationContext

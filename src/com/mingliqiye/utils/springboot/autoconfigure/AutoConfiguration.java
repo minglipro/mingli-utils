@@ -1,18 +1,26 @@
 package com.mingliqiye.utils.springboot.autoconfigure;
 
+import com.mingliqiye.utils.bean.springboot.SpringBeanUtil;
 import com.mingliqiye.utils.collection.ForEach;
+import com.mingliqiye.utils.jackson.Serializers;
 import com.mingliqiye.utils.time.DateTime;
 import com.mingliqiye.utils.time.Formatter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author MingLiPro
  */
+@Slf4j
 @Configuration
 @EnableConfigurationProperties(AutoConfiguration.class)
+@ComponentScan({ SpringBeanUtil.PACKAGE_NAME })
 public class AutoConfiguration {
 
 	private static String banner =
@@ -25,13 +33,36 @@ public class AutoConfiguration {
 		"|  $$ |\\$  /$$ |$$ |     $$ |  $$ |   $$ |   $$\\   $$ | |\n" +
 		"|  $$ | \\_/ $$ |$$$$$$$$\\\\$$$$$$  |   $$ |   \\$$$$$$  | |\n" +
 		"|  \\__|     \\__|\\________|\\______/    \\__|    \\______/  |\n";
+	private boolean isloadObjMapper;
 
 	public AutoConfiguration() throws IOException {
 		print();
+
+		try {
+			Class<?> clasz = ClassLoader.getSystemClassLoader().loadClass(
+				"com.fasterxml.jackson.databind.ObjectMapper"
+			);
+			isloadObjMapper = true;
+		} catch (ClassNotFoundException ignored) {
+			log.info(
+				"Jackson ObjectMapper not found in classpath. Jackson serialization features will be disabled."
+			);
+		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		new AutoConfiguration();
+	@PostConstruct
+	public void init() {
+		if (isloadObjMapper) {
+			log.info("init ObjectMapper");
+			Serializers.addSerializers(
+				SpringBeanUtil.getBean(
+					com.fasterxml.jackson.databind.ObjectMapper.class
+				)
+			);
+			log.info("add ObjectMapper Serializers OK");
+		} else {
+			log.info("ObjectMapper is Not Found");
+		}
 	}
 
 	public void print() throws IOException {
@@ -62,7 +93,6 @@ public class AutoConfiguration {
 				}
 			}
 		});
-
 		System.out.printf(
 			banner,
 			DateTime.now().format(Formatter.STANDARD_DATETIME_MILLISECOUND7)
