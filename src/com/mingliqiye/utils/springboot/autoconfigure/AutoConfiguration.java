@@ -10,7 +10,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -23,7 +22,7 @@ import java.io.InputStream;
 @ComponentScan({ SpringBeanUtil.PACKAGE_NAME })
 public class AutoConfiguration {
 
-	private static String banner =
+	private static final String banner =
 		"---------------------------------------------------------\n" +
 		"|  $$\\      $$\\ $$\\      $$\\   $$\\ $$$$$$$$\\  $$$$$$\\   |\n" +
 		"|  $$$\\    $$$ |$$ |     $$ |  $$ |\\__$$  __|$$  __$$\\  |\n" +
@@ -33,6 +32,7 @@ public class AutoConfiguration {
 		"|  $$ |\\$  /$$ |$$ |     $$ |  $$ |   $$ |   $$\\   $$ | |\n" +
 		"|  $$ | \\_/ $$ |$$$$$$$$\\\\$$$$$$  |   $$ |   \\$$$$$$  | |\n" +
 		"|  \\__|     \\__|\\________|\\______/    \\__|    \\______/  |\n";
+	private static String banner2;
 	private boolean isloadObjMapper;
 
 	public AutoConfiguration() throws IOException {
@@ -48,9 +48,9 @@ public class AutoConfiguration {
 				"Jackson ObjectMapper not found in classpath. Jackson serialization features will be disabled."
 			);
 		}
+		init();
 	}
 
-	@PostConstruct
 	public void init() {
 		if (isloadObjMapper) {
 			log.info("init ObjectMapper");
@@ -66,6 +66,7 @@ public class AutoConfiguration {
 	}
 
 	public void print() throws IOException {
+		banner2 = banner;
 		InputStream inputStream = AutoConfiguration.class.getResourceAsStream(
 			"/META-INF/meta-data"
 		);
@@ -87,14 +88,14 @@ public class AutoConfiguration {
 					for (int ia = 0; ia < spacesNeeded; ia++) {
 						da.append(" ");
 					}
-					banner += da + "|\n";
+					banner2 += da + "|\n";
 				} else {
-					banner += content.substring(0, targetLength) + "|\n";
+					banner2 += content.substring(0, targetLength) + "|\n";
 				}
 			}
 		});
 		System.out.printf(
-			banner,
+			banner2,
 			DateTime.now().format(Formatter.STANDARD_DATETIME_MILLISECOUND7)
 		);
 		System.out.println(

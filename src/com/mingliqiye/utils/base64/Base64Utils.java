@@ -169,4 +169,8 @@ public class Base64Utils {
 		System.arraycopy(bytes, offset, data, 0, length);
 		return encode(data);
 	}
+
+	public static String encodeBytes(byte[] bytes) {
+		return encodeBytes(bytes, 0, bytes.length);
+	}
 }

@@ -1,8 +1,9 @@
 package com.mingliqiye.utils.collection;
 
-import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
 
 /**
  * Lists工具类提供了一系列创建List实现的便捷方法。
@@ -247,6 +248,13 @@ public class Lists {
 		return newList.toArray(new String[0]);
 	}
 
+	/**
+	 * 将列表转换为数组
+	 *
+	 * @param ts  要转换的列表
+	 * @param <T> 数组元素的类型
+	 * @return 包含列表中所有元素的数组，如果列表为null则返回null
+	 */
 	@Nullable
 	public static <T> T[] toArray(List<T> ts) {
 		if (ts == null) {
@@ -257,5 +265,162 @@ public class Lists {
 			items[i] = t;
 		});
 		return items;
+	}
+
+	/**
+	 * 将数组转换为列表
+	 *
+	 * @param ts  要转换的数组
+	 * @param <T> 列表元素的类型
+	 * @return 包含数组中所有元素的列表，如果数组为null则返回null
+	 */
+	// 原始的方法 - 用于引用类型
+	@Nullable
+	public static <T> List<T> toList(T[] ts) {
+		return ts == null ? null : new ArrayList<>(Arrays.asList(ts));
+	}
+
+	/**
+	 * 将int数组转换为Integer列表
+	 *
+	 * @param array 要转换的int数组
+	 * @return 包含数组中所有元素的Integer列表，如果数组为null则返回null
+	 */
+	@Nullable
+	public static List<Integer> toList(int[] array) {
+		if (array == null) {
+			return null;
+		}
+		List<Integer> list = new ArrayList<>(array.length);
+		for (int value : array) {
+			list.add(value);
+		}
+		return list;
+	}
+
+	/**
+	 * 将long数组转换为Long列表
+	 *
+	 * @param array 要转换的long数组
+	 * @return 包含数组中所有元素的Long列表，如果数组为null则返回null
+	 */
+	@Nullable
+	public static List<Long> toList(long[] array) {
+		if (array == null) {
+			return null;
+		}
+		List<Long> list = new ArrayList<>(array.length);
+		for (long value : array) {
+			list.add(value);
+		}
+		return list;
+	}
+
+	/**
+	 * 将double数组转换为Double列表
+	 *
+	 * @param array 要转换的double数组
+	 * @return 包含数组中所有元素的Double列表，如果数组为null则返回null
+	 */
+	@Nullable
+	public static List<Double> toList(double[] array) {
+		if (array == null) {
+			return null;
+		}
+		List<Double> list = new ArrayList<>(array.length);
+		for (double value : array) {
+			list.add(value);
+		}
+		return list;
+	}
+
+	/**
+	 * 将float数组转换为Float列表
+	 *
+	 * @param array 要转换的float数组
+	 * @return 包含数组中所有元素的Float列表，如果数组为null则返回null
+	 */
+	@Nullable
+	public static List<Float> toList(float[] array) {
+		if (array == null) {
+			return null;
+		}
+		List<Float> list = new ArrayList<>(array.length);
+		for (float value : array) {
+			list.add(value);
+		}
+		return list;
+	}
+
+	/**
+	 * 将boolean数组转换为Boolean列表
+	 *
+	 * @param array 要转换的boolean数组
+	 * @return 包含数组中所有元素的Boolean列表，如果数组为null则返回null
+	 */
+	@Nullable
+	public static List<Boolean> toList(boolean[] array) {
+		if (array == null) {
+			return null;
+		}
+		List<Boolean> list = new ArrayList<>(array.length);
+		for (boolean value : array) {
+			list.add(value);
+		}
+		return list;
+	}
+
+	/**
+	 * 将char数组转换为Character列表
+	 *
+	 * @param array 要转换的char数组
+	 * @return 包含数组中所有元素的Character列表，如果数组为null则返回null
+	 */
+	@Nullable
+	public static List<Character> toList(char[] array) {
+		if (array == null) {
+			return null;
+		}
+		List<Character> list = new ArrayList<>(array.length);
+		for (char value : array) {
+			list.add(value);
+		}
+		return list;
+	}
+
+	/**
+	 * 将byte数组转换为Byte列表
+	 *
+	 * @param array 要转换的byte数组
+	 * @return 包含数组中所有元素的Byte列表，如果数组为null则返回null
+	 */
+	@Nullable
+	public static List<Byte> toList(byte[] array) {
+		if (array == null) {
+			return null;
+		}
+		List<Byte> list = new ArrayList<>(array.length);
+		for (byte value : array) {
+			list.add(value);
+		}
+		return list;
+	}
+
+	/**
+	 * 将short数组转换为Short列表
+	 *
+	 * @param array 要转换的short数组
+	 * @return 包含数组中所有元素的Short列表，如果数组为null则返回null
+	 */
+	@Nullable
+	public static List<Short> toList(short[] array) {
+		if (array == null) {
+			return null;
+		}
+		List<Short> list = new ArrayList<>(array.length);
+		for (short value : array) {
+			list.add(value);
+		}
+		return list;
 	}
 }

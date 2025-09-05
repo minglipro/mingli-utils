@@ -50,7 +50,9 @@ public class SystemUtil {
 		return (
 			osName.startsWith("Linux") ||
 			osName.startsWith("AIX") ||
-			osName.startsWith("SunOS")
+			osName.startsWith("SunOS") ||
+			osName.startsWith("Mac OS X") ||
+			osName.startsWith("FreeBSD")
 		);
 	}
 
