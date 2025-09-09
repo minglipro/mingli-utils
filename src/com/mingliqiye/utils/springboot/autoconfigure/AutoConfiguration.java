@@ -1,22 +1,45 @@
+/*
+ * Copyright 2025 mingliqiye
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ProjectName mingli-utils
+ * ModuleName mingli-utils.main
+ * CurrentFile AutoConfiguration.java
+ * LastUpdate 2025-09-09 08:37:34
+ * UpdateUser MingLiPro
+ */
+
 package com.mingliqiye.utils.springboot.autoconfigure;
 
 import com.mingliqiye.utils.bean.springboot.SpringBeanUtil;
 import com.mingliqiye.utils.collection.ForEach;
 import com.mingliqiye.utils.jackson.Serializers;
+import com.mingliqiye.utils.json.JacksonJsonApi;
+import com.mingliqiye.utils.json.JsonApi;
 import com.mingliqiye.utils.time.DateTime;
 import com.mingliqiye.utils.time.Formatter;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-/**
- * @author MingLiPro
- */
-@Slf4j
 @Configuration
 @EnableConfigurationProperties(AutoConfiguration.class)
 @ComponentScan({ SpringBeanUtil.PACKAGE_NAME })
@@ -33,67 +56,48 @@ public class AutoConfiguration {
 		"|  $$ | \\_/ $$ |$$$$$$$$\\\\$$$$$$  |   $$ |   \\$$$$$$  | |\n" +
 		"|  \\__|     \\__|\\________|\\______/    \\__|    \\______/  |\n";
 	private static String banner2;
-	private boolean isloadObjMapper;
+	private final Logger log = LoggerFactory.getLogger(AutoConfiguration.class);
+	private com.fasterxml.jackson.databind.ObjectMapper objectMapper;
 
-	public AutoConfiguration() throws IOException {
-		print();
+	public AutoConfiguration() {}
 
-		try {
-			Class<?> clasz = ClassLoader.getSystemClassLoader().loadClass(
-				"com.fasterxml.jackson.databind.ObjectMapper"
-			);
-			isloadObjMapper = true;
-		} catch (ClassNotFoundException ignored) {
-			log.info(
-				"Jackson ObjectMapper not found in classpath. Jackson serialization features will be disabled."
-			);
-		}
-		init();
-	}
-
-	public void init() {
-		if (isloadObjMapper) {
-			log.info("init ObjectMapper");
-			Serializers.addSerializers(
-				SpringBeanUtil.getBean(
-					com.fasterxml.jackson.databind.ObjectMapper.class
+	public static void printBanner() {
+		StringBuilder bannerBuilder = new StringBuilder(banner);
+		try (
+			InputStream inputStream =
+				AutoConfiguration.class.getResourceAsStream(
+					"/META-INF/meta-data"
 				)
-			);
-			log.info("add ObjectMapper Serializers OK");
-		} else {
-			log.info("ObjectMapper is Not Found");
-		}
-	}
-
-	public void print() throws IOException {
-		banner2 = banner;
-		InputStream inputStream = AutoConfiguration.class.getResourceAsStream(
-			"/META-INF/meta-data"
-		);
-		int readlen;
-		byte[] buffer = new byte[1024];
-		StringBuilder metaData = new StringBuilder();
-		while ((readlen = inputStream.read(buffer)) != -1) {
-			metaData.append(new String(buffer, 0, readlen));
-		}
-		ForEach.forEach(metaData.toString().split("\n"), (s, i) -> {
-			String[] d = s.trim().split("=", 2);
-			if (d.length >= 2) {
-				String content = "|  " + d[0] + ": " + d[1];
-				// 直接计算需要的空格数来对齐
-				int targetLength = 56; // 为右侧的 | 留出空间
-				if (content.length() < targetLength) {
-					int spacesNeeded = targetLength - content.length();
-					StringBuilder da = new StringBuilder(content);
-					for (int ia = 0; ia < spacesNeeded; ia++) {
-						da.append(" ");
-					}
-					banner2 += da + "|\n";
-				} else {
-					banner2 += content.substring(0, targetLength) + "|\n";
-				}
+		) {
+			if (inputStream == null) {
+				return;
 			}
-		});
+			int readlen;
+			byte[] buffer = new byte[1024];
+			StringBuilder metaData = new StringBuilder();
+			while ((readlen = inputStream.read(buffer)) != -1) {
+				metaData.append(new String(buffer, 0, readlen));
+			}
+			ForEach.forEach(metaData.toString().split("\n"), (s, i) -> {
+				String[] d = s.trim().split("=", 2);
+				if (d.length >= 2) {
+					String content = "|  " + d[0] + ": " + d[1];
+					int targetLength = 56;
+					if (content.length() < targetLength) {
+						bannerBuilder.append(
+							String.format("%-" + targetLength + "s|\n", content)
+						);
+					} else {
+						bannerBuilder
+							.append(content, 0, targetLength)
+							.append("|\n");
+					}
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		banner2 = bannerBuilder.toString();
 		System.out.printf(
 			banner2,
 			DateTime.now().format(Formatter.STANDARD_DATETIME_MILLISECOUND7)
@@ -101,5 +105,38 @@ public class AutoConfiguration {
 		System.out.println(
 			"---------------------------------------------------------"
 		);
+	}
+
+	@PostConstruct
+	public void init() {
+		try {
+			Class.forName("com.fasterxml.jackson.databind.ObjectMapper");
+			log.info("init ObjectMapper");
+			objectMapper = SpringBeanUtil.getBean(
+				com.fasterxml.jackson.databind.ObjectMapper.class
+			);
+			Serializers.addSerializers(objectMapper);
+			log.info("add ObjectMapper Serializers OK");
+		} catch (ClassNotFoundException ignored) {
+			log.info(
+				"Jackson ObjectMapper not found in classpath. Jackson serialization features will be disabled."
+			);
+		} catch (Exception e) {
+			log.warn("Failed to initialize ObjectMapper", e);
+		}
+		printBanner();
+	}
+
+	@Bean
+	@ConditionalOnClass(name = "com.fasterxml.jackson.databind.ObjectMapper")
+	public JsonApi jsonApi() {
+		if (objectMapper == null) {
+			log.warn(
+				"ObjectMapper is not available, returning null for JsonApi"
+			);
+			return null;
+		}
+		log.info("Creating JacksonJsonApi bean");
+		return new JacksonJsonApi(objectMapper);
 	}
 }

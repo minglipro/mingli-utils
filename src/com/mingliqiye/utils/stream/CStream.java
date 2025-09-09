@@ -1,3 +1,25 @@
+/*
+ * Copyright 2025 mingliqiye
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ProjectName mingli-utils
+ * ModuleName mingli-utils.main
+ * CurrentFile CStream.java
+ * LastUpdate 2025-09-09 08:37:33
+ * UpdateUser MingLiPro
+ */
+
 package com.mingliqiye.utils.stream;
 
 import com.mingliqiye.utils.collection.ForEach;
@@ -10,22 +32,22 @@ import java.util.stream.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * 自定义的 ListStream 实现类，用于对集合进行流式操作。
- * 该类实现了 Java 标准库中的 ListStream 接口，并基于 List 数据结构提供了一系列流式处理方法。
+ * 自定义的 CStream 实现类，用于对集合进行流式操作。
+ * 该类实现了 Java 标准库中的 CStream 接口，并基于 List 数据结构提供了一系列流式处理方法。
  *
  * @author MingLiPro
  * @param <T> 流中元素的类型
  */
-public class ListStream<T> implements java.util.stream.Stream<T> {
+public class CStream<T> implements java.util.stream.Stream<T> {
 
 	private final List<T> list;
 
 	/**
-	 * 构造方法，初始化 ListStream 实例。
+	 * 构造方法，初始化 CStream 实例。
 	 *
-	 * @param list 用于构造 ListStream 的列表数据，如果为 null 则使用空列表
+	 * @param list 用于构造 CStream 的列表数据，如果为 null 则使用空列表
 	 */
-	private ListStream(List<T> list) {
+	private CStream(List<T> list) {
 		this.list = list != null ? list : Lists.newArrayList();
 	}
 
@@ -496,6 +518,12 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 		return Collectors.toMap(keyMapper, valueMapper, mergeFunction);
 	}
 
+	public static <T, K> Collector<T, ?, @NotNull Map<K, T>> toMap(
+		@NotNull Function<? super T, ? extends K> keyMapper
+	) {
+		return Collectors.toMap(keyMapper, CStream::getThis);
+	}
+
 	/**
 	 * 创建一个收集器，将元素转换为 Map，指定键冲突合并函数和 Map 工厂。
 	 *
@@ -648,43 +676,47 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	}
 
 	/**
-	 * 创建一个包含指定元素的 ListStream。
+	 * 创建一个包含指定元素的 CStream。
 	 *
-	 * @param ts 可变参数，表示要包含在 ListStream 中的元素
+	 * @param ts 可变参数，表示要包含在 CStream 中的元素
 	 * @param <T> 元素类型
-	 * @return 包含指定元素的新 ListStream 实例
+	 * @return 包含指定元素的新 CStream 实例
 	 */
 	@SafeVarargs
-	public static <T> ListStream<T> of(T... ts) {
-		return new ListStream<>(Lists.newArrayList(ts));
+	public static <T> CStream<T> of(T... ts) {
+		return new CStream<>(Lists.newArrayList(ts));
 	}
 
 	/**
-	 * 创建一个包含指定列表元素的 ListStream。
+	 * 创建一个包含指定列表元素的 CStream。
 	 *
-	 * @param ts 列表，表示要包含在 ListStream 中的元素
+	 * @param ts 列表，表示要包含在 CStream 中的元素
 	 * @param <T> 元素类型
-	 * @return 包含指定元素的新 ListStream 实例
+	 * @return 包含指定元素的新 CStream 实例
 	 */
-	public static <T> ListStream<T> of(List<T> ts) {
-		return new ListStream<>(Lists.newArrayList(ts));
+	public static <T> CStream<T> of(Collection<T> ts) {
+		return new CStream<>(Lists.newArrayList(ts));
+	}
+
+	public static <T> T getThis(T t) {
+		return t;
 	}
 
 	/**
 	 * 根据给定的谓词条件过滤流中的元素。
 	 *
 	 * @param predicate 用于测试元素是否应保留的谓词函数
-	 * @return 包含满足条件元素的新 ListStream 实例
+	 * @return 包含满足条件元素的新 CStream 实例
 	 */
 	@Override
-	public ListStream<T> filter(Predicate<? super T> predicate) {
+	public CStream<T> filter(Predicate<? super T> predicate) {
 		List<T> result = Lists.newArrayList();
 		for (T item : list) {
 			if (predicate.test(item)) {
 				result.add(item);
 			}
 		}
-		return new ListStream<>(result);
+		return new CStream<>(result);
 	}
 
 	/**
@@ -692,9 +724,9 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	 *
 	 * @param propertyExtractor 属性提取函数
 	 * @param targetValue 目标值
-	 * @return 包含满足条件元素的新 ListStream 实例
+	 * @return 包含满足条件元素的新 CStream 实例
 	 */
-	public ListStream<T> filter(
+	public CStream<T> filter(
 		Function<T, Object> propertyExtractor,
 		Object targetValue
 	) {
@@ -704,7 +736,7 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 				result.add(item);
 			}
 		}
-		return new ListStream<>(result);
+		return new CStream<>(result);
 	}
 
 	/**
@@ -712,15 +744,15 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	 *
 	 * @param mapper 映射函数，将元素从类型 T 转换为类型 R
 	 * @param <R> 映射后元素的类型
-	 * @return 包含转换后元素的新 ListStream 实例
+	 * @return 包含转换后元素的新 CStream 实例
 	 */
 	@Override
-	public <R> ListStream<R> map(Function<? super T, ? extends R> mapper) {
+	public <R> CStream<R> map(Function<? super T, ? extends R> mapper) {
 		List<R> result = Lists.newArrayList();
 		for (T item : list) {
 			result.add(mapper.apply(item));
 		}
-		return new ListStream<>(result);
+		return new CStream<>(result);
 	}
 
 	/**
@@ -777,12 +809,12 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	/**
 	 * 将流中的每个元素通过映射函数转换为另一个流，并将所有结果流合并为一个流。
 	 *
-	 * @param mapper 映射函数，将元素从类型 T 转换为另一个 ListStream
+	 * @param mapper 映射函数，将元素从类型 T 转换为另一个 CStream
 	 * @param <R> 映射后流中元素的类型
-	 * @return 合并后的 ListStream 实例
+	 * @return 合并后的 CStream 实例
 	 */
 	@Override
-	public <R> ListStream<R> flatMap(
+	public <R> CStream<R> flatMap(
 		Function<
 			? super T,
 			? extends java.util.stream.Stream<? extends R>
@@ -795,7 +827,7 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 				stream.forEach(result::add);
 			}
 		}
-		return new ListStream<>(result);
+		return new CStream<>(result);
 	}
 
 	/**
@@ -840,47 +872,47 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	/**
 	 * 去除流中重复的元素，保持原有顺序。
 	 *
-	 * @return 包含去重后元素的新 ListStream 实例
+	 * @return 包含去重后元素的新 CStream 实例
 	 */
 	@Override
-	public ListStream<T> distinct() {
+	public CStream<T> distinct() {
 		Set<T> seen = new LinkedHashSet<>(list);
-		return new ListStream<>(new ArrayList<>(seen));
+		return new CStream<>(new ArrayList<>(seen));
 	}
 
 	/**
 	 * 对流中的元素进行自然排序。
 	 *
-	 * @return 排序后的新 ListStream 实例
+	 * @return 排序后的新 CStream 实例
 	 */
 	@Override
-	public ListStream<T> sorted() {
+	public CStream<T> sorted() {
 		List<T> sortedList = Lists.newArrayList(list);
 		Collections.sort((List<? extends Comparable>) sortedList);
-		return new ListStream<>(sortedList);
+		return new CStream<>(sortedList);
 	}
 
 	/**
 	 * 根据给定的比较器对流中的元素进行排序。
 	 *
 	 * @param comparator 用于比较元素的比较器
-	 * @return 排序后的新 ListStream 实例
+	 * @return 排序后的新 CStream 实例
 	 */
 	@Override
-	public ListStream<T> sorted(Comparator<? super T> comparator) {
+	public CStream<T> sorted(Comparator<? super T> comparator) {
 		List<T> sortedList = Lists.newArrayList(list);
 		sortedList.sort(comparator);
-		return new ListStream<>(sortedList);
+		return new CStream<>(sortedList);
 	}
 
 	/**
 	 * 对流中的每个元素执行指定的操作，但不改变流本身。
 	 *
 	 * @param action 要对每个元素执行的操作
-	 * @return 当前 ListStream 实例
+	 * @return 当前 CStream 实例
 	 */
 	@Override
-	public ListStream<T> peek(Consumer<? super T> action) {
+	public CStream<T> peek(Consumer<? super T> action) {
 		for (T item : list) {
 			action.accept(item);
 		}
@@ -891,16 +923,16 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	 * 截取流中前 maxSize 个元素组成新的流。
 	 *
 	 * @param maxSize 要截取的最大元素数量
-	 * @return 截取后的新 ListStream 实例
+	 * @return 截取后的新 CStream 实例
 	 * @throws IllegalArgumentException 如果 maxSize 为负数
 	 */
 	@Override
-	public ListStream<T> limit(long maxSize) {
+	public CStream<T> limit(long maxSize) {
 		if (maxSize < 0) {
 			throw new IllegalArgumentException("maxSize must be non-negative");
 		}
 		if (maxSize == 0) {
-			return new ListStream<>(Lists.newArrayList());
+			return new CStream<>(Lists.newArrayList());
 		}
 
 		List<T> limitedList = Lists.newArrayList();
@@ -912,23 +944,23 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 			limitedList.add(item);
 			count++;
 		}
-		return new ListStream<>(limitedList);
+		return new CStream<>(limitedList);
 	}
 
 	/**
 	 * 跳过流中前 n 个元素，返回剩余元素组成的新流。
 	 *
 	 * @param n 要跳过的元素数量
-	 * @return 跳过后的新 ListStream 实例
+	 * @return 跳过后的新 CStream 实例
 	 * @throws IllegalArgumentException 如果 n 为负数
 	 */
 	@Override
-	public ListStream<T> skip(long n) {
+	public CStream<T> skip(long n) {
 		if (n < 0) {
 			throw new IllegalArgumentException("n must be non-negative");
 		}
 		if (n == 0) {
-			return new ListStream<>(Lists.newArrayList(list));
+			return new CStream<>(Lists.newArrayList(list));
 		}
 
 		List<T> skippedList = Lists.newArrayList();
@@ -939,7 +971,7 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 			}
 			count++;
 		}
-		return new ListStream<>(skippedList);
+		return new CStream<>(skippedList);
 	}
 
 	/**
@@ -1071,10 +1103,10 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	@Override
 	public String toString() {
 		if (list.isEmpty()) {
-			return "ListStream()";
+			return "CStream()";
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append("ListStream(");
+		sb.append("CStream(");
 		forEach((item, index) -> {
 			sb.append(item);
 			if (index != list.size() - 1) {
@@ -1273,7 +1305,7 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	 * @return 当前流的顺序版本
 	 */
 	@Override
-	public @NotNull ListStream<T> sequential() {
+	public @NotNull CStream<T> sequential() {
 		return this;
 	}
 
@@ -1283,8 +1315,8 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	 * @return 当前流的并行版本
 	 */
 	@Override
-	public @NotNull ListStream<T> parallel() {
-		return new ListStream<>(list);
+	public @NotNull CStream<T> parallel() {
+		return new CStream<>(list);
 	}
 
 	/**
@@ -1293,7 +1325,7 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	 * @return 当前流的无序版本
 	 */
 	@Override
-	public @NotNull ListStream<T> unordered() {
+	public @NotNull CStream<T> unordered() {
 		return this;
 	}
 
@@ -1301,10 +1333,10 @@ public class ListStream<T> implements java.util.stream.Stream<T> {
 	 * 注册一个关闭处理器，在流关闭时执行。
 	 *
 	 * @param closeHandler 关闭处理器
-	 * @return 当前 ListStream 实例
+	 * @return 当前 CStream 实例
 	 */
 	@Override
-	public @NotNull ListStream<T> onClose(@NotNull Runnable closeHandler) {
+	public @NotNull CStream<T> onClose(@NotNull Runnable closeHandler) {
 		return this;
 	}
 

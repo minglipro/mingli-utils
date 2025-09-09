@@ -1,6 +1,28 @@
+/*
+ * Copyright 2025 mingliqiye
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ProjectName mingli-utils
+ * ModuleName mingli-utils.main
+ * CurrentFile StringUtil.java
+ * LastUpdate 2025-09-09 08:37:33
+ * UpdateUser MingLiPro
+ */
+
 package com.mingliqiye.utils.string;
 
-import com.mingliqiye.utils.callback.P1R1Function;
+import com.mingliqiye.utils.callback.P1RFunction;
 import com.mingliqiye.utils.collection.Lists;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -137,7 +159,7 @@ public class StringUtil {
 	public static <P> String join(
 		String separator,
 		List<P> list,
-		P1R1Function<P, String> fun
+		P1RFunction<P, String> fun
 	) {
 		// 处理空列表情况
 		if (list == null || list.isEmpty()) {
