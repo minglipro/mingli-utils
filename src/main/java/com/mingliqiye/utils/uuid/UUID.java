@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.java
- * LastUpdate 2025-09-09 08:37:33
+ * LastUpdate 2025-09-10 11:14:27
  * UpdateUser MingLiPro
  */
 
@@ -58,10 +58,14 @@ public class UUID implements Serializable {
 	}
 
 	/**
-	 * 构造一个基于当前时间的时间戳型 UUID（版本1）。
+	 * 构造一个基于当前时间的时间戳型 UUID（版本1）。<br>
+	 * 由于springboot 默认使用此构造函数构造UUID 导致致命BUG 废弃<br>
+	 * 下个大版本删除<br>
+	 * @deprecated 请使用 <code>UUID.getTimeBased()</code>
 	 */
+	@Deprecated
 	public UUID() {
-		uuid = UuidCreator.getTimeBased();
+		uuid = UUID.getTimeBased().GetUUID();
 	}
 
 	/**
@@ -80,6 +84,15 @@ public class UUID implements Serializable {
 	 */
 	public UUID(String uuid) {
 		this.uuid = java.util.UUID.fromString(uuid);
+	}
+
+	/**
+	 * 获取一个基于当前时间生成的时间戳型 UUID（版本1）。
+	 *
+	 * @return 时间戳型 UUID
+	 */
+	public static UUID getTimeBased() {
+		return new UUID(UuidCreator.getTimeBased());
 	}
 
 	/**
@@ -110,10 +123,7 @@ public class UUID implements Serializable {
 			return null;
 		}
 		try {
-			java.util.UUID uuid1 = java.util.UUID.fromString(data);
-			UUID uuid = new UUID();
-			uuid.setUuid(uuid1);
-			return uuid;
+			return new UUID(java.util.UUID.fromString(data));
 		} catch (Exception e) {
 			throw new UUIDException(e.getMessage(), e);
 		}

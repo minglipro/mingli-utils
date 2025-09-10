@@ -15974,4 +15974,12 @@ public class Maps {
 		}
 		return map;
 	}
+
+	public static <K, V> Map<K, V> ofEntries(List<Map.Entry<K, V>> entries) {
+		var map = new HashMap<K, V>(entries.size() + 2);
+		for (Map.Entry<K, V> entry : entries) {
+			map.put(entry.getKey(), entry.getValue());
+		}
+		return map;
+	}
 }

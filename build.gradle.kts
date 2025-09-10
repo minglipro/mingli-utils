@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-09 08:37:33
+ * LastUpdate 2025-09-10 11:08:55
  * UpdateUser MingLiPro
  */
 
@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter
 
 plugins {
     idea
+    java
     id("java-library")
     id("maven-publish")
 }
@@ -60,11 +61,6 @@ dependencies {
     implementation("net.java.dev.jna:jna:5.17.0")
 }
 
-
-sourceSets.main.configure {
-    java.setSrcDirs(files("src"))
-    resources.setSrcDirs(files("resources"))
-}
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"

@@ -282,9 +282,7 @@ public class Lists {
 			return null;
 		}
 		T[] items = (T[]) new Object[ts.size()];
-		ForEach.forEach(ts, (t, i) -> {
-			items[i] = t;
-		});
+		ForEach.forEach(ts, (t, i) -> items[i] = t);
 		return items;
 	}
 

@@ -31,4 +31,8 @@ public class JsonException extends RuntimeException {
 	public JsonException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
+	public JsonException(Throwable cause) {
+		this(cause.getMessage(), cause);
+	}
 }

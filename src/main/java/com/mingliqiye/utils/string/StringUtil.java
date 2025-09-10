@@ -212,4 +212,60 @@ public class StringUtil {
 	public static StringBuilder stringBuilder(int i) {
 		return new StringBuilder(i);
 	}
+
+	/**
+	 * 将字符串转换为Unicode编码格式
+	 *
+	 * @param str 待转换的字符串
+	 * @return 转换后的Unicode编码字符串，每个字符都以\\u开头的十六进制形式表示
+	 */
+	public static String stringToUnicode(String str) {
+		StringBuilder sb = new StringBuilder();
+		char[] c = str.toCharArray();
+		for (char value : c) {
+			sb.append(stringToUnicode(value));
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 将字符转换为Unicode转义字符串
+	 *
+	 * @param c 需要转换的字符
+	 * @return 返回格式为"\\uXXXX"的Unicode转义字符串，其中XXXX为字符的十六进制Unicode码点
+	 */
+	public static String stringToUnicode(char c) {
+		return "\\u" + String.format("%04x", (int) c);
+	}
+
+	/**
+	 * 将整数转换为Unicode字符串表示形式
+	 *
+	 * @param c 要转换的整数，表示Unicode码点
+	 * @return 返回格式为"\\uXXXX"的Unicode字符串，其中XXXX是参数c的十六进制表示
+	 */
+	public static String stringToUnicode(Integer c) {
+		return "\\u" + Integer.toHexString(c);
+	}
+
+	/**
+	 * 将Unicode编码字符串转换为普通字符串
+	 * 该函数接收一个包含Unicode转义序列的字符串，将其解析并转换为对应的字符序列
+	 *
+	 * @param unicode 包含Unicode转义序列的字符串，格式如"\\uXXXX"，其中XXXX为十六进制数
+	 * @return 转换后的普通字符串，包含对应的Unicode字符
+	 */
+	public static String unicodeToString(String unicode) {
+		StringBuilder sb = new StringBuilder();
+		// 按照Unicode转义符分割字符串，得到包含十六进制编码的数组
+		String[] hex = unicode.split("\\\\u");
+		// 从索引1开始遍历，因为分割后的第一个元素是转义符前面的内容（可能为空）
+		for (int i = 1; i < hex.length; i++) {
+			// 将十六进制字符串转换为整数，作为字符的Unicode码点
+			int index = Integer.parseInt(hex[i], 16);
+			// 将Unicode码点转换为对应字符并添加到结果中
+			sb.append((char) index);
+		}
+		return sb.toString();
+	}
 }

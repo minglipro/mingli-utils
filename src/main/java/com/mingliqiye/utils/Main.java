@@ -22,12 +22,21 @@
 
 package com.mingliqiye.utils;
 
+import com.mingliqiye.utils.collection.Lists;
+import com.mingliqiye.utils.collection.Maps;
 import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration;
+import com.mingliqiye.utils.stream.SuperStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		AutoConfiguration.printBanner();
+
+		Map<String, String> map = Maps.of("1", "2", "3", "4");
+
+		SuperStream.of(map).entryToMap();
 	}
 }

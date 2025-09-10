@@ -22,6 +22,7 @@
 
 package com.mingliqiye.utils.json;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,7 +52,7 @@ public class JacksonJsonApi implements JsonApi {
 	 * @param objectMapper 自定义的ObjectMapper实例
 	 */
 	public JacksonJsonApi(ObjectMapper objectMapper) {
-		this.objectMapper = objectMapper;
+		this.objectMapper = objectMapper.copy();
 	}
 
 	/**
@@ -112,6 +113,18 @@ public class JacksonJsonApi implements JsonApi {
 		}
 	}
 
+	@Override
+	public String formatUnicode(Object object) {
+		try {
+			return objectMapper
+				.writer()
+				.with(JsonGenerator.Feature.ESCAPE_NON_ASCII)
+				.writeValueAsString(object);
+		} catch (JsonProcessingException e) {
+			throw new JsonException(e);
+		}
+	}
+
 	/**
 	 * 将对象格式化为美化（带缩进）的JSON字符串
 	 *
@@ -124,6 +137,21 @@ public class JacksonJsonApi implements JsonApi {
 		try {
 			return objectMapper
 				.writerWithDefaultPrettyPrinter()
+				.writeValueAsString(object);
+		} catch (JsonProcessingException e) {
+			throw new JsonException(
+				"Failed to format object to pretty JSON string",
+				e
+			);
+		}
+	}
+
+	@Override
+	public String formatPrettyUnicode(Object object) {
+		try {
+			return objectMapper
+				.writerWithDefaultPrettyPrinter()
+				.with(JsonGenerator.Feature.ESCAPE_NON_ASCII)
 				.writeValueAsString(object);
 		} catch (JsonProcessingException e) {
 			throw new JsonException(
@@ -283,10 +311,10 @@ public class JacksonJsonApi implements JsonApi {
 	/**
 	 * 在不同对象类型之间进行转换
 	 *
-	 * @param source            源对象
-	 * @param destinationClass  目标对象类型
-	 * @param <T>               源对象类型
-	 * @param <D>               目标对象类型
+	 * @param source           源对象
+	 * @param destinationClass 目标对象类型
+	 * @param <T>              源对象类型
+	 * @param <D>              目标对象类型
 	 * @return 转换后的对象
 	 */
 	@Override
@@ -297,10 +325,10 @@ public class JacksonJsonApi implements JsonApi {
 	/**
 	 * 在不同泛型对象类型之间进行转换
 	 *
-	 * @param source           源对象
-	 * @param destinationType  目标对象的泛型类型引用
-	 * @param <T>              源对象类型
-	 * @param <D>              目标对象类型
+	 * @param source          源对象
+	 * @param destinationType 目标对象的泛型类型引用
+	 * @param <T>             源对象类型
+	 * @param <D>             目标对象类型
 	 * @return 转换后的对象
 	 */
 	@Override

@@ -103,7 +103,9 @@ public class FileUtil {
 		Charset charset
 	) throws IOException {
 		Path path = Paths.get(filePath);
-		Files.createDirectories(path.getParent());
+		if (path.getParent() != null) {
+			Files.createDirectories(path.getParent());
+		}
 		Files.write(path, content.getBytes(charset));
 	}
 
