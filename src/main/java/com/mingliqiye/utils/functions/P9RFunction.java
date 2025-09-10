@@ -15,14 +15,14 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile P5RFunction.java
+ * CurrentFile P9RFunction.java
  * LastUpdate 2025-09-09 08:37:33
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.callback;
+package com.mingliqiye.utils.functions;
 
 @FunctionalInterface
-public interface P5RFunction<P, P1, P2, P3, P4, R> {
-	R call(P p, P1 p1, P2 p2, P3 p3, P4 p4);
+public interface P9RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, R> {
+	R call(P p, P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6, P7 p7, P8 p8);
 }

@@ -15,14 +15,14 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile P4RFunction.java
- * LastUpdate 2025-09-09 08:37:34
+ * CurrentFile P4Function.java
+ * LastUpdate 2025-09-09 08:37:33
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.callback;
+package com.mingliqiye.utils.functions;
 
 @FunctionalInterface
-public interface P4RFunction<P, P1, P2, P3, R> {
-	R call(P p, P1 p1, P2 p2, P3 p3);
+public interface P4Function<P, P1, P2, P3> {
+	void call(P p, P1 p1, P2 p2, P3 p3);
 }

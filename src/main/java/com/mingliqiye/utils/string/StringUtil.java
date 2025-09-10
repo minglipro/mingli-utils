@@ -22,7 +22,7 @@
 
 package com.mingliqiye.utils.string;
 
-import com.mingliqiye.utils.callback.P1RFunction;
+import com.mingliqiye.utils.functions.P1RFunction;
 import com.mingliqiye.utils.collection.Lists;
 import java.text.MessageFormat;
 import java.util.ArrayList;

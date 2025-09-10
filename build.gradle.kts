@@ -41,12 +41,24 @@ base {
     archivesName.set(ARTIFACTID)
 }
 
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs("src/main/java")
+        }
+        resources {
+            srcDirs("src/main/resources")
+        }
+    }
+}
+
 java {
     withJavadocJar()
     withSourcesJar()
     toolchain.languageVersion.set(JavaLanguageVersion.of(8))
 }
-
 dependencies {
     annotationProcessor("org.jetbrains:annotations:24.0.0")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
@@ -79,7 +91,10 @@ tasks.withType<Javadoc> {
     options.encoding = "UTF-8"
 }
 
+
+
 tasks.withType<org.gradle.jvm.tasks.Jar> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
             mapOf(
@@ -129,6 +144,8 @@ publishing {
 }
 
 tasks.processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    outputs.upToDateWhen { false }
     filesMatching("META-INF/meta-data") {
         expand(
             mapOf(
@@ -142,4 +159,3 @@ tasks.processResources {
         )
     }
 }
-

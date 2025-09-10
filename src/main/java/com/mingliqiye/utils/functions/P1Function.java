@@ -15,14 +15,14 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile P1RFunction.java
- * LastUpdate 2025-09-09 08:37:34
+ * CurrentFile P1Function.java
+ * LastUpdate 2025-09-09 08:37:33
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.callback;
+package com.mingliqiye.utils.functions;
 
 @FunctionalInterface
-public interface P1RFunction<P, R> {
-	R call(P p);
+public interface P1Function<P> {
+	void call(P p);
 }
