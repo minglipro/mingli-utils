@@ -1,5 +1,5 @@
 name: Gitea Actions Build
-run-name: ${{ gitea.actor }} is Build out Gitea Actions 🚀
+run-name: ${{ gitea.actor }} is testing out Gitea Actions 🚀
 on:
   push:
     branches:
@@ -11,7 +11,16 @@ jobs:
       - name: Check out repository code
         uses: https://git.mingliqiye.com/Actions/checkout@v4
 
-      - name: build
+      - name: build-test
         run: |
+          source gradle.properties
           gradle
           gradle build
+
+      - name: Releases
+        run: |
+          source gradle.properties
+          SHA=${{gitea.sha}}
+          curl -o- https://git.mingliqiye.com/Actions/com.mingliqiye.gitea.releases/raw/branch/master/install.sh | bash
+          FILENAME="${GROUPSID}-${VERSIONS}.jar" java -jar com.mingliqiye.gitea.releases.jar -s "${{gitea.server_url}}" -o "${{gitea.repository_owner}}" -r ${{gitea.event.repository.name}} -t "${{gitea.token}}" -ti "Auto releases ${{gitea.sha}} ${VERSIONS}" -b "# Auto releases wtih ${{gitea.event .head_commit.message}} - [${{gitea.sha}}](${{gitea.event .head_commit.url}})" -tn "Auto-Releases-${VERSIONS}-${SHA:0:10}" -a "build/libs" -a "build/publications/mavenJava"
+          
