@@ -29,9 +29,6 @@ import com.mingliqiye.utils.json.JacksonJsonApi;
 import com.mingliqiye.utils.json.JsonApi;
 import com.mingliqiye.utils.time.DateTime;
 import com.mingliqiye.utils.time.Formatter;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -39,6 +36,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 @Configuration
 @EnableConfigurationProperties(AutoConfiguration.class)
@@ -112,7 +112,7 @@ public class AutoConfiguration {
 		);
 	}
 
-	@PostConstruct
+	@jakarta.annotation.PostConstruct
 	public void init() {
 		try {
 			Class.forName("com.fasterxml.jackson.databind.ObjectMapper");

@@ -71,6 +71,9 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("net.java.dev.jna:jna:5.17.0")
+    // https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api
+    implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
+
 }
 
 
