@@ -47,7 +47,7 @@ public class Jackson {
 	 */
 	public static void addSerializers(ObjectMapper objectMapper) {
 		// 创建SimpleModule并添加UUID的序列化器和反序列化器
-		SimpleModule module = new SimpleModule()
+		SimpleModule module = new SimpleModule("MingliqiyeUUIDModule")
 			.addSerializer(UUID.class, new UUIDJsonSerializer())
 			.addDeserializer(UUID.class, new UUIDJsonDeserializer());
 		objectMapper.registerModule(module);

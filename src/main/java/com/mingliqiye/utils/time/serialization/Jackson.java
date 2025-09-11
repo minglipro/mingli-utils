@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.mingliqiye.utils.time.DateTime;
 import com.mingliqiye.utils.time.Formatter;
+
 import java.io.IOException;
 
 /**
@@ -47,7 +48,7 @@ public class Jackson {
 	 */
 	public static void addSerializers(ObjectMapper objectMapper) {
 		// 创建SimpleModule并添加DateTime类型的序列化器和反序列化器
-		SimpleModule module = new SimpleModule()
+		SimpleModule module = new SimpleModule("MingliqiyeDateTimeModule")
 			.addSerializer(DateTime.class, new DateTimeJsonSerializer())
 			.addDeserializer(DateTime.class, new DateTimeJsonDeserializerM7());
 		objectMapper.registerModule(module);

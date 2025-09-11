@@ -21,3 +21,4 @@
 #
 
 com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
+com.mingliqiye.utils.springboot.autoconfigure.JacksonAutoConfiguration
