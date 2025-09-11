@@ -22,7 +22,6 @@
 
 package com.mingliqiye.utils.json;
 
-import com.mingliqiye.utils.collection.Maps;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,8 +33,6 @@ import java.util.Map;
  * JSON处理接口，提供JSON字符串与Java对象之间的相互转换功能
  */
 public interface JsonApi {
-	final Map<String, String> UNICODE_BIND = Maps.of("1", "");
-
 	/**
 	 * 将JSON字符串解析为指定类型的对象
 	 *

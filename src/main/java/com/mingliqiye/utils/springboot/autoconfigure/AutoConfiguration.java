@@ -25,13 +25,12 @@ package com.mingliqiye.utils.springboot.autoconfigure;
 import com.mingliqiye.utils.collection.ForEach;
 import com.mingliqiye.utils.time.DateTime;
 import com.mingliqiye.utils.time.Formatter;
+import java.io.IOException;
+import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 @org.springframework.boot.autoconfigure.AutoConfiguration
 @EnableConfigurationProperties(AutoConfiguration.class)

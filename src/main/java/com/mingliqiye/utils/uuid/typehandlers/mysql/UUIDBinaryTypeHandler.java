@@ -24,15 +24,14 @@ package com.mingliqiye.utils.uuid.typehandlers.mysql;
 
 import com.mingliqiye.utils.uuid.UUID;
 import com.mingliqiye.utils.uuid.typehandlers.UUIDConverter;
-import org.apache.ibatis.type.BaseTypeHandler;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
-import org.apache.ibatis.type.MappedTypes;
-
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedJdbcTypes;
+import org.apache.ibatis.type.MappedTypes;
 
 /**
  * UUIDBinaryTypeHandler 类用于处理 UUID 类型与数据库 BINARY 类型之间的转换
