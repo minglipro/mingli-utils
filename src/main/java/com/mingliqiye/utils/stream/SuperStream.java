@@ -25,13 +25,12 @@ package com.mingliqiye.utils.stream;
 import com.mingliqiye.utils.collection.Lists;
 import com.mingliqiye.utils.collection.Maps;
 import com.mingliqiye.utils.stream.interfaces.Getable;
-import lombok.val;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.*;
 import java.util.stream.*;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 自定义的 SuperStream 实现类，用于对集合进行流式操作。
@@ -296,8 +295,9 @@ public class SuperStream<T> implements Stream<T> {
 	 *
 	 * @param predicate 谓词函数
 	 * @return SuperStream 实例
+	 * @since 3.2.5
 	 */
-	public SuperStream<T> filter(Function<T, Boolean> predicate) {
+	public SuperStream<T> filterBoolean(Function<T, Boolean> predicate) {
 		return new SuperStream<>(stream.filter(predicate::apply));
 	}
 
