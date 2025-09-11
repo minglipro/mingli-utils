@@ -41,9 +41,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringBeanUtil implements ApplicationContextAware {
 
-	public static final String PACKAGE_NAME =
-		"com.mingliqiye.utils.bean.springboot";
-
 	/**
 	 * 获取applicationContext
 	 */

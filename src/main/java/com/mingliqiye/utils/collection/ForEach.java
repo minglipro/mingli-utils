@@ -26,7 +26,6 @@ import com.mingliqiye.utils.functions.P1Function;
 import com.mingliqiye.utils.functions.P2Function;
 import com.mingliqiye.utils.functions.P3Function;
 import com.mingliqiye.utils.stream.SuperStream;
-
 import java.util.*;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
@@ -46,431 +45,499 @@ import java.util.function.Function;
  */
 public class ForEach {
 
-    /**
-     * 对给定的集合执行指定的操作，操作包含元素值和索引。
-     * 根据集合类型选择最优的遍历方式以提高性能。
-     *
-     * @param collection 要遍历的集合，可以是 List 或其他 Collection 实现
-     * @param action     要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param <T>        集合中元素的类型
-     */
-    public static <T> void forEach(Collection<T> collection, P2Function<? super T, Integer> action) {
-        // 参数校验：如果集合或操作为空，则直接返回
-        if (collection == null || action == null) {
-            return;
-        }
+	/**
+	 * 对给定的集合执行指定的操作，操作包含元素值和索引。
+	 * 根据集合类型选择最优的遍历方式以提高性能。
+	 *
+	 * @param collection 要遍历的集合，可以是 List 或其他 Collection 实现
+	 * @param action     要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param <T>        集合中元素的类型
+	 */
+	public static <T> void forEach(
+		Collection<T> collection,
+		P2Function<? super T, Integer> action
+	) {
+		// 参数校验：如果集合或操作为空，则直接返回
+		if (collection == null || action == null) {
+			return;
+		}
 
-        // 如果集合实现了 RandomAccess 接口（如 ArrayList），使用索引访问优化性能
-        if (collection instanceof RandomAccess && collection instanceof List) {
-            List<T> list = (List<T>) collection;
-            for (int i = 0; i < list.size(); i++) {
-                action.call(list.get(i), i);
-            }
-        }
-        // 如果是普通 List，使用迭代器遍历并手动维护索引
-        else if (collection instanceof List) {
-            int index = 0;
-            Iterator<T> it = collection.iterator();
-            while (it.hasNext()) {
-                action.call(it.next(), index);
-                index++;
-            }
-        }
-        // 其他类型的集合使用增强 for 循环，并手动维护索引
-        else {
-            int index = 0;
-            for (T element : collection) {
-                action.call(element, index);
-                index++;
-            }
-        }
-    }
+		// 如果集合实现了 RandomAccess 接口（如 ArrayList），使用索引访问优化性能
+		if (collection instanceof RandomAccess && collection instanceof List) {
+			List<T> list = (List<T>) collection;
+			for (int i = 0; i < list.size(); i++) {
+				action.call(list.get(i), i);
+			}
+		}
+		// 如果是普通 List，使用迭代器遍历并手动维护索引
+		else if (collection instanceof List) {
+			int index = 0;
+			Iterator<T> it = collection.iterator();
+			while (it.hasNext()) {
+				action.call(it.next(), index);
+				index++;
+			}
+		}
+		// 其他类型的集合使用增强 for 循环，并手动维护索引
+		else {
+			int index = 0;
+			for (T element : collection) {
+				action.call(element, index);
+				index++;
+			}
+		}
+	}
 
-    /**
-     * 对给定的集合执行指定的操作，仅处理元素值。
-     * 根据集合是否实现 RandomAccess 接口选择最优的遍历方式。
-     *
-     * @param collection 要遍历的集合
-     * @param action     要对每个元素执行的操作，只接收元素值作为参数
-     * @param <T>        集合中元素的类型
-     */
-    public static <T> void forEach(Collection<T> collection, P1Function<? super T> action) {
-        // 参数校验：如果集合或操作为空，则直接返回
-        if (collection == null || action == null) {
-            return;
-        }
+	/**
+	 * 对给定的集合执行指定的操作，仅处理元素值。
+	 * 根据集合是否实现 RandomAccess 接口选择最优的遍历方式。
+	 *
+	 * @param collection 要遍历的集合
+	 * @param action     要对每个元素执行的操作，只接收元素值作为参数
+	 * @param <T>        集合中元素的类型
+	 */
+	public static <T> void forEach(
+		Collection<T> collection,
+		P1Function<? super T> action
+	) {
+		// 参数校验：如果集合或操作为空，则直接返回
+		if (collection == null || action == null) {
+			return;
+		}
 
-        // 如果集合实现了 RandomAccess 接口，使用索引访问提升性能
-        if (collection instanceof RandomAccess) {
-            List<T> list = (List<T>) collection;
-            for (int i = 0; i < list.size(); i++) {
-                action.call(list.get(i));
-            }
-        }
-        // 否则使用增强 for 循环进行遍历
-        else {
-            for (T element : collection) {
-                action.call(element);
-            }
-        }
-    }
+		// 如果集合实现了 RandomAccess 接口，使用索引访问提升性能
+		if (collection instanceof RandomAccess) {
+			List<T> list = (List<T>) collection;
+			for (int i = 0; i < list.size(); i++) {
+				action.call(list.get(i));
+			}
+		}
+		// 否则使用增强 for 循环进行遍历
+		else {
+			for (T element : collection) {
+				action.call(element);
+			}
+		}
+	}
 
-    /**
-     * 对给定的映射执行指定的操作，操作包含键、值和索引。
-     * 根据映射类型选择不同的遍历策略。
-     *
-     * @param map    要遍历的映射
-     * @param action 要对每个键值对执行的操作，接收键、值和索引作为参数
-     * @param <K>    映射中键的类型
-     * @param <V>    映射中值的类型
-     */
-    public static <K, V> void forEach(Map<K, V> map, P3Function<? super K, ? super V, Integer> action) {
-        // 参数校验：如果映射或操作为空，则直接返回
-        if (map == null || action == null) {
-            return;
-        }
+	/**
+	 * 对给定的映射执行指定的操作，操作包含键、值和索引。
+	 * 根据映射类型选择不同的遍历策略。
+	 *
+	 * @param map    要遍历的映射
+	 * @param action 要对每个键值对执行的操作，接收键、值和索引作为参数
+	 * @param <K>    映射中键的类型
+	 * @param <V>    映射中值的类型
+	 */
+	public static <K, V> void forEach(
+		Map<K, V> map,
+		P3Function<? super K, ? super V, Integer> action
+	) {
+		// 参数校验：如果映射或操作为空，则直接返回
+		if (map == null || action == null) {
+			return;
+		}
 
-        // 遍历 TreeMap 的条目集合并传递索引
-        if (map instanceof TreeMap) {
-            int index = 0;
-            for (Map.Entry<K, V> entry : map.entrySet()) {
-                action.call(entry.getKey(), entry.getValue(), index);
-                index++;
-            }
-        }
-        // 遍历 ConcurrentMap 或 LinkedHashMap 的条目集合并传递索引
-        else if (map instanceof ConcurrentMap || map instanceof LinkedHashMap) {
-            int index = 0;
-            for (Map.Entry<K, V> entry : map.entrySet()) {
-                action.call(entry.getKey(), entry.getValue(), index);
-                index++;
-            }
-        }
-        // 遍历其他类型映射的条目集合并传递索引
-        else {
-            int index = 0;
-            for (Map.Entry<K, V> entry : map.entrySet()) {
-                action.call(entry.getKey(), entry.getValue(), index);
-                index++;
-            }
-        }
-    }
+		// 遍历 TreeMap 的条目集合并传递索引
+		if (map instanceof TreeMap) {
+			int index = 0;
+			for (Map.Entry<K, V> entry : map.entrySet()) {
+				action.call(entry.getKey(), entry.getValue(), index);
+				index++;
+			}
+		}
+		// 遍历 ConcurrentMap 或 LinkedHashMap 的条目集合并传递索引
+		else if (map instanceof ConcurrentMap || map instanceof LinkedHashMap) {
+			int index = 0;
+			for (Map.Entry<K, V> entry : map.entrySet()) {
+				action.call(entry.getKey(), entry.getValue(), index);
+				index++;
+			}
+		}
+		// 遍历其他类型映射的条目集合并传递索引
+		else {
+			int index = 0;
+			for (Map.Entry<K, V> entry : map.entrySet()) {
+				action.call(entry.getKey(), entry.getValue(), index);
+				index++;
+			}
+		}
+	}
 
-    /**
-     * 对给定的映射执行指定的操作，仅处理键和值。
-     * 根据映射类型选择不同的遍历策略。
-     *
-     * @param map    要遍历的映射
-     * @param action 要对每个键值对执行的操作，接收键和值作为参数
-     * @param <K>    映射中键的类型
-     * @param <V>    映射中值的类型
-     */
-    public static <K, V> void forEach(Map<K, V> map, P2Function<? super K, ? super V> action) {
-        // 参数校验：如果映射或操作为空，则直接返回
-        if (map == null || action == null) {
-            return;
-        }
+	/**
+	 * 对给定的映射执行指定的操作，仅处理键和值。
+	 * 根据映射类型选择不同的遍历策略。
+	 *
+	 * @param map    要遍历的映射
+	 * @param action 要对每个键值对执行的操作，接收键和值作为参数
+	 * @param <K>    映射中键的类型
+	 * @param <V>    映射中值的类型
+	 */
+	public static <K, V> void forEach(
+		Map<K, V> map,
+		P2Function<? super K, ? super V> action
+	) {
+		// 参数校验：如果映射或操作为空，则直接返回
+		if (map == null || action == null) {
+			return;
+		}
 
-        // 遍历 TreeMap 的条目集合
-        if (map instanceof TreeMap) {
-            for (Map.Entry<K, V> entry : map.entrySet()) {
-                action.call(entry.getKey(), entry.getValue());
-            }
-        }
-        // 如果是 ConcurrentMap 或 LinkedHashMap，使用其内置的 forEach 方法
-        else if (map instanceof ConcurrentMap || map instanceof LinkedHashMap) {
-            forEach(map.entrySet(), (i) -> action.call(i.getKey(), i.getValue()));
-        }
-        // 遍历其他类型映射的条目集合
-        else {
-            for (Map.Entry<K, V> entry : map.entrySet()) {
-                action.call(entry.getKey(), entry.getValue());
-            }
-        }
-    }
+		// 遍历 TreeMap 的条目集合
+		if (map instanceof TreeMap) {
+			for (Map.Entry<K, V> entry : map.entrySet()) {
+				action.call(entry.getKey(), entry.getValue());
+			}
+		}
+		// 如果是 ConcurrentMap 或 LinkedHashMap，使用其内置的 forEach 方法
+		else if (map instanceof ConcurrentMap || map instanceof LinkedHashMap) {
+			forEach(map.entrySet(), i -> action.call(i.getKey(), i.getValue()));
+		}
+		// 遍历其他类型映射的条目集合
+		else {
+			for (Map.Entry<K, V> entry : map.entrySet()) {
+				action.call(entry.getKey(), entry.getValue());
+			}
+		}
+	}
 
-    /**
-     * 对可变参数数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param objects 要遍历的可变参数数组
-     * @param <T>     数组中元素的类型
-     */
-    public static <T> void forEach(P2Function<? super T, Integer> action, T... objects) {
-        forEach(Lists.newArrayList(objects), action);
-    }
+	/**
+	 * 对可变参数数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param objects 要遍历的可变参数数组
+	 * @param <T>     数组中元素的类型
+	 */
+	public static <T> void forEach(
+		P2Function<? super T, Integer> action,
+		T... objects
+	) {
+		forEach(Lists.newArrayList(objects), action);
+	}
 
-    /**
-     * 对数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param objects 要遍历的数组
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param <T>     数组中元素的类型
-     */
-    public static <T> void forEach(T[] objects, P2Function<? super T, Integer> action) {
-        forEach(action, objects);
-    }
+	/**
+	 * 对数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param objects 要遍历的数组
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param <T>     数组中元素的类型
+	 */
+	public static <T> void forEach(
+		T[] objects,
+		P2Function<? super T, Integer> action
+	) {
+		forEach(action, objects);
+	}
 
-    /**
-     * 对数组执行指定的操作，仅处理元素值
-     *
-     * @param objects 要遍历的数组
-     * @param action  要对每个元素执行的操作，只接收元素值作为参数
-     * @param <T>     数组中元素的类型
-     */
-    public static <T> void forEach(T[] objects, P1Function<? super T> action) {
-        forEach(action, objects);
-    }
+	/**
+	 * 对数组执行指定的操作，仅处理元素值
+	 *
+	 * @param objects 要遍历的数组
+	 * @param action  要对每个元素执行的操作，只接收元素值作为参数
+	 * @param <T>     数组中元素的类型
+	 */
+	public static <T> void forEach(T[] objects, P1Function<? super T> action) {
+		forEach(action, objects);
+	}
 
-    /**
-     * 对可变参数数组执行指定的操作，仅处理元素值
-     *
-     * @param action  要对每个元素执行的操作，只接收元素值作为参数
-     * @param objects 要遍历的可变参数数组
-     * @param <T>     数组中元素的类型
-     */
-    public static <T> void forEach(P1Function<? super T> action, T... objects) {
-        forEach(Lists.toList(objects), (t, i) -> action.call(t));
-    }
+	/**
+	 * 对可变参数数组执行指定的操作，仅处理元素值
+	 *
+	 * @param action  要对每个元素执行的操作，只接收元素值作为参数
+	 * @param objects 要遍历的可变参数数组
+	 * @param <T>     数组中元素的类型
+	 */
+	public static <T> void forEach(P1Function<? super T> action, T... objects) {
+		forEach(Lists.toList(objects), (t, i) -> action.call(t));
+	}
 
-    /**
-     * 对整型数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param objects 要遍历的整型数组
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     */
-    public static void forEach(int[] objects, P2Function<Integer, Integer> action) {
-        forEach(action, objects);
-    }
+	/**
+	 * 对整型数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param objects 要遍历的整型数组
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 */
+	public static void forEach(
+		int[] objects,
+		P2Function<Integer, Integer> action
+	) {
+		forEach(action, objects);
+	}
 
-    /**
-     * 对整型可变参数数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param objects 要遍历的整型可变参数数组
-     */
-    private static void forEach(P2Function<Integer, Integer> action, int... objects) {
-        forEach(objects, action);
-    }
+	/**
+	 * 对整型可变参数数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param objects 要遍历的整型可变参数数组
+	 */
+	private static void forEach(
+		P2Function<Integer, Integer> action,
+		int... objects
+	) {
+		forEach(objects, action);
+	}
 
-    /**
-     * 对整型可变参数数组执行指定的操作，仅处理元素值
-     *
-     * @param action  要对每个元素执行的操作，只接收元素值作为参数
-     * @param objects 要遍历的整型可变参数数组
-     */
-    private static void forEach(P1Function<Integer> action, int... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对整型可变参数数组执行指定的操作，仅处理元素值
+	 *
+	 * @param action  要对每个元素执行的操作，只接收元素值作为参数
+	 * @param objects 要遍历的整型可变参数数组
+	 */
+	private static void forEach(P1Function<Integer> action, int... objects) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对字节数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param objects 要遍历的字节数组
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     */
-    public static void forEach(byte[] objects, P2Function<Byte, Integer> action) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对字节数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param objects 要遍历的字节数组
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 */
+	public static void forEach(
+		byte[] objects,
+		P2Function<Byte, Integer> action
+	) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对字节可变参数数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param objects 要遍历的字节可变参数数组
-     */
-    private static void forEach(P2Function<Byte, Integer> action, byte... objects) {
-        forEach(objects, action);
-    }
+	/**
+	 * 对字节可变参数数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param objects 要遍历的字节可变参数数组
+	 */
+	private static void forEach(
+		P2Function<Byte, Integer> action,
+		byte... objects
+	) {
+		forEach(objects, action);
+	}
 
-    /**
-     * 对字节可变参数数组执行指定的操作，仅处理元素值
-     *
-     * @param action  要对每个元素执行的操作，只接收元素值作为参数
-     * @param objects 要遍历的字节可变参数数组
-     */
-    private static void forEach(P1Function<Byte> action, byte... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对字节可变参数数组执行指定的操作，仅处理元素值
+	 *
+	 * @param action  要对每个元素执行的操作，只接收元素值作为参数
+	 * @param objects 要遍历的字节可变参数数组
+	 */
+	private static void forEach(P1Function<Byte> action, byte... objects) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对短整型数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param objects 要遍历的短整型数组
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     */
-    public static void forEach(short[] objects, P2Function<Short, Integer> action) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对短整型数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param objects 要遍历的短整型数组
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 */
+	public static void forEach(
+		short[] objects,
+		P2Function<Short, Integer> action
+	) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对短整型可变参数数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param objects 要遍历的短整型可变参数数组
-     */
-    private static void forEach(P2Function<Short, Integer> action, short... objects) {
-        forEach(objects, action);
-    }
+	/**
+	 * 对短整型可变参数数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param objects 要遍历的短整型可变参数数组
+	 */
+	private static void forEach(
+		P2Function<Short, Integer> action,
+		short... objects
+	) {
+		forEach(objects, action);
+	}
 
-    /**
-     * 对短整型可变参数数组执行指定的操作，仅处理元素值
-     *
-     * @param action  要对每个元素执行的操作，只接收元素值作为参数
-     * @param objects 要遍历的短整型可变参数数组
-     */
-    private static void forEach(P1Function<Short> action, short... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对短整型可变参数数组执行指定的操作，仅处理元素值
+	 *
+	 * @param action  要对每个元素执行的操作，只接收元素值作为参数
+	 * @param objects 要遍历的短整型可变参数数组
+	 */
+	private static void forEach(P1Function<Short> action, short... objects) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对长整型数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param objects 要遍历的长整型数组
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     */
-    public static void forEach(long[] objects, P2Function<Long, Integer> action) {
-        forEach(action, objects);
-    }
+	/**
+	 * 对长整型数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param objects 要遍历的长整型数组
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 */
+	public static void forEach(
+		long[] objects,
+		P2Function<Long, Integer> action
+	) {
+		forEach(action, objects);
+	}
 
-    /**
-     * 对长整型可变参数数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param objects 要遍历的长整型可变参数数组
-     */
-    private static void forEach(P2Function<Long, Integer> action, long... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对长整型可变参数数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param objects 要遍历的长整型可变参数数组
+	 */
+	private static void forEach(
+		P2Function<Long, Integer> action,
+		long... objects
+	) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对长整型可变参数数组执行指定的操作，仅处理元素值
-     *
-     * @param action  要对每个元素执行的操作，只接收元素值作为参数
-     * @param objects 要遍历的长整型可变参数数组
-     */
-    private static void forEach(P1Function<Long> action, long... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对长整型可变参数数组执行指定的操作，仅处理元素值
+	 *
+	 * @param action  要对每个元素执行的操作，只接收元素值作为参数
+	 * @param objects 要遍历的长整型可变参数数组
+	 */
+	private static void forEach(P1Function<Long> action, long... objects) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对浮点数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param objects 要遍历的浮点数组
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     */
-    public static void forEach(float[] objects, P2Function<Float, Integer> action) {
-        forEach(action, objects);
-    }
+	/**
+	 * 对浮点数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param objects 要遍历的浮点数组
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 */
+	public static void forEach(
+		float[] objects,
+		P2Function<Float, Integer> action
+	) {
+		forEach(action, objects);
+	}
 
-    /**
-     * 对浮点可变参数数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param objects 要遍历的浮点可变参数数组
-     */
-    private static void forEach(P2Function<Float, Integer> action, float... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对浮点可变参数数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param objects 要遍历的浮点可变参数数组
+	 */
+	private static void forEach(
+		P2Function<Float, Integer> action,
+		float... objects
+	) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对浮点可变参数数组执行指定的操作，仅处理元素值
-     *
-     * @param action  要对每个元素执行的操作，只接收元素值作为参数
-     * @param objects 要遍历的浮点可变参数数组
-     */
-    private static void forEach(P1Function<Float> action, float... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对浮点可变参数数组执行指定的操作，仅处理元素值
+	 *
+	 * @param action  要对每个元素执行的操作，只接收元素值作为参数
+	 * @param objects 要遍历的浮点可变参数数组
+	 */
+	private static void forEach(P1Function<Float> action, float... objects) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对双精度浮点数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param objects 要遍历的双精度浮点数组
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     */
-    public static void forEach(double[] objects, P2Function<Double, Integer> action) {
-        forEach(action, objects);
-    }
+	/**
+	 * 对双精度浮点数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param objects 要遍历的双精度浮点数组
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 */
+	public static void forEach(
+		double[] objects,
+		P2Function<Double, Integer> action
+	) {
+		forEach(action, objects);
+	}
 
-    /**
-     * 对双精度浮点可变参数数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param objects 要遍历的双精度浮点可变参数数组
-     */
-    private static void forEach(P2Function<Double, Integer> action, double... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对双精度浮点可变参数数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param objects 要遍历的双精度浮点可变参数数组
+	 */
+	private static void forEach(
+		P2Function<Double, Integer> action,
+		double... objects
+	) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对双精度浮点可变参数数组执行指定的操作，仅处理元素值
-     *
-     * @param action  要对每个元素执行的操作，只接收元素值作为参数
-     * @param objects 要遍历的双精度浮点可变参数数组
-     */
-    private static void forEach(P1Function<Double> action, double... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对双精度浮点可变参数数组执行指定的操作，仅处理元素值
+	 *
+	 * @param action  要对每个元素执行的操作，只接收元素值作为参数
+	 * @param objects 要遍历的双精度浮点可变参数数组
+	 */
+	private static void forEach(P1Function<Double> action, double... objects) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对字符数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param objects 要遍历的字符数组
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     */
-    public static void forEach(char[] objects, P2Function<Character, Integer> action) {
-        forEach(action, objects);
-    }
+	/**
+	 * 对字符数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param objects 要遍历的字符数组
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 */
+	public static void forEach(
+		char[] objects,
+		P2Function<Character, Integer> action
+	) {
+		forEach(action, objects);
+	}
 
-    /**
-     * 对字符可变参数数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param objects 要遍历的字符可变参数数组
-     */
-    private static void forEach(P2Function<Character, Integer> action, char... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对字符可变参数数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param objects 要遍历的字符可变参数数组
+	 */
+	private static void forEach(
+		P2Function<Character, Integer> action,
+		char... objects
+	) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对字符可变参数数组执行指定的操作，仅处理元素值
-     *
-     * @param action  要对每个元素执行的操作，只接收元素值作为参数
-     * @param objects 要遍历的字符可变参数数组
-     */
-    private static void forEach(P1Function<Character> action, char... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对字符可变参数数组执行指定的操作，仅处理元素值
+	 *
+	 * @param action  要对每个元素执行的操作，只接收元素值作为参数
+	 * @param objects 要遍历的字符可变参数数组
+	 */
+	private static void forEach(P1Function<Character> action, char... objects) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对布尔数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param objects 要遍历的布尔数组
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     */
-    public static void forEach(boolean[] objects, P2Function<Character, Integer> action) {
-        forEach(objects, action);
-    }
+	/**
+	 * 对布尔数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param objects 要遍历的布尔数组
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 */
+	public static void forEach(
+		boolean[] objects,
+		P2Function<Character, Integer> action
+	) {
+		forEach(objects, action);
+	}
 
-    /**
-     * 对布尔可变参数数组执行指定的操作，操作包含元素值和索引
-     *
-     * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
-     * @param objects 要遍历的布尔可变参数数组
-     */
-    private static void forEach(P2Function<Boolean, Integer> action, boolean... objects) {
-        forEach(Lists.toList(objects), action);
-    }
+	/**
+	 * 对布尔可变参数数组执行指定的操作，操作包含元素值和索引
+	 *
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数
+	 * @param objects 要遍历的布尔可变参数数组
+	 */
+	private static void forEach(
+		P2Function<Boolean, Integer> action,
+		boolean... objects
+	) {
+		forEach(Lists.toList(objects), action);
+	}
 
-    /**
-     * 对布尔可变参数数组执行指定的操作，仅处理元素值
-     *
-     * @param action  要对每个元素执行的操作，只接收元素值作为参数
-     * @param objects 要遍历的布尔可变参数数组
-     */
-    private static void forEach(P1Function<Boolean> action, boolean... objects) {
-        forEach(Lists.toList(objects), action);
-    }
-
+	/**
+	 * 对布尔可变参数数组执行指定的操作，仅处理元素值
+	 *
+	 * @param action  要对每个元素执行的操作，只接收元素值作为参数
+	 * @param objects 要遍历的布尔可变参数数组
+	 */
+	private static void forEach(
+		P1Function<Boolean> action,
+		boolean... objects
+	) {
+		forEach(Lists.toList(objects), action);
+	}
 }

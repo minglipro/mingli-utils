@@ -42,7 +42,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties(AutoConfiguration.class)
-@ComponentScan({ SpringBeanUtil.PACKAGE_NAME })
+@ComponentScan(
+	{
+		"com.mingliqiye.utils.bean.springboot",
+		"com.mingliqiye.utils.springboot.autoconfigure.converters",
+	}
+)
 public class AutoConfiguration {
 
 	private static final String banner =

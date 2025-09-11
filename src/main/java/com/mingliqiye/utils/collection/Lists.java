@@ -22,7 +22,14 @@
 
 package com.mingliqiye.utils.collection;
 
+import static com.mingliqiye.utils.collection.Collection.findFirst;
+
+import com.github.f4b6a3.uuid.util.internal.RandomUtil;
+import com.mingliqiye.utils.random.RandomInt;
 import java.util.*;
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -299,6 +306,13 @@ public class Lists {
 		return ts == null ? null : new ArrayList<>(Arrays.asList(ts));
 	}
 
+	@NotNull
+	public static <T> List<T> toList(Stream<T> ts) {
+		return ts == null
+			? newArrayList()
+			: new ArrayList<>(ts.collect(Collectors.toList()));
+	}
+
 	/**
 	 * 将int数组转换为Integer列表
 	 *
@@ -441,5 +455,21 @@ public class Lists {
 			list.add(value);
 		}
 		return list;
+	}
+
+	public <T> T getFirst(Collection<T> collectors) {
+		return com.mingliqiye.utils.collection.Collection.getFirst(collectors);
+	}
+
+	public <T> T getLast(Collection<T> collectors) {
+		return com.mingliqiye.utils.collection.Collection.getFirst(collectors);
+	}
+
+	public <T> T getAny(Collection<T> collectors) {
+		return com.mingliqiye.utils.collection.Collection.getOrDefault(
+			collectors,
+			RandomInt.randomInt(0, collectors.size()),
+			null
+		);
 	}
 }

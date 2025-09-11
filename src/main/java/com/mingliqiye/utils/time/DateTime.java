@@ -23,6 +23,7 @@
 package com.mingliqiye.utils.time;
 
 import com.mingliqiye.utils.jna.time.WinKernel32;
+import com.mingliqiye.utils.system.SystemUtil;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -36,8 +37,10 @@ import lombok.var;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * 时间工具类，用于处理日期时间的转换、格式化等操作。
+ * 时间类，用于处理日期时间的转换、格式化等操作。
  * 提供了多种静态方法来创建 DateTime 实例，并支持与 Date、LocalDateTime 等类型的互转。
+ *<br>
+ * windows java 1.8 及以下 使用windows Api 获取高精度时间
  *
  * @author MingLiPro
  * @see java.time
@@ -51,13 +54,12 @@ import org.jetbrains.annotations.NotNull;
 @Setter
 public final class DateTime implements Serializable {
 
-	private static final String version = System.getProperty("java.version");
 	private static final WinKernel32 WIN_KERNEL_32;
 	private static final long FILETIME_EPOCH_OFFSET = -116444736000000000L;
 	private static final long NANOS_PER_100NS = 100;
 
 	static {
-		if (version.startsWith("1.8")) {
+		if (!SystemUtil.isJdk8Plus() && SystemUtil.isWindows()) {
 			WIN_KERNEL_32 = WinKernel32.load();
 		} else {
 			WIN_KERNEL_32 = null;
@@ -116,10 +118,6 @@ public final class DateTime implements Serializable {
 			);
 		}
 		return new DateTime();
-	}
-
-	public static void main(String[] args) {
-		System.out.println(DateTime.now());
 	}
 
 	/**

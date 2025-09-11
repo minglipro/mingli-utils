@@ -48,7 +48,7 @@ public class Jackson {
 	public static void addSerializers(ObjectMapper objectMapper) {
 		// 创建SimpleModule并添加DateTime类型的序列化器和反序列化器
 		SimpleModule module = new SimpleModule()
-			.addSerializer(DateTime.class, new DateTimeJsonSerializerM7())
+			.addSerializer(DateTime.class, new DateTimeJsonSerializer())
 			.addDeserializer(DateTime.class, new DateTimeJsonDeserializerM7());
 		objectMapper.registerModule(module);
 	}

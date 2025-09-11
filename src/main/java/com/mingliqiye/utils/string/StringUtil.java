@@ -22,8 +22,8 @@
 
 package com.mingliqiye.utils.string;
 
-import com.mingliqiye.utils.functions.P1RFunction;
 import com.mingliqiye.utils.collection.Lists;
+import com.mingliqiye.utils.functions.P1RFunction;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;

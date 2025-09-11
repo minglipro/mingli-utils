@@ -56,6 +56,7 @@ public class InputStreamUtils {
 	/**
 	 * 将输入流读取为字符串<br>
 	 * 请在外部自行关闭输入流对象 避免资源泄露
+	 *
 	 * @param inputStream 输入流对象，用于读取数据
 	 * @return 输入流对应的字符串内容
 	 * @throws IOException 当读取输入流时发生IO异常

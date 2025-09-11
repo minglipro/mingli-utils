@@ -22,6 +22,7 @@
 
 package com.mingliqiye.utils.collection;
 
+import com.mingliqiye.utils.stream.SuperStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -127,14 +128,28 @@ public class Collection {
 	 */
 	@Nullable
 	public static <T> T getOrDefault(
-		@NotNull List<T> list,
+		@NotNull java.util.Collection<T> list,
 		int index,
 		@Nullable T defaultValue
 	) {
 		if (index < 0 || index >= list.size()) {
 			return defaultValue;
 		}
-		return list.get(index);
+		return SuperStream.of(list).get(index);
+	}
+
+	/**
+	 * 获取集合中指定索引的元素。
+	 * 如果索引超出范围则返回null。
+	 *
+	 * @param list  集合
+	 * @param index 索引
+	 * @param <T>   元素类型
+	 * @return 指定索引的元素，如果索引超出范围则返回null
+	 */
+	@Nullable
+	public static <T> T get(@NotNull java.util.Collection<T> list, int index) {
+		return getOrDefault(list, index, null);
 	}
 
 	/**
