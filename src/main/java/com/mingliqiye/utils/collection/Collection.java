@@ -23,13 +23,14 @@
 package com.mingliqiye.utils.collection;
 
 import com.mingliqiye.utils.stream.SuperStream;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * 集合工具类，提供对列表和数组的常用操作方法。
@@ -336,5 +337,11 @@ public class Collection {
 		@NotNull java.util.Collection<T> collection
 	) {
 		return new ArrayList<>(collection);
+	}
+
+	public static <T> SuperStream<T> toSuperStream(
+		@NotNull java.util.Collection<T> list
+	) {
+		return SuperStream.of(list);
 	}
 }

@@ -1,9 +1,12 @@
 package com.mingliqiye.utils.stream;
 
-import java.io.*;
-import java.util.List;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
 
 public class InputStreanWrapper extends InputStream implements AutoCloseable {
 
@@ -72,9 +75,9 @@ public class InputStreanWrapper extends InputStream implements AutoCloseable {
 	 * jdk8 兼容实现 jdk9+ <br>
 	 * 请使用 InputStream.transferTo()
 	 *
-	 * @param outputStream
+	 * @param outputStream 输出流
 	 * @return 转换的字节数
-	 * @throws IOException
+	 * @throws IOException IO错误
 	 */
 	public long transferToOutputStream(OutputStream outputStream)
 		throws IOException {
