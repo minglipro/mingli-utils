@@ -25,11 +25,9 @@ package com.mingliqiye.utils.collection;
 import com.mingliqiye.utils.functions.P1Function;
 import com.mingliqiye.utils.functions.P2Function;
 import com.mingliqiye.utils.functions.P3Function;
-import com.mingliqiye.utils.stream.SuperStream;
+
 import java.util.*;
-import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.Function;
 
 /**
  *  集合和映射的增强遍历功能
@@ -46,33 +44,33 @@ import java.util.function.Function;
 public class ForEach {
 
 	/**
-	 * 对给定的集合执行指定的操作，操作包含元素值和索引。
-	 * 根据集合类型选择最优的遍历方式以提高性能。
+	 * 对给定的可迭代对象执行指定的操作，操作包含元素值和索引。
+	 * 根据可迭代对象类型选择最优的遍历方式以提高性能。
 	 *
-	 * @param collection 要遍历的集合，可以是 List 或其他 Collection 实现
+	 * @param iterable 要遍历的可迭代对象
 	 * @param action     要对每个元素执行的操作，接收元素值和索引作为参数
-	 * @param <T>        集合中元素的类型
+	 * @param <T>        可迭代对象中元素的类型
 	 */
 	public static <T> void forEach(
-		Collection<T> collection,
+		Iterable<T> iterable,
 		P2Function<? super T, Integer> action
 	) {
 		// 参数校验：如果集合或操作为空，则直接返回
-		if (collection == null || action == null) {
+		if (iterable == null || action == null) {
 			return;
 		}
 
 		// 如果集合实现了 RandomAccess 接口（如 ArrayList），使用索引访问优化性能
-		if (collection instanceof RandomAccess && collection instanceof List) {
-			List<T> list = (List<T>) collection;
+		if (iterable instanceof RandomAccess && iterable instanceof List) {
+			List<T> list = (List<T>) iterable;
 			for (int i = 0; i < list.size(); i++) {
 				action.call(list.get(i), i);
 			}
 		}
 		// 如果是普通 List，使用迭代器遍历并手动维护索引
-		else if (collection instanceof List) {
+		else if (iterable instanceof List) {
 			int index = 0;
-			Iterator<T> it = collection.iterator();
+			Iterator<T> it = iterable.iterator();
 			while (it.hasNext()) {
 				action.call(it.next(), index);
 				index++;
@@ -81,7 +79,7 @@ public class ForEach {
 		// 其他类型的集合使用增强 for 循环，并手动维护索引
 		else {
 			int index = 0;
-			for (T element : collection) {
+			for (T element : iterable) {
 				action.call(element, index);
 				index++;
 			}
@@ -89,34 +87,72 @@ public class ForEach {
 	}
 
 	/**
-	 * 对给定的集合执行指定的操作，仅处理元素值。
-	 * 根据集合是否实现 RandomAccess 接口选择最优的遍历方式。
+	 * 对给定的可迭代对象执行指定的操作，仅处理元素值。
+	 * 根据可迭代对象是否实现 RandomAccess 接口选择最优的遍历方式。
 	 *
-	 * @param collection 要遍历的集合
+	 * @param iterable 要遍历的可迭代对象
 	 * @param action     要对每个元素执行的操作，只接收元素值作为参数
-	 * @param <T>        集合中元素的类型
+	 * @param <T>        可迭代对象中元素的类型
 	 */
 	public static <T> void forEach(
-		Collection<T> collection,
+		Iterable<T> iterable,
 		P1Function<? super T> action
 	) {
 		// 参数校验：如果集合或操作为空，则直接返回
-		if (collection == null || action == null) {
+		if (iterable == null || action == null) {
 			return;
 		}
 
 		// 如果集合实现了 RandomAccess 接口，使用索引访问提升性能
-		if (collection instanceof RandomAccess) {
-			List<T> list = (List<T>) collection;
+		if (iterable instanceof RandomAccess) {
+			List<T> list = (List<T>) iterable;
 			for (int i = 0; i < list.size(); i++) {
 				action.call(list.get(i));
 			}
 		}
 		// 否则使用增强 for 循环进行遍历
 		else {
-			for (T element : collection) {
+			for (T element : iterable) {
 				action.call(element);
 			}
+		}
+	}
+
+	/**
+	 * 对给定的迭代器执行指定的操作，仅处理元素值。
+	 * @param iterator 要遍历的迭代器
+	 * @param action     要对每个元素执行的操作，只接收元素值作为参数
+	 * @param <T>        迭代器中元素的类型
+	 */
+	public static <T> void forEach(
+		Iterator<T> iterator,
+		P2Function<? super T, Integer> action
+	) {
+		if (iterator == null || action == null) {
+			return;
+		}
+		int index = 0;
+		while (iterator.hasNext()) {
+			action.call(iterator.next(), index);
+			index++;
+		}
+	}
+
+	/**
+	 * 对给定的迭代器执行指定的操作，处理元素值和索引。
+	 * @param iterator 要遍历的迭代器
+	 * @param action     要对每个元素执行的操作，只接收元素值作为参数
+	 * @param <T>        迭代器中元素的类型
+	 */
+	public static <T> void forEach(
+		Iterator<T> iterator,
+		P1Function<? super T> action
+	) {
+		if (iterator == null || action == null) {
+			return;
+		}
+		while (iterator.hasNext()) {
+			action.call(iterator.next());
 		}
 	}
 

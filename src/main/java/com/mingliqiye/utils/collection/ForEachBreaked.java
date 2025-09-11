@@ -25,6 +25,7 @@ package com.mingliqiye.utils.collection;
 import com.mingliqiye.utils.functions.P1RFunction;
 import com.mingliqiye.utils.functions.P2RFunction;
 import com.mingliqiye.utils.functions.P3RFunction;
+
 import java.util.*;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
@@ -202,8 +203,7 @@ public class ForEachBreaked {
 		// 如果是 ConcurrentMap 或 LinkedHashMap，使用其内置的 forEach 方法
 		else if (map instanceof ConcurrentMap || map instanceof LinkedHashMap) {
 			forEach(map.entrySet(), i -> {
-				if (action.call(i.getKey(), i.getValue())) return true;
-				return false;
+				return action.call(i.getKey(), i.getValue());
 			});
 		}
 		// 遍历其他类型映射的条目集合
@@ -245,6 +245,48 @@ public class ForEachBreaked {
 	}
 
 	/**
+	 * 对迭代器执行指定的操作，操作包含元素值和索引
+	 * 当操作返回 true 时，遍历将提前终止。
+	 *
+	 * @param iterator 要遍历的迭代器
+	 * @param action  要对每个元素执行的操作，接收元素值和索引作为参数，返回 Boolean 值决定是否继续遍历
+	 * @param <T>     数组中元素的类型
+	 */
+	public static <T> void forEach(
+		Iterator<T> iterator,
+		P2RFunction<? super T, Integer, Boolean> action
+	) {
+		if (iterator == null || action == null) {
+			return;
+		}
+		int index = 0;
+		while (iterator.hasNext()) {
+			if (action.call(iterator.next(), index)) return;
+			index++;
+		}
+	}
+
+	/**
+	 * 对迭代器执行指定的操作，操作包含元素值
+	 * 当操作返回 true 时，遍历将提前终止。
+	 *
+	 * @param iterator 要遍历的迭代器
+	 * @param action  要对每个元素执行的操作，接收元素值作为参数，返回 Boolean 值决定是否继续遍历
+	 * @param <T>     数组中元素的类型
+	 */
+	public static <T> void forEach(
+		Iterator<T> iterator,
+		P1RFunction<? super T, Boolean> action
+	) {
+		if (iterator == null || action == null) {
+			return;
+		}
+		while (iterator.hasNext()) {
+			if (action.call(iterator.next())) return;
+		}
+	}
+
+	/**
 	 * 对数组执行指定的操作，仅处理元素值
 	 * 当操作返回 true 时，遍历将提前终止。
 	 *
@@ -272,8 +314,7 @@ public class ForEachBreaked {
 		T... objects
 	) {
 		forEach(Lists.toList(objects), (t, i) -> {
-			if (action.call(t)) return true;
-			return false;
+			return action.call(t);
 		});
 	}
 
