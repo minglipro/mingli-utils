@@ -1,9 +1,5 @@
 package com.mingliqiye.utils.springboot.autoconfigure;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.mingliqiye.utils.json.GsonJsonApi;
-import com.mingliqiye.utils.json.JacksonJsonApi;
 import com.mingliqiye.utils.json.JsonApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,21 +26,25 @@ public class JsonApiAutoConfiguration {
 	@Bean
 	@Primary
 	@ConditionalOnMissingBean
-	@ConditionalOnClass(ObjectMapper.class)
-	public JsonApi jacksonJsonApi(ObjectMapper objectMapper) {
+	@ConditionalOnClass(
+		name = { "com.fasterxml.jackson.databind.ObjectMapper" }
+	)
+	public JsonApi jacksonJsonApi(
+		com.fasterxml.jackson.databind.ObjectMapper objectMapper
+	) {
 		log.info(
 			"MingliUtils-JsonApiAutoConfiguration: JacksonJsonApi bean is created."
 		);
-		return new JacksonJsonApi(objectMapper);
+		return new com.mingliqiye.utils.json.JacksonJsonApi(objectMapper);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	@ConditionalOnClass(Gson.class)
-	public JsonApi gsonJsonApi(Gson gson) {
+	@ConditionalOnClass(name = { "com.google.gson.Gson" })
+	public JsonApi gsonJsonApi(com.google.gson.Gson gson) {
 		log.info(
 			"MingliUtils-JsonApiAutoConfiguration: GsonJsonApi bean is created."
 		);
-		return new GsonJsonApi(gson);
+		return new com.mingliqiye.utils.json.GsonJsonApi(gson);
 	}
 }
