@@ -64,14 +64,15 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.38")
     compileOnly("org.springframework.boot:spring-boot-starter:2.7.14")
     compileOnly("com.fasterxml.jackson.core:jackson-databind:2.19.2")
+    compileOnly("com.google.code.gson:gson:2.13.1")
     compileOnly("org.mybatis:mybatis:3.5.19")
+    compileOnly("com.alibaba.fastjson2:fastjson2:2.0.58")
     compileOnly("org.projectlombok:lombok:1.18.38")
     implementation("org.bouncycastle:bcprov-jdk18on:1.81")
     implementation("com.github.f4b6a3:uuid-creator:6.1.0")
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("net.java.dev.jna:jna:5.17.0")
-    // https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api
     implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
 
 }

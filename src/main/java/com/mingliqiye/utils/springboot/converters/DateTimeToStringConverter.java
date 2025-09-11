@@ -1,11 +1,11 @@
-package com.mingliqiye.utils.springboot.autoconfigure.converters;
-
-import static com.mingliqiye.utils.time.Formatter.STANDARD_DATETIME;
+package com.mingliqiye.utils.springboot.converters;
 
 import com.mingliqiye.utils.time.DateTime;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import static com.mingliqiye.utils.time.Formatter.STANDARD_DATETIME;
 
 /**
  * spring boot DateTime到字符串转换器

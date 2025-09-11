@@ -38,7 +38,7 @@ import java.io.InputStream;
 @ComponentScan(
 	{
 		"com.mingliqiye.utils.bean.springboot",
-		"com.mingliqiye.utils.springboot.autoconfigure.converters",
+		"com.mingliqiye.utils.springboot.converters",
 	}
 )
 public class AutoConfiguration {

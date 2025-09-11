@@ -1,4 +1,4 @@
-package com.mingliqiye.utils.springboot.autoconfigure.converters;
+package com.mingliqiye.utils.springboot.converters;
 
 import com.mingliqiye.utils.uuid.UUID;
 import org.jetbrains.annotations.NotNull;
