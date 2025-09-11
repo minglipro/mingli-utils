@@ -23,4 +23,3 @@
 com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.JacksonAutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.GsonAutoConfiguration
-com.mingliqiye.utils.springboot.autoconfigure.JsonApiAutoConfiguration
