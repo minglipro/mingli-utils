@@ -1,3 +1,25 @@
+/*
+ * Copyright 2025 mingliqiye
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ProjectName mingli-utils
+ * ModuleName mingli-utils.main
+ * CurrentFile Range.java
+ * LastUpdate 2025-09-12 17:12:29
+ * UpdateUser MingLiPro
+ */
+
 package com.mingliqiye.utils.iterator;
 
 import lombok.Getter;
@@ -7,7 +29,8 @@ import java.util.Iterator;
 
 /**
  * 范围 Range<br>
- * 类似 KT的 {@code 0..10 = Range.of(0,10)}
+ * Iterable 可遍历对象<br>
+ * 类似 KT的 {@code 0..10 = Range.of(0,10)} {@code 0..10 step 2 = Range.of(0,10,2)}
  * @author MingLiPro
  * @since 3.2.6
  */
@@ -16,6 +39,7 @@ public class Range implements Iterable<Integer> {
 
 	private final int start;
 	private final int end;
+	private final int step;
 	private int current;
 
 	/**
@@ -27,8 +51,22 @@ public class Range implements Iterable<Integer> {
 	 * @see Integer
 	 */
 	public Range(int start, int end) {
+		this(start, end, 1);
+	}
+
+	/**
+	 * 创建一个范围 <br>
+	 * 最大值{@code Integer.MAX_VALUE = 2147483647 } <br>
+	 * 最小值{@code Integer.MIN_VALUE = -2147483648} <br>
+	 * @param start 开始 (包含)
+	 * @param end 完毕 (包含)
+	 * @param step 步长
+	 * @see Integer
+	 */
+	public Range(int start, int end, int step) {
 		this.start = start;
 		this.current = start;
+		this.step = step;
 		this.end = end + 1;
 	}
 
@@ -66,6 +104,32 @@ public class Range implements Iterable<Integer> {
 	 */
 	public static Range of(int start, int end) {
 		return new Range(start, end);
+	}
+
+	/**
+	 * 创建一个范围 <br>
+	 * 最大值{@code Integer.MAX_VALUE = 2147483647 } <br>
+	 * 最小值{@code Integer.MIN_VALUE = -2147483648} <br>
+	 * @param start 开始 (包含)
+	 * @param end 完毕 (包含)
+	 * @param step 步长
+	 * @see Integer
+	 */
+	public static Range of(int start, int end, int step) {
+		return new Range(start, end, step);
+	}
+
+	/**
+	 * 创建一个范围 <br>
+	 * 最大值{@code Integer.MAX_VALUE = 2147483647 } <br>
+	 * 最小值{@code Integer.MIN_VALUE = -2147483648} <br>
+	 * @param start 开始 (包含)
+	 * @param end 完毕 (包含)
+	 * @param step 步长
+	 * @see Integer
+	 */
+	public static Range range(int start, int end, int step) {
+		return new Range(start, end, step);
 	}
 
 	/**
@@ -110,7 +174,12 @@ public class Range implements Iterable<Integer> {
 				if (current >= end) {
 					return null;
 				}
-				return current++;
+
+				try {
+					return current;
+				} finally {
+					current = current + step;
+				}
 			}
 		};
 	}

@@ -15,19 +15,18 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Main.java
- * LastUpdate 2025-09-09 08:37:33
+ * CurrentFile Main.kt
+ * LastUpdate 2025-09-12 17:11:48
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils;
+@file:JvmName("Main")
 
-import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration;
-import java.io.IOException;
+package com.mingliqiye.utils
 
-public class Main {
+import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
 
-	public static void main(String[] args) throws IOException {
-		AutoConfiguration.printBanner();
-	}
+
+fun main() {
+    AutoConfiguration.printBanner()
 }

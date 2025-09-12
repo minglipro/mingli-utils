@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-10 11:08:55
+ * LastUpdate 2025-09-12 14:06:21
  * UpdateUser MingLiPro
  */
 
@@ -28,6 +28,8 @@ plugins {
     java
     id("java-library")
     id("maven-publish")
+    kotlin("jvm") version "2.2.20"
+    id("org.jetbrains.dokka") version "2.0.0"
 }
 
 val GROUPSID = project.properties["GROUPSID"] as String
@@ -41,12 +43,15 @@ base {
     archivesName.set(ARTIFACTID)
 }
 
-
+val buildDir: java.nio.file.Path = File("build").toPath()
 
 sourceSets {
     main {
         java {
             srcDirs("src/main/java")
+        }
+        kotlin {
+            srcDirs("src/main/kotlin")
         }
         resources {
             srcDirs("src/main/resources")
@@ -54,11 +59,15 @@ sourceSets {
     }
 }
 
+configurations {
+
+}
+
 java {
-    withJavadocJar()
     withSourcesJar()
     toolchain.languageVersion.set(JavaLanguageVersion.of(8))
 }
+
 dependencies {
     annotationProcessor("org.jetbrains:annotations:24.0.0")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
@@ -74,7 +83,6 @@ dependencies {
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("net.java.dev.jna:jna:5.17.0")
     implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
-
 }
 
 
@@ -82,6 +90,21 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
+tasks.register<Jar>("javaDocJar") {
+    group = "build"
+    archiveClassifier.set("javadoc")
+    dependsOn(tasks.dokkaGfm, tasks.dokkaHtml, tasks.dokkaJavadoc, tasks.dokkaJekyll)
+    from(buildDir.resolve("dokka/javadoc"))
+}
+tasks.register<Jar>("kotlinDocJar") {
+    group = "build"
+    archiveClassifier.set("kotlindoc")
+    dependsOn(tasks.dokkaHtml)
+    from(buildDir.resolve("dokka/html"))
+}
+tasks.build {
+    dependsOn("javaDocJar", "kotlinDocJar")
+}
 tasks.withType<JavaExec>().configureEach {
     jvmArgs = listOf(
         "-Dfile.encoding=UTF-8",
@@ -89,12 +112,6 @@ tasks.withType<JavaExec>().configureEach {
         "-Dsun.stderr.encoding=UTF-8"
     )
 }
-
-
-tasks.withType<Javadoc> {
-    options.encoding = "UTF-8"
-}
-
 
 
 tasks.withType<org.gradle.jvm.tasks.Jar> {
@@ -143,6 +160,19 @@ publishing {
             groupId = GROUPSID
             artifactId = ARTIFACTID
             version = VERSIONS
+            artifact(tasks.named("javaDocJar"))
+            artifact(tasks.named("kotlinDocJar"))
+            pom {
+                name.set(project.name)
+                url.set("https://github.com/minglipro/mingli-utils")
+
+                licenses {
+                    license {
+                        name.set("Apache-2.0")
+                        url.set("https://opensource.org/licenses/Apache-2.0")
+                    }
+                }
+            }
         }
     }
 }
