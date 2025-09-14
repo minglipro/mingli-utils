@@ -144,6 +144,9 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
 }
 
 repositories {
+    maven {
+        url =  uri("https://maven.aliyun.com/repository/public/")
+    }
     mavenCentral()
 }
 

@@ -47,6 +47,16 @@ public class OsPath implements Path {
 		return new OsPath(path);
 	}
 
+    public static OsPath of(URI uri) {
+        return new OsPath(Paths.get(uri));
+    }
+    public static OsPath of(File file) {
+        return new OsPath(file.toPath());
+    }
+    public static OsPath getCwd(){
+        return new OsPath(Paths.get(""));
+    }
+
 	@Override
 	public @NotNull FileSystem getFileSystem() {
 		return path.getFileSystem();
