@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-12 14:06:21
+ * LastUpdate 2025-09-13 10:11:22
  * UpdateUser MingLiPro
  */
 
@@ -59,10 +59,6 @@ sourceSets {
     }
 }
 
-configurations {
-
-}
-
 java {
     withSourcesJar()
     toolchain.languageVersion.set(JavaLanguageVersion.of(8))
@@ -81,8 +77,11 @@ dependencies {
     implementation("com.github.f4b6a3:uuid-creator:6.1.0")
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.jetbrains:annotations:24.0.0")
-    implementation("net.java.dev.jna:jna:5.17.0")
+    compileOnly("net.java.dev.jna:jna:5.17.0")
     implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
+    implementation("org.slf4j:slf4j-api:2.0.17")
+    implementation("com.mingliqiye.utils.jna:WinKernel32Api:1.0.1")
+
 }
 
 
@@ -90,26 +89,10 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
-tasks.register<Jar>("javaDocJar") {
-    group = "build"
-    archiveClassifier.set("javadoc")
-    dependsOn(tasks.dokkaGfm, tasks.dokkaHtml, tasks.dokkaJavadoc, tasks.dokkaJekyll)
-    from(buildDir.resolve("dokka/javadoc"))
-}
-tasks.register<Jar>("kotlinDocJar") {
-    group = "build"
-    archiveClassifier.set("kotlindoc")
-    dependsOn(tasks.dokkaHtml)
-    from(buildDir.resolve("dokka/html"))
-}
-tasks.build {
-    dependsOn("javaDocJar", "kotlinDocJar")
-}
+
 tasks.withType<JavaExec>().configureEach {
     jvmArgs = listOf(
-        "-Dfile.encoding=UTF-8",
-        "-Dsun.stdout.encoding=UTF-8",
-        "-Dsun.stderr.encoding=UTF-8"
+        "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8"
     )
 }
 
@@ -142,6 +125,7 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
         )
     }
 }
+val isJdk8Build = project.findProperty("buildForJdk8") == "true"
 
 repositories {
     maven {
@@ -150,6 +134,18 @@ repositories {
     mavenCentral()
 }
 
+tasks.register<Jar>("javaDocJar") {
+    group = "build"
+    archiveClassifier.set("javadoc")
+    dependsOn(tasks.dokkaJavadoc)
+    from(buildDir.resolve("dokka/javadoc"))
+}
+tasks.register<Jar>("kotlinDocJar") {
+    group = "build"
+    archiveClassifier.set("kotlindoc")
+    dependsOn(tasks.dokkaHtml)
+    from(buildDir.resolve("dokka/html"))
+}
 publishing {
     repositories {
         maven {
@@ -160,39 +156,34 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
-            groupId = GROUPSID
-            artifactId = ARTIFACTID
-            version = VERSIONS
             artifact(tasks.named("javaDocJar"))
             artifact(tasks.named("kotlinDocJar"))
-            pom {
-                name.set(project.name)
-                url.set("https://github.com/minglipro/mingli-utils")
-
-                licenses {
-                    license {
-                        name.set("Apache-2.0")
-                        url.set("https://opensource.org/licenses/Apache-2.0")
-                    }
-                }
-            }
+            artifactId = ARTIFACTID
+            java.toolchain.languageVersion.set(JavaLanguageVersion.of(8))
         }
     }
 }
+
+tasks.build {
+    dependsOn("javaDocJar", "kotlinDocJar")
+}
+
+
+
 
 tasks.processResources {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     outputs.upToDateWhen { false }
     filesMatching("META-INF/meta-data") {
         expand(
-            mapOf(
-                "buildTime" to LocalDateTime.now()
-                    .format(
-                        DateTimeFormatter.ofPattern(
-                            "yyyy-MM-dd HH:mm:ss.SSSSSSS"
-                        )
+            project.properties + mapOf(
+                "buildTime" to LocalDateTime.now().format(
+                    DateTimeFormatter.ofPattern(
+                        "yyyy-MM-dd HH:mm:ss.SSSSSSS"
                     )
-            ) + project.properties
+
+                )
+            )
         )
     }
 }

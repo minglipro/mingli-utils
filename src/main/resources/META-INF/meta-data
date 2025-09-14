@@ -4,4 +4,4 @@ artifactId=$ARTIFACTID
 version=$VERSIONS
 buildJdkVersion=$JDKVERSIONS
 author=MingLiPro
-website=mingliqiye.com
+website=https://mingli-utils.mingliqiye.com

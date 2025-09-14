@@ -24,12 +24,9 @@
 
 package com.mingliqiye.utils
 
-import com.mingliqiye.utils.path.OsPath
 import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
 
 
 fun main() {
     AutoConfiguration.printBanner()
-    val path = OsPath.getCwd()
-    println(path.toAbsolutePath())
 }

@@ -16,22 +16,20 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Lists.java
- * LastUpdate 2025-09-09 08:37:33
+ * LastUpdate 2025-09-13 00:26:11
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.collection;
 
-import static com.mingliqiye.utils.collection.Collection.findFirst;
-
-import com.github.f4b6a3.uuid.util.internal.RandomUtil;
 import com.mingliqiye.utils.random.RandomInt;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Lists工具类提供了一系列创建List实现的便捷方法。
@@ -454,6 +452,12 @@ public class Lists {
 		for (short value : array) {
 			list.add(value);
 		}
+		return list;
+	}
+
+	public static <T> List<T> toList(Iterator<T> iterator) {
+		List<T> list = newArrayList(10);
+		ForEach.forEach(iterator, item -> list.add(item));
 		return list;
 	}
 

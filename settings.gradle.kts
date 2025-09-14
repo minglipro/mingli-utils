@@ -16,9 +16,10 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile settings.gradle.kts
- * LastUpdate 2025-09-09 08:37:33
+ * LastUpdate 2025-09-13 02:37:04
  * UpdateUser MingLiPro
  */
 
+include("jdk8")
 val ARTIFACTID: String by settings.extra
 rootProject.name = ARTIFACTID

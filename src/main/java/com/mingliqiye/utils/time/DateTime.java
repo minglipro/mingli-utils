@@ -16,14 +16,22 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.java
- * LastUpdate 2025-09-09 08:37:33
+ * LastUpdate 2025-09-13 10:14:09
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.time;
 
-import com.mingliqiye.utils.jna.time.WinKernel32;
+import com.mingliqiye.utils.jna.WinKernel32Api;
+import com.mingliqiye.utils.jna.WinKernel32ApiFactory;
 import com.mingliqiye.utils.system.SystemUtil;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.val;
+import lombok.var;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -31,10 +39,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.var;
-import org.jetbrains.annotations.NotNull;
+
+import static com.mingliqiye.utils.jna.WinKernel32ApiFactory.FILETIME_EPOCH_OFFSET;
+import static com.mingliqiye.utils.jna.WinKernel32ApiFactory.NANOS_PER_100NS;
+import static com.mingliqiye.utils.logger.Loggers.getMingLiLoggerFactory;
 
 /**
  * 时间类，用于处理日期时间的转换、格式化等操作。
@@ -54,15 +62,38 @@ import org.jetbrains.annotations.NotNull;
 @Setter
 public final class DateTime implements Serializable {
 
-	private static final WinKernel32 WIN_KERNEL_32;
-	private static final long FILETIME_EPOCH_OFFSET = -116444736000000000L;
-	private static final long NANOS_PER_100NS = 100;
+	private static final WinKernel32Api WIN_KERNEL_32_API;
 
 	static {
-		if (!SystemUtil.isJdk8Plus() && SystemUtil.isWindows()) {
-			WIN_KERNEL_32 = WinKernel32.load();
+		if (SystemUtil.getJavaVersionAsInteger() == 8 && SystemUtil.isWindows()) {
+
+			final Logger log = getMingLiLoggerFactory().getLogger(
+				"mingli-utils DateTime"
+			);
+			val a = WinKernel32ApiFactory.getWinKernel32Apis();
+
+			if (a.size() > 1) {
+				log.warn(
+					"Multiple Size:{} WinKernel32Api implementations found.",
+					a.size()
+				);
+				a.forEach(api ->
+					log.warn(
+						"Found WinKernel32Api: {}",
+						api.getClass().getName()
+					)
+				);
+			}
+
+			if (a.isEmpty()) {
+				WIN_KERNEL_32_API = null;
+				log.warn("No WinKernel32Api implementation found. Use Jdk1.8 LocalDateTime");
+			} else {
+				WIN_KERNEL_32_API = a.get(a.size() - 1);
+				log.info("Found and Use WinKernel32Api: {}", WIN_KERNEL_32_API.getClass().getName());
+			}
 		} else {
-			WIN_KERNEL_32 = null;
+			WIN_KERNEL_32_API = null;
 		}
 	}
 
@@ -95,26 +126,9 @@ public final class DateTime implements Serializable {
 	 * @return 返回当前时间的 DateTime 实例
 	 */
 	public static DateTime now() {
-		if (WIN_KERNEL_32 != null) {
-			byte[] fileTimeBuffer = new byte[8];
-			WIN_KERNEL_32.GetSystemTimePreciseAsFileTime(fileTimeBuffer);
-			long fileTime =
-				(long) (fileTimeBuffer[0] & 0xFF) |
-				((long) (fileTimeBuffer[1] & 0xFF) << 8) |
-				((long) (fileTimeBuffer[2] & 0xFF) << 16) |
-				((long) (fileTimeBuffer[3] & 0xFF) << 24) |
-				((long) (fileTimeBuffer[4] & 0xFF) << 32) |
-				((long) (fileTimeBuffer[5] & 0xFF) << 40) |
-				((long) (fileTimeBuffer[6] & 0xFF) << 48) |
-				((long) (fileTimeBuffer[7] & 0xFF) << 56);
-			long unixNanos =
-				(fileTime + FILETIME_EPOCH_OFFSET) * NANOS_PER_100NS;
-			Instant instant = Instant.ofEpochSecond(
-				unixNanos / 1_000_000_000L,
-				unixNanos % 1_000_000_000L
-			);
+		if (WIN_KERNEL_32_API != null) {
 			return DateTime.of(
-				instant.atZone(ZoneId.systemDefault()).toLocalDateTime()
+				WIN_KERNEL_32_API.getTime().atZone(ZoneId.systemDefault()).toLocalDateTime()
 			);
 		}
 		return new DateTime();

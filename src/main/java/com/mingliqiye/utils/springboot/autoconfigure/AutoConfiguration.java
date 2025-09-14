@@ -16,21 +16,25 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AutoConfiguration.java
- * LastUpdate 2025-09-09 08:37:34
+ * LastUpdate 2025-09-13 01:23:09
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure;
 
 import com.mingliqiye.utils.collection.ForEach;
+import com.mingliqiye.utils.collection.Lists;
+import com.mingliqiye.utils.system.SystemUtil;
 import com.mingliqiye.utils.time.DateTime;
 import com.mingliqiye.utils.time.Formatter;
-import java.io.IOException;
-import java.io.InputStream;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 @org.springframework.boot.autoconfigure.AutoConfiguration
 @EnableConfigurationProperties(AutoConfiguration.class)
@@ -80,7 +84,10 @@ public class AutoConfiguration {
 			while ((readlen = inputStream.read(buffer)) != -1) {
 				metaData.append(new String(buffer, 0, readlen));
 			}
-			ForEach.forEach(metaData.toString().split("\n"), (s, i) -> {
+			val da = Lists.toList(metaData.toString().split("\n"));
+			da.add("time=" + DateTime.now().format(Formatter.STANDARD_DATETIME_MILLISECOUND7));
+			da.add("jdkRuntime=" + SystemUtil.getJdkVersion());
+			ForEach.forEach(da, (s, i) -> {
 				String[] d = s.trim().split("=", 2);
 				if (d.length >= 2) {
 					String content = "|  " + d[0] + ": " + d[1];
@@ -100,9 +107,8 @@ public class AutoConfiguration {
 			e.printStackTrace();
 		}
 		banner2 = bannerBuilder.toString();
-		System.out.printf(
-			banner2,
-			DateTime.now().format(Formatter.STANDARD_DATETIME_MILLISECOUND7)
+		System.out.print(
+			banner2
 		);
 		System.out.println(
 			"---------------------------------------------------------"
