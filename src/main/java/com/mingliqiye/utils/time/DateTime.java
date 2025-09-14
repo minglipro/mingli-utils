@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.java
- * LastUpdate 2025-09-14 22:05:19
+ * LastUpdate 2025-09-14 22:12:16
  * UpdateUser MingLiPro
  */
 
@@ -65,8 +65,10 @@ public final class DateTime implements Serializable {
 	private static final WinKernel32Api WIN_KERNEL_32_API;
 
 	static {
-		if (SystemUtils.getJavaVersionAsInteger() == 8 && SystemUtils.isWindows()) {
-
+		if (
+			SystemUtils.getJavaVersionAsInteger() == 8 &&
+			SystemUtils.isWindows()
+		) {
 			final Logger log = getMingLiLoggerFactory().getLogger(
 				"mingli-utils DateTime"
 			);
@@ -87,10 +89,15 @@ public final class DateTime implements Serializable {
 
 			if (a.isEmpty()) {
 				WIN_KERNEL_32_API = null;
-				log.warn("No WinKernel32Api implementation found. Use Jdk1.8 LocalDateTime");
+				log.warn(
+					"No WinKernel32Api implementation found. Use Jdk1.8 LocalDateTime"
+				);
 			} else {
 				WIN_KERNEL_32_API = a.get(a.size() - 1);
-				log.info("Found and Use WinKernel32Api: {}", WIN_KERNEL_32_API.getClass().getName());
+				log.info(
+					"Found and Use WinKernel32Api: {}",
+					WIN_KERNEL_32_API.getClass().getName()
+				);
 			}
 		} else {
 			WIN_KERNEL_32_API = null;
@@ -128,7 +135,9 @@ public final class DateTime implements Serializable {
 	public static DateTime now() {
 		if (WIN_KERNEL_32_API != null) {
 			return DateTime.of(
-				WIN_KERNEL_32_API.getTime().atZone(ZoneId.systemDefault()).toLocalDateTime()
+				WIN_KERNEL_32_API.getTime()
+					.atZone(ZoneId.systemDefault())
+					.toLocalDateTime()
 			);
 		}
 		return new DateTime();
