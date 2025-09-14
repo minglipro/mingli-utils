@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Range.java
- * LastUpdate 2025-09-14 20:23:26
+ * LastUpdate 2025-09-14 22:12:16
  * UpdateUser MingLiPro
  */
 
@@ -214,6 +214,7 @@ public class Range
 	public @NotNull Integer getEndExclusive() {
 		return end;
 	}
+
 	@Override
 	public @NotNull Integer getStart() {
 		return start;

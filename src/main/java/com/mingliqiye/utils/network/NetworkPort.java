@@ -16,15 +16,16 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NetworkPort.java
- * LastUpdate 2025-09-09 08:37:33
+ * LastUpdate 2025-09-14 22:12:16
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.network;
 
-import com.mingliqiye.utils.string.StringUtil;
-import java.io.Serializable;
+import com.mingliqiye.utils.string.StringUtils;
 import lombok.Getter;
+
+import java.io.Serializable;
 
 /**
  * 网络端口类
@@ -56,7 +57,7 @@ public class NetworkPort implements Serializable {
 		// 验证端口号范围是否在0-65535之间
 		if (!(0 <= port && 65535 >= port)) {
 			throw new NetworkException(
-				StringUtil.format("{} 不是正确的端口号", port)
+				StringUtils.format("{} 不是正确的端口号", port)
 			);
 		}
 	}

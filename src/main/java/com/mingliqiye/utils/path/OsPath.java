@@ -16,11 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile OsPath.java
- * LastUpdate 2025-09-09 08:37:34
+ * LastUpdate 2025-09-14 22:12:16
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.path;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +31,6 @@ import java.nio.file.*;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.Consumer;
-import org.jetbrains.annotations.NotNull;
 
 public class OsPath implements Path {
 
@@ -47,15 +48,17 @@ public class OsPath implements Path {
 		return new OsPath(path);
 	}
 
-    public static OsPath of(URI uri) {
-        return new OsPath(Paths.get(uri));
-    }
-    public static OsPath of(File file) {
-        return new OsPath(file.toPath());
-    }
-    public static OsPath getCwd(){
-        return new OsPath(Paths.get(""));
-    }
+	public static OsPath of(URI uri) {
+		return new OsPath(Paths.get(uri));
+	}
+
+	public static OsPath of(File file) {
+		return new OsPath(file.toPath());
+	}
+
+	public static OsPath getCwd() {
+		return new OsPath(Paths.get(""));
+	}
 
 	@Override
 	public @NotNull FileSystem getFileSystem() {
