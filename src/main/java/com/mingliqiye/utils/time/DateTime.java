@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.java
- * LastUpdate 2025-09-13 10:14:09
+ * LastUpdate 2025-09-14 22:05:19
  * UpdateUser MingLiPro
  */
 
@@ -24,7 +24,7 @@ package com.mingliqiye.utils.time;
 
 import com.mingliqiye.utils.jna.WinKernel32Api;
 import com.mingliqiye.utils.jna.WinKernel32ApiFactory;
-import com.mingliqiye.utils.system.SystemUtil;
+import com.mingliqiye.utils.system.SystemUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
@@ -65,7 +65,7 @@ public final class DateTime implements Serializable {
 	private static final WinKernel32Api WIN_KERNEL_32_API;
 
 	static {
-		if (SystemUtil.getJavaVersionAsInteger() == 8 && SystemUtil.isWindows()) {
+		if (SystemUtils.getJavaVersionAsInteger() == 8 && SystemUtils.isWindows()) {
 
 			final Logger log = getMingLiLoggerFactory().getLogger(
 				"mingli-utils DateTime"

@@ -16,16 +16,17 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NetworkEndpoint.java
- * LastUpdate 2025-09-09 08:37:33
+ * LastUpdate 2025-09-14 21:52:54
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.network;
 
-import com.mingliqiye.utils.string.StringUtil;
+import com.mingliqiye.utils.string.StringUtils;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.net.InetSocketAddress;
-import lombok.Getter;
 
 /**
  * IP和端口聚集类，用于封装网络地址与端口信息。
@@ -121,7 +122,7 @@ public class NetworkEndpoint implements Serializable {
 	 * @return 格式化后的字符串
 	 */
 	public String toHostPortString() {
-		return StringUtil.format(
+		return StringUtils.format(
 			"{}:{}",
 			networkAddress.getIp(),
 			networkPort.getPort()
@@ -135,7 +136,7 @@ public class NetworkEndpoint implements Serializable {
 	 * @return 包含详细信息的字符串
 	 */
 	public String toString() {
-		return StringUtil.format(
+		return StringUtils.format(
 			"NetworkEndpoint(IP={},Port={},Endpoint={})",
 			networkAddress.getIp(),
 			networkPort.getPort(),

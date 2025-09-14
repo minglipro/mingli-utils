@@ -16,13 +16,16 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile FileUtil.java
- * LastUpdate 2025-09-09 08:37:34
+ * LastUpdate 2025-09-14 21:52:34
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.file;
 
-import com.mingliqiye.utils.string.StringUtil;
+import com.mingliqiye.utils.string.StringUtils;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,8 +37,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 文件工具类，提供常用的文件操作方法
@@ -243,7 +244,7 @@ public class FileUtil {
 	 * @return 文件扩展名（不包含点号），如果无扩展名返回空字符串
 	 */
 	public static String getFileExtension(String fileName) {
-		if (StringUtil.isEmpty(fileName)) {
+		if (StringUtils.isEmpty(fileName)) {
 			return "";
 		}
 		int lastDotIndex = fileName.lastIndexOf('.');
@@ -260,7 +261,7 @@ public class FileUtil {
 	 * @return 不带扩展名的文件名
 	 */
 	public static String getFileNameWithoutExtension(String fileName) {
-		if (StringUtil.isEmpty(fileName)) {
+		if (StringUtils.isEmpty(fileName)) {
 			return "";
 		}
 		int lastDotIndex = fileName.lastIndexOf('.');

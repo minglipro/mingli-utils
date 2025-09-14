@@ -16,19 +16,20 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NetworkAddress.java
- * LastUpdate 2025-09-09 08:37:33
+ * LastUpdate 2025-09-14 21:52:34
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.network;
 
-import com.mingliqiye.utils.string.StringUtil;
+import com.mingliqiye.utils.string.StringUtils;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.regex.Pattern;
-import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 网络地址类，用于表示一个网络地址（IP或域名），并提供相关操作。
@@ -182,7 +183,7 @@ public class NetworkAddress implements Serializable {
 
 		// 不符合任一格式时抛出异常
 		throw new NetworkException(
-			StringUtil.format("[{}] 不是有效的IPv4或IPv6地址", ip)
+			StringUtils.format("[{}] 不是有效的IPv4或IPv6地址", ip)
 		);
 	}
 
@@ -206,12 +207,12 @@ public class NetworkAddress implements Serializable {
 	 */
 	public String toString() {
 		return isdom
-			? StringUtil.format(
+			? StringUtils.format(
 				"NetworkAddress(IP='{}',type='{}'," + "domain='{}')",
 				ip,
 				IPv,
 				domain
 			)
-			: StringUtil.format("NetworkAddress(IP='{}',type='{}')", ip, IPv);
+			: StringUtils.format("NetworkAddress(IP='{}',type='{}')", ip, IPv);
 	}
 }

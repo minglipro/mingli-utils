@@ -1,15 +1,38 @@
+/*
+ * Copyright 2025 mingliqiye
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ProjectName mingli-utils
+ * ModuleName mingli-utils.main
+ * CurrentFile Pseudocryptography.java
+ * LastUpdate 2025-09-14 21:53:30
+ * UpdateUser MingLiPro
+ */
+
 package com.mingliqiye.utils.minecraft.pe.json;
 
 import com.mingliqiye.utils.collection.ForEach;
 import com.mingliqiye.utils.file.FileUtil;
 import com.mingliqiye.utils.json.JsonApi;
 import com.mingliqiye.utils.json.JsonTypeReference;
-import com.mingliqiye.utils.string.StringUtil;
+import com.mingliqiye.utils.string.StringUtils;
+import lombok.val;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.val;
 
 public class Pseudocryptography {
 
@@ -32,7 +55,7 @@ public class Pseudocryptography {
 
 			return map2;
 		} else if (object instanceof String) {
-			return StringUtil.stringToUnicode((String) object);
+			return StringUtils.stringToUnicode((String) object);
 		} else if (object instanceof List) {
 			ForEach.forEach((List<Object>) object, (t, i) -> {
 				((List<Object>) object).set(i, prossed(t));
@@ -49,7 +72,7 @@ public class Pseudocryptography {
 			);
 
 			String s = jsonApi.format(prossed(map)).replace("\\\\u", "\\u");
-			FileUtil.writeStringToFile(StringUtil.format("old-{}", path), s);
+			FileUtil.writeStringToFile(StringUtils.format("old-{}", path), s);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

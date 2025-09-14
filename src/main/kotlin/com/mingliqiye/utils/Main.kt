@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Main.kt
- * LastUpdate 2025-09-14 20:08:44
+ * LastUpdate 2025-09-14 22:05:03
  * UpdateUser MingLiPro
  */
 
@@ -29,6 +29,4 @@ import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
 
 fun main() {
     AutoConfiguration.printBanner()
-
-    0..10
 }
