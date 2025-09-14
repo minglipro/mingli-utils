@@ -15,11 +15,11 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile ByteUtil.kt
- * LastUpdate 2025-09-14 18:19:29
+ * CurrentFile ByteUtils.kt
+ * LastUpdate 2025-09-14 19:28:38
  * UpdateUser MingLiPro
  */
-@file:JvmName("ByteUtil")
+@file:JvmName("ByteUtils")
 
 package com.mingliqiye.utils.bytes
 
@@ -39,13 +39,11 @@ const val ESC_RESERVED: Byte = 0x06
 
 /**
  * 将字节数组转换为十六进制字符串列表
- *
- * @param bytes 输入的字节数组
  * @return 包含每个字节对应十六进制字符串的列表
  */
-fun getByteArrayString(bytes: ByteArray): MutableList<String> {
-    return SuperStream.of(Lists.toList(bytes))
-        .map { a -> String.format("%02x", a!!.toInt() and 0xFF) }
+fun ByteArray.getByteArrayString(): MutableList<String> {
+    return Lists.toList(this)!!.stream()
+        .map { a -> String.format("0X%02X", a!!.toInt() and 0xFF) }
         .collect(SuperStream.Collectors.toList())
 }
 

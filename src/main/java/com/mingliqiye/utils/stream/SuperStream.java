@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SuperStream.java
- * LastUpdate 2025-09-09 08:37:33
+ * LastUpdate 2025-09-14 20:16:59
  * UpdateUser MingLiPro
  */
 
@@ -25,12 +25,13 @@ package com.mingliqiye.utils.stream;
 import com.mingliqiye.utils.collection.Lists;
 import com.mingliqiye.utils.collection.Maps;
 import com.mingliqiye.utils.stream.interfaces.Getable;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.*;
 import java.util.stream.*;
-import lombok.val;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 自定义的 SuperStream 实现类，用于对集合进行流式操作。

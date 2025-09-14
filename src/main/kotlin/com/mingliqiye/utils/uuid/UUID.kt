@@ -16,10 +16,9 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2025-09-12 16:57:52
+ * LastUpdate 2025-09-14 19:55:47
  * UpdateUser MingLiPro
  */
-
 package com.mingliqiye.utils.uuid
 
 import com.github.f4b6a3.uuid.UuidCreator
@@ -85,6 +84,16 @@ class UUID : Serializable {
         }
 
         /**
+         * 从Java的UUID
+         * @param uuid 字符串
+         * @return UUID
+         */
+        @JvmStatic
+        fun of(uuid: JUUID): UUID {
+            return UUID(uuid)
+        }
+
+        /**
          * 从字节码转换到UUID
          * @param array 16字节
          * @return UUID
@@ -92,6 +101,10 @@ class UUID : Serializable {
         @JvmStatic
         fun of(array: ByteArray): UUID {
             return UUID(array)
+        }
+
+        fun JUUID.toMlUUID(): UUID {
+            return of(this)
         }
     }
 
@@ -108,9 +121,10 @@ class UUID : Serializable {
         this.uuid = JUUID(bb.getLong(), bb.getLong())
     }
 
-    internal constructor(uuid: String) {
+    constructor(uuid: String) {
         this.uuid = JUUID.fromString(uuid)
     }
+
 
     /**
      * 获取对应的字节码
@@ -242,3 +256,5 @@ class UUID : Serializable {
         return uuid.hashCode()
     }
 }
+
+

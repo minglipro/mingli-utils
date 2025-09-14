@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AesUtils.kt
- * LastUpdate 2025-09-14 18:19:29
+ * LastUpdate 2025-09-14 18:43:04
  * UpdateUser MingLiPro
  */
 
@@ -25,7 +25,8 @@
 
 package com.mingliqiye.utils.aes
 
-import com.mingliqiye.utils.base64.Base64Utils
+import com.mingliqiye.utils.base64.decode
+import com.mingliqiye.utils.base64.encode
 import java.nio.charset.StandardCharsets
 import java.security.GeneralSecurityException
 import java.security.MessageDigest
@@ -71,8 +72,8 @@ fun encrypt(sSrc: String, sKey: String?): String? {
     val encrypted = cipher.doFinal(
         sSrc.toByteArray(StandardCharsets.UTF_8)
     )
-    return Base64Utils.encode(
-        "${Base64Utils.encode(iv)}:${Base64Utils.encode(encrypted)}".toByteArray()
+    return encode(
+        "${encode(iv)}:${encode(encrypted)}".toByteArray()
     )
 }
 
@@ -85,13 +86,13 @@ fun encrypt(sSrc: String, sKey: String?): String? {
 fun decrypt(sSrc: String, sKey: String): String? {
     try {
         // 分割IV和加密数据
-        val sSrcs = String(Base64Utils.decode(sSrc))
+        val sSrcs = String(decode(sSrc))
         val parts: Array<String?> = sSrcs.split(":".toRegex(), limit = 2).toTypedArray()
         if (parts.size != 2) {
             return null
         }
-        val iv = Base64Utils.decode(parts[0])
-        val encryptedData = Base64Utils.decode(parts[1])
+        val iv = decode(parts[0]!!)
+        val encryptedData = decode(parts[1]!!)
         if (iv.size != GCM_IV_LENGTH) {
             return null
         }
@@ -114,7 +115,7 @@ fun decrypt(sSrc: String, sKey: String): String? {
  * @return SecretKeySpec对象
  * @throws Exception 可能抛出的异常
  */
-@Throws(GeneralSecurityException::class)
+@Throws(Exception::class)
 private fun createSecretKey(sKey: String): SecretKeySpec {
     val key = sKey.toByteArray(StandardCharsets.UTF_8)
     val md = MessageDigest.getInstance("MD5")

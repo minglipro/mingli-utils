@@ -16,13 +16,16 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Range.java
- * LastUpdate 2025-09-12 17:12:29
+ * LastUpdate 2025-09-14 20:23:26
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.iterator;
 
+import kotlin.ranges.ClosedRange;
+import kotlin.ranges.OpenEndRange;
 import lombok.Getter;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -35,7 +38,8 @@ import java.util.Iterator;
  * @since 3.2.6
  */
 @Getter
-public class Range implements Iterable<Integer> {
+public class Range
+	implements Iterable<Integer>, ClosedRange<Integer>, OpenEndRange<Integer> {
 
 	private final int start;
 	private final int end;
@@ -182,5 +186,36 @@ public class Range implements Iterable<Integer> {
 				}
 			}
 		};
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return current < end;
+	}
+
+	@Override
+	public @NotNull Integer getEndInclusive() {
+		val va = end - step;
+		return Math.max(va, 0);
+	}
+
+	@Override
+	public boolean contains(@NotNull Integer integer) {
+		if (step == 0) return false;
+		if (step > 0) {
+			if (integer < start || integer > end) return false;
+		} else {
+			if (integer > start || integer < end) return false;
+		}
+		return (integer - start) % step == 0;
+	}
+
+	@Override
+	public @NotNull Integer getEndExclusive() {
+		return end;
+	}
+	@Override
+	public @NotNull Integer getStart() {
+		return start;
 	}
 }
