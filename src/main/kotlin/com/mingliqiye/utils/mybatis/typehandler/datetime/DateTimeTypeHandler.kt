@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTimeTypeHandler.kt
- * LastUpdate 2025-09-14 18:19:29
+ * LastUpdate 2025-09-15 13:53:53
  * UpdateUser MingLiPro
  */
 @file:JvmName("DateTimeConvertor")
@@ -65,8 +65,8 @@ class DateTimeTypeHandler : BaseTypeHandler<DateTime>() {
     override fun setNonNullParameter(
         ps: PreparedStatement,
         i: Int,
-        parameter: DateTime,  // 移除了 ?，因为这是 non-null 方法
-        jdbcType: JdbcType
+        parameter: DateTime,
+        jdbcType: JdbcType?
     ) {
         // 使用 setObject 允许传入 null，由数据库处理
         ps.setObject(i, toLocalDateTime(parameter))

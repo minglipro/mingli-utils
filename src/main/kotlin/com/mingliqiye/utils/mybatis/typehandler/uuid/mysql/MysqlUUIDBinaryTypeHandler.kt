@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MysqlUUIDBinaryTypeHandler.kt
- * LastUpdate 2025-09-14 18:19:29
+ * LastUpdate 2025-09-15 13:54:29
  * UpdateUser MingLiPro
  */
 
@@ -72,7 +72,7 @@ class MysqlUUIDBinaryTypeHandler : BaseTypeHandler<UUID>() {
         ps: PreparedStatement,
         i: Int,
         parameter: UUID,
-        jdbcType: JdbcType
+        jdbcType: JdbcType?
     ) {
         ps.setBytes(i, toByteArray(parameter))
     }

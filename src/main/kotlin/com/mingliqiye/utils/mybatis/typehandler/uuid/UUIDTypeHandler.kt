@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUIDTypeHandler.kt
- * LastUpdate 2025-09-14 18:19:29
+ * LastUpdate 2025-09-15 13:54:18
  * UpdateUser MingLiPro
  */
 @file:JvmName("UUIDConvertor")
@@ -112,7 +112,7 @@ class UUIDBinaryTypeHandler : BaseTypeHandler<UUID>() {
      * @param jdbcType JDBC类型
      */
     override fun setNonNullParameter(
-        ps: PreparedStatement, i: Int, parameter: UUID, jdbcType: JdbcType
+        ps: PreparedStatement, i: Int, parameter: UUID, jdbcType: JdbcType?
     ) {
         ps.setBytes(i, uuidToByteArray(parameter))
     }
@@ -172,7 +172,7 @@ class UUIDStringTypeHandler : BaseTypeHandler<UUID>() {
      * @param jdbcType JDBC类型
      */
     override fun setNonNullParameter(
-        ps: PreparedStatement, i: Int, parameter: UUID, jdbcType: JdbcType
+        ps: PreparedStatement, i: Int, parameter: UUID, jdbcType: JdbcType?
     ) {
         ps.setString(i, uuidToString(parameter))
     }
@@ -234,7 +234,7 @@ class UUIDTypeHandler : BaseTypeHandler<UUID>() {
      * @param jdbcType JDBC类型
      */
     override fun setNonNullParameter(
-        ps: PreparedStatement, i: Int, parameter: UUID, jdbcType: JdbcType
+        ps: PreparedStatement, i: Int, parameter: UUID, jdbcType: JdbcType?
     ) {
         ps.setObject(i, parameter.getUuid())
     }
