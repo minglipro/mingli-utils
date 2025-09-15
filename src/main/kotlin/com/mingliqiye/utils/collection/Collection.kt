@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Collection.kt
- * LastUpdate 2025-09-15 09:30:37
+ * LastUpdate 2025-09-15 17:26:00
  * UpdateUser MingLiPro
  */
 
@@ -24,8 +24,8 @@
 
 package com.mingliqiye.utils.collection
 
-import com.mingliqiye.utils.stream.SuperStream
 import java.util.*
+import java.util.stream.Collectors
 
 
 inline fun <reified T> Collection<T>.toArray(): Array<T> {
@@ -34,15 +34,15 @@ inline fun <reified T> Collection<T>.toArray(): Array<T> {
 
 inline fun <reified T, V> Collection<T>.toMap(noinline v: (T) -> V): Map<T, V> {
     return this.stream().collect(
-        SuperStream.Collectors.toMap(
-            SuperStream.Collectors::getThis, v
+        com.mingliqiye.utils.stream.toMapValueThis(
+            v
         )
     )
 }
 
 inline fun <reified T, V, K> Collection<T>.toMap(noinline k: (T) -> K, noinline v: (T) -> V): Map<K, V> {
     return this.stream().collect(
-        SuperStream.Collectors.toMap(
+        Collectors.toMap(
             k, v
         )
     )
