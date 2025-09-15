@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonApi.java
- * LastUpdate 2025-09-09 09:31:31
+ * LastUpdate 2025-09-15 11:16:53
  * UpdateUser MingLiPro
  */
 
@@ -28,6 +28,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mingliqiye.utils.json.converters.JsonConverter;
+import com.mingliqiye.utils.json.converters.JsonStringConverter;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -337,5 +341,15 @@ public class JacksonJsonApi implements JsonApi {
 			source,
 			objectMapper.constructType(destinationType.getType())
 		);
+	}
+
+	@Override
+	public void addJsonConverter(@NotNull JsonConverter<?, ?> c) {
+		objectMapper.registerModule(c.getStringConverter().getJacksonJsonStringConverterAdapter().getJacksonModule());
+	}
+
+	@Override
+	public void addJsonStringConverter(@NotNull JsonStringConverter<?> c) {
+		addJsonConverter(c);
 	}
 }

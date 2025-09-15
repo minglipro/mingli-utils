@@ -15,14 +15,22 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile P1RFunction.java
- * LastUpdate 2025-09-09 08:37:34
+ * CurrentFile JsonConverter.kt
+ * LastUpdate 2025-09-15 11:12:07
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.functions;
+package com.mingliqiye.utils.json.converters
 
-@FunctionalInterface
-public interface P1RFunction<P, R> {
-	R call(P p);
+interface JsonConverter<F, T> {
+    fun convert(obj: F?): T?
+    fun deConvert(obj: T?): F?
+    val tClass: Class<F>
+
+    fun getStringConverter(): JsonStringConverter<F>? {
+        if (this is JsonStringConverter<*>) {
+            return this as JsonStringConverter<F>
+        }
+        return null
+    }
 }

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-14 22:32:52
+ * LastUpdate 2025-09-15 11:20:04
  * UpdateUser MingLiPro
  */
 
@@ -31,7 +31,6 @@ plugins {
     kotlin("jvm") version "2.2.20"
     id("org.jetbrains.dokka") version "2.0.0"
 }
-
 val GROUPSID = project.properties["GROUPSID"] as String
 val VERSIONS = project.properties["VERSIONS"] as String
 val ARTIFACTID = project.properties["ARTIFACTID"] as String

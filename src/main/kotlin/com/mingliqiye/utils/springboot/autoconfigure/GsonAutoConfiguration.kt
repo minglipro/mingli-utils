@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile GsonAutoConfiguration.kt
- * LastUpdate 2025-09-14 22:06:47
+ * LastUpdate 2025-09-15 10:29:30
  * UpdateUser MingLiPro
  */
 
@@ -58,16 +58,16 @@ open class GsonAutoConfiguration {
             try {
                 return gsonBuilder
                     .registerTypeAdapter(
-                        uuidJsonStringConverter.getTClass(),
-                        dateTimeJsonConverter
-                            .getGsonJsonStringConverterAdapter()
-                            .getGsonTypeAdapter()
+                        uuidJsonStringConverter.tClass,
+                        uuidJsonStringConverter
+                            .gsonJsonStringConverterAdapter
+                            .gsonTypeAdapter
                     )
                     .registerTypeAdapter(
-                        dateTimeJsonConverter.getTClass(),
+                        dateTimeJsonConverter.tClass,
                         dateTimeJsonConverter
-                            .getGsonJsonStringConverterAdapter()
-                            .getGsonTypeAdapter()
+                            .gsonJsonStringConverterAdapter
+                            .gsonTypeAdapter
                     )
             } finally {
                 log.info("MingliUtils GsonBuilder TypeAdapter add")

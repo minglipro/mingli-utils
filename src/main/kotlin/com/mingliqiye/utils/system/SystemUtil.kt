@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SystemUtil.kt
- * LastUpdate 2025-09-15 08:50:23
+ * LastUpdate 2025-09-15 11:18:34
  * UpdateUser MingLiPro
  */
 @file:JvmName("SystemUtils")
@@ -66,7 +66,7 @@ fun isUnix(): Boolean {
  *
  * @return JDK版本号字符串
  */
-fun getJdkVersion(): String {
+fun getJdkVersion(): String? {
     return System.getProperty("java.specification.version")
 }
 

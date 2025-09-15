@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonAutoConfiguration.kt
- * LastUpdate 2025-09-14 22:10:08
+ * LastUpdate 2025-09-15 10:29:02
  * UpdateUser MingLiPro
  */
 
@@ -49,12 +49,12 @@ open class JacksonAutoConfiguration(objectMapper: ObjectMapper) {
                 .registerModule(
                     DateTimeJsonConverter()
                         .jacksonJsonStringConverterAdapter
-                        .getJacksonModule()
+                        .jacksonModule
                 )
                 .registerModule(
                     UUIDJsonStringConverter()
                         .jacksonJsonStringConverterAdapter
-                        .getJacksonModule()
+                        .jacksonModule
                 )
         }
     }
