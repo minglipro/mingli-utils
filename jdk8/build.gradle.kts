@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.jdk8
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-14 18:19:04
+ * LastUpdate 2025-09-15 22:32:50
  * UpdateUser MingLiPro
  */
 plugins {

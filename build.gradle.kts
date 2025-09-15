@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-15 11:20:04
+ * LastUpdate 2025-09-15 22:22:00
  * UpdateUser MingLiPro
  */
 
@@ -77,7 +77,6 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.jetbrains:annotations:24.0.0")
     compileOnly("net.java.dev.jna:jna:5.17.0")
-    //implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
     implementation("org.slf4j:slf4j-api:2.0.17")
     implementation("com.mingliqiye.utils.jna:WinKernel32Api:1.0.1")
 
@@ -179,7 +178,6 @@ tasks.processResources {
                     DateTimeFormatter.ofPattern(
                         "yyyy-MM-dd HH:mm:ss.SSSSSSS"
                     )
-
                 )
             )
         )

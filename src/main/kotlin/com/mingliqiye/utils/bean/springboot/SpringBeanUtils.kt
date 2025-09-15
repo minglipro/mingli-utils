@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SpringBeanUtils.kt
- * LastUpdate 2025-09-14 22:10:45
+ * LastUpdate 2025-09-15 22:32:50
  * UpdateUser MingLiPro
  */
 

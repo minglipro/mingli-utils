@@ -16,12 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile RandomBytes.kt
- * LastUpdate 2025-09-15 09:54:33
+ * LastUpdate 2025-09-15 22:27:36
  * UpdateUser MingLiPro
  */
 @file:JvmName("RandomBytes")
 
 package com.mingliqiye.utils.random
+
+import java.security.SecureRandom
 
 /**
  * 生成指定长度的随机字节数组
@@ -77,4 +79,14 @@ fun randomByteNoHave(from: Byte, to: Byte): Byte {
     val toInt = to.toInt() and 0xFF
     val randomValue = randomIntNoHave(fromInt, toInt)
     return (randomValue and 0xFF).toByte()
+}
+
+val secureRandom: SecureRandom by lazy {
+    SecureRandom()
+}
+
+fun randomByteSecure(size: Int): ByteArray {
+    val bytes = ByteArray(size)
+    secureRandom.nextBytes(bytes)
+    return bytes
 }

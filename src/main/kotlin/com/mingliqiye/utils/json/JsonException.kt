@@ -15,18 +15,18 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile PlayerSample.java
- * LastUpdate 2025-09-09 08:37:33
+ * CurrentFile JsonException.kt
+ * LastUpdate 2025-09-15 22:32:50
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.minecraft.slp;
+package com.mingliqiye.utils.json
 
-import lombok.Data;
+class JsonException : RuntimeException {
 
-@Data
-public class PlayerSample {
+    constructor(message: String) : super(message)
 
-	private String name;
-	private String id;
+    constructor(message: String, cause: Throwable) : super(message, cause)
+
+    constructor(cause: Throwable) : this(cause.message ?: "", cause)
 }

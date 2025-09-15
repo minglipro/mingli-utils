@@ -16,18 +16,16 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Main.kt
- * LastUpdate 2025-09-15 09:53:43
+ * LastUpdate 2025-09-15 22:31:33
  * UpdateUser MingLiPro
  */
+@file:JvmName("Main")
+
 package com.mingliqiye.utils
 
 import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
-import com.mingliqiye.utils.time.DateTime
+
 
 fun main() {
     AutoConfiguration.printBanner()
-    println(DateTime.now())
-}
-
-fun test() {
 }

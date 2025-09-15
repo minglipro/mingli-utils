@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2025-09-14 22:38:51
+ * LastUpdate 2025-09-15 18:01:30
  * UpdateUser MingLiPro
  */
 package com.mingliqiye.utils.uuid
@@ -247,7 +247,12 @@ class UUID : Serializable {
      * @return 如果相等返回 true，否则返回 false
      */
     override fun equals(other: Any?): Boolean {
-        return uuid == other
+        if (other is UUID) {
+            return uuid == other.uuid
+        } else if (other is JUUID) {
+            return uuid == other
+        }
+        return false
     }
 
     /**

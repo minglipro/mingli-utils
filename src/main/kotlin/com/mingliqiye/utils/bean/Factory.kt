@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Factory.kt
- * LastUpdate 2025-09-14 19:09:28
+ * LastUpdate 2025-09-15 22:32:50
  * UpdateUser MingLiPro
  */
 @file:JvmName("Factory")

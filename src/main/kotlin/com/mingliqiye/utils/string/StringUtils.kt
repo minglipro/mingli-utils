@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile StringUtils.kt
- * LastUpdate 2025-09-14 21:46:14
+ * LastUpdate 2025-09-15 22:32:50
  * UpdateUser MingLiPro
  */
 @file:JvmName("StringUtils")
