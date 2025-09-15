@@ -15,17 +15,16 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Main.kt
- * LastUpdate 2025-09-15 08:56:35
+ * CurrentFile Main.java
+ * LastUpdate 2025-09-15 09:24:07
  * UpdateUser MingLiPro
  */
-package com.mingliqiye.utils
 
-import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
+package com.mingliqiye.utils;
 
-fun main() {
-    AutoConfiguration.printBanner()
-}
+public class Main {
 
-fun test() {
+	public static void main(String[] args) {
+		MainKt.main();
+	}
 }
