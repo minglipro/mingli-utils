@@ -16,14 +16,12 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile RandomBytes.kt
- * LastUpdate 2025-09-15 00:08:18
+ * LastUpdate 2025-09-15 09:54:33
  * UpdateUser MingLiPro
  */
 @file:JvmName("RandomBytes")
 
 package com.mingliqiye.utils.random
-
-import com.mingliqiye.utils.iterator.Range
 
 /**
  * 生成指定长度的随机字节数组
@@ -32,7 +30,9 @@ import com.mingliqiye.utils.iterator.Range
  */
 fun randomBytes(length: Int): ByteArray {
     val bytes = ByteArray(length)
-    Range(0, length - 1).forEach { i: Int -> bytes[i] = randomByte(0x00.toByte(), 0xff.toByte()) }
+    for (i in 0..<length) {
+        bytes[i] = randomByte(0x00.toByte(), 0xff.toByte())
+    }
     return bytes
 }
 
