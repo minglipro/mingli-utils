@@ -16,13 +16,12 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AutoConfiguration.kt
- * LastUpdate 2025-09-14 22:09:46
+ * LastUpdate 2025-09-15 08:51:52
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure
 
-import com.mingliqiye.utils.collection.ForEach
 import com.mingliqiye.utils.logger.mingLiLoggerFactory
 import com.mingliqiye.utils.system.getJdkVersion
 import com.mingliqiye.utils.time.DateTime
@@ -47,8 +46,6 @@ open class AutoConfiguration {
                     "|  $$ |\\$  /$$ |$$ |     $$ |  $$ |   $$ |   $$\\   $$ | |\n" +
                     "|  $$ | \\_/ $$ |$$$$$$$$\\\\$$$$$$  |   $$ |   \\$$$$$$  | |\n" +
                     "|  \\__|     \\__|\\________|\\______/    \\__|    \\______/  |\n"
-
-        private var banner2: String? = null
         private val log = mingLiLoggerFactory.getLogger("MingliUtils-AutoConfiguration")
 
         fun printBanner() {
@@ -68,7 +65,7 @@ open class AutoConfiguration {
                     val da = metaData.toString().split("\n").toMutableList()
                     da.add("time=" + DateTime.now().format(Formatter.STANDARD_DATETIME_MILLISECOUND7))
                     da.add("jdkRuntime=" + getJdkVersion())
-                    ForEach.forEach(da) { s: String, _: Int ->
+                    da.forEach { s: String ->
                         val d = s.trim { it <= ' ' }.split("=".toRegex(), 2).toTypedArray()
                         if (d.size >= 2) {
                             val content = "|  " + d[0] + ": " + d[1]
@@ -91,8 +88,7 @@ open class AutoConfiguration {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-            banner2 = bannerBuilder.toString()
-            println(banner2)
+            println(bannerBuilder.toString().trim())
             println("---------------------------------------------------------")
         }
     }

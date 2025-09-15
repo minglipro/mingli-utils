@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-13 10:11:22
+ * LastUpdate 2025-09-14 22:32:52
  * UpdateUser MingLiPro
  */
 
@@ -78,7 +78,7 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.jetbrains:annotations:24.0.0")
     compileOnly("net.java.dev.jna:jna:5.17.0")
-    implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
+    //implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
     implementation("org.slf4j:slf4j-api:2.0.17")
     implementation("com.mingliqiye.utils.jna:WinKernel32Api:1.0.1")
 
@@ -95,7 +95,6 @@ tasks.withType<JavaExec>().configureEach {
         "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8"
     )
 }
-
 
 tasks.withType<org.gradle.jvm.tasks.Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -129,7 +128,7 @@ val isJdk8Build = project.findProperty("buildForJdk8") == "true"
 
 repositories {
     maven {
-        url =  uri("https://maven.aliyun.com/repository/public/")
+        url = uri("https://maven.aliyun.com/repository/public/")
     }
     mavenCentral()
 }

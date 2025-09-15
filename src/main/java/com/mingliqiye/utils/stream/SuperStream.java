@@ -16,22 +16,20 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SuperStream.java
- * LastUpdate 2025-09-14 22:12:16
+ * LastUpdate 2025-09-15 09:30:37
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.stream;
 
-import com.mingliqiye.utils.collection.Lists;
-import com.mingliqiye.utils.collection.Maps;
+import com.mingliqiye.utils.map.Maps;
 import com.mingliqiye.utils.stream.interfaces.Getable;
-import lombok.val;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.*;
 import java.util.stream.*;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 自定义的 SuperStream 实现类，用于对集合进行流式操作。
@@ -736,7 +734,7 @@ public class SuperStream<T> implements Stream<T> {
 		if (isEmpty()) {
 			return Optional.empty();
 		}
-		val l = Lists.toList(stream);
+		val l = stream.collect(Collectors.toList());
 		return Optional.of(l.get(l.size() - 1));
 	}
 

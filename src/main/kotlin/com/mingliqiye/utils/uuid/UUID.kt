@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2025-09-14 19:55:47
+ * LastUpdate 2025-09-14 22:38:51
  * UpdateUser MingLiPro
  */
 package com.mingliqiye.utils.uuid
@@ -43,6 +43,9 @@ class UUID : Serializable {
         fun getV1(): UUID {
             return UUID(UuidCreator.getTimeBased())
         }
+
+        @Deprecated("使用 getV1()", ReplaceWith("getV1()"), level = DeprecationLevel.WARNING)
+        fun getTimeBased(): UUID = getV1()
 
         /**
          * 获取 UUIDV4 版本的随机实例

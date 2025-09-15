@@ -16,14 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile RandomBytes.kt
- * LastUpdate 2025-09-12 17:11:19
+ * LastUpdate 2025-09-15 00:08:18
  * UpdateUser MingLiPro
  */
 @file:JvmName("RandomBytes")
 
 package com.mingliqiye.utils.random
 
-import com.mingliqiye.utils.collection.ForEach
 import com.mingliqiye.utils.iterator.Range
 
 /**
@@ -33,9 +32,7 @@ import com.mingliqiye.utils.iterator.Range
  */
 fun randomBytes(length: Int): ByteArray {
     val bytes = ByteArray(length)
-    ForEach.forEach(
-        Range(0, length - 1)
-    ) { i: Int -> bytes[i] = randomByte(0x00.toByte(), 0xff.toByte()) }
+    Range(0, length - 1).forEach { i: Int -> bytes[i] = randomByte(0x00.toByte(), 0xff.toByte()) }
     return bytes
 }
 

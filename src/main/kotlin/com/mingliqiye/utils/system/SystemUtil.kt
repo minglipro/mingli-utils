@@ -16,14 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SystemUtil.kt
- * LastUpdate 2025-09-14 21:56:58
+ * LastUpdate 2025-09-15 08:50:23
  * UpdateUser MingLiPro
  */
 @file:JvmName("SystemUtils")
 
 package com.mingliqiye.utils.system
 
-import com.mingliqiye.utils.collection.Lists
 import java.net.Inet4Address
 import java.net.NetworkInterface
 import java.net.SocketException
@@ -90,14 +89,14 @@ fun getJavaVersionAsInteger(): Int {
                 "Invalid Java version format: $version"
             )
         }
-        version.substring(2, 3)
+        version[2] + ""
     } else {
         if (version.length < 2) {
             throw IllegalStateException(
                 "Invalid Java version format: $version"
             )
         }
-        version.substring(0, 2)
+        version.take(2)
     }
     return uversion.toInt()
 }
@@ -151,7 +150,7 @@ fun getLocalIps(): Array<String> {
  * @return 本地IP地址的字符串列表
  */
 fun getLocalIpsByList(): List<String> {
-    return Lists.newArrayList(*getLocalIps())
+    return getLocalIps().toList()
 }
 
 /**
@@ -179,7 +178,6 @@ fun getLoopbackIps(): Array<String> {
         }
         strings.toTypedArray()
     } catch (e: SocketException) {
-        // 可考虑添加日志记录
         arrayOf("127.0.0.1")
     }
 }
@@ -191,5 +189,5 @@ fun getLoopbackIps(): Array<String> {
  */
 fun getLoopbackIpsByList(): List<String> {
     // 将本地回环地址IP数组转换为列表并返回
-    return Lists.newArrayList(*getLoopbackIps())
+    return getLoopbackIps().toList()
 }
