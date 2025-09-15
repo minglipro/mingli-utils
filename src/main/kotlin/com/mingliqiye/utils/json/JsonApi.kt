@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonApi.kt
- * LastUpdate 2025-09-15 11:10:59
+ * LastUpdate 2025-09-15 22:32:50
  * UpdateUser MingLiPro
  */
 
@@ -306,8 +306,8 @@ interface JsonApi {
      * @param <T>         泛型参数，表示List中元素的类型
      * @return 解析后的List集合
     </T> */
-    fun <T> parseList(json: String, elementType: Class<T>): MutableList<T> {
-        return parse<MutableList<T>>(json, JsonTypeUtils.listType<T>(elementType))
+    fun <T> parseList(json: String, elementType: Class<T>): List<T> {
+        return parse(json, type = listType(elementType))
     }
 
     /**
@@ -372,7 +372,7 @@ interface JsonApi {
      * @param path 节点路径（如："user.name"）
      * @return 节点值的字符串表示
      */
-    fun getNodeValue(json: String, path: String): String
+    fun getNodeValue(json: String, path: String): String?
 
     /**
      * 更新JSON字符串中指定路径节点的值

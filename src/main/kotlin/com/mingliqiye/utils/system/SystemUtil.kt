@@ -16,26 +16,33 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SystemUtil.kt
- * LastUpdate 2025-09-15 11:18:34
+ * LastUpdate 2025-09-15 22:19:57
  * UpdateUser MingLiPro
  */
 @file:JvmName("SystemUtils")
 
 package com.mingliqiye.utils.system
 
+import java.lang.management.ManagementFactory
 import java.net.Inet4Address
+import java.net.InetAddress
 import java.net.NetworkInterface
 import java.net.SocketException
 
-private val osName: String? = System.getProperties().getProperty("os.name")
+/**
+ * 操作系统名称属性，延迟初始化
+ */
+val osName: String? by lazy {
+    System.getProperties().getProperty("os.name")
+}
 
 /**
  * 判断当前操作系统是否为Windows系统
  *
  * @return 如果是Windows系统返回true，否则返回false
  */
-fun isWindows(): Boolean {
-    return osName != null && osName.startsWith("Windows")
+val isWindows: Boolean by lazy {
+    osName != null && osName!!.startsWith("Windows")
 }
 
 /**
@@ -43,8 +50,8 @@ fun isWindows(): Boolean {
  *
  * @return 如果是Mac系统返回true，否则返回false
  */
-fun isMac(): Boolean {
-    return osName != null && osName.startsWith("Mac")
+val isMac: Boolean by lazy {
+    osName != null && osName!!.startsWith("Mac")
 }
 
 /**
@@ -52,31 +59,30 @@ fun isMac(): Boolean {
  *
  * @return 如果是Unix/Linux系统返回true，否则返回false
  */
-fun isUnix(): Boolean {
+val isUnix: Boolean by lazy {
     if (osName == null) {
-        return false
+        false
+    } else {
+        (osName!!.startsWith("Linux") || osName!!.startsWith("AIX") || osName!!.startsWith("SunOS") || osName!!.startsWith(
+            "Mac OS X"
+        ) || osName!!.startsWith(
+            "FreeBSD"
+        ))
     }
-    return (osName.startsWith("Linux") || osName.startsWith("AIX") || osName.startsWith("SunOS") || osName.startsWith("Mac OS X") || osName.startsWith(
-        "FreeBSD"
-    ))
 }
 
 /**
- * 获取JDK版本号
- *
- * @return JDK版本号字符串
+ * JDK版本号属性，延迟初始化
  */
-fun getJdkVersion(): String? {
-    return System.getProperty("java.specification.version")
+val jdkVersion: String? by lazy {
+    System.getProperty("java.specification.version")
 }
 
 /**
- * 获取Java版本号的整数形式
- *
- * @return Java版本号的整数形式（如：8、11、17等）
+ * Java版本号的整数形式属性，延迟初始化
  */
-fun getJavaVersionAsInteger(): Int {
-    val version = getJdkVersion()
+val javaVersionAsInteger: Int by lazy {
+    val version = jdkVersion
     if (version == null || version.isEmpty()) {
         throw IllegalStateException(
             "Unable to determine Java version from property 'java.specification.version'"
@@ -98,7 +104,7 @@ fun getJavaVersionAsInteger(): Int {
         }
         version.take(2)
     }
-    return uversion.toInt()
+    uversion.toInt()
 }
 
 /**
@@ -106,18 +112,17 @@ fun getJavaVersionAsInteger(): Int {
  *
  * @return 如果JDK版本大于8返回true，否则返回false
  */
-fun isJdk8Plus(): Boolean {
-    return getJavaVersionAsInteger() > 8
+val isJdk8Plus: Boolean by lazy {
+    javaVersionAsInteger > 8
 }
 
 /**
- * 获取本地IP地址数组
+ * 本地IP地址数组，延迟初始化
  *
- * @return 本地IP地址字符串数组
  * @throws RuntimeException 当获取网络接口信息失败时抛出
  */
-fun getLocalIps(): Array<String> {
-    return try {
+val localIps: Array<String> by lazy {
+    try {
         val ipList: MutableList<String> = ArrayList()
         val interfaces = NetworkInterface.getNetworkInterfaces()
 
@@ -145,22 +150,18 @@ fun getLocalIps(): Array<String> {
 }
 
 /**
- * 获取本地IP地址列表
- *
- * @return 本地IP地址的字符串列表
+ * 本地IP地址列表，延迟初始化
  */
-fun getLocalIpsByList(): List<String> {
-    return getLocalIps().toList()
+val localIpsByList: List<String> by lazy {
+    localIps.toList()
 }
 
 /**
- * 获取本地回环地址
- *
- * @return 回环地址字符串，通常为"127.0.0.1"
+ * 本地回环地址数组，延迟初始化
  */
-fun getLoopbackIps(): Array<String> {
+val loopbackIps: Array<String> by lazy {
     val strings: MutableList<String> = ArrayList(3)
-    return try {
+    return@lazy try {
         val interfaces = NetworkInterface.getNetworkInterfaces()
 
         while (interfaces.hasMoreElements()) {
@@ -183,11 +184,92 @@ fun getLoopbackIps(): Array<String> {
 }
 
 /**
- * 获取本地回环地址IP列表
- *
- * @return 本地回环地址IP字符串列表的副本
+ * 本地回环地址IP列表，延迟初始化
  */
-fun getLoopbackIpsByList(): List<String> {
-    // 将本地回环地址IP数组转换为列表并返回
-    return getLoopbackIps().toList()
+val loopbackIpsByList: List<String> by lazy {
+    loopbackIps.toList()
+}
+
+/**
+ * 获取当前进程的PID
+ *
+ * @return 进程ID，如果无法获取则返回-1
+ */
+val getPid: Long by lazy {
+    try {
+        val name = ManagementFactory.getRuntimeMXBean().name
+        val index = name.indexOf('@')
+        if (index > 0) {
+            name.take(index).toLong()
+        } else {
+            -1L
+        }
+    } catch (e: Exception) {
+        -1L
+    }
+}
+
+/**
+ * 获取当前进程的PID字符串形式
+ *
+ * @return 进程ID字符串，如果无法获取则返回"-1"
+ */
+val pidAsString: String by lazy {
+    try {
+        val name = ManagementFactory.getRuntimeMXBean().name
+        val index = name.indexOf('@')
+        if (index > 0) {
+            name.take(index)
+        } else {
+            "-1"
+        }
+    } catch (e: Exception) {
+        "-1"
+    }
+}
+
+/**
+ * 获取计算机名
+ *
+ * @return 计算机名，如果无法获取则返回"unknown"
+ */
+val computerName: String by lazy {
+    try {
+        var name = System.getenv("COMPUTERNAME")
+        if (name.isNullOrBlank()) {
+            name = System.getenv("HOSTNAME")
+        }
+        if (name.isNullOrBlank()) {
+            name = InetAddress.getLocalHost().hostName
+        }
+        name ?: "unknown"
+    } catch (e: Exception) {
+        "unknown"
+    }
+}
+
+/**
+ * 获取当前用户名
+ *
+ * @return 当前用户名，如果无法获取则返回"unknown"
+ */
+val userName: String by lazy {
+    try {
+        getEnvVar("USERNAME")
+            ?: getEnvVar("USER")
+            ?: System.getProperty("user.name")
+            ?: "unknown"
+    } catch (e: SecurityException) {
+        "unknown"
+    } catch (e: Exception) {
+        "unknown"
+    }
+}
+
+private fun getEnvVar(name: String): String? {
+    return try {
+        System.getenv(name)?.takeIf { it.isNotBlank() }
+    } catch (e: SecurityException) {
+        null
+    }
 }

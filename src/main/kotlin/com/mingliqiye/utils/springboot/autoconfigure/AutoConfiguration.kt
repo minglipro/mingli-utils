@@ -16,14 +16,17 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AutoConfiguration.kt
- * LastUpdate 2025-09-15 08:51:52
+ * LastUpdate 2025-09-15 22:20:25
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure
 
 import com.mingliqiye.utils.logger.mingLiLoggerFactory
-import com.mingliqiye.utils.system.getJdkVersion
+import com.mingliqiye.utils.system.computerName
+import com.mingliqiye.utils.system.getPid
+import com.mingliqiye.utils.system.jdkVersion
+import com.mingliqiye.utils.system.userName
 import com.mingliqiye.utils.time.DateTime
 import com.mingliqiye.utils.time.Formatter
 import org.springframework.context.annotation.ComponentScan
@@ -63,8 +66,11 @@ open class AutoConfiguration {
                         metaData.append(String(buffer, 0, readlen))
                     }
                     val da = metaData.toString().split("\n").toMutableList()
-                    da.add("time=" + DateTime.now().format(Formatter.STANDARD_DATETIME_MILLISECOUND7))
-                    da.add("jdkRuntime=" + getJdkVersion())
+                    da.add("jdkRuntime=$jdkVersion")
+                    da.add("pid=$getPid")
+                    da.add("computerName=$computerName")
+                    da.add("userName=$userName")
+                    da.add("time=" + DateTime.now().format(Formatter.STANDARD_DATETIME_MILLISECOUND7, true))
                     da.forEach { s: String ->
                         val d = s.trim { it <= ' ' }.split("=".toRegex(), 2).toTypedArray()
                         if (d.size >= 2) {

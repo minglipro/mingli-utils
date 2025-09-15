@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.kt
- * LastUpdate 2025-09-15 09:57:50
+ * LastUpdate 2025-09-15 22:32:50
  * UpdateUser MingLiPro
  */
 
@@ -27,8 +27,8 @@ import com.mingliqiye.utils.jna.NANOS_PER_100NS
 import com.mingliqiye.utils.jna.WinKernel32Api
 import com.mingliqiye.utils.jna.getWinKernel32Apis
 import com.mingliqiye.utils.logger.mingLiLoggerFactory
-import com.mingliqiye.utils.system.getJavaVersionAsInteger
 import com.mingliqiye.utils.system.isWindows
+import com.mingliqiye.utils.system.javaVersionAsInteger
 import org.slf4j.Logger
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -185,8 +185,8 @@ class DateTime private constructor(
 
     companion object {
         private val WIN_KERNEL_32_API: WinKernel32Api? = if (
-            getJavaVersionAsInteger() == 8 &&
-            isWindows()
+            javaVersionAsInteger == 8 &&
+            isWindows
         ) {
             val log: Logger = mingLiLoggerFactory.getLogger("mingli-utils DateTime")
             val a = getWinKernel32Apis()

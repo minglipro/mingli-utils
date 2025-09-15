@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Base64Utils.kt
- * LastUpdate 2025-09-14 18:44:22
+ * LastUpdate 2025-09-15 22:32:50
  * UpdateUser MingLiPro
  */
 @file:JvmName("Base64Utils")
