@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-17 11:11:57
+ * LastUpdate 2025-09-17 12:08:42
  * UpdateUser MingLiPro
  */
 
@@ -65,21 +65,19 @@ java {
 }
 
 dependencies {
-    annotationProcessor("org.jetbrains:annotations:24.0.0")
-    annotationProcessor("org.projectlombok:lombok:1.18.38")
+
+    implementation("org.slf4j:slf4j-api:2.0.17")
+
+    implementation("com.mingliqiye.utils.jna:WinKernel32Api:1.0.1")
+    // https://github.com/jeremyh/jBCrypt
+    implementation("org.mindrot:jbcrypt:0.4")
+
     compileOnly("org.springframework.boot:spring-boot-starter:2.7.14")
     compileOnly("com.fasterxml.jackson.core:jackson-databind:2.19.2")
     compileOnly("com.google.code.gson:gson:2.13.1")
     compileOnly("org.mybatis:mybatis:3.5.19")
     compileOnly("com.alibaba.fastjson2:fastjson2:2.0.58")
-    compileOnly("org.projectlombok:lombok:1.18.38")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.81")
-    implementation("org.mindrot:jbcrypt:0.4")
-    implementation("org.jetbrains:annotations:24.0.0")
     compileOnly("net.java.dev.jna:jna:5.17.0")
-    implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation("com.mingliqiye.utils.jna:WinKernel32Api:1.0.1")
-
 }
 
 
@@ -96,7 +94,8 @@ tasks.withType<JavaExec>().configureEach {
 
 tasks.withType<org.gradle.jvm.tasks.Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from("LICENSE") { into(".") }
+    from("LICENSE") { into("META-INF") }
+    from("NOTICE") { into("META-INF") }
     manifest {
         attributes(
             mapOf(

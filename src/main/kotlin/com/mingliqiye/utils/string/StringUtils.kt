@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile StringUtils.kt
- * LastUpdate 2025-09-15 22:32:50
+ * LastUpdate 2025-09-17 21:09:10
  * UpdateUser MingLiPro
  */
 @file:JvmName("StringUtils")
@@ -28,14 +28,17 @@ import com.mingliqiye.utils.logger.mingLiLoggerFactory
 
 val log = mingLiLoggerFactory.getLogger("StringUtils")
 
+val NULLISH_STRINGS = setOf("null", "NaN", "undefined", "None", "none")
+
 /**
  * 判断`字符串`是否为空
  *
  * @param str 待判断的字符串
  * @return `true`: 空 `false`: 非空
  */
-fun isEmpty(str: String?): Boolean {
-    return str?.isEmpty() != null
+@JvmName("isEmpty")
+fun String?.isNullish(): Boolean {
+    return this == null || this.isBlank() || this in NULLISH_STRINGS
 }
 
 /**

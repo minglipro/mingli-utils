@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.kt
- * LastUpdate 2025-09-17 08:40:14
+ * LastUpdate 2025-09-17 19:06:39
  * UpdateUser MingLiPro
  */
 
@@ -95,6 +95,8 @@ enum class Formatter(private val value: String) {
      * 标准日期时间格式(7位毫秒)：yyyy-MM-dd HH:mm:ss.SSSSSSS
      */
     STANDARD_DATETIME_MILLISECOUND7("yyyy-MM-dd HH:mm:ss.SSSSSSS"),
+    STANDARD_DATETIME_MILLISECOUND8("yyyy-MM-dd HH:mm:ss.SSSSSSSS"),
+    STANDARD_DATETIME_MILLISECOUND9("yyyy-MM-dd HH:mm:ss.SSSSSSSSS"),
 
     /**
      * 标准日期时间格式(6位毫秒)：yyyy-MM-dd HH:mm:ss.SSSSSS
@@ -150,6 +152,7 @@ enum class Formatter(private val value: String) {
      * 紧凑型日期时间格式：yyyyMMddHHmmss
      */
     COMPACT_DATETIME("yyyyMMddHHmmss");
+
 
     private val len: Int = value.length
 
@@ -276,6 +279,20 @@ class DateTime private constructor(
             )
         }
 
+        @JvmStatic
+        fun parse(
+            timestr: String
+        ): DateTime {
+
+            val formatterString = Formatter.STANDARD_DATETIME_MILLISECOUND9.getValue()
+            return DateTime(
+                LocalDateTime.parse(
+                    getFillZeroByLen(timestr, formatterString),
+                    DateTimeFormatter.ofPattern(formatterString)
+                )
+            )
+        }
+
         /**
          * 使用 Formatter 枚举解析时间字符串并生成 DateTime 实例。
          *
@@ -332,7 +349,7 @@ class DateTime private constructor(
                     modifiedDstr += "."
                 }
                 val sb = StringBuilder(modifiedDstr)
-                for (i in 0 until formats.length - dstr.length) {
+                for (i in 0 until formats.length - sb.length) {
                     sb.append("0")
                 }
                 return sb.toString()
@@ -533,6 +550,10 @@ class DateTime private constructor(
         return format(formatter.getValue())
     }
 
+    fun format(): String {
+        return format(Formatter.STANDARD_DATETIME_MILLISECOUND9.getValue(), true)
+    }
+
     /**
      * 使用指定格式化模板将当前时间格式化为字符串，并可选择是否去除末尾多余的零。
      *
@@ -569,9 +590,7 @@ class DateTime private constructor(
      * @return 返回标准格式的时间字符串
      */
     override fun toString(): String {
-        return String.format(
-            "DateTime(%s)", format(Formatter.STANDARD_DATETIME_MILLISECOUND7, true)
-        )
+        return "DateTime(${format()})"
     }
 
     /**
