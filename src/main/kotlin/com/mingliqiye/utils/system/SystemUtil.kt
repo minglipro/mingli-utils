@@ -16,13 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SystemUtil.kt
- * LastUpdate 2025-09-15 22:19:57
+ * LastUpdate 2025-09-16 17:36:11
  * UpdateUser MingLiPro
  */
 @file:JvmName("SystemUtils")
 
 package com.mingliqiye.utils.system
 
+import com.mingliqiye.utils.random.randomByteSecure
 import java.lang.management.ManagementFactory
 import java.net.Inet4Address
 import java.net.InetAddress
@@ -271,5 +272,106 @@ private fun getEnvVar(name: String): String? {
         System.getenv(name)?.takeIf { it.isNotBlank() }
     } catch (e: SecurityException) {
         null
+    }
+}
+
+/**
+ * 获取本机MAC地址的字节数组形式
+ *
+ * @return MAC地址字节数组，如果无法获取则返回空数组
+ */
+val macAddressBytes: ByteArray by lazy {
+    try {
+        val interfaces = NetworkInterface.getNetworkInterfaces()
+
+        while (interfaces.hasMoreElements()) {
+            val networkInterface = interfaces.nextElement()
+
+            // 跳过回环接口和虚拟接口
+            if (networkInterface.isLoopback || networkInterface.isVirtual || !networkInterface.isUp) {
+                continue
+            }
+
+            val mac = networkInterface.hardwareAddress
+            if (mac != null && mac.isNotEmpty()) {
+                return@lazy mac
+            }
+        }
+        randomByteSecure(6)
+    } catch (e: SocketException) {
+        randomByteSecure(6)
+    } catch (e: Exception) {
+        randomByteSecure(6)
+    }
+}
+
+/**
+ * 获取本机MAC地址的十六进制字符串列表形式
+ *
+ * @return MAC地址字符串列表，每个元素表示一个字节的十六进制值（大写），如果无法获取则返回空列表
+ */
+val macAddressStringList: List<String> by lazy {
+    val macBytes = macAddressBytes
+    if (macBytes.isEmpty()) {
+        return@lazy emptyList()
+    }
+
+    macBytes.map { String.format("%02X", it) }
+}
+
+/**
+ * 获取本机MAC地址的格式化字符串形式（如 "00:11:22:33:44:55"）
+ *
+ * @return 格式化的MAC地址字符串，如果无法获取则返回空字符串
+ */
+val macAddressFormattedString: String by lazy {
+    val macBytes = macAddressBytes
+    if (macBytes.isEmpty()) {
+        return@lazy ""
+    }
+
+    macBytes.joinToString(":") { String.format("%02X", it) }
+}
+
+/**
+ * 获取所有网络接口的MAC地址映射
+ *
+ * @return Map结构，key为网络接口名称，value为对应的MAC地址字节数组
+ */
+val allMacAddresses: Map<String, ByteArray> by lazy {
+    try {
+        val result = mutableMapOf<String, ByteArray>()
+        val interfaces = NetworkInterface.getNetworkInterfaces()
+
+        while (interfaces.hasMoreElements()) {
+            val networkInterface = interfaces.nextElement()
+
+            // 跳过回环接口和虚拟接口
+            if (networkInterface.isLoopback || networkInterface.isVirtual) {
+                continue
+            }
+
+            val mac = networkInterface.hardwareAddress
+            if (mac != null && mac.isNotEmpty()) {
+                result[networkInterface.name] = mac
+            }
+        }
+
+        result
+    } catch (e: SocketException) {
+        emptyMap()
+    } catch (e: Exception) {
+        emptyMap()
+    }
+}
+
+/**
+ * 获取所有网络接口的MAC地址字符串列表映射
+ *
+ * @return Map结构，key为网络接口名称，value为对应的MAC地址字符串列表
+ */
+val allMacAddressesStringList: Map<String, List<String>> by lazy {
+    allMacAddresses.mapValues { entry ->
+        entry.value.map { String.format("%02X", it) }
     }
 }

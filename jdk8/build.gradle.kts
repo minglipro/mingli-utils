@@ -16,12 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.jdk8
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-15 22:32:50
+ * LastUpdate 2025-09-17 11:07:31
  * UpdateUser MingLiPro
  */
+
 plugins {
     id("java-library")
     id("maven-publish")
+    signing
 }
 val GROUPSID = project.properties["GROUPSID"] as String
 val VERSIONS = project.properties["VERSIONS"] as String
@@ -39,14 +41,43 @@ publishing {
             name = "MavenRepositoryRaw"
             url = uri("C:/data/git/maven-repository-raw")
         }
+        maven {
+            name = "OSSRepository"
+            url = uri("C:/data/git/maven-repository-raw-utils")
+        }
     }
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
             artifactId = "$ARTIFACTID-win-jdk8"
-            groupId = GROUPSID
-            version = VERSIONS
+            java.toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+            pom {
+                name = "mingli-utils-win-jdk8"
+                url = "https://mingli-utils.mingliqiye.com"
+                description = "A Java/kotlin Utils"
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "minglipro"
+                        name = "mingli"
+                        email = "minglipro@163.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:https://git.mingliqiye.com/minglipro/mingli-utils.git"
+                    developerConnection = "scm:git:https://git.mingliqiye.com:minglipro/mingli-utils.git"
+                    url = "https://git.mingliqiye.com/minglipro/mingli-utils"
+                }
+            }
         }
+    }
+    signing {
+        sign(publishing.publications)
     }
 }
 

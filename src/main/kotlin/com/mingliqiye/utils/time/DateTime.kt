@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.kt
- * LastUpdate 2025-09-15 22:32:50
+ * LastUpdate 2025-09-17 08:40:14
  * UpdateUser MingLiPro
  */
 
@@ -46,8 +46,7 @@ import kotlin.time.Instant
  * @author MingLiPro
  */
 class DateTimeOffset private constructor(
-    val offsetType: ChronoUnit,
-    val offset: Long
+    val offsetType: ChronoUnit, val offset: Long
 ) {
 
     companion object {
@@ -179,15 +178,11 @@ enum class Formatter(private val value: String) {
  * @see Instant
  */
 class DateTime private constructor(
-    private var localDateTime: LocalDateTime,
-    private val zoneId: ZoneId = ZoneId.systemDefault()
+    private var localDateTime: LocalDateTime, private val zoneId: ZoneId = ZoneId.systemDefault()
 ) : Serializable {
 
     companion object {
-        private val WIN_KERNEL_32_API: WinKernel32Api? = if (
-            javaVersionAsInteger == 8 &&
-            isWindows
-        ) {
+        private val WIN_KERNEL_32_API: WinKernel32Api? = if (javaVersionAsInteger == 8 && isWindows) {
             val log: Logger = mingLiLoggerFactory.getLogger("mingli-utils DateTime")
             val a = getWinKernel32Apis()
 
@@ -219,9 +214,7 @@ class DateTime private constructor(
         fun now(): DateTime {
             if (WIN_KERNEL_32_API != null) {
                 return DateTime(
-                    WIN_KERNEL_32_API.getTime()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime()
+                    WIN_KERNEL_32_API.getTime().atZone(ZoneId.systemDefault()).toLocalDateTime()
                 )
             }
             return DateTime(LocalDateTime.now())
@@ -273,9 +266,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun parse(
-            timestr: String,
-            formatter: String,
-            fillZero: Boolean
+            timestr: String, formatter: String, fillZero: Boolean
         ): DateTime {
             return DateTime(
                 LocalDateTime.parse(
@@ -295,9 +286,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun parse(
-            timestr: String,
-            formatter: Formatter,
-            fillZero: Boolean
+            timestr: String, formatter: Formatter, fillZero: Boolean
         ): DateTime {
             return parse(timestr, formatter.getValue(), fillZero)
         }
@@ -350,11 +339,7 @@ class DateTime private constructor(
             }
             throw IllegalArgumentException(
                 String.format(
-                    "Text: '%s' len %s < %s %s",
-                    dstr,
-                    dstr.length,
-                    formats,
-                    formats.length
+                    "Text: '%s' len %s < %s %s", dstr, dstr.length, formats, formats.length
                 )
             )
         }
@@ -384,11 +369,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun of(
-            year: Int,
-            month: Int,
-            day: Int,
-            hour: Int,
-            minute: Int
+            year: Int, month: Int, day: Int, hour: Int, minute: Int
         ): DateTime {
             return DateTime(LocalDateTime.of(year, month, day, hour, minute))
         }
@@ -407,8 +388,7 @@ class DateTime private constructor(
 
             // 2. 从纳秒时间戳创建 Instant
             val instant = java.time.Instant.ofEpochSecond(
-                unixNanos / 1_000_000_000L,
-                unixNanos % 1_000_000_000L
+                unixNanos / 1_000_000_000L, unixNanos % 1_000_000_000L
             )
 
             // 3. 转换为系统默认时区的 LocalDateTime
@@ -428,12 +408,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun of(
-            year: Int,
-            month: Int,
-            day: Int,
-            hour: Int,
-            minute: Int,
-            second: Int
+            year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int
         ): DateTime {
             return DateTime(
                 LocalDateTime.of(year, month, day, hour, minute, second)
@@ -454,13 +429,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun of(
-            year: Int,
-            month: Int,
-            day: Int,
-            hour: Int,
-            minute: Int,
-            second: Int,
-            nano: Int
+            year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, nano: Int
         ): DateTime {
             return DateTime(
                 LocalDateTime.of(year, month, day, hour, minute, second, nano)
@@ -476,9 +445,14 @@ class DateTime private constructor(
         @JvmStatic
         fun of(epochMilli: Long): DateTime {
             return DateTime(
-                java.time.Instant.ofEpochMilli(epochMilli)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime()
+                java.time.Instant.ofEpochMilli(epochMilli).atZone(ZoneId.systemDefault()).toLocalDateTime()
+            )
+        }
+
+        @JvmStatic
+        fun of(seconds: Long, nanos: Long): DateTime {
+            return DateTime(
+                java.time.Instant.ofEpochSecond(seconds, nanos).atZone(ZoneId.systemDefault()).toLocalDateTime()
             )
         }
 
@@ -492,8 +466,7 @@ class DateTime private constructor(
         @JvmStatic
         fun of(epochMilli: Long, zoneId: ZoneId): DateTime {
             return DateTime(
-                java.time.Instant.ofEpochMilli(epochMilli).atZone(zoneId).toLocalDateTime(),
-                zoneId
+                java.time.Instant.ofEpochMilli(epochMilli).atZone(zoneId).toLocalDateTime(), zoneId
             )
         }
     }
@@ -525,8 +498,7 @@ class DateTime private constructor(
     fun add(dateTimeOffset: DateTimeOffset): DateTime {
         return DateTime(
             this.localDateTime.plus(
-                dateTimeOffset.offset,
-                dateTimeOffset.offsetType
+                dateTimeOffset.offset, dateTimeOffset.offsetType
             )
         )
     }
@@ -538,12 +510,7 @@ class DateTime private constructor(
      * @return 返回修改后的 DateTime 实例
      */
     fun sub(dateTimeOffset: DateTimeOffset): DateTime {
-        return DateTime(
-            this.localDateTime.plus(
-                -dateTimeOffset.offset,
-                dateTimeOffset.offsetType
-            )
-        )
+        return add(DateTimeOffset.of(-dateTimeOffset.offset, dateTimeOffset.offsetType))
     }
 
     /**
@@ -603,8 +570,7 @@ class DateTime private constructor(
      */
     override fun toString(): String {
         return String.format(
-            "DateTime(%s)",
-            format(Formatter.STANDARD_DATETIME_MILLISECOUND7, true)
+            "DateTime(%s)", format(Formatter.STANDARD_DATETIME_MILLISECOUND7, true)
         )
     }
 
@@ -674,5 +640,35 @@ class DateTime private constructor(
      */
     fun getZoneId(): ZoneId {
         return zoneId
+    }
+
+
+    /**
+     * 将 Instant 转换为纳秒时间戳
+     * @throws ArithmeticException 如果结果超出 Long 范围 (-2^63 到 2^63-1)
+     */
+    fun toNanoTime(): Long {
+        val instant = toInstant()
+
+        return try {
+            val secondsInNanos = Math.multiplyExact(instant.epochSecond, 1_000_000_000L)
+            Math.addExact(secondsInNanos, instant.nano.toLong())
+        } catch (e: ArithmeticException) {
+            throw ArithmeticException(
+                "无法将 Instant(${instant.epochSecond}s, ${instant.nano}ns) 转换为纳秒: ${e.message}"
+            )
+        }
+    }
+
+    fun to100NanoTime(): Long {
+        return toInstant().let {
+            (it.epochSecond * 10_000_000L) + (it.nano / 100L)
+        }
+    }
+
+    fun toMillisecondTime(): Long {
+        return toInstant().let {
+            (it.epochSecond * 1000L) + (it.nano / 1_000_000L)
+        }
     }
 }

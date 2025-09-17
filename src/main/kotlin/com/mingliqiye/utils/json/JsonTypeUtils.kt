@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonTypeUtils.kt
- * LastUpdate 2025-09-15 22:04:54
+ * LastUpdate 2025-09-17 11:12:06
  * UpdateUser MingLiPro
  */
 @file:JvmName("JsonTypeUtils")
@@ -177,11 +177,11 @@ fun <K, V> MapType(keyType: Class<K>, valueType: Class<V>): JsonTypeReference<Ma
                     return null
                 }
 
-                override fun equals(obj: Any?): Boolean {
-                    if (this === obj) return true
-                    if (obj !is ParameterizedType) return false
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) return true
+                    if (other !is ParameterizedType) return false
 
-                    val that = obj
+                    val that = other
                     return (Objects.equals(
                         rawType,
                         that.rawType

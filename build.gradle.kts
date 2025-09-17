@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-15 22:22:00
+ * LastUpdate 2025-09-17 11:11:57
  * UpdateUser MingLiPro
  */
 
@@ -26,8 +26,9 @@ import java.time.format.DateTimeFormatter
 plugins {
     idea
     java
-    id("java-library")
-    id("maven-publish")
+    signing
+    `java-library`
+    `maven-publish`
     kotlin("jvm") version "2.2.20"
     id("org.jetbrains.dokka") version "2.0.0"
 }
@@ -73,7 +74,6 @@ dependencies {
     compileOnly("com.alibaba.fastjson2:fastjson2:2.0.58")
     compileOnly("org.projectlombok:lombok:1.18.38")
     implementation("org.bouncycastle:bcprov-jdk18on:1.81")
-    implementation("com.github.f4b6a3:uuid-creator:6.1.0")
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.jetbrains:annotations:24.0.0")
     compileOnly("net.java.dev.jna:jna:5.17.0")
@@ -96,6 +96,7 @@ tasks.withType<JavaExec>().configureEach {
 
 tasks.withType<org.gradle.jvm.tasks.Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from("LICENSE") { into(".") }
     manifest {
         attributes(
             mapOf(
@@ -149,6 +150,10 @@ publishing {
             name = "MavenRepositoryRaw"
             url = uri("C:/data/git/maven-repository-raw")
         }
+        maven {
+            name = "OSSRepository"
+            url = uri("C:/data/git/maven-repository-raw-utils")
+        }
     }
     publications {
         create<MavenPublication>("mavenJava") {
@@ -157,7 +162,33 @@ publishing {
             artifact(tasks.named("kotlinDocJar"))
             artifactId = ARTIFACTID
             java.toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+            pom {
+                name = "mingli-utils"
+                url = "https://mingli-utils.mingliqiye.com"
+                description = "A Java/kotlin Utils"
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "minglipro"
+                        name = "mingli"
+                        email = "minglipro@163.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:https://git.mingliqiye.com/minglipro/mingli-utils.git"
+                    developerConnection = "scm:git:https://git.mingliqiye.com:minglipro/mingli-utils.git"
+                    url = "https://git.mingliqiye.com/minglipro/mingli-utils"
+                }
+            }
         }
+    }
+    signing {
+        sign(publishing.publications)
     }
 }
 
@@ -183,3 +214,5 @@ tasks.processResources {
         )
     }
 }
+
+

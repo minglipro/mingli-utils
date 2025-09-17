@@ -45,3 +45,4 @@ log
 node_modules
 *lock*
 .kotlin
+secret.gpg

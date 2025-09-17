@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ByteUtils.kt
- * LastUpdate 2025-09-15 17:26:34
+ * LastUpdate 2025-09-16 16:55:36
  * UpdateUser MingLiPro
  */
 @file:JvmName("ByteUtils")
@@ -39,8 +39,20 @@ const val ESC_RESERVED: Byte = 0x06
  * @return 包含每个字节对应十六进制字符串的列表
  */
 fun ByteArray.getByteArrayString(): MutableList<String> {
-    return this.toList().stream()
-        .map { a -> String.format("0X%02X", a!!.toInt() and 0xFF) }
+    return this.toList().stream().map { a -> String.format("0X%02X", a!!.toInt() and 0xFF) }
         .collect(com.mingliqiye.utils.stream.toList()) as MutableList<String>
 }
 
+
+fun Char.hexDigitToValue(): Int {
+    return when (this) {
+        in '0'..'9' -> this - '0'
+        in 'A'..'F' -> this - 'A' + 10
+        in 'a'..'f' -> this - 'a' + 10
+        else -> throw NumberFormatException("Invalid hex character: $this")
+    }
+}
+
+private fun hexStringToByteArray(string: String): ByteArray {
+    return string.hexToByteArray()
+}
