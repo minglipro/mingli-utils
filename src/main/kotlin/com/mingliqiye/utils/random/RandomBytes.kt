@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile RandomBytes.kt
- * LastUpdate 2025-09-15 22:27:36
+ * LastUpdate 2025-09-16 17:42:26
  * UpdateUser MingLiPro
  */
 @file:JvmName("RandomBytes")
@@ -82,8 +82,9 @@ fun randomByteNoHave(from: Byte, to: Byte): Byte {
 }
 
 val secureRandom: SecureRandom by lazy {
-    SecureRandom()
+    SecureRandom.getInstanceStrong()
 }
+
 
 fun randomByteSecure(size: Int): ByteArray {
     val bytes = ByteArray(size)
