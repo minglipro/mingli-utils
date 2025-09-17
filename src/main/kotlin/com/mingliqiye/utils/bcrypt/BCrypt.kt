@@ -1,0 +1,51 @@
+/*
+ * Copyright 2025 mingliqiye
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ProjectName mingli-utils
+ * ModuleName mingli-utils.main
+ * CurrentFile BCrypt.kt
+ * LastUpdate 2025-09-17 11:57:26
+ * UpdateUser MingLiPro
+ */
+
+package com.mingliqiye.utils.bcrypt
+
+import org.mindrot.jbcrypt.BCrypt as JBCrypt
+
+object BCrypt {
+    fun hashpw(string: String): String {
+        return hashpw(string, gensalt())
+    }
+
+    fun hashpw(string: String, salt: String = gensalt()): String {
+        return JBCrypt.hashpw(string, salt)
+    }
+
+    fun checkpw(string: String, bcrypted: String): Boolean {
+        return JBCrypt.checkpw(string, bcrypted)
+    }
+
+    fun gensalt(): String {
+        return JBCrypt.gensalt()
+    }
+
+    fun gensalt(long: Int): String {
+        return JBCrypt.gensalt(long)
+    }
+
+    fun gensalt(long: Int, secureRandom: java.security.SecureRandom): String {
+        return JBCrypt.gensalt(long, secureRandom)
+    }
+}

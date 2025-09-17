@@ -16,25 +16,20 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile HashUtils.kt
- * LastUpdate 2025-09-15 09:38:04
+ * LastUpdate 2025-09-17 11:57:26
  * UpdateUser MingLiPro
  */
 @file:JvmName("HashUtils")
 
 package com.mingliqiye.utils.hash
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.mindrot.jbcrypt.BCrypt
+
+import com.mingliqiye.utils.bcrypt.BCrypt
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import java.security.Security
-
-private val _addProvider = run {
-    Security.addProvider(BouncyCastleProvider())
-}
 
 /**
  * 计算指定文件的哈希值。
@@ -92,7 +87,7 @@ private fun bytesToHex(bytes: ByteArray): String {
  * @return 加密后的 BCrypt 哈希字符串
  */
 fun bcrypt(string: String): String {
-    return BCrypt.hashpw(string, BCrypt.gensalt())
+    return BCrypt.hashpw(string)
 }
 
 /**
