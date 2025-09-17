@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonStringConverter.kt
- * LastUpdate 2025-09-15 11:03:53
+ * LastUpdate 2025-09-17 19:09:17
  * UpdateUser MingLiPro
  */
 
@@ -35,7 +35,6 @@ import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
 import com.mingliqiye.utils.time.DateTime
 import com.mingliqiye.utils.time.DateTime.Companion.parse
-import com.mingliqiye.utils.time.Formatter
 import com.mingliqiye.utils.uuid.UUID
 import com.mingliqiye.utils.uuid.UUID.Companion.of
 import java.io.IOException
@@ -219,7 +218,7 @@ class DateTimeJsonConverter : JsonStringConverter<DateTime>() {
         if (obj == null) {
             return null
         }
-        return obj.format(Formatter.STANDARD_DATETIME)
+        return obj.format()
     }
 
     override fun deConvert(obj: String?): DateTime? {
@@ -227,9 +226,7 @@ class DateTimeJsonConverter : JsonStringConverter<DateTime>() {
             return null
         }
         return parse(
-            obj,
-            Formatter.STANDARD_DATETIME_MILLISECOUND7,
-            true
+            obj
         )
     }
 }

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2025-09-17 11:04:08
+ * LastUpdate 2025-09-17 16:27:32
  * UpdateUser MingLiPro
  */
 
@@ -183,7 +183,6 @@ class UUID : Serializable {
         @JvmStatic
         fun getV7(): UUID {
             val instant = DateTime.now().toMillisecondTime()
-            println(instant.toString(16))
             val buffer = ByteBuffer.allocate(16)
             buffer.putInt((instant shr 16).toInt())
             buffer.putShort((instant).toShort())

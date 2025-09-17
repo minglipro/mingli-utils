@@ -16,36 +16,45 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BCrypt.kt
- * LastUpdate 2025-09-17 11:57:26
+ * LastUpdate 2025-09-17 16:20:30
  * UpdateUser MingLiPro
  */
 
+@file:JvmName("BCrypt")
+
 package com.mingliqiye.utils.bcrypt
 
+
+import java.security.SecureRandom
 import org.mindrot.jbcrypt.BCrypt as JBCrypt
 
-object BCrypt {
-    fun hashpw(string: String): String {
-        return hashpw(string, gensalt())
-    }
 
-    fun hashpw(string: String, salt: String = gensalt()): String {
-        return JBCrypt.hashpw(string, salt)
-    }
-
-    fun checkpw(string: String, bcrypted: String): Boolean {
-        return JBCrypt.checkpw(string, bcrypted)
-    }
-
-    fun gensalt(): String {
-        return JBCrypt.gensalt()
-    }
-
-    fun gensalt(long: Int): String {
-        return JBCrypt.gensalt(long)
-    }
-
-    fun gensalt(long: Int, secureRandom: java.security.SecureRandom): String {
-        return JBCrypt.gensalt(long, secureRandom)
-    }
+fun hashpw(string: String): String {
+    return hashpw(string, gensalt())
 }
+
+
+fun hashpw(string: String, salt: String = gensalt()): String {
+    return JBCrypt.hashpw(string, salt)
+}
+
+
+fun checkpw(string: String, bcrypted: String): Boolean {
+    return JBCrypt.checkpw(string, bcrypted)
+}
+
+
+fun gensalt(): String {
+    return JBCrypt.gensalt()
+}
+
+
+fun gensalt(long: Int): String {
+    return JBCrypt.gensalt(long)
+}
+
+
+fun gensalt(long: Int, secureRandom: SecureRandom): String {
+    return JBCrypt.gensalt(long, secureRandom)
+}
+

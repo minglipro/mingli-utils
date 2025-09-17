@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile HashUtils.kt
- * LastUpdate 2025-09-17 11:57:26
+ * LastUpdate 2025-09-17 16:20:57
  * UpdateUser MingLiPro
  */
 @file:JvmName("HashUtils")
@@ -24,7 +24,8 @@
 package com.mingliqiye.utils.hash
 
 
-import com.mingliqiye.utils.bcrypt.BCrypt
+import com.mingliqiye.utils.bcrypt.checkpw
+import com.mingliqiye.utils.bcrypt.hashpw
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -87,7 +88,7 @@ private fun bytesToHex(bytes: ByteArray): String {
  * @return 加密后的 BCrypt 哈希字符串
  */
 fun bcrypt(string: String): String {
-    return BCrypt.hashpw(string)
+    return hashpw(string)
 }
 
 /**
@@ -98,5 +99,5 @@ fun bcrypt(string: String): String {
  * @return 如果匹配返回 true，否则返回 false
  */
 fun checkBcrypt(string: String, bcrypted: String): Boolean {
-    return BCrypt.checkpw(string, bcrypted)
+    return checkpw(string, bcrypted)
 }
