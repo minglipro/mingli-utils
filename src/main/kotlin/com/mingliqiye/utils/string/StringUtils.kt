@@ -172,6 +172,13 @@ fun split(str: String, separator: String): List<String> {
 }
 
 fun List<String>.join(separator: String): String {
-    return this.joinToString(separator)
+    val sb = StringBuilder()
+    for (i in this.indices) {
+        sb.append(this[i])
+        if (i != this.size - 1) {
+            sb.append(separator)
+        }
+    }
+    return sb.toString()
 }
 
