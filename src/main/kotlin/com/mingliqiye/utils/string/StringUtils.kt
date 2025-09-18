@@ -182,3 +182,13 @@ fun List<String>.join(separator: String): String {
     return sb.toString()
 }
 
+fun <T> String.join(list: List<T>, getstring: (T) -> String = { it.toString() }): String {
+    val sb = StringBuilder()
+    for (i in list.indices) {
+        sb.append(getstring(list[i]))
+        if (i != list.size - 1) {
+            sb.append(this)
+        }
+    }
+    return sb.toString()
+}
