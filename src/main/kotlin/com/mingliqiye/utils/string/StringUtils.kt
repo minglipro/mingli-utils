@@ -171,7 +171,7 @@ fun split(str: String, separator: String): List<String> {
     return str.split(separator)
 }
 
-fun List<String>.join(separator: String): String {
+fun <T> List<T>.join(separator: String, getstring: (T) -> String = { it.toString() }): String {
     val sb = StringBuilder()
     for (i in this.indices) {
         sb.append(this[i])
