@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Main.kt
- * LastUpdate 2025-09-17 19:07:01
+ * LastUpdate 2025-09-18 14:39:24
  * UpdateUser MingLiPro
  */
 @file:JvmName("Main")
@@ -24,8 +24,10 @@
 package com.mingliqiye.utils
 
 import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
+import com.mingliqiye.utils.uuid.UUID
 
 
 fun main() {
     AutoConfiguration.printBanner()
+    println(UUID.getV7().getBase256ShortString())
 }

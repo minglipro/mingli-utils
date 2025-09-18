@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile OsPath.kt
- * LastUpdate 2025-09-15 08:59:15
+ * LastUpdate 2025-09-18 09:47:43
  * UpdateUser MingLiPro
  */
 
@@ -26,9 +26,8 @@ package com.mingliqiye.utils.path
 
 import java.io.File
 import java.net.URI
-import java.nio.file.*
-import java.util.*
-import java.util.function.Consumer
+import java.nio.file.Path
+import java.nio.file.Paths
 
 class OsPath private constructor(private val path: Path) : Path by path {
 
@@ -57,49 +56,5 @@ class OsPath private constructor(private val path: Path) : Path by path {
         fun getCwd(): OsPath {
             return OsPath(Paths.get(""))
         }
-    }
-
-    override fun getParent(): Path? {
-        var parent = path.parent
-        if (parent == null) {
-            parent = path.toAbsolutePath().parent
-        }
-        return parent
-    }
-
-    override fun toRealPath(vararg options: LinkOption): Path {
-        return OsPath(path.toRealPath(*options))
-    }
-
-    override fun register(watcher: WatchService, vararg events: WatchEvent.Kind<*>): WatchKey {
-        return path.register(watcher, *events)
-    }
-
-    override fun register(
-        watcher: WatchService,
-        events: Array<out WatchEvent.Kind<*>>,
-        vararg modifiers: WatchEvent.Modifier
-    ): WatchKey {
-        return path.register(watcher, events, *modifiers)
-    }
-
-    override fun iterator(): MutableIterator<Path> {
-        return path.iterator()
-    }
-
-    override fun compareTo(other: Path): Int {
-        return path.compareTo(other)
-    }
-
-    override fun toString(): String {
-        return path.toString()
-    }
-
-    override fun forEach(action: Consumer<in Path>) {
-        path.forEach(action)
-    }
-
-    override fun spliterator(): Spliterator<Path> {
-        return path.spliterator()
     }
 }

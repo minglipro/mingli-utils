@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Loggers.kt
- * LastUpdate 2025-09-15 22:32:50
+ * LastUpdate 2025-09-18 09:30:48
  * UpdateUser MingLiPro
  */
 
@@ -416,6 +416,6 @@ class MingLiLoggerFactory {
     }
 }
 
-val mingLiLoggerFactory = MingLiLoggerFactory()
+val mingLiLoggerFactory: MingLiLoggerFactory by lazy { MingLiLoggerFactory() }
 
 
