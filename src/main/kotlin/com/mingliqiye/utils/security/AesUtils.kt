@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AesUtils.kt
- * LastUpdate 2025-09-15 22:32:50
+ * LastUpdate 2025-09-19 20:18:09
  * UpdateUser MingLiPro
  */
 
@@ -50,11 +50,5 @@ fun encryptAesGcmNoPadding(src: ByteArray, key: String, iv: ByteArray): ByteArra
 fun encryptAesGcmNoPadding(src: String, key: String, iv: ByteArray): ByteArray {
     return encryptAesGcmNoPadding(src.toByteArray(), key.toByteArray(), iv)
 }
-
-fun main() {
-    val iv = getRandomBytes(16)
-    println(encryptAesGcmNoPadding("mingliqiye", "key", iv))
-}
-
 
 

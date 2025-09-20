@@ -16,11 +16,11 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SpringBeanUtils.kt
- * LastUpdate 2025-09-15 22:32:50
+ * LastUpdate 2025-09-19 20:07:08
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.bean.springboot
+package com.mingliqiye.utils.springboot.bean
 
 import org.springframework.beans.BeansException
 import org.springframework.context.ApplicationContext

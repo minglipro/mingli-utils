@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseUtils.kt
- * LastUpdate 2025-09-18 14:36:40
+ * LastUpdate 2025-09-19 20:18:09
  * UpdateUser MingLiPro
  */
 
@@ -59,4 +59,5 @@ val BASE16: BaseCodec by lazy {
 val BASE256: BaseCodec by lazy {
     Base256()
 }
+
 

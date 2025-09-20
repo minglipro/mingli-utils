@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-17 12:08:42
+ * LastUpdate 2025-09-19 09:39:33
  * UpdateUser MingLiPro
  */
 
@@ -99,7 +99,7 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
     manifest {
         attributes(
             mapOf(
-                "Main-Class" to "com.mingliqiye.utils.Main",
+                "Main-Class" to "com.mingliqiye.utils.main.Main",
                 "Specification-Title" to ARTIFACTID,
                 "Specification-Version" to VERSIONS,
                 "Specification-Vendor" to "minglipro",

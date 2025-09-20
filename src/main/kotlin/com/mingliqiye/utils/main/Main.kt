@@ -15,29 +15,21 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile ComponentBean.kt
- * LastUpdate 2025-09-15 22:32:50
+ * CurrentFile Main.kt
+ * LastUpdate 2025-09-20 13:22:11
  * UpdateUser MingLiPro
  */
+@file:JvmName("Main")
 
-package com.mingliqiye.utils.bean.annotation
+package com.mingliqiye.utils.main
 
-import kotlin.annotation.AnnotationRetention.RUNTIME
-import kotlin.annotation.AnnotationTarget.CLASS
-import kotlin.annotation.AnnotationTarget.FIELD
+import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
+import com.mingliqiye.utils.stream.SuperStream
 
-/**
- * 组件bean注解
- * @author MingLiPro
- */
-@Retention(RUNTIME)
-@Target(CLASS)
-annotation class ComponentBean(val value: String = "")
+fun main() {
+    AutoConfiguration.printBanner()
+    val data = SuperStream.of(Array(0) { 1 })
 
-/**
- * 注入bean注解
- * @author MingLiPro
- */
-@Retention(RUNTIME)
-@Target(FIELD)
-annotation class InjectBean(val value: String = "")
+
+    println(data)
+}

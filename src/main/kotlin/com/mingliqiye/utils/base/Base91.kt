@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Base91.kt
- * LastUpdate 2025-09-18 14:42:59
+ * LastUpdate 2025-09-19 20:08:46
  * UpdateUser MingLiPro
  */
 
@@ -401,11 +401,4 @@ class Base91 : BaseCodec {
         // 返回实际使用的部分
         return buffer.copyOf(index)
     }
-}
-
-fun main() {
-    val base91 = Base91()
-    val bytes = "Hello, World!".toByteArray()
-    val encoded = base91.encode(bytes)
-    println(encoded)
 }

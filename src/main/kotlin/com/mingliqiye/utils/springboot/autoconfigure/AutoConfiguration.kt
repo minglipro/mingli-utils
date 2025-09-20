@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AutoConfiguration.kt
- * LastUpdate 2025-09-15 22:20:25
+ * LastUpdate 2025-09-20 10:47:00
  * UpdateUser MingLiPro
  */
 
@@ -34,7 +34,7 @@ import java.io.IOException
 
 @org.springframework.boot.autoconfigure.AutoConfiguration
 @ComponentScan(
-    "com.mingliqiye.utils.bean.springboot",
+    "com.mingliqiye.utils.springboot.bean",
     "com.mingliqiye.utils.springboot.converters"
 )
 open class AutoConfiguration {
@@ -54,10 +54,7 @@ open class AutoConfiguration {
         fun printBanner() {
             val bannerBuilder = StringBuilder(banner)
             try {
-                val inputStream = AutoConfiguration::class.java.getResourceAsStream("/META-INF/meta-data")
-                if (inputStream == null) {
-                    return
-                }
+                val inputStream = AutoConfiguration::class.java.getResourceAsStream("/META-INF/meta-data") ?: return
                 inputStream.use { stream ->
                     var readlen: Int
                     val buffer = ByteArray(1024)

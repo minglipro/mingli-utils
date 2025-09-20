@@ -15,19 +15,20 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Main.kt
- * LastUpdate 2025-09-18 14:39:24
+ * CurrentFile StreamEmptyException.java
+ * LastUpdate 2025-09-20 13:24:07
  * UpdateUser MingLiPro
  */
-@file:JvmName("Main")
 
-package com.mingliqiye.utils
+package com.mingliqiye.utils.stream;
 
-import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
-import com.mingliqiye.utils.uuid.UUID
+public class StreamEmptyException extends java.lang.RuntimeException {
 
+    public StreamEmptyException(String message) {
+        super(message);
+    }
 
-fun main() {
-    AutoConfiguration.printBanner()
-    println(UUID.getV7().getBase256ShortString())
+    public StreamEmptyException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

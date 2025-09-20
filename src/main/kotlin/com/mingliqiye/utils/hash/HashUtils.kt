@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile HashUtils.kt
- * LastUpdate 2025-09-17 16:20:57
+ * LastUpdate 2025-09-19 20:24:33
  * UpdateUser MingLiPro
  */
 @file:JvmName("HashUtils")
@@ -24,6 +24,7 @@
 package com.mingliqiye.utils.hash
 
 
+import com.mingliqiye.utils.base.BASE16
 import com.mingliqiye.utils.bcrypt.checkpw
 import com.mingliqiye.utils.bcrypt.hashpw
 import java.io.File
@@ -70,15 +71,7 @@ fun calculateFileHash(file: File, algorithm: String): String {
  * @return 对应的十六进制字符串
  */
 private fun bytesToHex(bytes: ByteArray): String {
-    val hexString = StringBuilder(2 * bytes.size)
-    for (b in bytes) {
-        val hex = Integer.toHexString(0xff and b.toInt())
-        if (hex.length == 1) {
-            hexString.append('0')
-        }
-        hexString.append(hex)
-    }
-    return hexString.toString()
+    return BASE16.encode(bytes)
 }
 
 /**

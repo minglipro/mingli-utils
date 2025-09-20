@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Base256.kt
- * LastUpdate 2025-09-18 14:36:40
+ * LastUpdate 2025-09-20 14:01:29
  * UpdateUser MingLiPro
  */
 
@@ -310,8 +310,4 @@ class Base256 : BaseCodec {
         }
         return result
     }
-}
-
-fun main() {
-
 }
