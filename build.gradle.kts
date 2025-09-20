@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-19 09:39:33
+ * LastUpdate 2025-09-20 14:16:07
  * UpdateUser MingLiPro
  */
 
@@ -77,7 +77,7 @@ dependencies {
     compileOnly("com.google.code.gson:gson:2.13.1")
     compileOnly("org.mybatis:mybatis:3.5.19")
     compileOnly("com.alibaba.fastjson2:fastjson2:2.0.58")
-    compileOnly("net.java.dev.jna:jna:5.17.0")
+    compileOnly("com.baomidou:mybatis-plus-core:3.0.1")
 }
 
 
@@ -213,5 +213,3 @@ tasks.processResources {
         )
     }
 }
-
-
