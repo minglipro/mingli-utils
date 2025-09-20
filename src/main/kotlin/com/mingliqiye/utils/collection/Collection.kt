@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Collection.kt
- * LastUpdate 2025-09-20 14:01:07
+ * LastUpdate 2025-09-20 14:03:46
  * UpdateUser MingLiPro
  */
 
@@ -47,6 +47,7 @@ inline fun <reified T> Collection<T>.toArray(): Array<T> {
  * @param v 用于生成映射值的函数
  * @return 转换后的 Map
  */
+@Suppress("UNCHECKED_CAST")
 inline fun <reified T, V> Collection<T>.toMap(noinline v: (T) -> V): Map<T, V> {
     return this.stream().collect(
         SuperStream.toMap(
