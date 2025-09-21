@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BCrypt.kt
- * LastUpdate 2025-09-17 16:20:30
+ * LastUpdate 2025-09-19 20:17:41
  * UpdateUser MingLiPro
  */
 
@@ -57,4 +57,3 @@ fun gensalt(long: Int): String {
 fun gensalt(long: Int, secureRandom: SecureRandom): String {
     return JBCrypt.gensalt(long, secureRandom)
 }
-

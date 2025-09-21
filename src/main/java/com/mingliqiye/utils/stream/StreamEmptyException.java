@@ -15,29 +15,20 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile ComponentBean.kt
- * LastUpdate 2025-09-15 22:32:50
+ * CurrentFile StreamEmptyException.java
+ * LastUpdate 2025-09-20 13:24:07
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.bean.annotation
+package com.mingliqiye.utils.stream;
 
-import kotlin.annotation.AnnotationRetention.RUNTIME
-import kotlin.annotation.AnnotationTarget.CLASS
-import kotlin.annotation.AnnotationTarget.FIELD
+public class StreamEmptyException extends java.lang.RuntimeException {
 
-/**
- * 组件bean注解
- * @author MingLiPro
- */
-@Retention(RUNTIME)
-@Target(CLASS)
-annotation class ComponentBean(val value: String = "")
+    public StreamEmptyException(String message) {
+        super(message);
+    }
 
-/**
- * 注入bean注解
- * @author MingLiPro
- */
-@Retention(RUNTIME)
-@Target(FIELD)
-annotation class InjectBean(val value: String = "")
+    public StreamEmptyException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}

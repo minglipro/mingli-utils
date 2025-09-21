@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-17 12:08:42
+ * LastUpdate 2025-09-21 15:36:59
  * UpdateUser MingLiPro
  */
 
@@ -77,6 +77,8 @@ dependencies {
     compileOnly("com.google.code.gson:gson:2.13.1")
     compileOnly("org.mybatis:mybatis:3.5.19")
     compileOnly("com.alibaba.fastjson2:fastjson2:2.0.58")
+
+    compileOnly("com.baomidou:mybatis-plus-core:3.0.1")
     compileOnly("net.java.dev.jna:jna:5.17.0")
 }
 
@@ -99,7 +101,7 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
     manifest {
         attributes(
             mapOf(
-                "Main-Class" to "com.mingliqiye.utils.Main",
+                "Main-Class" to "com.mingliqiye.utils.main.Main",
                 "Specification-Title" to ARTIFACTID,
                 "Specification-Version" to VERSIONS,
                 "Specification-Vendor" to "minglipro",
@@ -130,17 +132,16 @@ repositories {
     }
     mavenCentral()
 }
-
 tasks.register<Jar>("javaDocJar") {
     group = "build"
     archiveClassifier.set("javadoc")
-    dependsOn(tasks.dokkaJavadoc)
+    dependsOn("dokkaJavadoc")
     from(buildDir.resolve("dokka/javadoc"))
 }
 tasks.register<Jar>("kotlinDocJar") {
     group = "build"
     archiveClassifier.set("kotlindoc")
-    dependsOn(tasks.dokkaHtml)
+    dependsOn("dokkaHtml")
     from(buildDir.resolve("dokka/html"))
 }
 publishing {
@@ -213,5 +214,3 @@ tasks.processResources {
         )
     }
 }
-
-

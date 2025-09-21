@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseUtils.kt
- * LastUpdate 2025-09-17 10:54:46
+ * LastUpdate 2025-09-19 20:18:09
  * UpdateUser MingLiPro
  */
 
@@ -49,6 +49,15 @@ val BASE91: BaseCodec by lazy {
  */
 val BASE16: BaseCodec by lazy {
     Base16()
+}
+
+/**
+ * Base256编解码器实例
+ * 使用懒加载方式初始化Base256编解码器对象
+ * 保证线程安全且只在首次访问时创建实例
+ */
+val BASE256: BaseCodec by lazy {
+    Base256()
 }
 
 

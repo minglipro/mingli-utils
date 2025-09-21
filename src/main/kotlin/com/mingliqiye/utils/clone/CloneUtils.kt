@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile CloneUtils.kt
- * LastUpdate 2025-09-15 09:30:37
+ * LastUpdate 2025-09-20 14:01:29
  * UpdateUser MingLiPro
  */
 @file:JvmName("CloneUtils")
@@ -38,8 +38,7 @@ inline fun <reified T> T.deepJsonClone(jsonApi: JsonApi): T {
 
     } catch (e: Exception) {
         throw JsonException(
-            "Failed to deep clone object using JSON",
-            e
+            "Failed to deep clone object using JSON", e
         )
     }
 }

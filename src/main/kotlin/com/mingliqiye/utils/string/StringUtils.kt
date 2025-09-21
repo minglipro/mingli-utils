@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile StringUtils.kt
- * LastUpdate 2025-09-17 21:09:10
+ * LastUpdate 2025-09-18 09:26:41
  * UpdateUser MingLiPro
  */
 @file:JvmName("StringUtils")
@@ -166,12 +166,51 @@ fun String.stringBuilder(): java.lang.StringBuilder {
     return StringBuilder(this)
 }
 
-
+/**
+ * 将字符串按照指定分隔符进行分割
+ * @param str 需要分割的字符串
+ * @param separator 分割符
+ * @return 分割后的字符串列表
+ */
 fun split(str: String, separator: String): List<String> {
     return str.split(separator)
 }
 
-fun List<String>.join(separator: String): String {
-    return this.joinToString(separator)
+/**
+ * 将列表中的元素使用指定分隔符连接成字符串
+ * @param separator 连接分隔符
+ * @param getstring 转换函数，将列表元素转换为字符串，默认使用toString()方法
+ * @return 连接后的字符串
+ */
+fun <T> List<T>.join(separator: String, getstring: (T) -> String = { it.toString() }): String {
+    // 使用StringBuilder构建结果字符串
+    val sb = StringBuilder()
+    for (i in this.indices) {
+        sb.append(this[i])
+        // 除了最后一个元素外，都在后面添加分隔符
+        if (i != this.size - 1) {
+            sb.append(separator)
+        }
+    }
+    return sb.toString()
+}
+
+/**
+ * 使用当前字符串作为分隔符，将列表中的元素连接成字符串
+ * @param list 需要连接的元素列表
+ * @param getstring 转换函数，将列表元素转换为字符串，默认使用toString()方法
+ * @return 连接后的字符串
+ */
+fun <T> String.join(list: List<T>, getstring: (T) -> String = { it.toString() }): String {
+    // 使用StringBuilder构建结果字符串
+    val sb = StringBuilder()
+    for (i in list.indices) {
+        sb.append(getstring(list[i]))
+        // 除了最后一个元素外，都在后面添加当前字符串作为分隔符
+        if (i != list.size - 1) {
+            sb.append(this)
+        }
+    }
+    return sb.toString()
 }
 

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AesUtils.kt
- * LastUpdate 2025-09-17 10:40:03
+ * LastUpdate 2025-09-19 21:35:53
  * UpdateUser MingLiPro
  */
 
@@ -121,3 +121,4 @@ private fun createSecretKey(sKey: String): SecretKeySpec {
     val digest = md.digest(key)
     return SecretKeySpec(digest, ALGORITHM)
 }
+

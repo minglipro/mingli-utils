@@ -15,46 +15,49 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile OsPath.kt
- * LastUpdate 2025-09-18 09:47:43
+ * CurrentFile IO.kt
+ * LastUpdate 2025-09-20 16:03:14
  * UpdateUser MingLiPro
  */
 
+package com.mingliqiye.utils.io
 
 
-package com.mingliqiye.utils.path
+fun Any?.println() {
+    IO.println(this)
+}
 
-import java.io.File
-import java.net.URI
-import java.nio.file.Path
-import java.nio.file.Paths
 
-class OsPath private constructor(private val path: Path) : Path by path {
-
+class IO {
     companion object {
+
         @JvmStatic
-        fun of(path: String): OsPath {
-            return of(Paths.get(path))
+        fun print(vararg args: Any?) {
+            printA(" ", *args)
         }
 
         @JvmStatic
-        fun of(path: Path): OsPath {
-            return OsPath(path)
+        fun println(vararg args: Any?) {
+            printlnA(" ", *args)
         }
 
         @JvmStatic
-        fun of(uri: URI): OsPath {
-            return OsPath(Paths.get(uri))
+        fun printlnA(sp: String, vararg args: Any?) {
+            printA(" ", *args)
+            kotlin.io.println()
         }
 
         @JvmStatic
-        fun of(file: File): OsPath {
-            return OsPath(file.toPath())
-        }
-
-        @JvmStatic
-        fun getCwd(): OsPath {
-            return OsPath(Paths.get(""))
+        fun printA(sp: String = "", vararg args: Any?) {
+            if (args.isEmpty()) {
+                kotlin.io.println()
+            }
+            val sb = StringBuilder()
+            for (i in args.indices) {
+                sb.append(args[i])
+                if (i < args.size - 1) sb.append(sp)
+            }
+            kotlin.io.print(sb)
         }
     }
 }

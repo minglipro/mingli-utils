@@ -16,12 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2025-09-17 16:27:32
+ * LastUpdate 2025-09-19 20:22:27
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.uuid
 
+import com.mingliqiye.utils.base.BASE256
 import com.mingliqiye.utils.base.BASE64
 import com.mingliqiye.utils.base.BASE91
 import com.mingliqiye.utils.random.randomByteSecure
@@ -64,6 +65,11 @@ class UUID : Serializable {
         @JvmStatic
         fun ofBase64ShortString(baseShortString: String): UUID {
             return UUID(BASE64.decode(baseShortString))
+        }
+
+        @JvmStatic
+        fun ofBase256ShortString(baseShortString: String): UUID {
+            return UUID(BASE256.decode(baseShortString))
         }
 
         @JvmStatic
@@ -654,6 +660,10 @@ class UUID : Serializable {
 
     fun getBase91ShortString(): String {
         return BASE91.encode(data)
+    }
+
+    fun getBase256ShortString(): String {
+        return BASE256.encode(data)
     }
 
     /**

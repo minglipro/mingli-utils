@@ -15,17 +15,28 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Main.kt
- * LastUpdate 2025-09-17 19:07:01
+ * CurrentFile QueryWrapper.kt
+ * LastUpdate 2025-09-20 14:21:44
  * UpdateUser MingLiPro
  */
-@file:JvmName("Main")
 
-package com.mingliqiye.utils
+package com.mingliqiye.utils.mybatisplus
 
-import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.baomidou.mybatisplus.core.mapper.BaseMapper
 
-
-fun main() {
-    AutoConfiguration.printBanner()
+/**
+ * BaseMapperQuery接口扩展了BaseMapper，提供了通用的查询包装器功能
+ *
+ * @param T 实体类类型
+ */
+interface BaseMapperQuery<T> : BaseMapper<T> {
+    /**
+     * 创建并返回一个新的QueryWrapper实例
+     *
+     * @return QueryWrapper<T> 返回类型化的查询包装器实例
+     */
+    fun queryWrapper(): QueryWrapper<T> {
+        return QueryWrapper<T>()
+    }
 }

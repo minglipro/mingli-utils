@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseCodec.kt
- * LastUpdate 2025-09-17 10:35:23
+ * LastUpdate 2025-09-18 14:07:35
  * UpdateUser MingLiPro
  */
 
@@ -149,5 +149,25 @@ interface BaseCodec {
         } catch (_: Exception) {
             false
         }
+    }
+
+    /**
+     * 将字符串编码为Base64字符串
+     *
+     * @param string 需要编码的字符串
+     * @return 编码后的Base64字符串
+     */
+    fun encode(string: String): String {
+        return encode(string.toByteArray())
+    }
+
+    /**
+     * 将Base64字符串解码为字符串
+     *
+     * @param string 需要解码的Base64字符串
+     * @return 解码后的字符串
+     */
+    fun decodetoString(string: String): String {
+        return decode(string).toString(Charsets.UTF_8)
     }
 }
