@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile IO.kt
- * LastUpdate 2025-09-20 11:46:19
+ * LastUpdate 2025-09-20 16:03:14
  * UpdateUser MingLiPro
  */
 
@@ -33,22 +33,22 @@ class IO {
 
         @JvmStatic
         fun print(vararg args: Any?) {
-            print(" ", *args)
+            printA(" ", *args)
         }
 
         @JvmStatic
         fun println(vararg args: Any?) {
-            println(" ", *args)
+            printlnA(" ", *args)
         }
 
         @JvmStatic
-        fun println(sp: String = " ", vararg args: Any?) {
-            print(" ", *args)
+        fun printlnA(sp: String, vararg args: Any?) {
+            printA(" ", *args)
             kotlin.io.println()
         }
 
         @JvmStatic
-        fun print(sp: String = " ", vararg args: Any?) {
+        fun printA(sp: String = "", vararg args: Any?) {
             if (args.isEmpty()) {
                 kotlin.io.println()
             }

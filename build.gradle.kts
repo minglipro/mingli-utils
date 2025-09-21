@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-20 14:16:07
+ * LastUpdate 2025-09-20 22:30:57
  * UpdateUser MingLiPro
  */
 
@@ -30,7 +30,7 @@ plugins {
     `java-library`
     `maven-publish`
     kotlin("jvm") version "2.2.20"
-    id("org.jetbrains.dokka") version "2.0.0"
+    id("org.jetbrains.dokka") version "2.1.0-Beta"
 }
 val GROUPSID = project.properties["GROUPSID"] as String
 val VERSIONS = project.properties["VERSIONS"] as String
@@ -77,7 +77,9 @@ dependencies {
     compileOnly("com.google.code.gson:gson:2.13.1")
     compileOnly("org.mybatis:mybatis:3.5.19")
     compileOnly("com.alibaba.fastjson2:fastjson2:2.0.58")
+
     compileOnly("com.baomidou:mybatis-plus-core:3.0.1")
+    compileOnly("net.java.dev.jna:jna:5.17.0")
 }
 
 

@@ -16,14 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SuperStream.java
- * LastUpdate 2025-09-20 13:24:35
+ * LastUpdate 2025-09-21 14:22:13
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.stream;
 
 import com.mingliqiye.utils.collection.Collections;
-import com.mingliqiye.utils.foreach.ForEach;
 import com.mingliqiye.utils.functions.P1Function;
 import com.mingliqiye.utils.functions.P2Function;
 import org.jetbrains.annotations.NotNull;
@@ -887,16 +886,13 @@ public class SuperStream<T> implements Stream<T> {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    public T[] toArray() {
-        List<T> list = toAList();
-        if (list.isEmpty()) {
-            throw new StreamEmptyException("Stream is empty");
-        }
-        T[] items = (T[]) Array.newInstance(list.get(0).getClass(), list.size());
-        ForEach.forEach(list, (v, i) -> {
-            items[i] = v;
-        });
-        return items;
+    public T[] toArray(Class<T> clazz) {
+        return stream.toArray(i -> (T[]) Array.newInstance(clazz, i));
+    }
+
+    @NotNull
+    public Object[] toArray() {
+        return stream.toArray();
     }
 
     /**

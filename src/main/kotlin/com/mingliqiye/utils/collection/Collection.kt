@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Collection.kt
- * LastUpdate 2025-09-20 14:03:46
+ * LastUpdate 2025-09-21 14:36:57
  * UpdateUser MingLiPro
  */
 
@@ -980,7 +980,14 @@ fun toArray(list: List<Char>): CharArray {
  * @param list 输入的 List
  * @return 转换后的数组
  */
-fun <T> toArray(list: List<T>): Array<T> {
+inline fun <reified T> toArray(list: List<T>): Array<T> {
+    if (list.isEmpty())
+        return arrayOf<T>()
     return SuperStream.of<T>(list)
-        .toArray()
+        .toArray(T::class.java)
+}
+
+fun <T> toArray(list: List<T>, clazz: Class<T>): Array<T> {
+    return SuperStream.of<T>(list)
+        .toArray(clazz)
 }
