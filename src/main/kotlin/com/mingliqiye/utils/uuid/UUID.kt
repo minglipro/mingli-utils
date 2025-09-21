@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2025-09-19 20:22:27
+ * LastUpdate 2025-09-21 21:53:40
  * UpdateUser MingLiPro
  */
 
@@ -588,6 +588,15 @@ class UUID : Serializable {
      * @return 包含 UUID 和版本号的字符串
      */
     override fun toString(): String {
+        when (version) {
+            1 -> {
+                return "UUID(uuid=${getString()},version=${version},datetime=${getDateTime()},mac=${getMac()})"
+            }
+
+            6, 7 -> {
+                return "UUID(uuid=${getString()},version=${version},datetime=${getDateTime()})"
+            }
+        }
         return "UUID(uuid=${getString()},version=${version})"
     }
 
