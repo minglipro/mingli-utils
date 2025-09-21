@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-20 22:30:57
+ * LastUpdate 2025-09-21 15:36:59
  * UpdateUser MingLiPro
  */
 
@@ -30,7 +30,7 @@ plugins {
     `java-library`
     `maven-publish`
     kotlin("jvm") version "2.2.20"
-    id("org.jetbrains.dokka") version "2.1.0-Beta"
+    id("org.jetbrains.dokka") version "2.0.0"
 }
 val GROUPSID = project.properties["GROUPSID"] as String
 val VERSIONS = project.properties["VERSIONS"] as String
@@ -132,17 +132,16 @@ repositories {
     }
     mavenCentral()
 }
-
 tasks.register<Jar>("javaDocJar") {
     group = "build"
     archiveClassifier.set("javadoc")
-    dependsOn(tasks.dokkaJavadoc)
+    dependsOn("dokkaJavadoc")
     from(buildDir.resolve("dokka/javadoc"))
 }
 tasks.register<Jar>("kotlinDocJar") {
     group = "build"
     archiveClassifier.set("kotlindoc")
-    dependsOn(tasks.dokkaHtml)
+    dependsOn("dokkaHtml")
     from(buildDir.resolve("dokka/html"))
 }
 publishing {

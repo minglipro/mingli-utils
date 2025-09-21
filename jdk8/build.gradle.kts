@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.jdk8
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-19 21:35:53
+ * LastUpdate 2025-09-21 15:39:12
  * UpdateUser MingLiPro
  */
 
@@ -24,6 +24,8 @@ plugins {
     id("java-library")
     id("maven-publish")
     signing
+    kotlin("jvm") version "2.2.20"
+    id("org.jetbrains.dokka") version "2.0.0"
 }
 val GROUPSID = project.properties["GROUPSID"] as String
 val VERSIONS = project.properties["VERSIONS"] as String
