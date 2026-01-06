@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,18 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AddressPort.kt
- * LastUpdate 2025-09-15 22:01:27
+ * LastUpdate 2026-01-06 14:03:47
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.network
 
+import com.mingliqiye.utils.string.join
 import java.io.Serializable
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.UnknownHostException
+import java.nio.ByteBuffer
 import java.util.regex.Pattern
 
 /**
@@ -78,6 +80,20 @@ class NetworkAddress private constructor(domip: String) : Serializable {
         @JvmStatic
         fun of(domip: String): NetworkAddress {
             return NetworkAddress(domip)
+        }
+
+        @JvmStatic
+        fun ofIpv4(byteBuffer: ByteBuffer): NetworkAddress {
+            val byteArray = ByteArray(4)
+            byteBuffer.get(byteArray)
+            return ofIpv4(byteArray)
+        }
+
+        @JvmStatic
+        fun ofIpv4(byteArray: ByteArray): NetworkAddress {
+            return of(".".join(byteArray.map {
+                (it.toInt() and 0xFF).toString()
+            }))
         }
 
         /**
@@ -183,6 +199,31 @@ class NetworkAddress private constructor(domip: String) : Serializable {
     }
 
     /**
+     * 将IPv4地址转换为字节数组
+     *
+     * @return 返回表示IPv4地址的4字节数组
+     * @throws NetworkException 当当前地址不是IPv4地址时抛出异常
+     */
+    fun toIpv4ByteArray(): ByteArray {
+        // 验证地址类型是否为IPv4
+        if (iPv != IPV4) {
+            throw NetworkException("该地址 不是IPv4地址")
+        }
+        // 将IP地址字符串按点分割，转换为整数并进行位运算处理，最后转为字节数组
+        return ip!!.split(".").map { it.toInt() and 0xFF }.map { it.toByte() }.toByteArray()
+    }
+
+    /**
+     * 将IPv4地址写入到指定的ByteBuffer中
+     *
+     * @param byteBuffer 要写入的ByteBuffer对象，IPv4地址将以字节数组形式写入到该缓冲区
+     * @return 返回写入了IPv4地址的ByteBuffer对象，便于链式调用
+     */
+    fun writeIpv4ToByteBuffer(byteBuffer: ByteBuffer): ByteBuffer {
+        return byteBuffer.put(toIpv4ByteArray())
+    }
+
+    /**
      * 将当前 NetworkAddress 转换为 InetAddress 对象。
      *
      * @return InetAddress 对象
@@ -215,7 +256,54 @@ class NetworkPort : Serializable {
         this.port = port
     }
 
+    fun toByteArray(): ByteArray {
+        val byteArray = ByteArray(2)
+        byteArray[0] = (port shr 8 and 0xFF).toByte()
+        byteArray[1] = (port and 0xFF).toByte()
+        return byteArray
+    }
+
+    fun writeToByteBuffer(byteBuffer: ByteBuffer): ByteBuffer {
+        return byteBuffer.put(toByteArray())
+    }
+
     companion object {
+
+        /**
+         * 创建NetworkPort实例
+         * @param port 端口号
+         * @return NetworkPort实例
+         */
+        @JvmStatic
+        fun of(port: Int): NetworkPort {
+            return NetworkPort(port)
+        }
+
+        /**
+         * 从字节数组创建NetworkPort实例
+         * @param byteArray 包含端口信息的字节数组（长度至少为2）
+         * @return NetworkPort实例
+         */
+        @JvmStatic
+        fun of(byteArray: ByteArray): NetworkPort {
+            // 将字节数组的前两个字节转换为端口号
+            val port = ((byteArray[0].toInt() and 0xFF) shl 8) or (byteArray[1].toInt() and 0xFF)
+            return of(port)
+        }
+
+        /**
+         * 从ByteBuffer创建NetworkPort实例
+         * @param byteBuffer 包含端口信息的ByteBuffer
+         * @return NetworkPort实例
+         */
+        @JvmStatic
+        fun of(byteBuffer: ByteBuffer): NetworkPort {
+            val byteArray = ByteArray(2)
+            byteBuffer.get(byteArray)
+            return of(byteArray)
+        }
+
+        @JvmStatic
         fun testPort(port: Int) {
             // 验证端口号范围是否在0-65535之间
             if (port !in 0..65535) {
@@ -283,6 +371,42 @@ class NetworkEndpoint private constructor(
         }
 
         /**
+         * 从字节数组创建IPv4网络端点
+         *
+         * @param byteArray 包含IPv4地址和端口信息的字节数组，前4个字节表示IP地址，后2个字节表示端口号
+         * @return NetworkEndpoint对象，封装了IPv4地址和端口信息
+         */
+        @JvmStatic
+        fun ofIpv4(byteArray: ByteArray): NetworkEndpoint {
+            // 提取前4个字节作为IP地址
+            val address = ByteArray(4) {
+                byteArray[it]
+            }
+            // 提取后2个字节作为端口号
+            val portInt = ByteArray(2) {
+                byteArray[it + 4]
+            }
+            return NetworkEndpoint(NetworkAddress.ofIpv4(address), NetworkPort.of(portInt))
+        }
+
+        /**
+         * 从字节缓冲区创建IPv4网络端点实例
+         *
+         * 该方法从给定的ByteBuffer中读取数据，构建一个包含IPv4地址和端口的网络端点对象。
+         * 该方法按照协议顺序从缓冲区中读取IPv4地址数据和端口数据。
+         *
+         * @param byteBuffer 包含IPv4地址和端口数据的字节缓冲区，缓冲区中的数据应按照先地址后端口的顺序排列
+         * @return 返回一个NetworkEndpoint实例，包含从缓冲区解析出的IPv4地址和端口信息
+         */
+        @JvmStatic
+        fun ofIpv4(byteBuffer: ByteBuffer): NetworkEndpoint {
+            return NetworkEndpoint(
+                NetworkAddress.ofIpv4(byteBuffer),
+                NetworkPort.of(byteBuffer)
+            )
+        }
+
+        /**
          * 根据"host:port"格式的字符串创建NetworkEndpoint实例。
          * 例如："127.0.0.1:8080"
          *
@@ -327,7 +451,7 @@ class NetworkEndpoint private constructor(
      * @return 包含详细信息的字符串
      */
     override fun toString(): String {
-        return "NetworkEndpoint(IP=${networkAddress.ip},Port=${networkPort.port},Endpoint=${toHostPortString()})"
+        return "NetworkEndpoint(IP=${networkAddress.ip},Port=${networkPort.port})"
     }
 
     /**
@@ -346,5 +470,40 @@ class NetworkEndpoint private constructor(
      */
     fun port(): Int {
         return networkPort.port
+    }
+
+    /**
+     * 将网络地址和端口转换为IPv4字节数组
+     *
+     * 该函数将当前对象的网络地址转换为IPv4字节数组，并与端口字节数组合并，
+     * 生成一个包含6个字节的数组，其中前4个字节为IPv4地址，后2个字节为端口号
+     *
+     * @return ByteArray 包含6个字节的数组，前4个字节为IPv4地址，后2个字节为端口号
+     */
+    fun toIpv4ByteArray(): ByteArray {
+        val ipv4ByteArray = networkAddress.toIpv4ByteArray()
+        val portByteArray = networkPort.toByteArray()
+        // 构建包含IPv4地址和端口的6字节数组
+        val byteArray = ByteArray(6) {
+            if (it < 4) {
+                ipv4ByteArray[it]
+            } else {
+                portByteArray[it - 4]
+            }
+        }
+        return byteArray
+    }
+
+    /**
+     * 将IPv4地址和端口信息写入字节缓冲区
+     *
+     * 该函数依次将网络地址的IPv4表示和网络端口写入到指定的字节缓冲区中
+     *
+     * @param byteBuffer 要写入数据的目标字节缓冲区
+     */
+    fun writeIpv4toByteBuffer(byteBuffer: ByteBuffer): ByteBuffer {
+        networkAddress.writeIpv4ToByteBuffer(byteBuffer)
+        networkPort.writeToByteBuffer(byteBuffer)
+        return byteBuffer
     }
 }

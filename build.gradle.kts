@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2025-09-21 15:36:59
+ * LastUpdate 2026-01-06 14:05:20
  * UpdateUser MingLiPro
  */
 
@@ -69,14 +69,14 @@ dependencies {
     implementation("org.slf4j:slf4j-api:2.0.17")
 
     implementation("com.mingliqiye.utils.jna:WinKernel32Api:1.0.1")
-    // https://github.com/jeremyh/jBCrypt
-    implementation("org.mindrot:jbcrypt:0.4")
+    compileOnly("org.mindrot:jbcrypt:0.4")
 
     compileOnly("org.springframework.boot:spring-boot-starter:2.7.14")
     compileOnly("com.fasterxml.jackson.core:jackson-databind:2.19.2")
     compileOnly("com.google.code.gson:gson:2.13.1")
     compileOnly("org.mybatis:mybatis:3.5.19")
     compileOnly("com.alibaba.fastjson2:fastjson2:2.0.58")
+    compileOnly("io.netty:netty-all:4.2.9.Final")
 
     compileOnly("com.baomidou:mybatis-plus-core:3.0.1")
     compileOnly("net.java.dev.jna:jna:5.17.0")

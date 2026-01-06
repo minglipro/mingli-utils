@@ -16,15 +16,27 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Main.kt
- * LastUpdate 2026-01-06 14:36:10
+ * LastUpdate 2026-01-06 14:04:14
  * UpdateUser MingLiPro
  */
-@file:JvmName("Main")
 
-package com.mingliqiye.utils.main
+package com.mingliqiye.utils
 
-import com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
+import com.mingliqiye.utils.network.NetworkEndpoint
+import com.mingliqiye.utils.uuid.UUID
+import java.nio.ByteBuffer
 
 fun main() {
-    AutoConfiguration.printBanner()
+    val byteBuffer = ByteBuffer.allocate(320)
+    NetworkEndpoint
+        .of("0:65532")
+        .writeIpv4toByteBuffer(byteBuffer)
+
+    UUID.getMaxUUID().writeToByteBuffer(byteBuffer)
+
+    byteBuffer.flip()
+
+    println(NetworkEndpoint.ofIpv4(byteBuffer))
+    println(UUID.of(byteBuffer))
+
 }

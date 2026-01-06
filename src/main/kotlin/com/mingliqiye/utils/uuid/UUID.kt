@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2025-09-21 21:53:40
+ * LastUpdate 2026-01-06 12:55:04
  * UpdateUser MingLiPro
  */
 
@@ -235,6 +235,19 @@ class UUID : Serializable {
         }
 
         /**
+         * 从ByteBuffer创建UUID对象
+         *
+         * @param byteBuffer 包含UUID字节数据的ByteBuffer对象，必须包含至少16个字节的数据
+         * @return 从ByteBuffer中读取的16个字节创建的UUID对象
+         */
+        @JvmStatic
+        fun of(byteBuffer: ByteBuffer): UUID {
+            val byte = ByteArray(16)
+            byteBuffer.get(byte)
+            return UUID(byte)
+        }
+
+        /**
          * 根据 MySQL UUID 字节数组创建 UUID 实例。
          *
          * @param byteArray MySQL UUID 字节数组
@@ -295,7 +308,6 @@ class UUID : Serializable {
         fun JUUID.toMLUUID(): UUID {
             return UUID(this)
         }
-
 
         /**
          * 从字符串解析 UUID 字节数组。
@@ -420,6 +432,10 @@ class UUID : Serializable {
      */
     fun toBytes(): ByteArray {
         return data
+    }
+
+    fun writeToByteBuffer(byteBuffer: ByteBuffer): ByteBuffer {
+        return byteBuffer.put(data)
     }
 
     /**
