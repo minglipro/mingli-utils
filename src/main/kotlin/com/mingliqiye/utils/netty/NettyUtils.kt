@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NettyUtils.kt
- * LastUpdate 2026-01-06 14:33:44
+ * LastUpdate 2026-01-07 10:00:31
  * UpdateUser MingLiPro
  */
 
@@ -78,13 +78,4 @@ fun ByteBuf.toByteArray(): ByteArray {
  */
 fun ByteArray.toByteBuf(): ByteBuf {
     return Unpooled.wrappedBuffer(this)
-}
-
-/**
- * 将字节数组转换为ByteBuffer对象
- *
- * @return 转换后的ByteBuffer对象，该ByteBuffer包装了原始字节数组
- */
-fun ByteArray.toByteBuffer(): ByteBuffer {
-    return ByteBuffer.wrap(this)
 }
