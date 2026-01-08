@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,15 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile StreamEmptyException.java
- * LastUpdate 2025-09-20 13:24:07
+ * CurrentFile StreamEmptyException.kt
+ * LastUpdate 2026-01-07 19:13:29
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.stream;
+package com.mingliqiye.utils.stream
 
-public class StreamEmptyException extends java.lang.RuntimeException {
+class StreamEmptyException : RuntimeException {
+    constructor(message: String) : super(message)
 
-    public StreamEmptyException(String message) {
-        super(message);
-    }
-
-    public StreamEmptyException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    constructor(message: String, cause: Throwable) : super(message, cause)
 }

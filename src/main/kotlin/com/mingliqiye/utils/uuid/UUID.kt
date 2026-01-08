@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2026-01-06 12:55:04
+ * LastUpdate 2026-01-08 13:21:00
  * UpdateUser MingLiPro
  */
 
@@ -537,7 +537,7 @@ class UUID : Serializable {
      * @return MySQL 格式的 UUID 字节数组
      */
     fun toMysql(): ByteArray {
-        return mysqlToUuid(this.data)
+        return uuidToMysql(this.data)
     }
 
     /**
@@ -546,7 +546,7 @@ class UUID : Serializable {
      * @return MySQL 格式的 UUID 实例
      */
     fun toMysqlUUID(): UUID {
-        return of(mysqlToUuid(this.data))
+        return of(uuidToMysql(this.data))
     }
 
     /**

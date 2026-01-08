@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,14 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile CallType.java
- * LastUpdate 2025-09-21 21:06:52
+ * CurrentFile CallType.kt
+ * LastUpdate 2026-01-07 19:06:59
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.mybatis;
+package com.mingliqiye.utils.mybatis
 
-/**
- * CallType枚举类定义了不同的调用类型
- * 用于标识数据库操作中结果集和可调用语句的访问方式
- */
-public enum CallType {
+enum class CallType {
     /**
      * 通过索引访问结果集
      * 使用数字索引位置来获取结果集中的数据

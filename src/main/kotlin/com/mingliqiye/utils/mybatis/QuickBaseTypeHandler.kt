@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,28 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile QuickBaseTypeHandler.java
- * LastUpdate 2025-09-21 21:10:36
+ * CurrentFile QuickBaseTypeHandler.kt
+ * LastUpdate 2026-01-08 07:59:47
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.mybatis;
+package com.mingliqiye.utils.mybatis
 
-import org.apache.ibatis.type.BaseTypeHandler;
-import org.apache.ibatis.type.JdbcType;
-
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.apache.ibatis.type.BaseTypeHandler
+import org.apache.ibatis.type.JdbcType
+import java.sql.CallableStatement
+import java.sql.PreparedStatement
+import java.sql.ResultSet
+import java.sql.SQLException
 
 /**
  * 抽象类 QuickBaseTypeHandler 是 MyBatis 的 BaseTypeHandler 的扩展，
  * 提供了统一处理数据库字段与 Java 类型之间转换的抽象方法。
  * 子类需要实现 getValue 和 setValue 方法来完成具体的类型转换逻辑。
  *
- * @param <T> 要处理的 Java 类型
+ * @param T 要处理的 Java 类型
  */
-public abstract class QuickBaseTypeHandler<T> extends BaseTypeHandler<T> {
-
+abstract class QuickBaseTypeHandler<T> : BaseTypeHandler<T>() {
     /**
      * 抽象方法，用于从数据库结果中获取并转换为 Java 类型 T。
      *
@@ -49,12 +47,13 @@ public abstract class QuickBaseTypeHandler<T> extends BaseTypeHandler<T> {
      * @return 转换后的 Java 类型 T 实例
      * @throws SQLException SQL 执行异常时抛出
      */
-    public abstract T getValue(
-            QuickBaseTypeHandlerValueGetter vg,
-            CallType ct,
-            Integer ci,
-            String cn
-    ) throws SQLException;
+    @Throws(SQLException::class)
+    abstract fun getValue(
+        vg: QuickBaseTypeHandlerValueGetter,
+        ct: CallType,
+        ci: Int?,
+        cn: String?
+    ): T
 
     /**
      * 抽象方法，用于将 Java 类型 T 设置到 PreparedStatement 中。
@@ -65,7 +64,8 @@ public abstract class QuickBaseTypeHandler<T> extends BaseTypeHandler<T> {
      * @param jdbcType  JDBC 类型
      * @throws SQLException SQL 执行异常时抛出
      */
-    public abstract void setValue(PreparedStatement ps, int index, T parameter, JdbcType jdbcType) throws SQLException;
+    @Throws(SQLException::class)
+    abstract fun setValue(ps: PreparedStatement, index: Int, parameter: T, jdbcType: JdbcType?)
 
     /**
      * 实现 BaseTypeHandler 的 setNonNullParameter 方法，
@@ -77,9 +77,9 @@ public abstract class QuickBaseTypeHandler<T> extends BaseTypeHandler<T> {
      * @param jdbcType  JDBC 类型
      * @throws SQLException SQL 执行异常时抛出
      */
-    @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException {
-        setValue(ps, i, parameter, jdbcType);
+    @Throws(SQLException::class)
+    override fun setNonNullParameter(ps: PreparedStatement, i: Int, parameter: T, jdbcType: JdbcType?) {
+        setValue(ps, i, parameter, jdbcType)
     }
 
     /**
@@ -91,9 +91,9 @@ public abstract class QuickBaseTypeHandler<T> extends BaseTypeHandler<T> {
      * @return 转换后的 Java 类型 T 实例（可能为 null）
      * @throws SQLException SQL 执行异常时抛出
      */
-    @Override
-    public T getNullableResult(ResultSet rs, String columnName) throws SQLException {
-        return getValue(new QuickBaseTypeHandlerValueGetter(null, rs), CallType.RESULTSET_NAME, null, columnName);
+    @Throws(SQLException::class)
+    override fun getNullableResult(rs: ResultSet, columnName: String): T {
+        return getValue(QuickBaseTypeHandlerValueGetter(null, rs), CallType.RESULTSET_NAME, null, columnName)
     }
 
     /**
@@ -105,9 +105,9 @@ public abstract class QuickBaseTypeHandler<T> extends BaseTypeHandler<T> {
      * @return 转换后的 Java 类型 T 实例（可能为 null）
      * @throws SQLException SQL 执行异常时抛出
      */
-    @Override
-    public T getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-        return getValue(new QuickBaseTypeHandlerValueGetter(null, rs), CallType.RESULTSET_NAME, columnIndex, null);
+    @Throws(SQLException::class)
+    override fun getNullableResult(rs: ResultSet, columnIndex: Int): T {
+        return getValue(QuickBaseTypeHandlerValueGetter(null, rs), CallType.RESULTSET_INDEX, columnIndex, null)
     }
 
     /**
@@ -119,8 +119,8 @@ public abstract class QuickBaseTypeHandler<T> extends BaseTypeHandler<T> {
      * @return 转换后的 Java 类型 T 实例（可能为 null）
      * @throws SQLException SQL 执行异常时抛出
      */
-    @Override
-    public T getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-        return getValue(new QuickBaseTypeHandlerValueGetter(cs, null), CallType.CALLABLE_STATEMENT_INDEX, columnIndex, null);
+    @Throws(SQLException::class)
+    override fun getNullableResult(cs: CallableStatement, columnIndex: Int): T {
+        return getValue(QuickBaseTypeHandlerValueGetter(cs, null), CallType.CALLABLE_STATEMENT_INDEX, columnIndex, null)
     }
 }

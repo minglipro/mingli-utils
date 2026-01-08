@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MysqlUUIDv1.kt
- * LastUpdate 2025-09-15 22:32:50
+ * LastUpdate 2026-01-08 08:22:14
  * UpdateUser MingLiPro
  */
-@file:JvmName("MysqlUUIDv1")
+@file:JvmName("MysqlUUIDConvertor")
 
 package com.mingliqiye.utils.uuid
 
