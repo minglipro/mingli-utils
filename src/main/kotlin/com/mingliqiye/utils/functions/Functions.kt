@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Functions.kt
- * LastUpdate 2025-09-15 09:56:54
+ * LastUpdate 2026-01-09 08:12:01
  * UpdateUser MingLiPro
  */
 
@@ -83,6 +83,11 @@ class Debouncer(private val delay: Long, unit: TimeUnit) {
 @FunctionalInterface
 fun interface P1Function<P> {
     fun call(p: P)
+}
+
+@FunctionalInterface
+fun interface RFunction<R> {
+    fun call(): R
 }
 
 @FunctionalInterface
