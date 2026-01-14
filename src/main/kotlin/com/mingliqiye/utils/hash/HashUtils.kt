@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile HashUtils.kt
- * LastUpdate 2025-09-19 20:24:33
+ * LastUpdate 2026-01-11 09:09:52
  * UpdateUser MingLiPro
  */
 @file:JvmName("HashUtils")
@@ -24,9 +24,9 @@
 package com.mingliqiye.utils.hash
 
 
-import com.mingliqiye.utils.base.BASE16
 import com.mingliqiye.utils.bcrypt.checkpw
 import com.mingliqiye.utils.bcrypt.hashpw
+import com.mingliqiye.utils.bytes.bytesToHex
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -62,16 +62,6 @@ fun calculateFileHash(file: File, algorithm: String): String {
     }
 
     return bytesToHex(digest.digest())
-}
-
-/**
- * 将字节数组转换为十六进制字符串表示。
- *
- * @param bytes 输入的字节数组
- * @return 对应的十六进制字符串
- */
-private fun bytesToHex(bytes: ByteArray): String {
-    return BASE16.encode(bytes)
 }
 
 /**

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-01-08 11:10:03
+ * LastUpdate 2026-01-14 13:01:44
  * UpdateUser MingLiPro
  */
 
@@ -78,7 +78,7 @@ dependencies {
     compileOnly("com.alibaba.fastjson2:fastjson2:2.0.58")
     compileOnly("io.netty:netty-all:4.1.130.Final")
 
-    compileOnly("com.baomidou:mybatis-plus-core:3.0.1")
+    compileOnly("com.baomidou:mybatis-plus-core:3.5.15")
     compileOnly("net.java.dev.jna:jna:5.17.0")
 }
 
