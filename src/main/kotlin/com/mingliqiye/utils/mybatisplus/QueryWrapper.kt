@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,16 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile QueryWrapper.kt
- * LastUpdate 2025-09-20 14:21:44
+ * LastUpdate 2026-01-14 13:00:31
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.mybatisplus
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
 
 /**
@@ -38,5 +41,32 @@ interface BaseMapperQuery<T> : BaseMapper<T> {
      */
     fun queryWrapper(): QueryWrapper<T> {
         return QueryWrapper<T>()
+    }
+
+    /**
+     * 创建并返回一个新的UpdateWrapper实例
+     *
+     * @return UpdateWrapper<T> 返回类型化的更新包装器实例
+     */
+    fun updateWrapper(): UpdateWrapper<T> {
+        return UpdateWrapper<T>()
+    }
+
+    /**
+     * 创建并返回一个新的LambdaQueryWrapper实例
+     *
+     * @return LambdaQueryWrapper<T> 返回类型化的Lambda查询包装器实例
+     */
+    fun lambdaQueryWrapper(): LambdaQueryWrapper<T> {
+        return LambdaQueryWrapper<T>()
+    }
+
+    /**
+     * 创建并返回一个新的LambdaUpdateWrapper实例
+     *
+     * @return LambdaUpdateWrapper<T> 返回类型化的Lambda更新包装器实例
+     */
+    fun lambdaUpdateWrapper(): LambdaUpdateWrapper<T> {
+        return LambdaUpdateWrapper<T>()
     }
 }

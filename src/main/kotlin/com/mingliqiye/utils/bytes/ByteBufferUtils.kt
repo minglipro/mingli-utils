@@ -16,14 +16,16 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ByteBufferUtils.kt
- * LastUpdate 2026-01-07 10:01:45
+ * LastUpdate 2026-01-11 09:44:19
  * UpdateUser MingLiPro
  */
 
-@file:JvmName("ByteBufferUtil")
+@file:JvmName("ByteBufferUtils")
 
 package com.mingliqiye.utils.bytes
 
+import java.io.IOException
+import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
@@ -203,3 +205,93 @@ fun ByteBuffer.putBoolean(boolean: Boolean): ByteBuffer = this.put(if (boolean) 
 fun ByteArray.toByteBuffer(): ByteBuffer {
     return ByteBuffer.wrap(this)
 }
+
+/**
+ * 从ByteBuffer中读取一个变长整数（VarNumber）。
+ *
+ * 变长整数使用可变长度编码方式，每个字节的最高位表示是否还有后续字节：
+ * - 如果最高位为1，则表示还有下一个字节；
+ * - 如果最高位为0，则表示当前字节是最后一个字节。
+ *
+ * @param size 最大允许读取的字节数，默认为8（即Long类型的最大长度）。
+ * @return 解码后的长整型数值。
+ * @throws IOException 当读取过程中发生IO异常时抛出。
+ */
+fun ByteBuffer.getVarLong(size: Int = 8): Long {
+    var numRead = 0
+    var result: Long = 0
+    var read: Byte
+    do {
+        read = this.get()
+        // 将当前字节的有效7位数据左移相应位置后与结果进行按位或运算
+        result = result or ((read.toLong() and 127) shl (7 * numRead))
+        numRead++
+        if (numRead > size) {
+            throw IOException("VarNumber is too big")
+        }
+    } while ((read.toLong() and 128) != 0L)
+    return result
+}
+
+/**
+ * 从ByteBuffer中读取一个变长整数（VarNumber），返回Int类型。
+ *
+ * @return 解码后的整型数值。
+ */
+fun ByteBuffer.getVarInt(): Int = this.getVarLong(4).toInt()
+
+/**
+ * 从ByteBuffer中读取一个变长整数（VarNumber），返回Short类型。
+ *
+ * @return 解码后的短整型数值。
+ */
+fun ByteBuffer.getVarShort(): Short = this.getVarLong(2).toShort()
+
+/**
+ * 从输入流中读取一个变长长整数（VarLong），最大长度默认为8个字节。
+ *
+ * @return 解码后的长整型数值。
+ * @throws IOException 当读取过程中发生IO异常时抛出。
+ */
+@Throws(IOException::class)
+fun ByteBuffer.getVarLong(): Long = this.getVarLong(8)
+
+
+/**
+ * 将长整型数值编码为变长格式并写入ByteBuffer
+ *
+ * 变长整数使用可变长度编码方式，每个字节的最高位表示是否还有后续字节：
+ * - 如果数值还有更多字节，则最高位设为1；
+ * - 最后一个字节最高位设为0。
+ *
+ * @param value 要写入的长整型数值
+ * @return 当前ByteBuffer实例（支持链式调用）
+ */
+fun ByteBuffer.putVarLong(value: Long): ByteBuffer {
+    var v = value
+    while (v >= 0x80) {
+        this.put((v and 0x7F or 0x80).toByte())
+        v = v shr 7
+    }
+    this.put(v.toByte())
+    return this
+}
+
+/**
+ * 将整型数值编码为变长格式并写入ByteBuffer
+ *
+ * @param value 要写入的整型数值
+ * @return 当前ByteBuffer实例（支持链式调用）
+ */
+fun ByteBuffer.putVarInt(value: Int): ByteBuffer = this.putVarLong(value.toLong())
+
+/**
+ * 将短整型数值编码为变长格式并写入ByteBuffer
+ *
+ * @param value 要写入的短整型数值
+ * @return 当前ByteBuffer实例（支持链式调用）
+ */
+fun ByteBuffer.putVarShort(value: Short): ByteBuffer = this.putVarLong(value.toLong())
+
+
+fun ByteBuffer.writeStream(outputStream: OutputStream) = outputStream.write(this.toByteArray())
