@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.kt
- * LastUpdate 2025-09-17 19:06:39
+ * LastUpdate 2026-02-04 21:54:04
  * UpdateUser MingLiPro
  */
 
@@ -26,7 +26,7 @@ import com.mingliqiye.utils.jna.FILETIME_EPOCH_OFFSET
 import com.mingliqiye.utils.jna.NANOS_PER_100NS
 import com.mingliqiye.utils.jna.WinKernel32Api
 import com.mingliqiye.utils.jna.getWinKernel32Apis
-import com.mingliqiye.utils.logger.mingLiLoggerFactory
+import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import com.mingliqiye.utils.system.isWindows
 import com.mingliqiye.utils.system.javaVersionAsInteger
 import org.slf4j.Logger
@@ -39,131 +39,6 @@ import java.util.*
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-
-/**
- * 时间位移 类
- *
- * @author MingLiPro
- */
-class DateTimeOffset private constructor(
-    val offsetType: ChronoUnit, val offset: Long
-) {
-
-    companion object {
-        /**
-         * 创建一个新的DateTimeOffset实例
-         *
-         * @param offsetType 偏移量的单位类型，指定偏移量的计算单位
-         * @param offset     偏移量的数值，可以为正数、负数或零
-         * @return 返回一个新的DateTimeOffset对象，包含指定的偏移量信息
-         */
-        @JvmStatic
-        fun of(offsetType: ChronoUnit, offset: Long): DateTimeOffset {
-            return DateTimeOffset(offsetType, offset)
-        }
-
-        /**
-         * 创建一个 DateTimeOffset 实例
-         *
-         * @param offset     偏移量数值
-         * @param offsetType 偏移量的时间单位类型
-         * @return 返回一个新的 DateTimeOffset 实例
-         */
-        @JvmStatic
-        fun of(offset: Long, offsetType: ChronoUnit): DateTimeOffset {
-            return DateTimeOffset(offsetType, offset)
-        }
-    }
-}
-
-
-/**
- * 时间格式化枚举类
- *
- *
- * 定义了常用的时间格式化模式，用于日期时间的解析和格式化操作
- * 每个枚举常量包含对应的格式化字符串和字符串长度
- *
- */
-enum class Formatter(private val value: String) {
-    /**
-     * 标准日期时间格式：yyyy-MM-dd HH:mm:ss
-     */
-    STANDARD_DATETIME("yyyy-MM-dd HH:mm:ss"),
-
-    /**
-     * 标准日期时间格式(7位毫秒)：yyyy-MM-dd HH:mm:ss.SSSSSSS
-     */
-    STANDARD_DATETIME_MILLISECOUND7("yyyy-MM-dd HH:mm:ss.SSSSSSS"),
-    STANDARD_DATETIME_MILLISECOUND8("yyyy-MM-dd HH:mm:ss.SSSSSSSS"),
-    STANDARD_DATETIME_MILLISECOUND9("yyyy-MM-dd HH:mm:ss.SSSSSSSSS"),
-
-    /**
-     * 标准日期时间格式(6位毫秒)：yyyy-MM-dd HH:mm:ss.SSSSSS
-     */
-    STANDARD_DATETIME_MILLISECOUND6("yyyy-MM-dd HH:mm:ss.SSSSSS"),
-
-    /**
-     * 标准日期时间格式(5位毫秒)：yyyy-MM-dd HH:mm:ss.SSSSS
-     */
-    STANDARD_DATETIME_MILLISECOUND5("yyyy-MM-dd HH:mm:ss.SSSSS"),
-
-    /**
-     * 标准日期时间格式(4位毫秒)：yyyy-MM-dd HH:mm:ss.SSSS
-     */
-    STANDARD_DATETIME_MILLISECOUND4("yyyy-MM-dd HH:mm:ss.SSSS"),
-
-    /**
-     * 标准日期时间格式(3位毫秒)：yyyy-MM-dd HH:mm:ss.SSS
-     */
-    STANDARD_DATETIME_MILLISECOUND3("yyyy-MM-dd HH:mm:ss.SSS"),
-
-    /**
-     * 标准日期时间格式(2位毫秒)：yyyy-MM-dd HH:mm:ss.SS
-     */
-    STANDARD_DATETIME_MILLISECOUND2("yyyy-MM-dd HH:mm:ss.SS"),
-
-    /**
-     * 标准日期时间格式(1位毫秒)：yyyy-MM-dd HH:mm:ss.S
-     */
-    STANDARD_DATETIME_MILLISECOUND1("yyyy-MM-dd HH:mm:ss.S"),
-
-    /**
-     * 标准ISO格式：yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
-     */
-    STANDARD_ISO("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
-
-    /**
-     * 标准日期时间秒格式：yyyy-MM-dd HH:mm:ss
-     */
-    STANDARD_DATETIME_SECOUND("yyyy-MM-dd HH:mm:ss"),
-
-    /**
-     * 标准日期格式：yyyy-MM-dd
-     */
-    STANDARD_DATE("yyyy-MM-dd"),
-
-    /**
-     * ISO8601格式：yyyy-MM-dd'T'HH:mm:ss.SSS'000'
-     */
-    ISO8601("yyyy-MM-dd'T'HH:mm:ss.SSS'000'"),
-
-    /**
-     * 紧凑型日期时间格式：yyyyMMddHHmmss
-     */
-    COMPACT_DATETIME("yyyyMMddHHmmss");
-
-
-    private val len: Int = value.length
-
-    fun getLen(): Int {
-        return this.len
-    }
-
-    fun getValue(): String {
-        return this.value
-    }
-}
 
 /**
  * 时间类，用于处理日期时间的转换、格式化等操作。
@@ -186,7 +61,7 @@ class DateTime private constructor(
 
     companion object {
         private val WIN_KERNEL_32_API: WinKernel32Api? = if (javaVersionAsInteger == 8 && isWindows) {
-            val log: Logger = mingLiLoggerFactory.getLogger("mingli-utils DateTime")
+            val log: Logger = MingLiLoggerFactory.getLogger("mingli-utils DateTime")
             val a = getWinKernel32Apis()
 
             if (a.size > 1) {
@@ -284,11 +159,10 @@ class DateTime private constructor(
             timestr: String
         ): DateTime {
 
-            val formatterString = Formatter.STANDARD_DATETIME_MILLISECOUND9.getValue()
+            val formatterString = Formatter.STANDARD_DATETIME_MILLISECOUND9.value
             return DateTime(
                 LocalDateTime.parse(
-                    getFillZeroByLen(timestr, formatterString),
-                    DateTimeFormatter.ofPattern(formatterString)
+                    getFillZeroByLen(timestr, formatterString), DateTimeFormatter.ofPattern(formatterString)
                 )
             )
         }
@@ -305,7 +179,7 @@ class DateTime private constructor(
         fun parse(
             timestr: String, formatter: Formatter, fillZero: Boolean
         ): DateTime {
-            return parse(timestr, formatter.getValue(), fillZero)
+            return parse(timestr, formatter.value, fillZero)
         }
 
         /**
@@ -317,7 +191,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun parse(timestr: String, formatter: Formatter): DateTime {
-            return parse(timestr, formatter.getValue())
+            return parse(timestr, formatter.value)
         }
 
         /**
@@ -340,23 +214,24 @@ class DateTime private constructor(
          * @return 补零后的时间字符串
          */
         private fun getFillZeroByLen(dstr: String, formats: String): String {
-            if (dstr.length == formats.length) {
+            val formatslen = formats.replace("'", "").length
+            if (dstr.length == formatslen) {
                 return dstr
             }
-            if (formats.length > dstr.length) {
+            if (formatslen > dstr.length) {
                 var modifiedDstr = dstr
                 if (dstr.length == 19) {
                     modifiedDstr += "."
                 }
                 val sb = StringBuilder(modifiedDstr)
-                for (i in 0 until formats.length - sb.length) {
+                for (i in 0 until formatslen - sb.length) {
                     sb.append("0")
                 }
                 return sb.toString()
             }
             throw IllegalArgumentException(
                 String.format(
-                    "Text: '%s' len %s < %s %s", dstr, dstr.length, formats, formats.length
+                    "Text: '%s' len %s < %s %s", dstr, dstr.length, formats, formatslen
                 )
             )
         }
@@ -521,6 +396,20 @@ class DateTime private constructor(
     }
 
     /**
+     * 重载加法运算符，将指定的DateTimeOffset添加到当前DateTime对象
+     * @param dateTimeOffset 要添加的时间偏移量
+     * @return 返回相加后的新DateTime对象
+     */
+    operator fun plus(dateTimeOffset: DateTimeOffset): DateTime = add(dateTimeOffset)
+
+    /**
+     * 重载减法运算符，从当前DateTime对象中减去指定的DateTimeOffset
+     * @param dateTimeOffset 要减去的时间偏移量
+     * @return 返回相减后的新DateTime对象
+     */
+    operator fun minus(dateTimeOffset: DateTimeOffset): DateTime = sub(dateTimeOffset)
+
+    /**
      * 在当前时间基础上减少指定的时间偏移量。
      *
      * @param dateTimeOffset 时间偏移对象
@@ -547,11 +436,11 @@ class DateTime private constructor(
      * @return 返回格式化后的时间字符串
      */
     fun format(formatter: Formatter): String {
-        return format(formatter.getValue())
+        return format(formatter.value)
     }
 
     fun format(): String {
-        return format(Formatter.STANDARD_DATETIME_MILLISECOUND9.getValue(), true)
+        return format(Formatter.STANDARD_DATETIME_MILLISECOUND9.value, true)
     }
 
     /**
@@ -581,7 +470,7 @@ class DateTime private constructor(
      * @return 返回格式化后的时间字符串
      */
     fun format(formatter: Formatter, repcZero: Boolean): String {
-        return format(formatter.getValue(), repcZero)
+        return format(formatter.value, repcZero)
     }
 
     /**
@@ -668,7 +557,6 @@ class DateTime private constructor(
      */
     fun toNanoTime(): Long {
         val instant = toInstant()
-
         return try {
             val secondsInNanos = Math.multiplyExact(instant.epochSecond, 1_000_000_000L)
             Math.addExact(secondsInNanos, instant.nano.toLong())

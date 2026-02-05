@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SpringBeanUtils.kt
- * LastUpdate 2025-09-19 20:07:08
+ * LastUpdate 2026-02-04 16:50:39
  * UpdateUser MingLiPro
  */
 
@@ -39,6 +39,9 @@ class SpringBeanUtils : ApplicationContextAware {
         @JvmStatic
         private var applicationContext: ApplicationContext? = null
 
+        @Throws(BeansException::class)
+        inline fun <reified T> getBean() = getBean(T::class.java)
+
         /**
          * 根据Bean名称获取Bean实例
          *
@@ -48,11 +51,9 @@ class SpringBeanUtils : ApplicationContextAware {
          * @throws ClassCastException 当类型转换失败时抛出
          */
         @JvmStatic
-        @Throws(BeansException::class, ClassCastException::class)
+        @Throws(BeansException::class)
         @Suppress("UNCHECKED_CAST")
-        fun <T> getBean(name: String): T {
-            return applicationContext!!.getBean(name) as T
-        }
+        fun getBean(name: String): Any = applicationContext!!.getBean(name)
 
         /**
          * 根据Bean类型获取Bean实例

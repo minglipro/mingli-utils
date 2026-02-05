@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Loggers.kt
- * LastUpdate 2025-09-18 09:30:48
+ * LastUpdate 2026-02-05 10:20:31
  * UpdateUser MingLiPro
  */
 
@@ -26,9 +26,7 @@ package com.mingliqiye.utils.logger
 
 
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.slf4j.Marker
-import java.util.*
 
 enum class MingLiLoggerLevel {
     TRACE,
@@ -38,9 +36,9 @@ enum class MingLiLoggerLevel {
     ERROR
 }
 
-class MingLiLogger : Logger {
+class MingLiLogger(private val name: String) : Logger {
     override fun getName(): String {
-        return "MingLiLogger"
+        return name
     }
 
     override fun isTraceEnabled(): Boolean {
@@ -345,12 +343,16 @@ class MingLiLogger : Logger {
 
     fun toPrintln(message: String, level: MingLiLoggerLevel) {
         when (level) {
-            MingLiLoggerLevel.TRACE -> println("[TRACE] $message")
-            MingLiLoggerLevel.DEBUG -> println("[DEBUG] $message")
-            MingLiLoggerLevel.INFO -> println("[INFO] $message")
-            MingLiLoggerLevel.WARN -> println("[WARN] $message")
-            MingLiLoggerLevel.ERROR -> println("[ERROR] $message")
+            MingLiLoggerLevel.TRACE -> wirteToSteam("[TRACE] [$name] $message\n")
+            MingLiLoggerLevel.DEBUG -> wirteToSteam("[DEBUG] [$name] $message\n")
+            MingLiLoggerLevel.INFO -> wirteToSteam("[INFO] [$name] $message\n")
+            MingLiLoggerLevel.WARN -> wirteToSteam("[WARN] [$name] $message\n")
+            MingLiLoggerLevel.ERROR -> wirteToSteam("[ERROR] [$name] $message\n")
         }
+    }
+
+    fun wirteToSteam(string: String) {
+        System.out.write(string.toByteArray())
     }
 
     private fun format1(format: String, arg: Any?): String {
@@ -374,48 +376,3 @@ class MingLiLogger : Logger {
         return result
     }
 }
-
-class MingLiLoggerFactory {
-    private var hasSLF4JImplementation: Boolean? = null
-
-    // 线程安全的延迟初始化
-    private fun checkSLF4JImplementation(): Boolean {
-        if (hasSLF4JImplementation == null) {
-            synchronized(this) {
-                if (hasSLF4JImplementation == null) {
-                    hasSLF4JImplementation = try {
-                        // 更可靠的检测方式
-                        ServiceLoader.load(
-                            Class.forName("org.slf4j.spi.SLF4JServiceProvider")
-                        ).iterator().hasNext()
-                    } catch (e: ClassNotFoundException) {
-                        false
-                    } catch (e: NoClassDefFoundError) {
-                        false
-                    }
-                }
-            }
-        }
-        return hasSLF4JImplementation ?: false
-    }
-
-    fun getLogger(name: String): Logger {
-        return if (checkSLF4JImplementation()) {
-            LoggerFactory.getLogger(name)
-        } else {
-            MingLiLogger()
-        }
-    }
-
-    fun getLogger(clazz: Class<*>): Logger {
-        return if (checkSLF4JImplementation()) {
-            LoggerFactory.getLogger(clazz)
-        } else {
-            MingLiLogger()
-        }
-    }
-}
-
-val mingLiLoggerFactory: MingLiLoggerFactory by lazy { MingLiLoggerFactory() }
-
-

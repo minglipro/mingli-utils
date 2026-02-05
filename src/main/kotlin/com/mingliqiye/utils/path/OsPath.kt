@@ -28,8 +28,17 @@ import java.io.File
 import java.net.URI
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.*
+import java.util.function.Consumer
 
 class OsPath private constructor(private val path: Path) : Path by path {
+    override fun forEach(action: Consumer<in Path>?) {
+        path.forEach(action)
+    }
+
+    override fun spliterator(): Spliterator<Path?> {
+        return path.spliterator()
+    }
 
     companion object {
         @JvmStatic

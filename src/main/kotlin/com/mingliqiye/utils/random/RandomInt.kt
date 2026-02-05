@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,24 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile RandomInt.kt
- * LastUpdate 2025-09-12 17:08:32
+ * LastUpdate 2026-01-28 10:46:02
  * UpdateUser MingLiPro
  */
 @file:JvmName("RandomInt")
 
 package com.mingliqiye.utils.random
 
-import java.util.concurrent.ThreadLocalRandom
+import java.security.SecureRandom
+
+val secureRandom: SecureRandom by lazy {
+    SecureRandom.getInstanceStrong()
+}
+
+
+fun SecureRandom.nextInt(min: Int, max: Int): Int {
+    return min + nextInt(max - min)
+}
+
 
 /**
  * 生成指定范围内的随机整数
@@ -42,7 +52,7 @@ fun randomIntNoHave(min: Int, max: Int): Int {
     if (min == max) {
         return min
     }
-    return ThreadLocalRandom.current().nextInt(min, max)
+    return secureRandom.nextInt(min, max)
 }
 
 /**
@@ -55,6 +65,3 @@ fun randomInt(min: Int, max: Int): Int {
     var max = max
     return randomIntNoHave(min, ++max)
 }
-
-
-

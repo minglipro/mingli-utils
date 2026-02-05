@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile RandomString.kt
- * LastUpdate 2025-09-12 17:10:43
+ * LastUpdate 2026-02-05 11:12:36
  * UpdateUser MingLiPro
  */
 @file:JvmName("RandomString")

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTimeTypeHandler.kt
- * LastUpdate 2026-01-07 19:23:12
+ * LastUpdate 2026-02-05 11:20:59
  * UpdateUser MingLiPro
  */
 
@@ -30,6 +30,7 @@ import org.apache.ibatis.type.JdbcType
 import org.apache.ibatis.type.MappedTypes
 import java.sql.PreparedStatement
 import java.sql.Timestamp
+import java.sql.Types.TIMESTAMP
 
 /**
  * DateTime类型处理器，用于在数据库和Java对象之间转换DateTime类型
@@ -42,22 +43,30 @@ class DateTimeTypeHandler : QuickBaseTypeHandler<DateTime>() {
         ct: CallType,
         ci: Int?,
         cn: String?
-    ): DateTime {
+    ): DateTime? {
+        val data = (when (ct) {
+            CallType.RESULTSET_INDEX -> vg.resultSet!!.getTimestamp(ci!!)
+            CallType.RESULTSET_NAME -> vg.resultSet!!.getTimestamp(cn!!)
+            CallType.CALLABLE_STATEMENT_INDEX -> vg.callableStatement!!.getTimestamp(ci!!)
+        })
+        if (data == null) {
+            return null
+        }
         return DateTime.of(
-            (when (ct) {
-                CallType.RESULTSET_INDEX -> vg.resultSet!!.getTimestamp(ci!!)
-                CallType.RESULTSET_NAME -> vg.resultSet!!.getTimestamp(cn!!)
-                CallType.CALLABLE_STATEMENT_INDEX -> vg.callableStatement!!.getTimestamp(ci!!)
-            })
+            data
         )
     }
 
     override fun setValue(
         ps: PreparedStatement,
         index: Int,
-        parameter: DateTime,
+        parameter: DateTime?,
         jdbcType: JdbcType?
     ) {
+        if (parameter == null) {
+            ps.setNull(index, TIMESTAMP)
+            return
+        }
         ps.setTimestamp(index, Timestamp.valueOf(parameter.toLocalDateTime()))
     }
 }

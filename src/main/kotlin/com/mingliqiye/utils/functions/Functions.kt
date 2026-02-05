@@ -16,13 +16,26 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Functions.kt
- * LastUpdate 2026-01-11 09:10:48
+ * LastUpdate 2026-02-05 11:20:59
  * UpdateUser MingLiPro
  */
 
 @file:JvmName("Functions")
 
 package com.mingliqiye.utils.functions
+
+fun <T> T.with(function: Function): T = function.call().let {
+    this
+}
+
+fun <T> T.with(function: P1Function<T>): T = function.call(this).let {
+    this
+}
+
+@FunctionalInterface
+fun interface Function {
+    fun call()
+}
 
 @FunctionalInterface
 fun interface P1Function<P> {
@@ -127,4 +140,598 @@ fun interface P10Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9> {
 @FunctionalInterface
 fun interface P10RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, R> {
     fun call(p: P, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9): R
+}
+
+@FunctionalInterface
+fun interface P11Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10> {
+    fun call(p: P, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9, p10: P10)
+}
+
+@FunctionalInterface
+fun interface P11RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, R> {
+    fun call(p: P, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9, p10: P10): R
+}
+
+@FunctionalInterface
+fun interface P12Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11> {
+    fun call(p: P, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9, p10: P10, p11: P11)
+}
+
+@FunctionalInterface
+fun interface P12RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, R> {
+    fun call(p: P, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9, p10: P10, p11: P11): R
+}
+
+@FunctionalInterface
+fun interface P13Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12> {
+    fun call(p: P, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9, p10: P10, p11: P11, p12: P12)
+}
+
+@FunctionalInterface
+fun interface P13RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12
+    ): R
+}
+
+@FunctionalInterface
+fun interface P14Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13
+    )
+}
+
+@FunctionalInterface
+fun interface P14RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13
+    ): R
+}
+
+@FunctionalInterface
+fun interface P15Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14
+    )
+}
+
+@FunctionalInterface
+fun interface P15RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14
+    ): R
+}
+
+@FunctionalInterface
+fun interface P16Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15
+    )
+}
+
+@FunctionalInterface
+fun interface P16RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15
+    ): R
+}
+
+@FunctionalInterface
+fun interface P17Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16
+    )
+}
+
+@FunctionalInterface
+fun interface P17RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16
+    ): R
+}
+
+@FunctionalInterface
+fun interface P18Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17
+    )
+}
+
+@FunctionalInterface
+fun interface P18RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17
+    ): R
+}
+
+@FunctionalInterface
+fun interface P19Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18
+    )
+}
+
+@FunctionalInterface
+fun interface P19RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18
+    ): R
+}
+
+@FunctionalInterface
+fun interface P20Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18,
+        p19: P19
+    )
+}
+
+@FunctionalInterface
+fun interface P20RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18,
+        p19: P19
+    ): R
+}
+
+@FunctionalInterface
+fun interface P21Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18,
+        p19: P19,
+        p20: P20
+    )
+}
+
+@FunctionalInterface
+fun interface P21RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18,
+        p19: P19,
+        p20: P20
+    ): R
+}
+
+@FunctionalInterface
+fun interface P22Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18,
+        p19: P19,
+        p20: P20,
+        p21: P21
+    )
+}
+
+@FunctionalInterface
+fun interface P22RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18,
+        p19: P19,
+        p20: P20,
+        p21: P21
+    ): R
+}
+
+@FunctionalInterface
+fun interface P23Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18,
+        p19: P19,
+        p20: P20,
+        p21: P21,
+        p22: P22
+    )
+}
+
+@FunctionalInterface
+fun interface P23RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18,
+        p19: P19,
+        p20: P20,
+        p21: P21,
+        p22: P22
+    ): R
+}
+
+@FunctionalInterface
+fun interface P24Function<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18,
+        p19: P19,
+        p20: P20,
+        p21: P21,
+        p22: P22,
+        p23: P23
+    )
+}
+
+@FunctionalInterface
+fun interface P24RFunction<P, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, R> {
+    fun call(
+        p: P,
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        p4: P4,
+        p5: P5,
+        p6: P6,
+        p7: P7,
+        p8: P8,
+        p9: P9,
+        p10: P10,
+        p11: P11,
+        p12: P12,
+        p13: P13,
+        p14: P14,
+        p15: P15,
+        p16: P16,
+        p17: P17,
+        p18: P18,
+        p19: P19,
+        p20: P20,
+        p21: P21,
+        p22: P22,
+        p23: P23
+    ): R
 }

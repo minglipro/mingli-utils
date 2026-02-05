@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,26 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile StringUtils.kt
- * LastUpdate 2025-09-18 09:26:41
+ * LastUpdate 2026-02-05 11:05:33
  * UpdateUser MingLiPro
  */
 @file:JvmName("StringUtils")
 
 package com.mingliqiye.utils.string
 
-import com.mingliqiye.utils.logger.mingLiLoggerFactory
+import com.mingliqiye.utils.base.BASE16
+import com.mingliqiye.utils.logger.MingLiLoggerFactory
+import com.mingliqiye.utils.objects.isNull
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.security.MessageDigest
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 
-val log = mingLiLoggerFactory.getLogger("StringUtils")
+private val log = MingLiLoggerFactory.getLogger(Class.forName("com.mingliqiye.utils.string.StringUtils"))
 
 val NULLISH_STRINGS = setOf("null", "NaN", "undefined", "None", "none")
 
@@ -36,10 +45,17 @@ val NULLISH_STRINGS = setOf("null", "NaN", "undefined", "None", "none")
  * @param str 待判断的字符串
  * @return `true`: 空 `false`: 非空
  */
+@OptIn(ExperimentalContracts::class)
 @JvmName("isEmpty")
 fun String?.isNullish(): Boolean {
-    return this == null || this.isBlank() || this in NULLISH_STRINGS
+    contract {
+        returns(false) implies (this@isNullish != null)
+    }
+    return this.isNullOrBlank() || this in NULLISH_STRINGS
 }
+
+@JvmName("__Formatde")
+fun String.formatd(vararg args: Any) = com.mingliqiye.utils.string.format(this, *args)
 
 /**
  * 格式化字符串，将字符串中的占位符{}替换为对应的参数值
@@ -82,8 +98,16 @@ fun format(str: String, vararg args: Any?): String {
 
     // 检查参数数量
     val placeholderCount = matches.count()
-    if (argIndex != args.size) {
+    if (placeholderCount != args.size) {
         log.warn("Placeholder count: $placeholderCount, Argument count: ${args.size}")
+        log.warn("template : $str")
+        log.warn(
+            "Arguments : [${
+                ", ".join(args) {
+                    if (it.isNull()) return@join "null:null"
+                    "${it.javaClass.simpleName}:$it"
+                }
+            }]")
     }
 
     return finalResult
@@ -214,3 +238,65 @@ fun <T> String.join(list: List<T>, getstring: (T) -> String = { it.toString() })
     return sb.toString()
 }
 
+fun <T> String.join(array: Array<T>, getstring: (T) -> String = { it.toString() }): String {
+    // 使用StringBuilder构建结果字符串
+    val sb = StringBuilder()
+    for (i in array.indices) {
+        sb.append(getstring(array[i]))
+        // 除了最后一个元素外，都在后面添加当前字符串作为分隔符
+        if (i != array.size - 1) {
+            sb.append(this)
+        }
+    }
+    return sb.toString()
+}
+
+fun String?.parserTemplate(template: String): List<String>? {
+    if (this == null) return null
+    val regex: Regex = Regex(
+        "^" +
+                template
+                    .replace("\\", "\\\\")
+                    .replace("(", "\\(")
+                    .replace(")", "\\)")
+                    .replace("[", "\\[")
+                    .replace("]", "\\]")
+                    .replace("+", "\\+")
+                    .replace("=", "\\=")
+                    .replace("{}", "((?s).*)")
+                    .toRegex() +
+                "$"
+    )
+    val datas = regex.find(this)?.groupValues ?: return null
+    return List(datas.size - 1) {
+        datas[it + 1]
+    }
+}
+
+
+fun String.urlEncode() = URLEncoder.encode(this, Charsets.UTF_8.name())
+fun String.urlDecode() = URLDecoder.decode(this, Charsets.UTF_8.name())
+
+
+fun String.hmacSHA256String(keyS: String): String {
+    val instance = Mac.getInstance("HmacSHA256")
+    val key = keyS.toByteArray()
+    instance.init(SecretKeySpec(key, 0, key.size, "HmacSHA256"))
+    val bytes = instance.doFinal(this.toByteArray())
+    return BASE16.encode(bytes)
+}
+
+fun String.md5String(): String {
+    val instance = MessageDigest.getInstance("MD5")
+    instance.update(this.toByteArray())
+    val bytes = instance.digest()
+    return BASE16.encode(bytes)
+}
+
+fun String.hmacMd5String(keyS: String): String {
+    val instance = Mac.getInstance("HmacMD5")
+    val key = keyS.toByteArray()
+    instance.init(SecretKeySpec(key, 0, key.size, "HmacSHA256"))
+    val bytes = instance.doFinal(this.toByteArray())
+    return BASE16.encode(bytes)
+}

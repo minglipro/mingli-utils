@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile IsChanged.kt
- * LastUpdate 2025-09-19 20:17:07
+ * LastUpdate 2026-01-31 21:13:45
  * UpdateUser MingLiPro
  */
 
@@ -39,17 +39,14 @@ class IsChanged<T> {
      */
     private val atomicReferenceData: AtomicReference<T> = AtomicReference()
 
-    /**
-     * 默认构造函数，初始化数据为 null
-     */
-    constructor() : this(null)
+    constructor()
 
     /**
      * 带参数的构造函数，使用指定的初始值初始化
      *
      * @param data 初始数据值
      */
-    constructor(data: T?) : super() {
+    constructor(data: T) : super() {
         atomicReferenceData.set(data)
     }
 
@@ -67,7 +64,7 @@ class IsChanged<T> {
      *
      * @return 当前数据值
      */
-    fun get(): T? {
+    fun get(): T {
         return atomicReferenceData.get()
     }
 
@@ -77,7 +74,7 @@ class IsChanged<T> {
      * @param data 要设置的新数据值
      * @return 设置前的旧数据值
      */
-    fun setAndGet(data: T): T? {
+    fun setAndGet(data: T): T {
         return atomicReferenceData.getAndSet(data)
     }
 
@@ -89,7 +86,7 @@ class IsChanged<T> {
      * @return 如果值发生变化返回 true，否则返回 false
      */
     fun setAndChanged(data: T): Boolean {
-        var currentData: T?
+        var currentData: T
         do {
             currentData = get()
             // 如果新值与当前值相等，则认为没有变化，直接返回 false

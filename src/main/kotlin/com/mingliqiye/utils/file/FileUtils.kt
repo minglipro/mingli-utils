@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile FileUtils.kt
- * LastUpdate 2026-01-11 09:20:20
+ * LastUpdate 2026-01-28 10:49:14
  * UpdateUser MingLiPro
  */
 @file:JvmName("FileUtils")
@@ -642,27 +642,6 @@ fun File.copyTo(target: File) {
     target.parentFile?.mkdirs()
     this.copyTo(target, overwrite = true)
 }
-
-// 删除文件
-/**
- * 删除文件
- *
- * @return 删除操作是否成功
- */
-fun File.delete(): Boolean {
-    return this.delete()
-}
-
-// 检查文件是否存在
-/**
- * 检查文件是否存在
- *
- * @return 文件是否存在
- */
-fun File.exists(): Boolean {
-    return this.exists()
-}
-
 // 获取文件大小
 /**
  * 获取文件大小
