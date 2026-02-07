@@ -1,7 +1,7 @@
-buildTime=$buildTime
-groupId=$GROUPSID
-artifactId=$ARTIFACTID
-version=$VERSIONS
-buildJdkVersion=$JDKVERSIONS
-author=MingLiPro
-website=https://mingli-utils.mingliqiye.com
+com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.buildTime=$buildTime
+com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.groupId=$GROUPSID
+com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.artifactId=$ARTIFACTID
+com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.version=$VERSIONS
+com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.buildJdkVersion=$JDKVERSIONS
+com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.author=MingLiPro
+com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.website=https://mingli-utils.mingliqiye.com

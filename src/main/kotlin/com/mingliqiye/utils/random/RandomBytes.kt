@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,12 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile RandomBytes.kt
- * LastUpdate 2025-09-16 17:42:26
+ * LastUpdate 2026-01-28 10:47:13
  * UpdateUser MingLiPro
  */
 @file:JvmName("RandomBytes")
 
 package com.mingliqiye.utils.random
-
-import java.security.SecureRandom
 
 /**
  * 生成指定长度的随机字节数组
@@ -37,6 +35,7 @@ fun randomBytes(length: Int): ByteArray {
     }
     return bytes
 }
+
 
 /**
  * 生成指定长度的随机字节数组
@@ -81,12 +80,8 @@ fun randomByteNoHave(from: Byte, to: Byte): Byte {
     return (randomValue and 0xFF).toByte()
 }
 
-val secureRandom: SecureRandom by lazy {
-    SecureRandom.getInstanceStrong()
-}
 
-
-fun randomByteSecure(size: Int): ByteArray {
+fun randomByte(size: Int): ByteArray {
     val bytes = ByteArray(size)
     secureRandom.nextBytes(bytes)
     return bytes

@@ -1,0 +1,42 @@
+{
+  "com.mingliqiye.utils": {
+    "i18n": {
+      "readjson": {
+        "error": "加载语言文件失败 %s"
+      }
+    },
+    "springboot.autoconfigure": {
+      "AutoConfiguration": {
+        "jdkRuntime": "Jdk运行环境版本",
+        "pid": "程序Pid",
+        "computerName": "计算机名",
+        "userName": "用户名",
+        "time": "当前时间",
+        "buildTime": "编译时间",
+        "groupId": "组Id",
+        "artifactId": "组件Id",
+        "version": "版本",
+        "buildJdkVersion": "编译Jdk版本",
+        "author": "作者",
+        "website": "官方网址",
+        "bean": "MingliUtils 自动配置 Bean 成功"
+      },
+      "JsonApiAutoConfiguration": {
+        "jsonause": "JSONA 使用 %s",
+        "jsonapiconfiged": "JsonApi Bean 自动配置成功",
+        "jacksonserializers": "MingliUtils Jackson 序列化器注册成功"
+      }
+    },
+    "string": {
+      "StringUtils": {
+        "format": {
+          "warn": {
+            "placeholder": "占位符数量: %s, 参数数量: %s",
+            "template": "模板: %s",
+            "arguments": "参数: [%s]"
+          }
+        }
+      }
+    }
+  }
+}

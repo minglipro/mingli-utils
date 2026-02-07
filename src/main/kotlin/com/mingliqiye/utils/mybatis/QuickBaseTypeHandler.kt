@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile QuickBaseTypeHandler.kt
- * LastUpdate 2026-01-08 07:59:47
+ * LastUpdate 2026-01-28 10:01:35
  * UpdateUser MingLiPro
  */
 
@@ -53,7 +53,7 @@ abstract class QuickBaseTypeHandler<T> : BaseTypeHandler<T>() {
         ct: CallType,
         ci: Int?,
         cn: String?
-    ): T
+    ): T?
 
     /**
      * 抽象方法，用于将 Java 类型 T 设置到 PreparedStatement 中。
@@ -65,7 +65,7 @@ abstract class QuickBaseTypeHandler<T> : BaseTypeHandler<T>() {
      * @throws SQLException SQL 执行异常时抛出
      */
     @Throws(SQLException::class)
-    abstract fun setValue(ps: PreparedStatement, index: Int, parameter: T, jdbcType: JdbcType?)
+    abstract fun setValue(ps: PreparedStatement, index: Int, parameter: T?, jdbcType: JdbcType?)
 
     /**
      * 实现 BaseTypeHandler 的 setNonNullParameter 方法，
@@ -78,7 +78,7 @@ abstract class QuickBaseTypeHandler<T> : BaseTypeHandler<T>() {
      * @throws SQLException SQL 执行异常时抛出
      */
     @Throws(SQLException::class)
-    override fun setNonNullParameter(ps: PreparedStatement, i: Int, parameter: T, jdbcType: JdbcType?) {
+    override fun setNonNullParameter(ps: PreparedStatement, i: Int, parameter: T?, jdbcType: JdbcType?) {
         setValue(ps, i, parameter, jdbcType)
     }
 
@@ -92,7 +92,7 @@ abstract class QuickBaseTypeHandler<T> : BaseTypeHandler<T>() {
      * @throws SQLException SQL 执行异常时抛出
      */
     @Throws(SQLException::class)
-    override fun getNullableResult(rs: ResultSet, columnName: String): T {
+    override fun getNullableResult(rs: ResultSet, columnName: String): T? {
         return getValue(QuickBaseTypeHandlerValueGetter(null, rs), CallType.RESULTSET_NAME, null, columnName)
     }
 
@@ -106,7 +106,7 @@ abstract class QuickBaseTypeHandler<T> : BaseTypeHandler<T>() {
      * @throws SQLException SQL 执行异常时抛出
      */
     @Throws(SQLException::class)
-    override fun getNullableResult(rs: ResultSet, columnIndex: Int): T {
+    override fun getNullableResult(rs: ResultSet, columnIndex: Int): T? {
         return getValue(QuickBaseTypeHandlerValueGetter(null, rs), CallType.RESULTSET_INDEX, columnIndex, null)
     }
 
@@ -120,7 +120,7 @@ abstract class QuickBaseTypeHandler<T> : BaseTypeHandler<T>() {
      * @throws SQLException SQL 执行异常时抛出
      */
     @Throws(SQLException::class)
-    override fun getNullableResult(cs: CallableStatement, columnIndex: Int): T {
+    override fun getNullableResult(cs: CallableStatement, columnIndex: Int): T? {
         return getValue(QuickBaseTypeHandlerValueGetter(cs, null), CallType.CALLABLE_STATEMENT_INDEX, columnIndex, null)
     }
 }

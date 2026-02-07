@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-01-14 13:01:44
+ * LastUpdate 2026-02-08 03:14:06
  * UpdateUser MingLiPro
  */
 
@@ -31,6 +31,7 @@ plugins {
     `maven-publish`
     kotlin("jvm") version "2.2.20"
     id("org.jetbrains.dokka") version "2.0.0"
+    kotlin("kapt") version "2.2.20"
 }
 val GROUPSID = project.properties["GROUPSID"] as String
 val VERSIONS = project.properties["VERSIONS"] as String
@@ -59,6 +60,10 @@ sourceSets {
     }
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 java {
     withSourcesJar()
     toolchain.languageVersion.set(JavaLanguageVersion.of(8))
@@ -67,19 +72,28 @@ java {
 dependencies {
 
     implementation("org.slf4j:slf4j-api:2.0.17")
-
     implementation("com.mingliqiye.utils.jna:WinKernel32Api:1.0.1")
+    implementation(kotlin("reflect"))
+
     compileOnly("org.mindrot:jbcrypt:0.4")
 
-    compileOnly("org.springframework.boot:spring-boot-starter:2.7.14")
-    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.19.2")
-    compileOnly("com.google.code.gson:gson:2.13.1")
+    compileOnly("com.squareup.okhttp3:okhttp:5.3.2")
+    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.21.0")
+    compileOnly("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
+    compileOnly("org.springframework.boot:spring-boot-starter-web:2.7.18")
+    compileOnly("com.google.code.gson:gson:2.13.2")
     compileOnly("org.mybatis:mybatis:3.5.19")
-    compileOnly("com.alibaba.fastjson2:fastjson2:2.0.58")
     compileOnly("io.netty:netty-all:4.1.130.Final")
-
     compileOnly("com.baomidou:mybatis-plus-core:3.5.15")
     compileOnly("net.java.dev.jna:jna:5.17.0")
+    compileOnly("com.baomidou:mybatis-plus-extension:3.5.15")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+//    testImplementation("com.squareup.okhttp3:okhttp:5.3.2")
+    testImplementation("com.mingliqiye.logger:logger-log4j2:1.0.5")
+    testImplementation("com.google.code.gson:gson:2.13.2")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind:2.21.0")
+    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
 }
 
 
@@ -92,6 +106,15 @@ tasks.withType<JavaExec>().configureEach {
     jvmArgs = listOf(
         "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8"
     )
+}
+
+kapt {
+    arguments {
+        arg(
+            "kapt.kotlin.generated",
+            project.layout.buildDirectory.dir("generated/source/kapt/main").get().asFile.absolutePath
+        )
+    }
 }
 
 tasks.withType<org.gradle.jvm.tasks.Jar> {
@@ -125,6 +148,8 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
     }
 }
 val isJdk8Build = project.findProperty("buildForJdk8") == "true"
+
+
 
 repositories {
     maven {
@@ -202,7 +227,7 @@ tasks.build {
 tasks.processResources {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     outputs.upToDateWhen { false }
-    filesMatching("META-INF/meta-data") {
+    filesMatching(listOf("META-INF/meta-data", "fabric.mod.json")) {
         expand(
             project.properties + mapOf(
                 "buildTime" to LocalDateTime.now().format(

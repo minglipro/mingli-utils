@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,16 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SystemUtil.kt
- * LastUpdate 2025-09-16 17:36:11
+ * LastUpdate 2026-01-31 20:47:59
  * UpdateUser MingLiPro
  */
 @file:JvmName("SystemUtils")
 
 package com.mingliqiye.utils.system
 
-import com.mingliqiye.utils.random.randomByteSecure
+import com.mingliqiye.utils.random.randomByte
 import java.lang.management.ManagementFactory
-import java.net.Inet4Address
-import java.net.InetAddress
-import java.net.NetworkInterface
-import java.net.SocketException
+import java.net.*
 
 /**
  * 操作系统名称属性，延迟初始化
@@ -256,10 +253,7 @@ val computerName: String by lazy {
  */
 val userName: String by lazy {
     try {
-        getEnvVar("USERNAME")
-            ?: getEnvVar("USER")
-            ?: System.getProperty("user.name")
-            ?: "unknown"
+        getEnvVar("USERNAME") ?: getEnvVar("USER") ?: System.getProperty("user.name") ?: "unknown"
     } catch (e: SecurityException) {
         "unknown"
     } catch (e: Exception) {
@@ -297,11 +291,11 @@ val macAddressBytes: ByteArray by lazy {
                 return@lazy mac
             }
         }
-        randomByteSecure(6)
+        randomByte(6)
     } catch (e: SocketException) {
-        randomByteSecure(6)
+        randomByte(6)
     } catch (e: Exception) {
-        randomByteSecure(6)
+        randomByte(6)
     }
 }
 
@@ -373,5 +367,93 @@ val allMacAddresses: Map<String, ByteArray> by lazy {
 val allMacAddressesStringList: Map<String, List<String>> by lazy {
     allMacAddresses.mapValues { entry ->
         entry.value.map { String.format("%02X", it) }
+    }
+}
+
+/**
+ * 获取可用处理器数量的懒加载属性
+ */
+val availableProcessors: Int by lazy {
+    Runtime.getRuntime().availableProcessors()
+}
+
+
+private var isLoadprotocol = false
+private var protocol = ""
+
+
+/**
+ * 判断是否为开发模式（file协议）
+ */
+val isDevMode: Boolean by lazy {
+    protocol == "file"
+}
+
+/**
+ * 判断是否不为开发模式
+ */
+val isNotDevMode: Boolean by lazy {
+    protocol != "file"
+}
+
+/**
+ * 判断是否为JAR模式
+ */
+val isJarMode: Boolean by lazy {
+    protocol == "jar"
+}
+
+/**
+ * 判断是否不为JAR模式
+ */
+val isNotJarMode: Boolean by lazy {
+    protocol != "jar"
+}
+
+/**
+ * 判断是否为WAR模式
+ */
+val isWarMode: Boolean by lazy {
+    protocol == "war"
+}
+
+/**
+ * 判断是否不为WAR模式
+ */
+val isNotMode: Boolean by lazy {
+    protocol != "war"
+}
+
+/**
+ * 判断是否为JSWAR模式
+ */
+val isJswarMode: Boolean by lazy {
+    protocol == "jswar"
+}
+
+/**
+ * 判断是否不为JSWAR模式
+ */
+val isNotJswarMode: Boolean by lazy {
+    protocol != "jswar"
+}
+
+/**
+ * 加载并获取资源协议
+ * @param clazz 要获取协议的类对象，默认为null
+ * @return 返回资源的协议字符串
+ */
+fun loadProtocol(clazz: Class<*>? = null): String {
+    // 如果已经加载过协议且clazz为null，则直接返回已缓存的协议
+    if (isLoadprotocol && clazz == null) {
+        return protocol
+    }
+    val resource: URL? = clazz!!.getResource(
+        clazz.getSimpleName() + ".class"
+    )
+    protocol = resource!!.protocol
+    return protocol.let {
+        isLoadprotocol = true
+        return@let it
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile CloneUtils.kt
- * LastUpdate 2025-09-20 14:01:29
+ * LastUpdate 2026-02-05 14:41:27
  * UpdateUser MingLiPro
  */
 @file:JvmName("CloneUtils")
 
 package com.mingliqiye.utils.clone
 
-import com.mingliqiye.utils.json.JsonApi
-import com.mingliqiye.utils.json.JsonException
+import com.mingliqiye.utils.exception.JsonException
+import com.mingliqiye.utils.json.api.base.JsonApi
 import java.io.*
 
 
@@ -34,8 +34,7 @@ inline fun <reified T> Serializable.deepClone(): T {
 
 inline fun <reified T> T.deepJsonClone(jsonApi: JsonApi): T {
     try {
-        return jsonApi.convert(this, this!!.javaClass) as T
-
+        return jsonApi.convert(this as Any, this!!.javaClass) as T
     } catch (e: Exception) {
         throw JsonException(
             "Failed to deep clone object using JSON", e

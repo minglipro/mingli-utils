@@ -16,16 +16,15 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2026-01-08 13:21:00
+ * LastUpdate 2026-02-06 14:33:24
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.uuid
 
-import com.mingliqiye.utils.base.BASE256
-import com.mingliqiye.utils.base.BASE64
-import com.mingliqiye.utils.base.BASE91
-import com.mingliqiye.utils.random.randomByteSecure
+import com.mingliqiye.utils.base.*
+import com.mingliqiye.utils.io.IO.println
+import com.mingliqiye.utils.random.randomByte
 import com.mingliqiye.utils.random.secureRandom
 import com.mingliqiye.utils.system.macAddressBytes
 import com.mingliqiye.utils.time.DateTime
@@ -109,7 +108,7 @@ class UUID : Serializable {
          */
         @JvmStatic
         fun getV4(): UUID {
-            val randomBytes = randomByteSecure(16)
+            val randomBytes = randomByte(16)
             randomBytes[6] = (randomBytes[6].toInt() and 0x0F).toByte()
             randomBytes[6] = (randomBytes[6].toInt() or 0x40).toByte()
             randomBytes[8] = (randomBytes[8].toInt() and 0x3F).toByte()
@@ -192,7 +191,7 @@ class UUID : Serializable {
             val buffer = ByteBuffer.allocate(16)
             buffer.putInt((instant shr 16).toInt())
             buffer.putShort((instant).toShort())
-            buffer.put(randomByteSecure(2))
+            buffer.put(randomByte(2))
             buffer.putLong(secureRandom.nextLong())
             val bytes = buffer.array()
             bytes[6] = (bytes[6].toInt() and 0x0F or 0x70).toByte()
@@ -363,6 +362,10 @@ class UUID : Serializable {
             return result
         }
 
+        fun of(str: String, base: BaseType): UUID {
+            return UUID(base.baseCodec.decode(str))
+        }
+
     }
 
     /**
@@ -485,6 +488,18 @@ class UUID : Serializable {
         }
     }
 
+    fun getString(uuidFormatType: UUIDFormatType): String {
+        return getString(isUpper = uuidFormatType.isUpper, isnotSpace = uuidFormatType.isnotSpace)
+    }
+
+    fun getString(baseType: BaseType): String {
+        return getString(baseType.baseCodec)
+    }
+
+    fun getString(baseCodec: BaseCodec): String {
+        return baseCodec.encode(data)
+    }
+
     /**
      * 返回标准格式的 UUID 字符串（带连字符）。
      *
@@ -556,8 +571,11 @@ class UUID : Serializable {
      * @return 如果相等则返回 true，否则返回 false
      */
     override fun equals(other: Any?): Boolean {
+        if (this === other) return true
         return when (other) {
             is UUID -> {
+                this.println()
+                other.println()
                 this.data.contentEquals(other.data)
             }
 

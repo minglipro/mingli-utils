@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MysqlUUIDBinaryTypeHandler.kt
- * LastUpdate 2026-01-07 19:30:31
+ * LastUpdate 2026-01-28 10:08:46
  * UpdateUser MingLiPro
  */
 
@@ -59,19 +59,29 @@ class MysqlUUIDBinaryTypeHandler : QuickBaseTypeHandler<UUID>() {
 
     override fun getValue(
         vg: QuickBaseTypeHandlerValueGetter, ct: CallType, ci: Int?, cn: String?
-    ): UUID {
+    ): UUID? {
+
+        val data: ByteArray? = when (ct) {
+            CallType.RESULTSET_NAME -> vg.resultSet!!.getBytes(cn!!)
+            CallType.RESULTSET_INDEX -> vg.resultSet!!.getBytes(ci!!)
+            CallType.CALLABLE_STATEMENT_INDEX -> vg.resultSet!!.getBytes(ci!!)
+        }
+        if (data == null) {
+            return null
+        }
+
         return toUUID(
-            when (ct) {
-                CallType.RESULTSET_NAME -> vg.resultSet!!.getBytes(cn!!)
-                CallType.RESULTSET_INDEX -> vg.resultSet!!.getBytes(ci!!)
-                CallType.CALLABLE_STATEMENT_INDEX -> vg.resultSet!!.getBytes(ci!!)
-            }
-        )!!
+            data
+        )
     }
 
     override fun setValue(
-        ps: PreparedStatement, index: Int, parameter: UUID, jdbcType: JdbcType?
+        ps: PreparedStatement, index: Int, parameter: UUID?, jdbcType: JdbcType?
     ) {
+        if (parameter == null) {
+            ps.setNull(index, java.sql.Types.BINARY)
+            return
+        }
         ps.setBytes(index, toByteArray(parameter))
     }
 

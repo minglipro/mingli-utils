@@ -24,8 +24,6 @@ plugins {
     id("java-library")
     id("maven-publish")
     signing
-    kotlin("jvm") version "2.2.20"
-    id("org.jetbrains.dokka") version "2.0.0"
 }
 val GROUPSID = project.properties["GROUPSID"] as String
 val VERSIONS = project.properties["VERSIONS"] as String
@@ -84,6 +82,7 @@ publishing {
 }
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+
 dependencies {
     api(rootProject)
     implementation("com.mingliqiye.utils.jna:WinKernel32Platform:1.0.1")

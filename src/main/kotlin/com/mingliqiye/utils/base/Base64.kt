@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Base64.kt
- * LastUpdate 2025-09-17 10:56:32
+ * LastUpdate 2026-02-08 03:08:10
  * UpdateUser MingLiPro
  */
 
@@ -26,7 +26,7 @@ package com.mingliqiye.utils.base
  * Base64编解码工具类
  * 提供Base64编码和解码功能的实现
  */
-class Base64 : BaseCodec {
+internal class Base64 : BaseCodec {
 
     /*
      * Base64编码器实例

@@ -16,38 +16,47 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MysqlUUIDv1.kt
- * LastUpdate 2026-01-08 08:22:14
+ * LastUpdate 2026-02-06 14:52:40
  * UpdateUser MingLiPro
  */
 @file:JvmName("MysqlUUIDConvertor")
 
 package com.mingliqiye.utils.uuid
 
+import com.mingliqiye.utils.array.copyTo
 
+/**
+ * 将标准UUID字节数组转换为MySQL存储格式的字节数组
+ * MySQL中UUID的存储格式与标准UUID的字节顺序不同，需要重新排列字节顺序
+ *
+ * @param uuid 标准UUID格式的字节数组（16字节）
+ * @return 转换后的MySQL存储格式字节数组（16字节）
+ * @since 4.6.2
+ */
 fun uuidToMysql(uuid: ByteArray): ByteArray {
-    val reuuid = ByteArray(16)
-    reuuid[4] = uuid[0]
-    reuuid[5] = uuid[1]
-    reuuid[6] = uuid[2]
-    reuuid[7] = uuid[3]
-    reuuid[2] = uuid[4]
-    reuuid[3] = uuid[5]
-    reuuid[0] = uuid[6]
-    reuuid[1] = uuid[7]
-    System.arraycopy(uuid, 8, reuuid, 8, 8)
-    return reuuid
+    return ByteArray(16).also {
+        // 按照MySQL UUID存储格式重新排列字节：前4字节、中间2字节、后2字节、最后8字节
+        uuid.copyTo(it, 0, 4, 4)
+            .copyTo(it, 4, 2, 2)
+            .copyTo(it, 6, 0, 2)
+            .copyTo(it, 8, 8, 8)
+    }
 }
 
+/**
+ * 将MySQL存储格式的UUID字节数组转换回标准UUID格式
+ * MySQL中UUID的存储格式与标准UUID的字节顺序不同，需要恢复原始字节顺序
+ *
+ * @param uuid MySQL存储格式的字节数组（16字节）
+ * @return 转换后的标准UUID格式字节数组（16字节）
+ * @since 4.6.2
+ */
 fun mysqlToUuid(uuid: ByteArray): ByteArray {
-    val reuuid = ByteArray(16)
-    reuuid[6] = uuid[0]
-    reuuid[7] = uuid[1]
-    reuuid[4] = uuid[2]
-    reuuid[5] = uuid[3]
-    reuuid[0] = uuid[4]
-    reuuid[1] = uuid[5]
-    reuuid[2] = uuid[6]
-    reuuid[3] = uuid[7]
-    System.arraycopy(uuid, 8, reuuid, 8, 8)
-    return reuuid
+    return ByteArray(16).also {
+        // 按照标准UUID格式恢复字节顺序：第6-7字节、第4-5字节、第0-3字节、第8-15字节
+        uuid.copyTo(it, 0, 6, 2)
+            .copyTo(it, 2, 4, 2)
+            .copyTo(it, 4, 0, 4)
+            .copyTo(it, 8, 8, 8)
+    }
 }

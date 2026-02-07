@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseUtils.kt
- * LastUpdate 2025-09-19 20:18:09
+ * LastUpdate 2026-02-08 03:00:37
  * UpdateUser MingLiPro
  */
 
@@ -24,40 +24,49 @@
 
 package com.mingliqiye.utils.base
 
-/**
- * Base64编解码器实例
- * 使用懒加载方式初始化Base64编解码器对象
- * 保证线程安全且只在首次访问时创建实例
- */
-val BASE64: BaseCodec by lazy {
-    Base64()
-}
-
-/**
- * Base91编解码器实例
- * 使用懒加载方式初始化Base91编解码器对象
- * 保证线程安全且只在首次访问时创建实例
- */
-val BASE91: BaseCodec by lazy {
-    Base91()
-}
-
-/**
- * Base91编解码器实例
- * 使用懒加载方式初始化Base91编解码器对象
- * 保证线程安全且只在首次访问时创建实例
- */
-val BASE16: BaseCodec by lazy {
-    Base16()
-}
-
-/**
- * Base256编解码器实例
- * 使用懒加载方式初始化Base256编解码器对象
- * 保证线程安全且只在首次访问时创建实例
- */
-val BASE256: BaseCodec by lazy {
-    Base256()
-}
+import com.mingliqiye.utils.base.code.Base10
+import com.mingliqiye.utils.base.code.Base16
+import com.mingliqiye.utils.base.code.Base256
+import com.mingliqiye.utils.base.code.Base64
+import com.mingliqiye.utils.base.code.Base91
 
 
+@Deprecated(
+    "重命名", replaceWith = ReplaceWith(
+        expression = "Base10", imports = ["com.mingliqiye.utils.base.code"]
+    )
+)
+val BASE10: BaseCodec
+    get() = Base10
+
+@Deprecated(
+    "重命名", replaceWith = ReplaceWith(
+        expression = "Base16", imports = ["com.mingliqiye.utils.base.code"]
+    )
+)
+val BASE16: BaseCodec
+    get() = Base16
+
+@Deprecated(
+    "重命名", replaceWith = ReplaceWith(
+        expression = "Base64", imports = ["com.mingliqiye.utils.base.code"]
+    )
+)
+val BASE64: BaseCodec
+    get() = Base64
+
+@Deprecated(
+    "重命名", replaceWith = ReplaceWith(
+        expression = "Base91", imports = ["com.mingliqiye.utils.base.code"]
+    )
+)
+val BASE91: BaseCodec
+    get() = Base91
+
+@Deprecated(
+    "重命名", replaceWith = ReplaceWith(
+        expression = "Base256", imports = ["com.mingliqiye.utils.base.code"]
+    )
+)
+val BASE256: BaseCodec
+    get() = Base256
