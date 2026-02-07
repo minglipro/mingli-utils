@@ -16,12 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AutoConfiguration.kt
- * LastUpdate 2026-02-05 10:45:05
+ * LastUpdate 2026-02-06 15:15:46
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure
 
+import com.mingliqiye.utils.i18n.I18N
+import com.mingliqiye.utils.i18n.I18N.infoTranslater
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import com.mingliqiye.utils.system.computerName
 import com.mingliqiye.utils.system.getPid
@@ -50,15 +52,14 @@ open class AutoConfiguration {
          * 启动横幅字符串，包含艺术字体和占位符。
          */
         private const val BANNER =
-            "---------------------------------------------------------\n" +
-                    "|  $$\\      $$\\ $$\\      $$\\   $$\\ $$$$$$$$\\  $$$$$$\\   |\n" +
-                    "|  $$$\\    $$$ |$$ |     $$ |  $$ |\\__$$  __|$$  __$$\\  |\n" +
-                    "|  $$$$\\  $$$$ |$$ |     $$ |  $$ |   $$ |   $$ /  \\__| |\n" +
-                    "|  $$\\$$\\$$ $$ |$$ |     $$ |  $$ |   $$ |   \\$$$$$$\\   |\n" +
-                    "|  $$ \\$$$  $$ |$$ |     $$ |  $$ |   $$ |    \\____$$\\  |\n" +
-                    "|  $$ |\\$  /$$ |$$ |     $$ |  $$ |   $$ |   $$\\   $$ | |\n" +
-                    "|  $$ | \\_/ $$ |$$$$$$$$\\\\$$$$$$  |   $$ |   \\$$$$$$  | |\n" +
-                    "|  \\__|     \\__|\\________|\\______/    \\__|    \\______/  |\n"
+            " |  $$\\      $$\\ $$\\      $$\\   $$\\ $$$$$$$$\\  $$$$$$\\   \n" +
+                    "|  $$$\\    $$$ |$$ |     $$ |  $$ |\\__$$  __|$$  __$$\\  \n" +
+                    "|  $$$$\\  $$$$ |$$ |     $$ |  $$ |   $$ |   $$ /  \\__| \n" +
+                    "|  $$\\$$\\$$ $$ |$$ |     $$ |  $$ |   $$ |   \\$$$$$$\\   \n" +
+                    "|  $$ \\$$$  $$ |$$ |     $$ |  $$ |   $$ |    \\____$$\\  \n" +
+                    "|  $$ |\\$  /$$ |$$ |     $$ |  $$ |   $$ |   $$\\   $$ | \n" +
+                    "|  $$ | \\_/ $$ |$$$$$$$$\\\\$$$$$$  |   $$ |   \\$$$$$$   \n" +
+                    "|  \\__|     \\__|\\________|\\______/    \\__|    \\______/  \n|\n"
 
         /**
          * 打印启动横幅，包含系统元数据（如JDK版本、进程ID、计算机名等）。
@@ -84,22 +85,25 @@ open class AutoConfiguration {
 
                     // 解析元数据并添加额外的系统信息
                     val da = metaData.toString().split("\n").toMutableList()
-                    da.add("jdkRuntime=$jdkVersion")
-                    da.add("pid=$getPid")
-                    da.add("computerName=$computerName")
-                    da.add("userName=$userName")
-                    da.add("time=" + DateTime.now().format(Formatter.STANDARD_DATETIME_MILLISECOUND7, false))
+                    da.add("${I18N.getString("com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.jdkRuntime")}=$jdkVersion")
+                    da.add("${I18N.getString("com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.pid")}=$getPid")
+                    da.add("${I18N.getString("com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.computerName")}=$computerName")
+                    da.add("${I18N.getString("com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.userName")}=$userName")
+                    da.add(
+                        "${I18N.getString("com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.time")}=" + DateTime.now()
+                            .format(Formatter.STANDARD_DATETIME_MILLISECOUND7, false)
+                    )
 
                     // 格式化每条元数据并追加到横幅中
                     da.forEach { s: String ->
                         val d = s.trim { it <= ' ' }.split("=".toRegex(), 2).toTypedArray()
                         if (d.size >= 2) {
-                            val content = "|  " + d[0] + ": " + d[1]
+                            val content = "| ->  " + I18N.getString(d[0]) + ": " + d[1]
                             val targetLength = 56
                             if (content.length < targetLength) {
                                 bannerBuilder.append(
                                     String.format(
-                                        "%-" + targetLength + "s|\n",
+                                        "%-${targetLength}s\n",
                                         content
                                     )
                                 )
@@ -117,8 +121,9 @@ open class AutoConfiguration {
             }
 
             // 输出最终构建的横幅
+            println("")
             println(bannerBuilder.toString().trim())
-            println("---------------------------------------------------------")
+            println("")
         }
     }
 
@@ -129,6 +134,6 @@ open class AutoConfiguration {
      */
     init {
         printBanner()
-        log.info("MingliUtils AutoConfigurationBean succeed")
+        log.infoTranslater("com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.bean")
     }
 }

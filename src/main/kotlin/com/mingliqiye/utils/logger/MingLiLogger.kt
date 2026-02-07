@@ -15,26 +15,15 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Loggers.kt
- * LastUpdate 2026-02-05 10:20:31
+ * CurrentFile MingLiLogger.kt
+ * LastUpdate 2026-02-06 08:27:44
  * UpdateUser MingLiPro
  */
 
-@file:JvmName("Loggers")
-
 package com.mingliqiye.utils.logger
-
 
 import org.slf4j.Logger
 import org.slf4j.Marker
-
-enum class MingLiLoggerLevel {
-    TRACE,
-    DEBUG,
-    INFO,
-    WARN,
-    ERROR
-}
 
 class MingLiLogger(private val name: String) : Logger {
     override fun getName(): String {
@@ -312,8 +301,7 @@ class MingLiLogger(private val name: String) : Logger {
 
     override fun error(msg: String?, t: Throwable?) {
         msg?.let {
-            val message = if (t != null) "$it: ${t.message}" else it
-            toPrintln(message, MingLiLoggerLevel.ERROR)
+            toPrintln(it, MingLiLoggerLevel.ERROR)
         }
     }
 

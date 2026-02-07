@@ -16,12 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile IO.kt
- * LastUpdate 2026-02-04 13:12:57
+ * LastUpdate 2026-02-06 13:21:33
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.io
 
+import com.mingliqiye.utils.array.toHexString
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import com.mingliqiye.utils.string.join
 import org.slf4j.Logger
@@ -35,7 +36,13 @@ import java.io.PrintStream
 object IO {
 
     @JvmStatic
-    fun <T : List<*>> T.println(): T {
+    fun ByteArray.println(): ByteArray {
+        this.toHexString().chunked(2).println()
+        return this
+    }
+
+    @JvmStatic
+    fun <T> List<T>.println(): List<T> {
         println("{" + ",".join(this) + "}")
         return this
     }

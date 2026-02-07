@@ -16,12 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTimeJsonConverter.kt
- * LastUpdate 2026-02-05 11:18:57
+ * LastUpdate 2026-02-07 22:13:41
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.converters
 
+import com.mingliqiye.utils.annotation.DateTimeJsonFormat
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.converters.base.AnnotationGetter
 import com.mingliqiye.utils.json.converters.base.AnnotationGetter.Companion.get
@@ -29,7 +30,6 @@ import com.mingliqiye.utils.json.converters.base.BaseJsonStringConverter
 import com.mingliqiye.utils.objects.isNull
 import com.mingliqiye.utils.string.isNullish
 import com.mingliqiye.utils.time.DateTime
-import com.mingliqiye.utils.time.DateTimeJsonFormat
 import com.mingliqiye.utils.time.Formatter
 
 
@@ -37,7 +37,17 @@ import com.mingliqiye.utils.time.Formatter
  * DateTimeJsonConverter 是一个用于处理 DateTime 类型与 JSON 字符串之间转换的类。
  * 它继承自 BaseJsonStringConverter，提供了序列化（convert）和反序列化（deConvert）的功能。
  */
-class DateTimeJsonConverter : BaseJsonStringConverter<DateTime> {
+class DateTimeJsonConverter private constructor() : BaseJsonStringConverter<DateTime> {
+
+
+    companion object {
+        private val dateTimeJsonConverter by lazy {
+            DateTimeJsonConverter()
+        }
+
+        @JvmStatic
+        fun getJsonConverter(): DateTimeJsonConverter = dateTimeJsonConverter
+    }
 
     /**
      * 将 DateTime 对象转换为 JSON 字符串。

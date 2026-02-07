@@ -15,16 +15,22 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile DateTimeJsonFormat.kt
- * LastUpdate 2026-02-04 22:14:47
+ * CurrentFile HttpStatusException.kt
+ * LastUpdate 2026-02-05 14:55:04
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.time
+package com.mingliqiye.utils.exception
 
-@Target(AnnotationTarget.FIELD)
-annotation class DateTimeJsonFormat(
-    val value: Formatter = Formatter.NONE,
-    val formatter: String = "",
-    val repcZero: Boolean = true,
-)
+/**
+ * 表示 HTTP 异常的基类，继承自 [RuntimeException]。
+ *
+ * @param statusCode HTTP 状态码
+ * @param message 异常信息，默认为 null
+ * @param cause 异常原因，默认为 null
+ */
+sealed class HttpStatusException(
+    open val statusCode: Int,
+    override val message: String? = null,
+    override val cause: Throwable? = null
+) : MingLiUtilsBaseException(message, cause)

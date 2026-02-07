@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Base16.kt
- * LastUpdate 2025-09-17 10:56:07
+ * LastUpdate 2026-02-08 03:08:10
  * UpdateUser MingLiPro
  */
 
@@ -26,7 +26,7 @@ package com.mingliqiye.utils.base
  * Base16编解码器实现类
  * 提供字节数组与十六进制字符串之间的相互转换功能
  */
-class Base16 : BaseCodec {
+internal class Base16 : BaseCodec {
     /**
      * 将字节数组编码为十六进制字符串
      * @param bytes 待编码的字节数组

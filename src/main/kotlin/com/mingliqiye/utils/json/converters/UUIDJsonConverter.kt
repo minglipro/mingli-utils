@@ -16,12 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUIDJsonConverter.kt
- * LastUpdate 2026-02-05 11:19:45
+ * LastUpdate 2026-02-08 01:37:00
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.converters
 
+import com.mingliqiye.utils.annotation.UUIDJsonFormat
 import com.mingliqiye.utils.base.BaseType
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.converters.base.AnnotationGetter
@@ -31,14 +32,22 @@ import com.mingliqiye.utils.objects.isNull
 import com.mingliqiye.utils.string.isNullish
 import com.mingliqiye.utils.uuid.UUID
 import com.mingliqiye.utils.uuid.UUIDFormatType
-import com.mingliqiye.utils.uuid.UUIDJsonFormat
 
 /**
  * UUIDJsonConverter 是一个用于处理 UUID 类型与 JSON 字符串之间转换的类。
  * 它继承自 BaseJsonStringConverter，并实现了 convert 和 deConvert 方法，
  * 分别用于将 UUID 对象序列化为字符串以及反序列化字符串为 UUID 对象。
  */
-class UUIDJsonConverter : BaseJsonStringConverter<UUID> {
+class UUIDJsonConverter private constructor() : BaseJsonStringConverter<UUID> {
+
+    companion object {
+        private val uuidJsonConverter by lazy {
+            UUIDJsonConverter()
+        }
+
+        @JvmStatic
+        fun getJsonConverter(): UUIDJsonConverter = uuidJsonConverter
+    }
 
     /**
      * 将 UUID 对象转换为字符串形式。

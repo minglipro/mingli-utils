@@ -16,12 +16,15 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Response.kt
- * LastUpdate 2026-02-03 20:09:10
+ * LastUpdate 2026-02-07 22:18:42
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.http
 
+import com.mingliqiye.utils.annotation.DateTimeJsonFormat
+import com.mingliqiye.utils.json.converters.DateTimeJsonConverter
+import com.mingliqiye.utils.json.converters.base.AnnotationGetter
 import com.mingliqiye.utils.time.DateTime
 
 /**
@@ -35,8 +38,13 @@ import com.mingliqiye.utils.time.DateTime
  * @property statusCode 状态码
  */
 data class Response<T>(
-    private var time: DateTime, private var message: String, private var data: T?, private var statusCode: Int
+    private var time: DateTime,
+    private var message: String,
+    private var data: T?,
+    private var statusCode: Int,
 ) {
+    private var timeFormat: DateTimeJsonFormat = DateTimeJsonFormat()
+
     companion object {
 
         /**
@@ -124,20 +132,22 @@ data class Response<T>(
 
 
     /**
-     * 获取响应时间
+     * 获取格式化后的时间字符串。
      *
-     * @return DateTime 响应时间
+     * @return 格式化后的时间字符串，使用 [DateTimeJsonConverter] 和 [timeFormat] 注解进行转换。
      */
-    fun getTime(): DateTime = time
+    fun getTime(): String =
+        DateTimeJsonConverter.getJsonConverter().convert(time, AnnotationGetter.oneGetter(timeFormat))!!
 
     /**
-     * 设置响应时间
+     * 设置时间字段的值。
      *
-     * @param dateTime 响应时间
-     * @return Response<T> 当前响应对象（用于链式调用）
+     * @param dateTime 格式化后的时间字符串，将被反序列化为内部时间对象。
+     * @return 返回当前对象实例，支持链式调用。
      */
-    fun setTime(dateTime: DateTime): Response<T> {
-        time = dateTime
+    fun setTime(dateTime: String): Response<T> {
+        // 使用 DateTimeJsonConverter 将输入的字符串反序列化为时间对象，并更新内部 time 字段
+        time = DateTimeJsonConverter.getJsonConverter().deConvert(dateTime, AnnotationGetter.oneGetter(timeFormat))!!
         return this
     }
 
@@ -249,6 +259,13 @@ data class Response<T>(
         this.statusCode = statusCode
         return this
     }
+
+    fun writeTimeFormat(timeFormat: DateTimeJsonFormat): Response<T> {
+        this.timeFormat = timeFormat
+        return this
+    }
+
+    fun readTimeFormat(): DateTimeJsonFormat = timeFormat
 
     /**
      * 返回响应对象的字符串表示

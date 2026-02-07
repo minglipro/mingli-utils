@@ -16,44 +16,76 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonConverter.kt
- * LastUpdate 2026-02-05 11:18:33
+ * LastUpdate 2026-02-07 22:30:18
  * UpdateUser MingLiPro
  */
-@file:JvmName("JsonConverter")
 
 package com.mingliqiye.utils.json.converters.base
 
-
-import com.fasterxml.jackson.databind.ObjectMapper
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
+import com.mingliqiye.utils.json.api.type.JsonTypeReference
 
 /**
- * 获取给定类型的实际类对象。
+ * BaseJsonConverter 是一个通用的 JSON 转换器接口，用于定义对象之间的双向转换逻辑。
  *
- * @param type 类型对象，可以是Class、ParameterizedType或其他Type的实现。
- * @return 返回与给定类型对应的Class对象；如果无法解析，则返回null。
+ * @param F 源类型，表示需要被转换的对象类型。
+ * @param T 目标类型，表示转换后的对象类型。
  */
-fun getClass(type: Type?): Class<*>? {
-    // 尝试将type直接转换为Class类型，如果失败则检查是否为ParameterizedType
-    val clazz: Class<*>? = type as? Class<*> ?: if (type is ParameterizedType) {
-        // 如果是ParameterizedType，则递归获取其原始类型
-        getClass(type.rawType)
-    } else {
-        // 其他情况返回null
-        null
-    }
-    return clazz
+interface JsonConverter<F, T> {
+    /**
+     * 将源对象转换为目标对象。
+     *
+     * @param obj 源对象，可能为 null。
+     * @param annotationGetter 注解获取器，用于获取字段上的注解信息。
+     * @return 转换后的目标对象，可能为 null。
+     * @throws Exception 转换过程中可能抛出的异常。
+     */
+    @Throws(Exception::class)
+    fun convert(obj: F?, annotationGetter: AnnotationGetter): T?
+
+    /**
+     * 将目标对象反向转换为源对象。
+     *
+     * @param obj 目标对象，可能为 null。
+     * @param annotationGetter 注解获取器，用于获取字段上的注解信息。
+     * @return 反向转换后的源对象，可能为 null。
+     * @throws Exception 转换过程中可能抛出的异常。
+     */
+    @Throws(Exception::class)
+    fun deConvert(obj: T?, annotationGetter: AnnotationGetter): F?
+
+    /**
+     * 获取源类型的类型引用。
+     *
+     * @return 源类型的 JsonTypeReference 对象。
+     * @throws Exception 获取过程中可能抛出的异常。
+     */
+    @Throws(Exception::class)
+    fun getFromType(): JsonTypeReference<F>
+
+    /**
+     * 获取目标类型的类型引用。
+     *
+     * @return 目标类型的 JsonTypeReference 对象。
+     * @throws Exception 获取过程中可能抛出的异常。
+     */
+    @Throws(Exception::class)
+    fun getToType(): JsonTypeReference<T>
+
+    /**
+     * 获取源类型的原始类。
+     *
+     * @return 源类型的 Class 对象。
+     * @throws Exception 获取过程中可能抛出的异常。
+     */
+    @Throws(Exception::class)
+    fun getFromClass() = getFromType().getRawType()
+
+    /**
+     * 获取目标类型的原始类。
+     *
+     * @return 目标类型的 Class 对象。
+     * @throws Exception 获取过程中可能抛出的异常。
+     */
+    @Throws(Exception::class)
+    fun getToClass() = getToType().getRawType()
 }
-
-/**
- * 扩展ObjectMapper，用于注册指定类型的模块。
- *
- * 此函数通过反射创建指定类型的实例，并调用其getJacksonModule方法来获取Jackson模块，
- * 然后将该模块注册到当前ObjectMapper实例中。
- *
- * @param T 必须继承自BaseJsonConverter的泛型类型。
- * @return 返回注册了模块后的ObjectMapper实例。
- */
-inline fun <reified T : BaseJsonConverter<*, *>> ObjectMapper.registerModule(): ObjectMapper =
-    this.registerModule(T::class.java.newInstance().getJacksonModule())

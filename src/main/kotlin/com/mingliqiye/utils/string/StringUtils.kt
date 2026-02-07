@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile StringUtils.kt
- * LastUpdate 2026-02-05 11:05:33
+ * LastUpdate 2026-02-06 08:35:07
  * UpdateUser MingLiPro
  */
 @file:JvmName("StringUtils")
@@ -24,6 +24,7 @@
 package com.mingliqiye.utils.string
 
 import com.mingliqiye.utils.base.BASE16
+import com.mingliqiye.utils.i18n.I18N.warnTranslater
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import com.mingliqiye.utils.objects.isNull
 import java.net.URLDecoder
@@ -99,15 +100,18 @@ fun format(str: String, vararg args: Any?): String {
     // 检查参数数量
     val placeholderCount = matches.count()
     if (placeholderCount != args.size) {
-        log.warn("Placeholder count: $placeholderCount, Argument count: ${args.size}")
-        log.warn("template : $str")
-        log.warn(
-            "Arguments : [${
-                ", ".join(args) {
-                    if (it.isNull()) return@join "null:null"
-                    "${it.javaClass.simpleName}:$it"
-                }
-            }]")
+        log.warnTranslater(
+            "com.mingliqiye.utils.string.StringUtils.format.warn.placeholder",
+            placeholderCount, args.size
+        )
+        log.warnTranslater("com.mingliqiye.utils.string.StringUtils.format.warn.template", str)
+        log.warnTranslater(
+            "com.mingliqiye.utils.string.StringUtils.format.warn.arguments",
+            ", ".join(args) {
+                if (it.isNull()) return@join "null:null"
+                "${it.javaClass.simpleName}:$it"
+            }
+        )
     }
 
     return finalResult

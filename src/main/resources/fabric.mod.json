@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "mingli-utils",
+  "groupsId": "${GROUPSID}",
+  "artifactId": "${ARTIFACTID}",
+  "name": "Mingli-Utils",
+  "version": "${VERSIONS}",
+  "environment": "*",
+  "license": "Apache-2.0",
+  "icon": "assets/mingli-utils/icon.png",
+  "contact": {
+    "homepage": "https://git.mingliqiye.com/minglipro/mingli-utils",
+    "issues": "https://git.mingliqiye.com/minglipro/mingli-utils/issues",
+    "sources": "https://git.mingliqiye.com/minglipro/mingli-utils"
+  },
+  "buildTime": "${buildTime}",
+  "jdk": {
+    "version": "${JDKVERSIONS}"
+  },
+  "authors": [
+    "minglipro"
+  ],
+  "depends": {
+    "fabricloader": "*"
+  },
+  "description": "A Java/kotlin Utils"
+}

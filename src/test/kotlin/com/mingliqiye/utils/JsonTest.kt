@@ -16,27 +16,32 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.test
  * CurrentFile JsonTest.kt
- * LastUpdate 2026-02-05 10:57:18
+ * LastUpdate 2026-02-08 02:29:27
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.mingliqiye.utils.annotation.UUIDJsonFormat
+import com.mingliqiye.utils.array.toHexString
 import com.mingliqiye.utils.base.BaseType
 import com.mingliqiye.utils.io.IO.println
 import com.mingliqiye.utils.json.api.JSONA
 import com.mingliqiye.utils.json.api.JacksonJsonApi
 import com.mingliqiye.utils.json.converters.DateTimeJsonConverter
 import com.mingliqiye.utils.json.converters.UUIDJsonConverter
+import com.mingliqiye.utils.json.converters.base.JackSonJsonConverter.Companion.addJsonConverter
+import com.mingliqiye.utils.json.converters.base.getJsonConverter
+import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import com.mingliqiye.utils.string.formatd
-import com.mingliqiye.utils.time.DateTime
-import com.mingliqiye.utils.time.DateTimeJsonFormat
-import com.mingliqiye.utils.time.Formatter
 import com.mingliqiye.utils.uuid.UUID
 import com.mingliqiye.utils.uuid.UUIDFormatType
-import com.mingliqiye.utils.uuid.UUIDJsonFormat
+import com.mingliqiye.utils.uuid.mysqlToUuid
+import com.mingliqiye.utils.uuid.uuidToMysql
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
 
 class JsonTest {
     @Test
@@ -55,28 +60,72 @@ class JsonTest {
 
     @Test
     fun testBANNER() {
+        val log = MingLiLoggerFactory.getLogger<JsonTest>()
         com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration.printBanner()
+    }
+
+    @Test
+    fun testMysqld() {
+        val v = UUID.of("c3efb797-0323-11f1-8791-3aff070ec47d")
+        val ba = uuidToMysql(v.toBytes())
+        val ca = mysqlToUuid(ba)
+        assertEquals(
+            "11F10323C3EFB79787913AFF070EC47D",
+            ba.toHexString().println()
+        )
+        assertEquals(
+            "C3EFB797032311F187913AFF070EC47D",
+            ca.toHexString().println()
+        )
+    }
+
+    @Test
+    fun testGson2() {
+        getJsonConverter<UUIDJsonConverter>()
+        getJsonConverter<DateTimeJsonConverter>()
+    }
+
+    @Test
+    fun testGson() {
+
+        val obm = jacksonObjectMapper()
+            .addJsonConverter<UUIDJsonConverter>()
+            .addJsonConverter<DateTimeJsonConverter>()
+
+        obm.readValue<AC<CC<ZZ<UUID>>>>(
+            obm.writeValueAsString(
+                AC(c = CC(b = ZZ(b = UUID.getV7())))
+            ).println()
+        ).println()
     }
 }
 
 data class AC<T>(
     var a: String = "AC",
-    @field:DateTimeJsonFormat(Formatter.ISO8601, repcZero = false)
-    var time: DateTime = DateTime.now(),
     @field:UUIDJsonFormat(
         base = BaseType.BASE256,
         value = UUIDFormatType.UPPER_NO_SPACE
     )
     var uuid: UUID = UUID.getV4(),
-    var b: T
+    var b: BC = BC(),
+    var c: T
 )
 
-data class BC<T>(
+data class BC(
     var a: String = "BC",
-    var b: T
 )
 
 data class CC<T>(
     var a: String = "BC",
+    var b: T
+)
+
+
+data class ZZ<T>(
+    var a: String = "ZZ",
+    @field:UUIDJsonFormat(
+        base = BaseType.BASE256,
+        value = UUIDFormatType.UPPER_NO_SPACE
+    )
     var b: T
 )

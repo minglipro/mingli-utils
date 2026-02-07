@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Pipeline.kt
- * LastUpdate 2026-02-05 09:53:44
+ * LastUpdate 2026-02-05 15:22:21
  * UpdateUser MingLiPro
  */
 
@@ -174,7 +174,7 @@ class Pipeline<T>(private val value: T) {
     fun require(
         any: Any, message: String
     ): Pipeline<T> {
-        Require.require(any == value, message)
+        Require.RequireLayz.require(any == value, message)
         return this
     }
 

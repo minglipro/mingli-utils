@@ -16,11 +16,11 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonException.kt
- * LastUpdate 2026-02-05 11:12:36
+ * LastUpdate 2026-02-07 13:17:50
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.json.api.exception
+package com.mingliqiye.utils.exception
 
 /**
  * 自定义异常类，用于处理 JSON 相关操作中出现的错误。
@@ -30,27 +30,15 @@ package com.mingliqiye.utils.json.api.exception
  * 2. 包含错误信息和原因（Throwable）的构造函数。
  * 3. 仅包含原因（Throwable）的构造函数。
  */
-class JsonException : RuntimeException {
-
-    /**
-     * 构造函数：创建一个带有指定错误信息的 [JsonException] 实例。
-     *
-     * @param message 错误信息描述。
-     */
+open class JsonException : MingLiUtilsBaseException {
+    constructor()
     constructor(message: String) : super(message)
-
-    /**
-     * 构造函数：创建一个带有指定错误信息和原因的 [JsonException] 实例。
-     *
-     * @param message 错误信息描述。
-     * @param cause 导致此异常的根本原因。
-     */
-    constructor(message: String, cause: Throwable) : super(message, cause)
-
-    /**
-     * 构造函数：创建一个由指定原因引发的 [JsonException] 实例。
-     *
-     * @param cause 导致此异常的根本原因。
-     */
-    constructor(cause: Throwable) : super(cause)
+    constructor(throwable: Throwable) : super(throwable)
+    constructor(message: String, throwable: Throwable) : super(message, throwable)
+    constructor(
+        message: String? = null,
+        throwable: Throwable? = null,
+        enableSuppression: Boolean = false,
+        writableStackTrace: Boolean = false
+    ) : super(message, throwable, enableSuppression, writableStackTrace)
 }

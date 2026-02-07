@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Base91.kt
- * LastUpdate 2025-09-19 20:08:46
+ * LastUpdate 2026-02-08 03:08:10
  * UpdateUser MingLiPro
  */
 
@@ -27,7 +27,7 @@ package com.mingliqiye.utils.base
  *
  * Base91 是一种高效的二进制到文本的编码方式，相较于 Base64，它使用更少的字符来表示相同的数据。
  */
-class Base91 : BaseCodec {
+internal class Base91 : BaseCodec {
 
     companion object {
         /**

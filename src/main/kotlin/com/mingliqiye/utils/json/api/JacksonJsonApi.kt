@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonApi.kt
- * LastUpdate 2026-02-05 10:31:14
+ * LastUpdate 2026-02-05 14:41:27
  * UpdateUser MingLiPro
  */
 
@@ -28,8 +28,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.databind.node.ObjectNode
+import com.mingliqiye.utils.exception.JsonException
 import com.mingliqiye.utils.json.api.base.JsonApi
-import com.mingliqiye.utils.json.api.exception.JsonException
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
 
@@ -63,7 +63,7 @@ class JacksonJsonApi : JsonApi {
      * @param clazz 目标对象类型
      * @param <T>   泛型参数，表示目标对象类型
      * @return 解析后的对象
-     * @throws com.mingliqiye.utils.json.api.exception.JsonException 当解析失败时抛出异常
+     * @throws JsonException 当解析失败时抛出异常
      */
     override fun <T> parse(json: String, clazz: Class<T>): T {
         return try {

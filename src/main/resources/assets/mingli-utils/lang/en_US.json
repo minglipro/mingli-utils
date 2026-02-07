@@ -1,0 +1,42 @@
+{
+  "com.mingliqiye.utils": {
+    "i18n": {
+      "readjson": {
+        "error": "Failed to load language file %s"
+      }
+    },
+    "springboot.autoconfigure": {
+      "AutoConfiguration": {
+        "jdkRuntime": "JDK Runtime Environment Version",
+        "pid": "Process PID",
+        "computerName": "Computer Name",
+        "userName": "User Name",
+        "time": "Current Time",
+        "buildTime": "Build Time",
+        "groupId": "Group ID",
+        "artifactId": "Artifact ID",
+        "version": "Version",
+        "buildJdkVersion": "Build JDK Version",
+        "author": "Author",
+        "website": "Official Website",
+        "bean": "MingliUtils Auto Configuration Bean Success"
+      },
+      "JsonApiAutoConfiguration": {
+        "jsonause": "JSONA Using %s",
+        "jsonapiconfiged": "JsonApi Bean Auto Configuration Success",
+        "jacksonserializers": "MingliUtils Jackson Serializers created"
+      }
+    },
+    "string": {
+      "StringUtils": {
+        "format": {
+          "warn": {
+            "placeholder": "Placeholder Count: %s, Argument Count: %s",
+            "template": "Template: %s",
+            "arguments": "Arguments: [%s]"
+          }
+        }
+      }
+    }
+  }
+}

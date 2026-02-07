@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Base256.kt
- * LastUpdate 2025-09-20 14:01:29
+ * LastUpdate 2026-02-08 03:08:10
  * UpdateUser MingLiPro
  */
 
@@ -30,7 +30,7 @@ package com.mingliqiye.utils.base
  * !#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~§±×÷←↑→↓⇒⇔∀∃∅∆∇∈∉∋∌∏∑−∓∕∗∘∙√∛∜∞∟∠∣∥∧∨∩∪∫∬∭∮∯∰∱∲∳∴∵∶∷≈≠≡≤≥≦≧≪≫≺≻⊂⊃⊆⊇⊈⊉⊊⊋⊕⊖⊗⊘⊙⊚⊛⊜⊝⊞⊟⊠⊡⊢⊣⊤⊥⊦⊧⊨⊩⊪⊫⊬⊭⊮⊯⋀⋁⋂⋃⋄⋅⋆⋇⋈⋉⋊⋋⋌⋍⋎⋏⋐⋑⋒⋓⋔⋕⋖⋗⋘⋙⋚⋛⋜⋝⋞⋟⋠⋡⋢⋣⋤⋥⋦⋧⋨⋩▁▂▃▄▅▆▇█▉▊▋▌▍▎▏▐░▒▓▔▕▖▗▘▙
  *
  */
-class Base256 : BaseCodec {
+internal class Base256 : BaseCodec {
 
     companion object {
         val code = arrayOf(

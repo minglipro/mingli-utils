@@ -15,17 +15,22 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile UUIDJsonFormat.kt
- * LastUpdate 2026-02-04 22:14:47
+ * CurrentFile EmptyJsonException.kt
+ * LastUpdate 2026-02-07 14:45:12
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.uuid
+package com.mingliqiye.utils.exception
 
-import com.mingliqiye.utils.base.BaseType
-
-@Target(AnnotationTarget.FIELD)
-annotation class UUIDJsonFormat(
-    val value: UUIDFormatType = UUIDFormatType.NO_UPPER_SPACE,
-    val base: BaseType = BaseType.BASE16
-)
+class EmptyJsonException : JsonException {
+    constructor()
+    constructor(message: String) : super(message)
+    constructor(throwable: Throwable) : super(throwable)
+    constructor(message: String, throwable: Throwable) : super(message, throwable)
+    constructor(
+        message: String? = null,
+        throwable: Throwable? = null,
+        enableSuppression: Boolean = false,
+        writableStackTrace: Boolean = false
+    ) : super(message, throwable, enableSuppression, writableStackTrace)
+}

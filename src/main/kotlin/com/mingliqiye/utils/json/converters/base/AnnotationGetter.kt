@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AnnotationGetter.kt
- * LastUpdate 2026-02-05 11:12:36
+ * LastUpdate 2026-02-06 16:57:45
  * UpdateUser MingLiPro
  */
 
@@ -58,5 +58,24 @@ interface AnnotationGetter {
              */
             override fun <T : Annotation> get(clazz: Class<T>): T? = null
         }
+
+
+        /**
+         * 创建一个AnnotationGetter对象，用于根据指定的注解类型获取对应的注解实例。
+         *
+         * @param annotation 要包装的注解实例，作为内部逻辑的来源。
+         * @return 返回一个实现了AnnotationGetter接口的匿名对象。
+         */
+        fun oneGetter(annotation: Annotation) = object : AnnotationGetter {
+            /**
+             * 根据传入的注解类型clazz，尝试返回与annotation匹配的注解实例。
+             *
+             * @param clazz 目标注解类型的Class对象。
+             * @return 如果annotation的类型与clazz一致，则返回annotation转换为T类型的实例；否则返回null。
+             */
+            override fun <T : Annotation> get(clazz: Class<T>): T? =
+                if (annotation.javaClass == clazz) annotation as T else null
+        }
+
     }
 }

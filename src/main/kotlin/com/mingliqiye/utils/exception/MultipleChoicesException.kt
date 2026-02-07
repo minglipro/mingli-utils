@@ -15,15 +15,20 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile StreamEmptyException.kt
- * LastUpdate 2026-01-07 19:13:29
+ * CurrentFile MultipleChoicesException.kt
+ * LastUpdate 2026-02-05 14:55:04
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.stream
+package com.mingliqiye.utils.exception
 
-class StreamEmptyException : RuntimeException {
-    constructor(message: String) : super(message)
-
-    constructor(message: String, cause: Throwable) : super(message, cause)
-}
+/**
+ * 表示 HTTP 300 Multiple Choices 异常。
+ *
+ * @param message 异常信息，默认为 "Multiple Choices"
+ * @param cause 异常原因，默认为 null
+ */
+class MultipleChoicesException(
+    override val message: String? = "Multiple Choices",
+    override val cause: Throwable? = null,
+) : HttpStatusException(300, message, cause)

@@ -16,13 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2026-02-05 11:20:59
+ * LastUpdate 2026-02-06 14:33:24
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.uuid
 
 import com.mingliqiye.utils.base.*
+import com.mingliqiye.utils.io.IO.println
 import com.mingliqiye.utils.random.randomByte
 import com.mingliqiye.utils.random.secureRandom
 import com.mingliqiye.utils.system.macAddressBytes
@@ -570,8 +571,11 @@ class UUID : Serializable {
      * @return 如果相等则返回 true，否则返回 false
      */
     override fun equals(other: Any?): Boolean {
+        if (this === other) return true
         return when (other) {
             is UUID -> {
+                this.println()
+                other.println()
                 this.data.contentEquals(other.data)
             }
 
