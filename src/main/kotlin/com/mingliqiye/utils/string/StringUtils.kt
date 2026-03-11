@@ -16,15 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile StringUtils.kt
- * LastUpdate 2026-02-06 08:35:07
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 @file:JvmName("StringUtils")
 
 package com.mingliqiye.utils.string
 
-import com.mingliqiye.utils.base.BASE16
-import com.mingliqiye.utils.i18n.I18N.warnTranslater
+import com.mingliqiye.utils.base.code.Base16
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import com.mingliqiye.utils.objects.isNull
 import java.net.URLDecoder
@@ -100,13 +99,13 @@ fun format(str: String, vararg args: Any?): String {
     // 检查参数数量
     val placeholderCount = matches.count()
     if (placeholderCount != args.size) {
-        log.warnTranslater(
-            "com.mingliqiye.utils.string.StringUtils.format.warn.placeholder",
+        log.warn(
+            "Placeholder Count: {}, Argument Count: {}",
             placeholderCount, args.size
         )
-        log.warnTranslater("com.mingliqiye.utils.string.StringUtils.format.warn.template", str)
-        log.warnTranslater(
-            "com.mingliqiye.utils.string.StringUtils.format.warn.arguments",
+        log.warn("Template: {}", str)
+        log.warn(
+            "Arguments: [{}]",
             ", ".join(args) {
                 if (it.isNull()) return@join "null:null"
                 "${it.javaClass.simpleName}:$it"
@@ -287,14 +286,14 @@ fun String.hmacSHA256String(keyS: String): String {
     val key = keyS.toByteArray()
     instance.init(SecretKeySpec(key, 0, key.size, "HmacSHA256"))
     val bytes = instance.doFinal(this.toByteArray())
-    return BASE16.encode(bytes)
+    return Base16.encode(bytes)
 }
 
 fun String.md5String(): String {
     val instance = MessageDigest.getInstance("MD5")
     instance.update(this.toByteArray())
     val bytes = instance.digest()
-    return BASE16.encode(bytes)
+    return Base16.encode(bytes)
 }
 
 fun String.hmacMd5String(keyS: String): String {
@@ -302,5 +301,5 @@ fun String.hmacMd5String(keyS: String): String {
     val key = keyS.toByteArray()
     instance.init(SecretKeySpec(key, 0, key.size, "HmacSHA256"))
     val bytes = instance.doFinal(this.toByteArray())
-    return BASE16.encode(bytes)
+    return Base16.encode(bytes)
 }

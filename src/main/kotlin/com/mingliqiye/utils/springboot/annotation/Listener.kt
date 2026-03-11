@@ -15,17 +15,18 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile TestAnnotation.kt
- * LastUpdate 2026-02-07 08:44:25
+ * CurrentFile Listener.kt
+ * LastUpdate 2026-03-10 09:04:02
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.annotation
+package com.mingliqiye.utils.springboot.annotation
 
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
-@Retention(AnnotationRetention.SOURCE)
-annotation class TestAnnotation(val value: String = "test")
+import org.springframework.core.annotation.AliasFor
+import org.springframework.stereotype.Component
 
-@Target(AnnotationTarget.FIELD)
-@Retention(AnnotationRetention.SOURCE)
-annotation class TestFieldAnnotation(val required: Boolean = true)
+@Component
+annotation class Listener(
+    @get:AliasFor(annotation = Component::class)
+    val value: String = ""
+)

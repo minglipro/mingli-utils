@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SystemUtil.kt
- * LastUpdate 2026-01-31 20:47:59
+ * LastUpdate 2026-03-11 08:44:41
  * UpdateUser MingLiPro
  */
 @file:JvmName("SystemUtils")
@@ -454,6 +454,6 @@ fun loadProtocol(clazz: Class<*>? = null): String {
     protocol = resource!!.protocol
     return protocol.let {
         isLoadprotocol = true
-        return@let it
+        it
     }
 }

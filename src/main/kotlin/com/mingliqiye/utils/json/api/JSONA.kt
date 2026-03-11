@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JSONA.kt
- * LastUpdate 2026-02-05 10:34:30
+ * LastUpdate 2026-02-26 14:14:18
  * UpdateUser MingLiPro
  */
 
@@ -28,6 +28,7 @@ import com.mingliqiye.utils.json.api.base.JsonApi
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.api.type.listType
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
+import com.mingliqiye.utils.json.converters.base.getJsonConverter
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -71,7 +72,7 @@ object JSONA {
      * @param T 继承自JsonApi的具体实现类
      */
     inline fun <reified T : JsonApi> setJsonApi() {
-        setJsonApi(T::class.java.newInstance() as JsonApi)
+        setJsonApi(T::class.java.getConstructor().newInstance() as JsonApi)
     }
 
     /**
@@ -127,14 +128,6 @@ object JSONA {
     @JvmStatic
     fun format(obj: Any): String = getJsonApi().format(obj)
 
-    /**
-     * 将对象格式化为带Unicode转义的JSON字符串
-     *
-     * @param obj 待格式化的对象
-     * @return 格式化后的带Unicode转义的JSON字符串
-     */
-    @JvmStatic
-    fun formatUnicode(obj: Any): String = getJsonApi().formatPrettyUnicode(obj)
 
     /**
      * 从文件路径解析JSON为指定类型的对象
@@ -292,24 +285,6 @@ object JSONA {
     fun formatPrettyBytes(obj: Any): ByteArray = getJsonApi().formatPrettyBytes(obj)
 
     /**
-     * 将对象格式化为带Unicode转义的美化JSON字符串
-     *
-     * @param obj 待格式化的对象
-     * @return 格式化后的带Unicode转义的美化JSON字符串
-     */
-    @JvmStatic
-    fun formatPrettyUnicode(obj: Any): String = getJsonApi().formatPrettyUnicode(obj)
-
-    /**
-     * 将对象格式化为带Unicode转义的美化JSON字节数组
-     *
-     * @param obj 待格式化的对象
-     * @return 格式化后的带Unicode转义的美化JSON字节数组
-     */
-    @JvmStatic
-    fun formatPrettyUnicodeBytes(obj: Any): ByteArray = getJsonApi().formatPrettyUnicodeBytes(obj)
-
-    /**
      * 将对象格式化为美化格式的JSON字符串并写入文件
      *
      * @param obj  待格式化的对象
@@ -345,41 +320,6 @@ object JSONA {
     @JvmStatic
     fun formatPretty(obj: Any, stream: OutputStream) = getJsonApi().formatPretty(obj, stream)
 
-    /**
-     * 将对象格式化为带Unicode转义的美化JSON字符串并写入文件
-     *
-     * @param obj  待格式化的对象
-     * @param file 文件路径
-     */
-    @JvmStatic
-    fun formatPrettyUnicode(obj: Any, file: String) = getJsonApi().formatPrettyUnicode(obj, file)
-
-    /**
-     * 将对象格式化为带Unicode转义的美化JSON字符串并写入文件
-     *
-     * @param obj  待格式化的对象
-     * @param file Path对象
-     */
-    @JvmStatic
-    fun formatPrettyUnicode(obj: Any, file: Path) = getJsonApi().formatPrettyUnicode(obj, file)
-
-    /**
-     * 将对象格式化为带Unicode转义的美化JSON字符串并写入文件
-     *
-     * @param obj  待格式化的对象
-     * @param file File对象
-     */
-    @JvmStatic
-    fun formatPrettyUnicode(obj: Any, file: File) = getJsonApi().formatPrettyUnicode(obj, file)
-
-    /**
-     * 将对象格式化为带Unicode转义的美化JSON字符串并写入输出流
-     *
-     * @param obj    待格式化的对象
-     * @param stream OutputStream对象
-     */
-    @JvmStatic
-    fun formatPrettyUnicode(obj: Any, stream: OutputStream) = getJsonApi().formatPrettyUnicode(obj, stream)
 
     /**
      * 将对象格式化为JSON字节数组
@@ -390,14 +330,6 @@ object JSONA {
     @JvmStatic
     fun formatBytes(obj: Any): ByteArray = getJsonApi().formatBytes(obj)
 
-    /**
-     * 将对象格式化为带Unicode转义的JSON字节数组
-     *
-     * @param obj 待格式化的对象
-     * @return 格式化后的带Unicode转义的JSON字节数组
-     */
-    @JvmStatic
-    fun formatUnicodeBytes(obj: Any): ByteArray = getJsonApi().formatUnicodeBytes(obj)
 
     /**
      * 将对象格式化为JSON字符串并写入文件
@@ -435,41 +367,6 @@ object JSONA {
     @JvmStatic
     fun format(obj: Any, stream: OutputStream) = getJsonApi().format(obj, stream)
 
-    /**
-     * 将对象格式化为带Unicode转义的JSON字符串并写入文件
-     *
-     * @param obj  待格式化的对象
-     * @param file 文件路径
-     */
-    @JvmStatic
-    fun formatUnicode(obj: Any, file: String) = getJsonApi().formatUnicode(obj, file)
-
-    /**
-     * 将对象格式化为带Unicode转义的JSON字符串并写入文件
-     *
-     * @param obj  待格式化的对象
-     * @param file Path对象
-     */
-    @JvmStatic
-    fun formatUnicode(obj: Any, file: Path) = getJsonApi().formatUnicode(obj, file)
-
-    /**
-     * 将对象格式化为带Unicode转义的JSON字符串并写入文件
-     *
-     * @param obj  待格式化的对象
-     * @param file File对象
-     */
-    @JvmStatic
-    fun formatUnicode(obj: Any, file: File) = getJsonApi().formatUnicode(obj, file)
-
-    /**
-     * 将对象格式化为带Unicode转义的JSON字符串并写入输出流
-     *
-     * @param obj    待格式化的对象
-     * @param stream OutputStream对象
-     */
-    @JvmStatic
-    fun formatUnicode(obj: Any, stream: OutputStream) = getJsonApi().formatUnicode(obj, stream)
 
     /**
      * 将JSON字符串解析为指定元素类型的List集合
@@ -627,8 +524,7 @@ object JSONA {
      *
      * @param T 继承自BaseJsonConverter的具体实现类
      */
-    inline fun <reified T : BaseJsonConverter<*, *>> addJsonConverter() =
-        addJsonConverter(T::class.java.newInstance())
+    inline fun <reified T : BaseJsonConverter<*, *>> addJsonConverter() = addJsonConverter(getJsonConverter<T>())
 
 
     inline fun <reified T> String.parseJson() = parse<T>(this)
@@ -639,6 +535,9 @@ object JSONA {
 
     fun Any.toJson() = format(this)
 
+    @JvmStatic
     fun jacksonKotlinObjectMapper(): ObjectMapper = ObjectMapper().jacksonKotlinObjectMapper()
+
+    @JvmStatic
     fun ObjectMapper.jacksonKotlinObjectMapper(): ObjectMapper = this.registerModule(kotlinModule())
 }

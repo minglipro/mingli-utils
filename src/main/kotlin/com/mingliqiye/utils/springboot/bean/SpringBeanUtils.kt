@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SpringBeanUtils.kt
- * LastUpdate 2026-02-04 16:50:39
+ * LastUpdate 2026-02-26 14:09:02
  * UpdateUser MingLiPro
  */
 
@@ -40,7 +40,7 @@ class SpringBeanUtils : ApplicationContextAware {
         private var applicationContext: ApplicationContext? = null
 
         @Throws(BeansException::class)
-        inline fun <reified T> getBean() = getBean(T::class.java)
+        inline fun <reified T : Any> getBean() = getBean(T::class.java)
 
         /**
          * 根据Bean名称获取Bean实例
@@ -64,7 +64,7 @@ class SpringBeanUtils : ApplicationContextAware {
          */
         @JvmStatic
         @Throws(BeansException::class)
-        fun <T> getBean(clazz: Class<T>): T {
+        fun <T : Any> getBean(clazz: Class<T>): T {
             return applicationContext!!.getBean(clazz)
         }
 
@@ -78,7 +78,7 @@ class SpringBeanUtils : ApplicationContextAware {
          */
         @JvmStatic
         @Throws(BeansException::class)
-        fun <T> getBean(name: String, clazz: Class<T>): T {
+        fun <T : Any> getBean(name: String, clazz: Class<T>): T {
             return applicationContext!!.getBean<T>(name, clazz)
         }
     }

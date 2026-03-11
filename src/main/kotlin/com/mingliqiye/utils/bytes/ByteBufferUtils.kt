@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ByteBufferUtils.kt
- * LastUpdate 2026-01-11 09:44:19
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 
@@ -26,6 +26,7 @@ package com.mingliqiye.utils.bytes
 
 import java.io.IOException
 import java.io.OutputStream
+import java.nio.BufferUnderflowException
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 

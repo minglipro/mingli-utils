@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile CloneUtils.kt
- * LastUpdate 2026-02-05 14:41:27
+ * LastUpdate 2026-02-08 10:36:51
  * UpdateUser MingLiPro
  */
 @file:JvmName("CloneUtils")
@@ -24,17 +24,18 @@
 package com.mingliqiye.utils.clone
 
 import com.mingliqiye.utils.exception.JsonException
-import com.mingliqiye.utils.json.api.base.JsonApi
+import com.mingliqiye.utils.json.api.JSONA
 import java.io.*
 
 
-inline fun <reified T> Serializable.deepClone(): T {
-    return deepClone(this) as T
+@JvmName("_inline_deepClone")
+inline fun <reified T : Serializable> T.deepClone(): T {
+    return deepClone(this)
 }
 
-inline fun <reified T> T.deepJsonClone(jsonApi: JsonApi): T {
+inline fun <reified T> T.deepJsonClone(): T {
     try {
-        return jsonApi.convert(this as Any, this!!.javaClass) as T
+        return JSONA.convert(this as Any, this!!.javaClass) as T
     } catch (e: Exception) {
         throw JsonException(
             "Failed to deep clone object using JSON", e

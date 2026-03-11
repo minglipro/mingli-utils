@@ -16,14 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AutoServiceProcessor.kt
- * LastUpdate 2026-02-08 01:24:16
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.annotation.processor
 
 import com.mingliqiye.utils.annotation.AutoService
-import com.mingliqiye.utils.io.IO.println
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
@@ -42,7 +41,7 @@ class AutoServiceProcessor : AbstractProcessor() {
 
     override fun process(
         annotations: Set<TypeElement>,
-        roundEnv: RoundEnvironment
+        roundEnv: RoundEnvironment,
     ): Boolean {
 
         val service = mutableMapOf<String, MutableList<String>>()

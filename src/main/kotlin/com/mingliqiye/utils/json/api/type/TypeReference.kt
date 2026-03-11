@@ -16,16 +16,16 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile TypeReference.kt
- * LastUpdate 2026-02-04 21:00:48
+ * LastUpdate 2026-02-26 14:11:35
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.api.type
 
 import com.mingliqiye.utils.string.join
-import sun.reflect.generics.reflectiveObjects.WildcardTypeImpl
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.lang.reflect.WildcardType
 
 class TypeReference(
     val rawClass: Type,
@@ -40,23 +40,37 @@ class TypeReference(
     override fun getOwnerType(): Type? = null
 
 
-    override fun toString(): String = "${getRawString(rawType)}<${
-        ",".join(typeArguments, TypeReference::getRawString)
+    override fun toString(): String = "${getRawString(rawClass)}<${
+        ",".join(typeArguments) { getRawString(it) }
     }>"
 
     companion object {
 
-        fun getRawString(s: Any): String {
-            if (s is Class<*>) {
-                return s.name
+        fun getRawString(type: Type): String {
+            return when (type) {
+                is Class<*> -> type.name
+                is WildcardType -> {
+                    val upperBounds = type.upperBounds
+                    val lowerBounds = type.lowerBounds
+                    when {
+                        upperBounds.isNotEmpty() && upperBounds[0] != Any::class.java -> {
+                            "? extends ${getRawString(upperBounds[0])}"
+                        }
+
+                        lowerBounds.isNotEmpty() -> {
+                            "? super ${getRawString(lowerBounds[0])}"
+                        }
+
+                        else -> "?"
+                    }
+                }
+
+                is ParameterizedType -> {
+                    of(type).toString()
+                }
+
+                else -> type.typeName
             }
-            if (s is WildcardTypeImpl) {
-                return getRawString(s.upperBounds[0])
-            }
-            if (s is ParameterizedType) {
-                return of(s).toString()
-            }
-            return s.toString()
         }
 
         inline fun <reified T> of(): TypeReference {
@@ -64,13 +78,17 @@ class TypeReference(
         }
 
         fun of(type: Type): TypeReference {
-            if (type is Class<*>) {
-                return TypeReference(type)
+            return when (type) {
+                is Class<*> -> TypeReference(type)
+                is ParameterizedType -> TypeReference(type.rawType, *type.actualTypeArguments)
+                is WildcardType -> {
+                    // 处理通配符类型，返回上界类型
+                    val upperBound = type.upperBounds.firstOrNull() ?: Any::class.java
+                    TypeReference(upperBound)
+                }
+
+                else -> throw IllegalStateException("无法获取类型: $type")
             }
-            if (type is ParameterizedType) {
-                return TypeReference(type.rawType, *type.actualTypeArguments)
-            }
-            throw IllegalStateException("无法获取类型: $type")
         }
     }
 }

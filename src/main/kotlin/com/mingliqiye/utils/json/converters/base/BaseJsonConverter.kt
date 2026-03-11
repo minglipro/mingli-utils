@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseJsonConverter.kt
- * LastUpdate 2026-02-08 01:22:35
+ * LastUpdate 2026-02-26 15:59:35
  * UpdateUser MingLiPro
  */
 
@@ -31,4 +31,4 @@ package com.mingliqiye.utils.json.converters.base
  * @param F 源类型，表示需要被转换的数据类型。
  * @param T 目标类型，表示转换后的数据类型。
  */
-interface BaseJsonConverter<F, T> : JackSonJsonConverter<F, T>
+interface BaseJsonConverter<F, T> : JsonConverter<F, T>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MetaData.kt
- * LastUpdate 2025-09-20 10:45:43
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 @file:JvmName("MetaData")
@@ -38,16 +38,6 @@ fun getMetaData(): Map<String, String> {
             return@map null
         }
     }.filter { it != null }.collect(toMap({ it!!.first }, { it!!.second }))
-}
-
-class MingliUtilsMetaData {
-    var buildTime: String = ""
-    var groupId: String = ""
-    var artifactId: String = ""
-    var version: String = ""
-    var buildJdkVersion: String = ""
-    var author: String = ""
-    var website: String = ""
 }
 
 val mingliUtilsMetaData: MingliUtilsMetaData by lazy {

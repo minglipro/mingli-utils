@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AesUtils.kt
- * LastUpdate 2025-09-19 21:35:53
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 
@@ -25,7 +25,7 @@
 
 package com.mingliqiye.utils.aes
 
-import com.mingliqiye.utils.base.BASE64
+import com.mingliqiye.utils.base.code.Base64
 import java.nio.charset.StandardCharsets
 import java.security.GeneralSecurityException
 import java.security.MessageDigest
@@ -71,8 +71,8 @@ fun encrypt(sSrc: String, sKey: String?): String? {
     val encrypted = cipher.doFinal(
         sSrc.toByteArray(StandardCharsets.UTF_8)
     )
-    return BASE64.encode(
-        "${BASE64.encode(iv)}:${BASE64.encode(encrypted)}".toByteArray()
+    return Base64.encode(
+        "${Base64.encode(iv)}:${Base64.encode(encrypted)}".toByteArray()
     )
 }
 
@@ -85,13 +85,13 @@ fun encrypt(sSrc: String, sKey: String?): String? {
 fun decrypt(sSrc: String, sKey: String): String? {
     try {
         // 分割IV和加密数据
-        val sSrcs = String(BASE64.decode(sSrc))
+        val sSrcs = String(Base64.decode(sSrc))
         val parts: Array<String?> = sSrcs.split(":".toRegex(), limit = 2).toTypedArray()
         if (parts.size != 2) {
             return null
         }
-        val iv = BASE64.decode(parts[0]!!)
-        val encryptedData = BASE64.decode(parts[1]!!)
+        val iv = Base64.decode(parts[0]!!)
+        val encryptedData = Base64.decode(parts[1]!!)
         if (iv.size != GCM_IV_LENGTH) {
             return null
         }
@@ -121,4 +121,3 @@ private fun createSecretKey(sKey: String): SecretKeySpec {
     val digest = md.digest(key)
     return SecretKeySpec(digest, ALGORITHM)
 }
-

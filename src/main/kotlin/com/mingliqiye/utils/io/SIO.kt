@@ -15,8 +15,8 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile IO.kt
- * LastUpdate 2026-02-06 13:21:33
+ * CurrentFile SIO.kt
+ * LastUpdate 2026-02-27 12:36:11
  * UpdateUser MingLiPro
  */
 
@@ -29,46 +29,134 @@ import org.slf4j.Logger
 import java.io.OutputStream
 import java.io.PrintStream
 
+/**
+ * 已弃用的IO对象，所有方法都委托给SIO对象
+ * @deprecated 请使用SIO对象替代
+ */
+@Deprecated("This IO is deprecated. reName SIO", replaceWith = ReplaceWith("SIO"), level = DeprecationLevel.WARNING)
+object IO {
+    /**
+     * 打印多个参数，使用空格分隔
+     * @param args 要打印的参数数组
+     */
+    @JvmStatic
+    fun print(vararg args: Any?) = SIO.print(*args)
+
+    /**
+     * 打印多个参数并换行，使用空格分隔
+     * @param args 要打印的参数数组
+     */
+    @JvmStatic
+    fun println(vararg args: Any?) = SIO.println(*args)
+
+    /**
+     * 打印多个参数并换行，指定分隔符
+     * @param sp 分隔符
+     * @param args 要打印的参数数组
+     */
+    @JvmStatic
+    fun printlnA(sp: String, vararg args: Any?) = SIO.printlnA(sp, *args)
+
+    /**
+     * 打印多个参数，指定分隔符
+     * @param sp 分隔符，默认为空字符串
+     * @param args 要打印的参数数组
+     */
+    @JvmStatic
+    fun printA(sp: String = "", vararg args: Any?) = SIO.printA(sp, *args)
+
+    /**
+     * 重定向 System.out 到 INFO 级别日志
+     */
+    @JvmStatic
+    fun redirectOutToInfo() = SIO.redirectOutToInfo()
+
+    /**
+     * 重定向 System.err 到 ERROR 级别
+     */
+    @JvmStatic
+    fun redirectErrToError() = SIO.redirectErrToError()
+
+    /**
+     * 完全重定向（包括第三方库的输出）
+     */
+    @JvmStatic
+    fun redirectAll() = SIO.redirectAll()
+
+    /**
+     * 恢复原始输出流
+     */
+    @JvmStatic
+    fun restore() = SIO.restore()
+}
+
 
 /**
  * IO工具类，提供打印功能和系统输出流重定向到日志的功能
  */
-object IO {
+object SIO {
 
+    /**
+     * 扩展函数：将字节数组以十六进制格式打印，每两个字符用空格分隔
+     * @return 原始字节数组
+     */
     @JvmStatic
     fun ByteArray.println(): ByteArray {
         this.toHexString().chunked(2).println()
         return this
     }
 
+    /**
+     * 扩展函数：将列表以花括号格式打印，元素间用逗号分隔
+     * @return 原始列表
+     */
     @JvmStatic
     fun <T> List<T>.println(): List<T> {
         println("{" + ",".join(this) + "}")
         return this
     }
 
+    /**
+     * 扩展函数：将数组以花括号格式打印，元素间用逗号分隔
+     * @return 原始数组
+     */
     @JvmStatic
     fun <T> Array<T>.println(): Array<T> {
         println("{" + ",".join(this) + "}")
         return this
     }
 
+    /**
+     * 扩展函数：打印任意对象并返回该对象
+     * @return 原始对象
+     */
     @JvmStatic
     fun <T> T.println(): T {
         println(this)
         return this
     }
 
+    /**
+     * 原始标准输出流的备份
+     */
     @JvmStatic
-    var originalOut: PrintStream = System.out
+    val originalOut: PrintStream = System.out
 
+    /**
+     * 原始错误输出流的备份
+     */
     @JvmStatic
-    var originalErr: PrintStream = System.err
+    val originalErr: PrintStream = System.err
 
-
+    /**
+     * 用于记录标准输出的日志记录器
+     */
     @JvmStatic
     val outLog: Logger = MingLiLoggerFactory.getLogger("out")
 
+    /**
+     * 用于记录错误输出的日志记录器
+     */
     @JvmStatic
     val errLog: Logger = MingLiLoggerFactory.getLogger("err")
 
@@ -119,10 +207,11 @@ object IO {
         kotlin.io.print(sb)
     }
 
+    /**
+     * 重定向 System.out 到 INFO 级别日志
+     * 创建自定义PrintStream，将输出内容缓冲并记录到INFO级别日志中
+     */
     @JvmStatic
-            /**
-             * 重定向 System.out 到 INFO 级别日志
-             */
     fun redirectOutToInfo() {
         val outLogger = PrintStream(object : OutputStream() {
             private val buffer = StringBuilder()
@@ -169,10 +258,11 @@ object IO {
         System.setOut(outLogger)
     }
 
+    /**
+     * 重定向 System.err 到 ERROR 级别
+     * 创建自定义PrintStream，将错误输出内容缓冲并记录到ERROR级别日志中
+     */
     @JvmStatic
-            /**
-             * 重定向 System.err 到 ERROR 级别
-             */
     fun redirectErrToError() {
         val errLogger = PrintStream(object : OutputStream() {
             private val buffer = StringBuilder()
@@ -219,19 +309,21 @@ object IO {
         System.setErr(errLogger)
     }
 
+    /**
+     * 完全重定向（包括第三方库的输出）
+     * 同时重定向标准输出和错误输出到对应的日志级别
+     */
     @JvmStatic
-            /**
-             * 完全重定向（包括第三方库的输出）
-             */
     fun redirectAll() {
         redirectOutToInfo()
         redirectErrToError()
     }
 
+    /**
+     * 恢复原始输出流
+     * 将System.out和System.err恢复到原始状态
+     */
     @JvmStatic
-            /**
-             * 恢复原始输出流
-             */
     fun restore() {
         System.setOut(originalOut)
         System.setErr(originalErr)

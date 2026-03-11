@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonConverterUtils.kt
- * LastUpdate 2026-02-07 22:33:09
+ * LastUpdate 2026-02-26 16:01:49
  * UpdateUser MingLiPro
  */
 @file:JvmName("JsonConverterUtils")
@@ -49,6 +49,7 @@ fun getClass(type: Type?): Class<*>? {
 
 inline fun <reified T : JsonConverter<*, *>> getJsonConverter(): T = getJsonConverter(T::class.java)
 
+@Suppress("UNCHECKED_CAST")
 fun <T : JsonConverter<*, *>> getJsonConverter(clazz: Class<T>): T {
     try {
         return clazz.getDeclaredMethod(
@@ -59,3 +60,25 @@ fun <T : JsonConverter<*, *>> getJsonConverter(clazz: Class<T>): T {
         throw e
     }
 }
+
+fun <T : BaseJsonConverter<*, *>> com.fasterxml.jackson.databind.ObjectMapper.addJsonConverter(clazz: Class<T>): com.fasterxml.jackson.databind.ObjectMapper =
+    this.registerModule(getJsonConverter(clazz).getJacksonModule())
+
+@JvmName("inline_addJsonConverter")
+inline fun <reified T : BaseJsonConverter<*, *>> com.fasterxml.jackson.databind.ObjectMapper.addJsonConverter(): com.fasterxml.jackson.databind.ObjectMapper =
+    this.registerModule(getJsonConverter(T::class.java).getJacksonModule())
+
+/**
+ * 创建并返回一个 Jackson 模块，该模块包含自定义的序列化器和反序列化器。
+ *
+ * @return 配置了自定义序列化器和反序列化器的 SimpleModule 对象。
+ */
+fun <F, T> JsonConverter<F, T>.getJacksonModule(): com.fasterxml.jackson.databind.module.SimpleModule =
+    com.fasterxml.jackson.databind.module.SimpleModule("${getFromClass().name}To${getToClass().name}")
+        .addSerializer(getFromClass(), JackJsonSerializer(null, this))
+        .addDeserializer(getFromClass(), JackJsonDeserializer(null, this))
+
+fun <F, T> JsonConverter<F, T>.getJackson3Module(): tools.jackson.databind.module.SimpleModule =
+    tools.jackson.databind.module.SimpleModule("${getFromClass().name}To${getToClass().name}")
+        .addSerializer(getFromClass(), JackJson3Serializer(null, this))
+        .addDeserializer(getFromClass(), JackJson3Deserializer(null, this))

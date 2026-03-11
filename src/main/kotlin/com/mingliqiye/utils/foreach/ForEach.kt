@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ForEach.kt
- * LastUpdate 2025-09-15 12:44:46
+ * LastUpdate 2026-02-27 12:45:39
  * UpdateUser MingLiPro
  */
 @file:JvmName("ForEach")
@@ -58,10 +58,8 @@ fun <T> forEach(
 
         else -> {
             // 对于其他类型的可迭代对象，使用增强 for 循环并手动维护索引
-            var index = 0
-            for (element in iterable) {
+            for ((index, element) in iterable.withIndex()) {
                 action.call(element, index)
-                index++
             }
         }
     }

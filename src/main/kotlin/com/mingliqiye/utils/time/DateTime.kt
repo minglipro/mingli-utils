@@ -16,27 +16,19 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.kt
- * LastUpdate 2026-02-04 21:54:04
+ * LastUpdate 2026-03-07 11:02:42
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.time
 
-import com.mingliqiye.utils.jna.FILETIME_EPOCH_OFFSET
-import com.mingliqiye.utils.jna.NANOS_PER_100NS
-import com.mingliqiye.utils.jna.WinKernel32Api
-import com.mingliqiye.utils.jna.getWinKernel32Apis
-import com.mingliqiye.utils.logger.MingLiLoggerFactory
-import com.mingliqiye.utils.system.isWindows
-import com.mingliqiye.utils.system.javaVersionAsInteger
-import org.slf4j.Logger
+import io.swagger.v3.oas.annotations.media.Schema
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 
@@ -55,33 +47,17 @@ import kotlin.time.Instant
  * @see ZoneId
  * @see Instant
  */
+@Schema(
+    name = "DateTime",
+    description = "DateTime",
+    type = "string",
+    format = "date-time"
+)
 class DateTime private constructor(
     private var localDateTime: LocalDateTime, private val zoneId: ZoneId = ZoneId.systemDefault()
 ) : Serializable {
 
     companion object {
-        private val WIN_KERNEL_32_API: WinKernel32Api? = if (javaVersionAsInteger == 8 && isWindows) {
-            val log: Logger = MingLiLoggerFactory.getLogger("mingli-utils DateTime")
-            val a = getWinKernel32Apis()
-
-            if (a.size > 1) {
-                log.warn("Multiple Size:{} WinKernel32Api implementations found.", a.size)
-                a.forEach { api ->
-                    log.warn("Found WinKernel32Api: {}", api.javaClass.name)
-                }
-            }
-
-            if (a.isEmpty()) {
-                log.warn("No WinKernel32Api implementation found. Use Jdk1.8 LocalDateTime")
-                null
-            } else {
-                log.info("Found and Use WinKernel32Api: {}", a[a.size - 1].javaClass.name)
-                a[a.size - 1]
-            }
-        } else {
-            null
-        }
-
         /**
          * 获取当前时间的 DateTime 实例。
          * 如果运行在 Java 1.8 环境下，则通过 WinKernel32 获取高精度时间。
@@ -90,11 +66,6 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun now(): DateTime {
-            if (WIN_KERNEL_32_API != null) {
-                return DateTime(
-                    WIN_KERNEL_32_API.getTime().atZone(ZoneId.systemDefault()).toLocalDateTime()
-                )
-            }
             return DateTime(LocalDateTime.now())
         }
 
@@ -264,27 +235,6 @@ class DateTime private constructor(
             year: Int, month: Int, day: Int, hour: Int, minute: Int
         ): DateTime {
             return DateTime(LocalDateTime.of(year, month, day, hour, minute))
-        }
-
-        /**
-         * 将 FILETIME 转换为 LocalDateTime。
-         *
-         * @param fileTime FILETIME 时间戳（100纳秒单位自1601年1月1日起）
-         * @return 转换后的 LocalDateTime 实例
-         */
-        @OptIn(ExperimentalTime::class)
-        @JvmStatic
-        fun fileTimeToLocalDateTime(fileTime: Long): LocalDateTime {
-            // 1. 将 FILETIME (100ns间隔 since 1601) 转换为 Unix 时间戳 (纳秒 since 1970)
-            val unixNanos = (fileTime + FILETIME_EPOCH_OFFSET) * NANOS_PER_100NS
-
-            // 2. 从纳秒时间戳创建 Instant
-            val instant = java.time.Instant.ofEpochSecond(
-                unixNanos / 1_000_000_000L, unixNanos % 1_000_000_000L
-            )
-
-            // 3. 转换为系统默认时区的 LocalDateTime
-            return instant.atZone(ZoneId.systemDefault()).toLocalDateTime()
         }
 
         /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,158 +16,163 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseCodec.kt
- * LastUpdate 2025-09-18 14:07:35
+ * LastUpdate 2026-02-09 19:58:29
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.base
 
+import com.mingliqiye.utils.exception.CodecException
 import java.io.File
-import java.io.IOException
 import java.nio.file.Path
 
+/**
+ * BaseCodec 接口定义了一组用于编码和解码数据的基本方法。
+ * 提供了对字节数组、字符串、文件和路径的编码与解码功能，
+ * 并支持安全操作（在发生异常时返回默认值或布尔状态）。
+ */
 interface BaseCodec {
+
     /**
-     * 将字节数组编码为Base64字符串
+     * 对字节数组进行编码，并捕获可能发生的异常。
      *
      * @param bytes 需要编码的字节数组
-     * @return 编码后的Base64字符串
+     * @return 编码后的字符串结果
+     * @throws CodecException 如果编码过程中发生异常
+     */
+    fun catchEncode(bytes: ByteArray) = try {
+        encode(bytes)
+    } catch (e: Exception) {
+        throw CodecException(e)
+    }
+
+    /**
+     * 对字符串进行解码，并捕获可能发生的异常。
+     *
+     * @param string 需要解码的字符串
+     * @return 解码后的字节数组结果
+     * @throws CodecException 如果解码过程中发生异常
+     */
+    fun catchDecode(string: String) = try {
+        decode(string)
+    } catch (e: Exception) {
+        throw CodecException(e)
+    }
+
+    /**
+     * 将字节数组编码为字符串。
+     *
+     * @param bytes 需要编码的字节数组
+     * @return 编码后的字符串结果
      */
     fun encode(bytes: ByteArray): String
 
     /**
-     * 将Base64字符串解码为字节数组
+     * 将字符串解码为字节数组。
      *
-     * @param string 需要解码的Base64字符串
-     * @return 解码后的字节数组
+     * @param string 需要解码的字符串
+     * @return 解码后的字节数组结果
      */
     fun decode(string: String): ByteArray
 
     /**
-     * 将文件内容编码为Base64字符串
+     * 对文件内容进行编码。
      *
-     * @param file 需要编码的文件
-     * @return 文件内容的Base64编码字符串
-     * @throws IOException 当文件读取失败时抛出
+     * @param file 需要编码的文件对象
+     * @return 文件内容编码后的字符串结果
      */
-    @Throws(IOException::class)
-    fun encode(file: File): String {
-        return encode(file.readBytes())
+    fun encode(file: File) = catchEncode(file.readBytes())
+
+    /**
+     * 将字符串解码后写入指定文件。
+     *
+     * @param file 目标文件对象
+     * @param string 需要解码的字符串
+     */
+    fun decode(file: File, string: String) =
+        file.writeBytes(catchDecode(string))
+
+    /**
+     * 安全地对文件内容进行编码，如果发生异常则返回 null。
+     *
+     * @param file 需要编码的文件对象
+     * @return 文件内容编码后的字符串结果，若失败则返回 null
+     */
+    fun encodeSafe(file: File) = try {
+        encode(file)
+    } catch (_: Exception) {
+        null
     }
 
     /**
-     * 将Base64字符串解码并写入文件
+     * 安全地将字符串解码并写入指定文件，如果成功则返回 true，否则返回 false。
      *
-     * @param file 目标文件
-     * @param string 需要解码的Base64字符串
-     * @throws IOException 当文件写入失败时抛出
+     * @param file 目标文件对象
+     * @param string 需要解码的字符串
+     * @return 操作是否成功的布尔值
      */
-    @Throws(IOException::class)
-    fun decode(file: File, string: String) {
-        file.writeBytes(decode(string))
+    fun decodeSafe(file: File, string: String) = try {
+        decode(file, string)
+        true
+    } catch (_: Exception) {
+        false
     }
 
     /**
-     * 安全地将文件内容编码为Base64字符串，出现异常时返回null
-     *
-     * @param file 需要编码的文件
-     * @return 文件内容的Base64编码字符串，失败时返回null
-     */
-    fun encodeSafe(file: File): String? {
-        return try {
-            encode(file)
-        } catch (_: Exception) {
-            null
-        }
-    }
-
-    /**
-     * 安全地将Base64字符串解码并写入文件，返回操作是否成功
-     *
-     * @param file 目标文件
-     * @param string 需要解码的Base64字符串
-     * @return 操作成功返回true，失败返回false
-     */
-    fun decodeSafe(file: File, string: String): Boolean {
-        return try {
-            decode(file, string)
-            true
-        } catch (_: Exception) {
-            false
-        }
-    }
-
-    /**
-     * 将路径对应的文件内容编码为Base64字符串
+     * 对路径指向的文件内容进行编码。
      *
      * @param path 需要编码的文件路径
-     * @return 文件内容的Base64编码字符串
-     * @throws IOException 当文件读取失败时抛出
+     * @return 文件内容编码后的字符串结果
      */
-    @Throws(IOException::class)
-    fun encode(path: Path): String {
-        return encode(path.toFile().readBytes())
-    }
+    fun encode(path: Path) = catchEncode(path.toFile().readBytes())
 
     /**
-     * 将Base64字符串解码并写入路径指定的文件
+     * 将字符串解码后写入指定路径的文件。
      *
      * @param path 目标文件路径
-     * @param string 需要解码的Base64字符串
-     * @throws IOException 当文件写入失败时抛出
+     * @param string 需要解码的字符串
      */
-    @Throws(IOException::class)
-    fun decode(path: Path, string: String) {
-        path.toFile().writeBytes(decode(string))
-    }
+    fun decode(path: Path, string: String) = path.toFile().writeBytes(catchDecode(string))
 
     /**
-     * 安全地将路径对应的文件内容编码为Base64字符串，出现异常时返回null
+     * 安全地对路径指向的文件内容进行编码，如果发生异常则返回 null。
      *
      * @param path 需要编码的文件路径
-     * @return 文件内容的Base64编码字符串，失败时返回null
+     * @return 文件内容编码后的字符串结果，若失败则返回 null
      */
-    fun encodeSafe(path: Path): String? {
-        return try {
-            encode(path)
-        } catch (_: Exception) {
-            null
-        }
+    fun encodeSafe(path: Path) = try {
+        encode(path)
+    } catch (_: Exception) {
+        null
     }
 
     /**
-     * 安全地将Base64字符串解码并写入路径指定的文件，返回操作是否成功
+     * 安全地将字符串解码并写入指定路径的文件，如果成功则返回 true，否则返回 false。
      *
      * @param path 目标文件路径
-     * @param string 需要解码的Base64字符串
-     * @return 操作成功返回true，失败返回false
+     * @param string 需要解码的字符串
+     * @return 操作是否成功的布尔值
      */
-    fun decodeSafe(path: Path, string: String): Boolean {
-        return try {
-            decode(path, string)
-            true
-        } catch (_: Exception) {
-            false
-        }
+    fun decodeSafe(path: Path, string: String) = try {
+        decode(path, string)
+        true
+    } catch (_: Exception) {
+        false
     }
 
     /**
-     * 将字符串编码为Base64字符串
+     * 对字符串进行编码。
      *
      * @param string 需要编码的字符串
-     * @return 编码后的Base64字符串
+     * @return 编码后的字符串结果
      */
-    fun encode(string: String): String {
-        return encode(string.toByteArray())
-    }
+    fun encode(string: String) = catchEncode(string.toByteArray())
 
     /**
-     * 将Base64字符串解码为字符串
+     * 将字符串解码为 UTF-8 格式的字符串。
      *
-     * @param string 需要解码的Base64字符串
-     * @return 解码后的字符串
+     * @param string 需要解码的字符串
+     * @return 解码后的 UTF-8 字符串结果
      */
-    fun decodetoString(string: String): String {
-        return decode(string).toString(Charsets.UTF_8)
-    }
+    fun decodetoString(string: String) = catchDecode(string).toString(Charsets.UTF_8)
 }

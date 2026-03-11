@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonApi.kt
- * LastUpdate 2026-02-04 21:00:48
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 
@@ -25,6 +25,7 @@ package com.mingliqiye.utils.json.api.base
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.api.type.listType
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
+import com.mingliqiye.utils.json.converters.base.getJsonConverter
 import java.io.*
 import java.nio.file.Files
 import java.nio.file.Path
@@ -111,7 +112,7 @@ interface JsonApi {
          * @return 解析后的Map集合
          */
         inline fun <reified K, reified V> JsonApi.parseMap(
-            json: String
+            json: String,
         ): MutableMap<K, V> = parseMap(json, K::class.java, V::class.java)
 
 
@@ -133,7 +134,7 @@ interface JsonApi {
          */
         @JvmStatic
         inline fun <reified T : BaseJsonConverter<*, *>> JsonApi.addJsonConverter() {
-            addJsonConverter(T::class.java.newInstance())
+            addJsonConverter(getJsonConverter<T>())
         }
 
     }
@@ -165,8 +166,6 @@ interface JsonApi {
      * @return 格式化后的JSON字符串
      */
     fun format(obj: Any): String
-
-    fun formatUnicode(obj: Any): String
 
     /**
      * 从文件路径读取JSON并解析为指定类型对象
@@ -333,7 +332,7 @@ interface JsonApi {
      * @return 解析后的对象实例或默认值
      **/
     fun <T> parse(
-        json: String, type: JsonTypeReference<T>, defaultValue: T
+        json: String, type: JsonTypeReference<T>, defaultValue: T,
     ): T {
         return try {
             parse<T>(json, type)
@@ -354,12 +353,6 @@ interface JsonApi {
         return formatPretty(obj)!!.toByteArray()
     }
 
-    fun formatPrettyUnicode(obj: Any): String
-
-    fun formatPrettyUnicodeBytes(obj: Any): ByteArray {
-        return formatPrettyUnicode(obj)!!.toByteArray()
-    }
-
     fun formatPretty(obj: Any, file: String) {
         formatPretty(obj, Paths.get(file))
     }
@@ -378,30 +371,8 @@ interface JsonApi {
         stream.write(formatPrettyBytes(obj))
     }
 
-    fun formatPrettyUnicode(obj: Any, file: String) {
-        formatPrettyUnicode(obj, Paths.get(file))
-    }
-
-    fun formatPrettyUnicode(obj: Any, file: Path) {
-        formatPrettyUnicode(obj, file.toFile())
-    }
-
-    fun formatPrettyUnicode(obj: Any, file: File) {
-        FileOutputStream(file).use { fos ->
-            formatPrettyUnicode(obj, fos)
-        }
-    }
-
-    fun formatPrettyUnicode(obj: Any, stream: OutputStream) {
-        stream.write(formatPrettyUnicodeBytes(obj))
-    }
-
     fun formatBytes(obj: Any): ByteArray {
-        return format(obj)!!.toByteArray()
-    }
-
-    fun formatUnicodeBytes(obj: Any): ByteArray {
-        return formatUnicode(obj)!!.toByteArray()
+        return format(obj).toByteArray()
     }
 
     fun format(obj: Any, file: String) {
@@ -422,23 +393,6 @@ interface JsonApi {
         stream.write(formatPrettyBytes(obj))
     }
 
-    fun formatUnicode(obj: Any, file: String) {
-        formatUnicode(obj, Paths.get(file))
-    }
-
-    fun formatUnicode(obj: Any, file: Path) {
-        formatUnicode(obj, file.toFile())
-    }
-
-    fun formatUnicode(obj: Any, file: File) {
-        FileOutputStream(file).use { fos ->
-            formatUnicode(obj, fos)
-        }
-    }
-
-    fun formatUnicode(obj: Any, stream: OutputStream) {
-        stream.write(formatPrettyUnicodeBytes(obj))
-    }
 
     /**
      * 将JSON字符串解析为指定元素类型的List集合
@@ -463,7 +417,7 @@ interface JsonApi {
      * @return 解析后的Map集合
     </V></K> */
     fun <K, V> parseMap(
-        json: String, keyType: Class<K>, valueType: Class<V>
+        json: String, keyType: Class<K>, valueType: Class<V>,
     ): MutableMap<K, V> {
         val mapType: JsonTypeReference<MutableMap<K, V>> = object : JsonTypeReference<MutableMap<K, V>>() {}
         return parse<MutableMap<K, V>>(json, mapType)

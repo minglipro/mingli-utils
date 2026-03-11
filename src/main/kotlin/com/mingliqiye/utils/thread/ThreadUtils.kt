@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ThreadUtils.kt
- * LastUpdate 2026-01-31 20:48:19
+ * LastUpdate 2026-02-09 20:14:22
  * UpdateUser MingLiPro
  */
 
@@ -35,7 +35,7 @@ object ThreadUtils {
      * @return 当前线程的名称字符串
      */
     @JvmStatic
-    var name: String
+    var currentThreadName: String
         get() = Thread.currentThread().name
         set(s) {
             Thread.currentThread().name = s

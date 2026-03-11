@@ -16,46 +16,120 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTimeOffset.kt
- * LastUpdate 2026-02-04 21:54:04
+ * LastUpdate 2026-02-27 11:04:05
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.time
 
 import java.time.temporal.ChronoUnit
+import java.util.concurrent.TimeUnit
 
 /**
- * 时间位移 类
+ * 表示一个时间偏移量的类，用于封装时间单位和偏移值。
  *
- * @author MingLiPro
+ * @property offsetType 时间单位类型，使用 [ChronoUnit] 表示。
+ * @property offset 偏移量的数值。
  */
 class DateTimeOffset private constructor(
-    val offsetType: ChronoUnit, val offset: Long
+    val offsetType: ChronoUnit,
+    val offset: Long
 ) {
 
     companion object {
         /**
-         * 创建一个新的DateTimeOffset实例
+         * 将 [ChronoUnit] 扩展为创建 [DateTimeOffset] 实例的函数。
          *
-         * @param offsetType 偏移量的单位类型，指定偏移量的计算单位
-         * @param offset     偏移量的数值，可以为正数、负数或零
-         * @return 返回一个新的DateTimeOffset对象，包含指定的偏移量信息
+         * @param offset 偏移量的长整型数值。
+         * @return 返回一个新的 [DateTimeOffset] 实例。
          */
         @JvmStatic
-        fun of(offsetType: ChronoUnit, offset: Long): DateTimeOffset {
-            return DateTimeOffset(offsetType, offset)
-        }
+        @JvmName("of")
+        fun ChronoUnit.toDateTimeOffset(offset: Long) = DateTimeOffset(this, offset)
 
         /**
-         * 创建一个 DateTimeOffset 实例
+         * 将 [ChronoUnit] 扩展为创建 [DateTimeOffset] 实例的函数。
          *
-         * @param offset     偏移量数值
-         * @param offsetType 偏移量的时间单位类型
-         * @return 返回一个新的 DateTimeOffset 实例
+         * @param offset 偏移量的整型数值。
+         * @return 返回一个新的 [DateTimeOffset] 实例。
          */
         @JvmStatic
-        fun of(offset: Long, offsetType: ChronoUnit): DateTimeOffset {
-            return DateTimeOffset(offsetType, offset)
+        @JvmName("of")
+        fun ChronoUnit.toDateTimeOffset(offset: Int) = DateTimeOffset(this, offset.toLong())
+
+        /**
+         * 将 [TimeUnit] 扩展为创建 [DateTimeOffset] 实例的函数。
+         *
+         * @param offset 偏移量的长整型数值。
+         * @return 返回一个新的 [DateTimeOffset] 实例。
+         */
+        @JvmStatic
+        @JvmName("of")
+        fun TimeUnit.toDateTimeOffset(offset: Long) = DateTimeOffset(this.toChronoUnit(), offset)
+
+        /**
+         * 将 [TimeUnit] 扩展为创建 [DateTimeOffset] 实例的函数。
+         *
+         * @param offset 偏移量的整型数值。
+         * @return 返回一个新的 [DateTimeOffset] 实例。
+         */
+        @JvmStatic
+        @JvmName("of")
+        fun TimeUnit.toDateTimeOffset(offset: Int) = DateTimeOffset(this.toChronoUnit(), offset.toLong())
+
+        /**
+         * 创建 [DateTimeOffset] 实例的静态工厂方法。
+         *
+         * @param offset 偏移量的长整型数值。
+         * @param offsetType 时间单位类型，使用 [ChronoUnit] 表示。
+         * @return 返回一个新的 [DateTimeOffset] 实例。
+         */
+        @JvmStatic
+        fun of(offset: Long, offsetType: ChronoUnit) = offsetType.toDateTimeOffset(offset)
+
+        /**
+         * 创建 [DateTimeOffset] 实例的静态工厂方法。
+         *
+         * @param offset 偏移量的整型数值。
+         * @param offsetType 时间单位类型，使用 [ChronoUnit] 表示。
+         * @return 返回一个新的 [DateTimeOffset] 实例。
+         */
+        @JvmStatic
+        fun of(offset: Int, offsetType: ChronoUnit) = offsetType.toDateTimeOffset(offset)
+
+        /**
+         * 创建 [DateTimeOffset] 实例的静态工厂方法。
+         *
+         * @param offset 偏移量的长整型数值。
+         * @param offsetType 时间单位类型，使用 [TimeUnit] 表示。
+         * @return 返回一个新的 [DateTimeOffset] 实例。
+         */
+        @JvmStatic
+        fun of(offset: Long, offsetType: TimeUnit) = offsetType.toDateTimeOffset(offset)
+
+        /**
+         * 创建 [DateTimeOffset] 实例的静态工厂方法。
+         *
+         * @param offset 偏移量的整型数值。
+         * @param offsetType 时间单位类型，使用 [TimeUnit] 表示。
+         * @return 返回一个新的 [DateTimeOffset] 实例。
+         */
+        @JvmStatic
+        fun of(offset: Int, offsetType: TimeUnit) = offsetType.toDateTimeOffset(offset)
+
+        @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+        @JvmStatic
+        @JvmName("TimeUnitToChronoUnit")
+        fun TimeUnit.toChronoUnit(): ChronoUnit {
+            return when (this) {
+                TimeUnit.NANOSECONDS -> ChronoUnit.NANOS
+                TimeUnit.MICROSECONDS -> ChronoUnit.MICROS
+                TimeUnit.MILLISECONDS -> ChronoUnit.MILLIS
+                TimeUnit.SECONDS -> ChronoUnit.SECONDS
+                TimeUnit.MINUTES -> ChronoUnit.MINUTES
+                TimeUnit.HOURS -> ChronoUnit.HOURS
+                TimeUnit.DAYS -> ChronoUnit.DAYS
+            }
         }
     }
 }

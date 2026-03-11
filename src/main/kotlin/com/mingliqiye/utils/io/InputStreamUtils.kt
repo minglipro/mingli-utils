@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile InputStreamUtils.kt
- * LastUpdate 2025-09-15 17:26:34
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 @file:JvmName("InputStreamUtils")
@@ -28,23 +28,16 @@ import java.io.OutputStream
 import java.nio.charset.Charset
 
 
-fun InputStream.readAllText(charset: Charset = Charsets.UTF_8): String {
-    return this.readAllBytes().toString(charset)
-}
-
-fun InputStream.readAllBytes(): ByteArray {
-    return this.readBytes()
-}
+fun InputStream.readAllText(charset: Charset = Charsets.UTF_8) = this.readAllBytes().toString(charset)
 
 fun InputStream.exportBytes(out: OutputStream) {
     out.write(this.readAllBytes())
     out.flush()
 }
 
-fun InputStream.readToList(): List<Byte> {
-    return this.readBytes().toList()
-}
+fun InputStream.readToList(): List<Byte> = this.readBytes().toList()
 
 
-
-
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+@JvmName("readInputStreamAllBytes")
+fun InputStream.readAllBytes(): ByteArray = this.readBytes()

@@ -16,14 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Pipeline.kt
- * LastUpdate 2026-02-05 15:22:21
+ * LastUpdate 2026-02-24 09:10:26
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.functions
 
 import com.mingliqiye.utils.require.Require
-import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * 流水线操作类，提供链式调用的操作方式来处理数据转换和操作
@@ -112,6 +112,7 @@ class Pipeline<T>(private val value: T) {
      * @throws ClassCastException 当类型转换失败时抛出异常
      */
     @Throws(ClassCastException::class)
+    @Suppress("UNCHECKED_CAST")
     fun <E> cast(type: Class<E>): Pipeline<E> = Pipeline(value as E)
 
     /**
@@ -160,7 +161,7 @@ class Pipeline<T>(private val value: T) {
     fun require(
         any: Any, message: String, exception: Class<out Exception> = IllegalArgumentException::class.java
     ): Pipeline<T> {
-        Require.require(Objects.equals(any, value), message, exception)
+        Require.require(any == value, message, exception)
         return this
     }
 
@@ -174,7 +175,7 @@ class Pipeline<T>(private val value: T) {
     fun require(
         any: Any, message: String
     ): Pipeline<T> {
-        Require.RequireLayz.require(any == value, message)
+        Require.require(any == value, message)
         return this
     }
 
@@ -189,6 +190,38 @@ class Pipeline<T>(private val value: T) {
         must: P1RFunction<T, Boolean>,
         message: String,
         exception: Class<out Throwable> = IllegalArgumentException::class.java
+    ): Pipeline<T> {
+        Require.require(must.call(value), message, exception)
+        return this
+    }
+
+    /**
+     * 验证当前值是否等于指定值，如果不相等则抛出异常
+     * @param any 比较的目标值
+     * @param message 错误消息
+     * @param exception 异常类型，默认为IllegalArgumentException
+     * @return 当前Pipeline实例
+     */
+    fun require(
+        any: Any,
+        message: String,
+        exception: KClass<out Throwable> = IllegalArgumentException::class
+    ): Pipeline<T> {
+        Require.require(any == value, message, exception)
+        return this
+    }
+
+    /**
+     * 使用P1RFunction验证当前值是否满足条件，不满足则抛出异常
+     * @param must 验证条件函数
+     * @param message 错误消息
+     * @param exception 异常类型，默认为IllegalArgumentException
+     * @return 当前Pipeline实例
+     */
+    fun require(
+        must: P1RFunction<T, Boolean>,
+        message: String,
+        exception: KClass<out Throwable> = IllegalArgumentException::class
     ): Pipeline<T> {
         Require.require(must.call(value), message, exception)
         return this

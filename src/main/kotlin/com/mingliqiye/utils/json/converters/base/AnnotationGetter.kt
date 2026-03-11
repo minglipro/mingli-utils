@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AnnotationGetter.kt
- * LastUpdate 2026-02-06 16:57:45
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 
@@ -73,6 +73,7 @@ interface AnnotationGetter {
              * @param clazz 目标注解类型的Class对象。
              * @return 如果annotation的类型与clazz一致，则返回annotation转换为T类型的实例；否则返回null。
              */
+            @Suppress("UNCHECKED_CAST")
             override fun <T : Annotation> get(clazz: Class<T>): T? =
                 if (annotation.javaClass == clazz) annotation as T else null
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Maps.kt
- * LastUpdate 2025-09-15 08:33:24
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 
@@ -38,6 +38,10 @@ fun <K, V> newHashMap(vararg elements: Pair<K, V>): HashMap<K, V> {
 
 fun <K, V> newHashMap(size: Int): HashMap<K, V> {
     return HashMap(size)
+}
+
+fun <K, V> newHashMap(): HashMap<K, V> {
+    return HashMap()
 }
 
 fun <K, V> newHashMap(vararg elements: Map.Entry<K, V>): HashMap<K, V> {

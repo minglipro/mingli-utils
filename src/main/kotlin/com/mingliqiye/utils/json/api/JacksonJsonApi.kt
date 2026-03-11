@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonApi.kt
- * LastUpdate 2026-02-05 14:41:27
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 
@@ -32,6 +32,7 @@ import com.mingliqiye.utils.exception.JsonException
 import com.mingliqiye.utils.json.api.base.JsonApi
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
+import com.mingliqiye.utils.json.converters.base.getJacksonModule
 
 /**
  * 基于Jackson的JSON处理实现类，提供JSON字符串解析、格式化、合并、节点操作等功能。
@@ -110,7 +111,7 @@ class JacksonJsonApi : JsonApi {
         }
     }
 
-    override fun formatUnicode(obj: Any): String {
+    fun formatUnicode(obj: Any): String {
         return try {
             objectMapper.writer().with(JsonGenerator.Feature.ESCAPE_NON_ASCII).writeValueAsString(obj)
         } catch (e: Exception) {
@@ -135,7 +136,7 @@ class JacksonJsonApi : JsonApi {
         }
     }
 
-    override fun formatPrettyUnicode(obj: Any): String {
+    fun formatPrettyUnicode(obj: Any): String {
         return try {
             objectMapper.writerWithDefaultPrettyPrinter().with(JsonGenerator.Feature.ESCAPE_NON_ASCII)
                 .writeValueAsString(obj)

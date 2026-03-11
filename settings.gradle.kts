@@ -16,10 +16,21 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile settings.gradle.kts
- * LastUpdate 2026-02-07 17:00:59
+ * LastUpdate 2026-02-26 10:52:01
  * UpdateUser MingLiPro
  */
 
-include("jdk8")
+plugins {
+    id("com.gradleup.nmcp.settings").version("1.4.4")
+}
+
 val ARTIFACTID: String by settings.extra
 rootProject.name = ARTIFACTID
+
+nmcpSettings {
+    centralPortal {
+        username = System.getenv("sonatype.username")
+        password = System.getenv("sonatype.password")
+        publishingType = "AUTOMATIC"
+    }
+}

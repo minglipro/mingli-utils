@@ -16,20 +16,19 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonAutoConfiguration.kt
- * LastUpdate 2026-02-08 01:29:21
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.mingliqiye.utils.i18n.I18N.infoTranslater
 import com.mingliqiye.utils.json.api.JSONA
 import com.mingliqiye.utils.json.api.JacksonJsonApi
 import com.mingliqiye.utils.json.api.base.JsonApi
 import com.mingliqiye.utils.json.converters.DateTimeJsonConverter
 import com.mingliqiye.utils.json.converters.UUIDJsonConverter
-import com.mingliqiye.utils.json.converters.base.JackSonJsonConverter.Companion.addJsonConverter
+import com.mingliqiye.utils.json.converters.base.addJsonConverter
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import org.slf4j.Logger
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
@@ -77,10 +76,10 @@ open class JacksonAutoConfiguration(objectMapper: ObjectMapper) {
      * 注册自定义的 UUID 和 DateTime JSON 转换器模块到 ObjectMapper 中。
      */
     init {
-        log.infoTranslater("com.mingliqiye.utils.springboot.autoconfigure.JsonApiAutoConfiguration.jacksonserializers")
         objectMapper
             .addJsonConverter<UUIDJsonConverter>()
             .addJsonConverter<DateTimeJsonConverter>()
+        log.info("MingliUtils Jackson Serializers created")
     }
 
     /*
@@ -95,14 +94,13 @@ open class JacksonAutoConfiguration(objectMapper: ObjectMapper) {
     @ConditionalOnMissingBean
     open fun jsonApi(objectMapper: ObjectMapper): JsonApi {
         return JacksonJsonApi(objectMapper).also {
-            log.infoTranslater("com.mingliqiye.utils.springboot.autoconfigure.JsonApiAutoConfiguration.jsonapiconfiged")
+            log.info("JsonApi Bean Auto Configuration Success")
             try {
                 JSONA.getJsonApi()
             } catch (_: NullPointerException) {
                 JSONA.setJsonApi(it)
-                log.infoTranslater(
-                    "com.mingliqiye.utils.springboot.autoconfigure.JsonApiAutoConfiguration.jsonause",
-                    it.javaClass.name
+                log.info(
+                    "JSONA Using {}", it.javaClass.name
                 )
             }
         }

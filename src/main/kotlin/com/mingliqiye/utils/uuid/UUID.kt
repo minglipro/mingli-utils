@@ -16,30 +16,45 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2026-02-06 14:33:24
+ * LastUpdate 2026-03-07 11:02:29
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.uuid
 
-import com.mingliqiye.utils.base.*
-import com.mingliqiye.utils.io.IO.println
+import com.mingliqiye.utils.array.copyTo
+import com.mingliqiye.utils.base.BaseCodec
+import com.mingliqiye.utils.base.BaseType
+import com.mingliqiye.utils.base.code.Base256
+import com.mingliqiye.utils.base.code.Base64
+import com.mingliqiye.utils.base.code.Base91
 import com.mingliqiye.utils.random.randomByte
 import com.mingliqiye.utils.random.secureRandom
 import com.mingliqiye.utils.system.macAddressBytes
 import com.mingliqiye.utils.time.DateTime
 import com.mingliqiye.utils.time.DateTimeOffset
+import com.mingliqiye.utils.time.DateTimeOffset.Companion.toDateTimeOffset
+import io.swagger.v3.oas.annotations.media.Schema
 import java.io.Serializable
+import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.time.temporal.ChronoUnit
+import java.util.concurrent.atomic.AtomicLong
 import java.util.UUID as JUUID
 
 
 /**
  * UUID 类用于生成和操作不同版本的 UUID（通用唯一标识符）。
  * 支持 UUID 的序列化、转换、解析和时间/版本信息提取。
+ * V8 请开发者自己实现
  */
+@Schema(
+    name = "UUID",
+    description = "UUID",
+    type = "string",
+    format = "uuid"
+)
 class UUID : Serializable {
     private val data: ByteArray
     private val mostSigBits: Long
@@ -47,6 +62,11 @@ class UUID : Serializable {
     private val version: Int
 
     companion object {
+
+
+        private var lastTimestamp = 0L
+        private var clockSequence = secureRandom.nextInt(0x3FFF + 1)
+        private val clockSeqHolder = AtomicLong(0)
 
         /**
          * 预期 UUID 字符串中连字符的位置数组。
@@ -63,17 +83,35 @@ class UUID : Serializable {
 
         @JvmStatic
         fun ofBase64ShortString(baseShortString: String): UUID {
-            return UUID(BASE64.decode(baseShortString))
+            return UUID(Base64.decode(baseShortString))
         }
 
         @JvmStatic
         fun ofBase256ShortString(baseShortString: String): UUID {
-            return UUID(BASE256.decode(baseShortString))
+            return UUID(Base256.decode(baseShortString))
         }
 
         @JvmStatic
         fun ofBase91ShortString(baseShortString: String): UUID {
-            return UUID(BASE91.decode(baseShortString))
+            return UUID(Base91.decode(baseShortString))
+        }
+
+        @JvmStatic
+        fun getV8(
+            customA: ByteArray, // 6字节
+            customB: ByteArray, // 2字节 前4位被替换位版本号
+            customC: ByteArray, // 8字节, 前2位被替换位变体
+        ): UUID {
+            require(customA.size == 6) { "customA 必须是6字节" }
+            require(customB.size == 2) { "customB 必须是2字节" }
+            require(customC.size == 8) { "customC 必须是8字节" }
+            val rbyte = ByteArray(16)
+            customA.copyTo(rbyte, 0, 0, 6)
+            customB.copyTo(rbyte, 0, 6, 2)
+            customC.copyTo(rbyte, 0, 8, 8)
+            rbyte[6] = (rbyte[6].toInt() and 0x0F or 0x80).toByte()
+            rbyte[8] = (rbyte[8].toInt() and 0x3F or 0x80).toByte()
+            return UUID(rbyte)
         }
 
         /**
@@ -85,18 +123,47 @@ class UUID : Serializable {
         @JvmStatic
         fun getV1(): UUID {
             val time = DateTime.now().add(DateTimeOffset.of(UUID_EPOCH_OFFSET, ChronoUnit.DAYS)).to100NanoTime()
-
             val timeLow = (time and 0xFFFFFFFFL).toInt()
             val timeMid = ((time shr 32) and 0xFFFFL).toShort()
             val timeHighAndVersion = (((time shr 48) and 0x0FFFL) or 0x1000L).toShort()
-            val clockSeq = (secureRandom.nextInt(16384)) and 0x3FFF
+            val clockSeq: Long = if (time == lastTimestamp) {
+                clockSeqHolder.addAndGet(1)
+            } else {
+                clockSeqHolder.set(0)
+                lastTimestamp = time
+                0
+            }
+            val byteBuffer = ByteBuffer.wrap(ByteArray(16))
+            byteBuffer.putInt(timeLow)
+            byteBuffer.putShort(timeMid)
+            byteBuffer.putShort(timeHighAndVersion)
+            byteBuffer.putShort((clockSeq and 0x3FFF).toShort())
+            byteBuffer.put(macAddressBytes)
+
+            return UUID(byteBuffer.array())
+        }
+
+        @JvmStatic
+        fun getV1RandomMac(): UUID {
+            val time = DateTime.now().add(DateTimeOffset.of(UUID_EPOCH_OFFSET, ChronoUnit.DAYS)).to100NanoTime()
+            val timeLow = (time and 0xFFFFFFFFL).toInt()
+            val timeMid = ((time shr 32) and 0xFFFFL).toShort()
+            val timeHighAndVersion = (((time shr 48) and 0x0FFFL) or 0x1000L).toShort()
+            val clockSeq: Long = if (time == lastTimestamp) {
+                clockSeqHolder.addAndGet(1)
+            } else {
+                clockSeqHolder.set(0)
+                lastTimestamp = time
+                0
+            }
+            lastTimestamp = time
 
             val byteBuffer = ByteBuffer.wrap(ByteArray(16))
             byteBuffer.putInt(timeLow)
             byteBuffer.putShort(timeMid)
             byteBuffer.putShort(timeHighAndVersion)
-            byteBuffer.putShort(clockSeq.toShort())
-            byteBuffer.put(macAddressBytes)
+            byteBuffer.putShort((clockSeq and 0x3FFF).toShort())
+            byteBuffer.put(randomByte(6))
 
             return UUID(byteBuffer.array())
         }
@@ -109,10 +176,8 @@ class UUID : Serializable {
         @JvmStatic
         fun getV4(): UUID {
             val randomBytes = randomByte(16)
-            randomBytes[6] = (randomBytes[6].toInt() and 0x0F).toByte()
-            randomBytes[6] = (randomBytes[6].toInt() or 0x40).toByte()
-            randomBytes[8] = (randomBytes[8].toInt() and 0x3F).toByte()
-            randomBytes[8] = (randomBytes[8].toInt() or 0x80).toByte()
+            randomBytes[6] = (randomBytes[6].toInt() and 0x0F or 0x40).toByte()
+            randomBytes[8] = (randomBytes[8].toInt() and 0x3F or 0x80).toByte()
             return UUID(randomBytes)
         }
 
@@ -161,8 +226,7 @@ class UUID : Serializable {
          */
         @JvmStatic
         fun getV6(): UUID {
-            val timestamp = DateTime.now()
-                .add(DateTimeOffset.of(UUID_EPOCH_OFFSET, ChronoUnit.DAYS))
+            val timestamp = DateTime.now().add(DateTimeOffset.of(UUID_EPOCH_OFFSET, ChronoUnit.DAYS))
                 .to100NanoTime() and 0x0FFFFFFFFFFFFFFFL
             val timeHigh = (timestamp ushr 12) and 0xFFFFFFFFFFFFL
             val timeMid = timestamp and 0x0FFFL
@@ -278,8 +342,7 @@ class UUID : Serializable {
             return UUID(
                 ByteArray(
                     16
-                ) { 0xFF.toByte() }
-            )
+                ) { 0xFF.toByte() })
         }
 
         /**
@@ -292,8 +355,7 @@ class UUID : Serializable {
             return UUID(
                 ByteArray(
                     16
-                ) { 0x00.toByte() }
-            )
+                ) { 0x00.toByte() })
         }
 
         /**
@@ -574,8 +636,6 @@ class UUID : Serializable {
         if (this === other) return true
         return when (other) {
             is UUID -> {
-                this.println()
-                other.println()
                 this.data.contentEquals(other.data)
             }
 
@@ -645,40 +705,29 @@ class UUID : Serializable {
             1 -> {
                 val timestamp =
                     ((mostSigBits and 0x0FFFL) shl 48 or (((mostSigBits shr 16) and 0x0FFFFL) shl 32) or (mostSigBits ushr 32))
-                val timestampBigInt = java.math.BigInteger.valueOf(timestamp)
-                val nanosecondsBigInt = timestampBigInt.multiply(java.math.BigInteger.valueOf(100L))
-                val divisor = java.math.BigInteger.valueOf(1_000_000_000L)
+                val timestampBigInt = BigInteger.valueOf(timestamp)
+                val nanosecondsBigInt = timestampBigInt.multiply(BigInteger.valueOf(100L))
+                val divisor = BigInteger.valueOf(1_000_000_000L)
                 val seconds = nanosecondsBigInt.divide(divisor)
                 val nanos = nanosecondsBigInt.remainder(divisor)
                 return DateTime.of(seconds.toLong(), nanos.toLong())
-                    .sub(DateTimeOffset.of(ChronoUnit.DAYS, UUID_EPOCH_OFFSET))
+                    .sub(ChronoUnit.DAYS.toDateTimeOffset(UUID_EPOCH_OFFSET))
             }
 
             6 -> {
-                val timeHigh = (
-                        ((data[0].toLong() and 0xFF) shl 40) or
-                                ((data[1].toLong() and 0xFF) shl 32) or
-                                ((data[2].toLong() and 0xFF) shl 24) or
-                                ((data[3].toLong() and 0xFF) shl 16) or
-                                ((data[4].toLong() and 0xFF) shl 8) or
-                                (data[5].toLong() and 0xFF)
-                        )
+                val timeHigh =
+                    (((data[0].toLong() and 0xFF) shl 40) or ((data[1].toLong() and 0xFF) shl 32) or ((data[2].toLong() and 0xFF) shl 24) or ((data[3].toLong() and 0xFF) shl 16) or ((data[4].toLong() and 0xFF) shl 8) or (data[5].toLong() and 0xFF))
                 val timeMidAndVersion = ((data[6].toInt() and 0xFF) shl 8) or (data[7].toInt() and 0xFF)
                 val timeMid = timeMidAndVersion and 0x0FFF
                 val hundredNanosSinceUuidEpoch = (timeHigh shl 12) or timeMid.toLong()
                 val seconds = hundredNanosSinceUuidEpoch / 10_000_000
                 val nanos = (hundredNanosSinceUuidEpoch % 10_000_000) * 100
-                return DateTime.of(seconds, nanos).sub(DateTimeOffset.of(ChronoUnit.DAYS, UUID_EPOCH_OFFSET))
+                return DateTime.of(seconds, nanos).sub(ChronoUnit.DAYS.toDateTimeOffset(UUID_EPOCH_OFFSET))
             }
 
             7 -> {
                 val times =
-                    (data[0].toLong() and 0xFF shl 40) or
-                            (data[1].toLong() and 0xFF shl 32) or
-                            (data[2].toLong() and 0xFF shl 24) or
-                            (data[3].toLong() and 0xFF shl 16) or
-                            (data[4].toLong() and 0xFF shl 8) or
-                            (data[5].toLong() and 0xFF)
+                    (data[0].toLong() and 0xFF shl 40) or (data[1].toLong() and 0xFF shl 32) or (data[2].toLong() and 0xFF shl 24) or (data[3].toLong() and 0xFF shl 16) or (data[4].toLong() and 0xFF shl 8) or (data[5].toLong() and 0xFF)
                 return DateTime.of(times)
             }
 
@@ -698,15 +747,15 @@ class UUID : Serializable {
     }
 
     fun getBase64ShortString(): String {
-        return BASE64.encode(data).substring(0, 22)
+        return Base64.encode(data).substring(0, 22)
     }
 
     fun getBase91ShortString(): String {
-        return BASE91.encode(data)
+        return Base91.encode(data)
     }
 
     fun getBase256ShortString(): String {
-        return BASE256.encode(data)
+        return Base256.encode(data)
     }
 
     /**

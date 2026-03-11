@@ -16,14 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ByteUtils.kt
- * LastUpdate 2026-01-14 13:01:44
+ * LastUpdate 2026-03-11 08:46:40
  * UpdateUser MingLiPro
  */
 @file:JvmName("ByteUtils")
 
 package com.mingliqiye.utils.bytes
 
-import com.mingliqiye.utils.base.BASE16
+import com.mingliqiye.utils.base.code.Base16
 import com.mingliqiye.utils.stream.SuperStream
 
 /**
@@ -125,5 +125,5 @@ fun hexStringToByteArray(string: String): ByteArray {
  * @return 对应的十六进制字符串
  */
 fun bytesToHex(bytes: ByteArray): String {
-    return BASE16.encode(bytes)
+    return Base16.encode(bytes)
 }

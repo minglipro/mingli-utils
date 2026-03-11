@@ -16,9 +16,12 @@
 # ProjectName mingli-utils
 # ModuleName mingli-utils.main
 # CurrentFile org.springframework.boot.autoconfigure.AutoConfiguration.imports
-# LastUpdate 2026-02-04 16:47:27
+# LastUpdate 2026-02-27 17:39:55
 # UpdateUser MingLiPro
 #
 
 com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.JacksonAutoConfiguration
+com.mingliqiye.utils.springboot.autoconfigure.Jackson3AutoConfiguration
+com.mingliqiye.utils.springboot.autoconfigure.Jackson3JsonApiAutoConfiguration
+com.mingliqiye.utils.springboot.autoconfigure.Okhttp3AutoConfiguration

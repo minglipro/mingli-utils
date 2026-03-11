@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ArrayUtils.kt
- * LastUpdate 2026-02-06 14:01:56
+ * LastUpdate 2026-03-11 08:42:08
  * UpdateUser MingLiPro
  */
 
@@ -25,7 +25,7 @@
 
 package com.mingliqiye.utils.array
 
-import com.mingliqiye.utils.base.BASE16
+import com.mingliqiye.utils.base.code.Base16
 
 
 /**
@@ -35,7 +35,7 @@ import com.mingliqiye.utils.base.BASE16
  * @since 4.6.0
  * @see toHexByteArray
  */
-fun ByteArray.toHexString(): String = BASE16.encode(this).uppercase()
+fun ByteArray.toHexString(): String = Base16.encode(this).uppercase()
 
 /**
  * 将十六进制字符串转换为字节数组
@@ -45,9 +45,7 @@ fun ByteArray.toHexString(): String = BASE16.encode(this).uppercase()
  * @since 4.6.0
  * @see toHexString
  */
-fun String.toHexByteArray(): ByteArray = BASE16.decode(this.lowercase())
-
-/* ==================== 数组复制扩展函数 ==================== */
+fun String.toHexByteArray(): ByteArray = Base16.decode(this.lowercase())
 
 /**
  * 将当前数组的指定范围复制到目标数组
