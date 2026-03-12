@@ -15,8 +15,8 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Base91.kt
- * LastUpdate 2026-02-08 03:08:10
+ * CurrentFile Base91Codec.kt
+ * LastUpdate 2026-03-12 10:34:36
  * UpdateUser MingLiPro
  */
 
@@ -27,7 +27,7 @@ package com.mingliqiye.utils.base
  *
  * Base91 是一种高效的二进制到文本的编码方式，相较于 Base64，它使用更少的字符来表示相同的数据。
  */
-internal class Base91 : BaseCodec {
+internal class Base91Codec : BaseCodec {
 
     companion object {
         /**

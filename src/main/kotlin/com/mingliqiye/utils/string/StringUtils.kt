@@ -16,14 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile StringUtils.kt
- * LastUpdate 2026-03-11 08:46:40
+ * LastUpdate 2026-03-12 10:05:22
  * UpdateUser MingLiPro
  */
 @file:JvmName("StringUtils")
 
 package com.mingliqiye.utils.string
 
-import com.mingliqiye.utils.base.code.Base16
+import com.mingliqiye.utils.base.BaseType.BASE16
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import com.mingliqiye.utils.objects.isNull
 import java.net.URLDecoder
@@ -266,9 +266,7 @@ fun String?.parserTemplate(template: String): List<String>? {
                     .replace("]", "\\]")
                     .replace("+", "\\+")
                     .replace("=", "\\=")
-                    .replace("{}", "((?s).*)")
-                    .toRegex() +
-                "$"
+                    .replace("{}", "((?s).*)") + "$".toRegex()
     )
     val datas = regex.find(this)?.groupValues ?: return null
     return List(datas.size - 1) {
@@ -286,14 +284,14 @@ fun String.hmacSHA256String(keyS: String): String {
     val key = keyS.toByteArray()
     instance.init(SecretKeySpec(key, 0, key.size, "HmacSHA256"))
     val bytes = instance.doFinal(this.toByteArray())
-    return Base16.encode(bytes)
+    return BASE16.encode(bytes)
 }
 
 fun String.md5String(): String {
     val instance = MessageDigest.getInstance("MD5")
     instance.update(this.toByteArray())
     val bytes = instance.digest()
-    return Base16.encode(bytes)
+    return BASE16.encode(bytes)
 }
 
 fun String.hmacMd5String(keyS: String): String {
@@ -301,5 +299,5 @@ fun String.hmacMd5String(keyS: String): String {
     val key = keyS.toByteArray()
     instance.init(SecretKeySpec(key, 0, key.size, "HmacSHA256"))
     val bytes = instance.doFinal(this.toByteArray())
-    return Base16.encode(bytes)
+    return BASE16.encode(bytes)
 }

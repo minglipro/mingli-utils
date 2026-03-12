@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile AesUtils.kt
- * LastUpdate 2026-03-11 08:46:40
+ * LastUpdate 2026-03-12 10:34:36
  * UpdateUser MingLiPro
  */
 
@@ -25,7 +25,7 @@
 
 package com.mingliqiye.utils.aes
 
-import com.mingliqiye.utils.base.code.Base64
+import com.mingliqiye.utils.base.BaseType
 import java.nio.charset.StandardCharsets
 import java.security.GeneralSecurityException
 import java.security.MessageDigest
@@ -71,8 +71,8 @@ fun encrypt(sSrc: String, sKey: String?): String? {
     val encrypted = cipher.doFinal(
         sSrc.toByteArray(StandardCharsets.UTF_8)
     )
-    return Base64.encode(
-        "${Base64.encode(iv)}:${Base64.encode(encrypted)}".toByteArray()
+    return BaseType.BASE64.encode(
+        "${BaseType.BASE64.encode(iv)}:${BaseType.BASE64.encode(encrypted)}".toByteArray()
     )
 }
 
@@ -85,13 +85,13 @@ fun encrypt(sSrc: String, sKey: String?): String? {
 fun decrypt(sSrc: String, sKey: String): String? {
     try {
         // 分割IV和加密数据
-        val sSrcs = String(Base64.decode(sSrc))
+        val sSrcs = String(BaseType.BASE64.decode(sSrc))
         val parts: Array<String?> = sSrcs.split(":".toRegex(), limit = 2).toTypedArray()
         if (parts.size != 2) {
             return null
         }
-        val iv = Base64.decode(parts[0]!!)
-        val encryptedData = Base64.decode(parts[1]!!)
+        val iv = BaseType.BASE64.decode(parts[0]!!)
+        val encryptedData = BaseType.BASE64.decode(parts[1]!!)
         if (iv.size != GCM_IV_LENGTH) {
             return null
         }

@@ -15,14 +15,14 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Base2.kt
- * LastUpdate 2026-02-08 03:06:23
+ * CurrentFile Base2Codec.kt
+ * LastUpdate 2026-03-12 10:34:36
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.base
 
-internal class Base2 : BaseCodec {
+internal class Base2Codec : BaseCodec {
     override fun encode(bytes: ByteArray): String {
         if (bytes.isEmpty()) return ""
         val result = StringBuilder()

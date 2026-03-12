@@ -15,40 +15,50 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Base16.kt
- * LastUpdate 2026-02-08 03:08:10
+ * CurrentFile Base64Codec.kt
+ * LastUpdate 2026-03-12 10:34:36
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.base
 
-/**
- * Base16编解码器实现类
- * 提供字节数组与十六进制字符串之间的相互转换功能
+import java.util.*
+
+/*
+ * Base64编解码工具类
+ * 提供Base64编码和解码功能的实现
  */
-internal class Base16 : BaseCodec {
-    /**
-     * 将字节数组编码为十六进制字符串
+internal class Base64Codec : BaseCodec {
+
+    /*
+     * Base64编码器实例
+     * 用于执行字节数组到Base64字符串的编码操作
+     */
+    val encoder: Base64.Encoder = Base64.getEncoder()
+
+    /*
+     * Base64解码器实例
+     * 用于执行Base64字符串到字节数组的解码操作
+     */
+    val decoder: Base64.Decoder = Base64.getDecoder()
+
+    /*
+     * 将字节数组编码为Base64字符串
+     *
      * @param bytes 待编码的字节数组
-     * @return 编码后的十六进制字符串，每个字节对应两位十六进制字符
+     * @return 编码后的Base64字符串
      */
     override fun encode(bytes: ByteArray): String {
-        // 将每个字节转换为两位十六进制字符串并拼接
-        return bytes.joinToString("") {
-            it.toInt().and(0xff).toString(16).padStart(2, '0')
-        }
+        return encoder.encodeToString(bytes)
     }
 
-    /**
-     * 将十六进制字符串解码为字节数组
-     * @param string 待解码的十六进制字符串
+    /*
+     * 将Base64字符串解码为字节数组
+     *
+     * @param string 待解码的Base64字符串
      * @return 解码后的字节数组
      */
     override fun decode(string: String): ByteArray {
-        // 按每两个字符分组，转换为字节
-        return string.chunked(2).map {
-            it.toInt(16).toByte()
-        }.toByteArray()
+        return decoder.decode(string)
     }
-
 }

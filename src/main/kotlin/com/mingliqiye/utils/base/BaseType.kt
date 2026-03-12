@@ -16,27 +16,21 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseType.kt
- * LastUpdate 2026-02-09 19:54:38
+ * LastUpdate 2026-03-12 10:08:42
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.base
 
-import com.mingliqiye.utils.base.code.Base10
-import com.mingliqiye.utils.base.code.Base16
-import com.mingliqiye.utils.base.code.Base2
-import com.mingliqiye.utils.base.code.Base256
-import com.mingliqiye.utils.base.code.Base64
-import com.mingliqiye.utils.base.code.Base91
-
 enum class BaseType(val baseCodec: BaseCodec) : BaseCodec {
 
-    BASE2(Base2),
-    BASE10(Base10),
-    BASE16(Base16),
-    BASE64(Base64),
-    BASE91(Base91),
-    BASE256(Base256);
+    BASE2(com.mingliqiye.utils.base.code.BASE2),
+    BASE10(com.mingliqiye.utils.base.code.BASE10),
+    BASE16(com.mingliqiye.utils.base.code.BASE16),
+    BASE64(com.mingliqiye.utils.base.code.BASE64),
+    BASE64URL(com.mingliqiye.utils.base.code.BASE64URL),
+    BASE91(com.mingliqiye.utils.base.code.BASE91),
+    BASE256(com.mingliqiye.utils.base.code.BASE256);
 
     override fun encode(bytes: ByteArray) = baseCodec.encode(bytes)
     override fun decode(string: String) = baseCodec.decode(string)

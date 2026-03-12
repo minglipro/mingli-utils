@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseCodes.kt
- * LastUpdate 2026-02-08 03:10:03
+ * LastUpdate 2026-03-12 10:03:32
  * UpdateUser MingLiPro
  */
 
@@ -30,52 +30,57 @@ import com.mingliqiye.utils.base.*
  * 提供Base2编码器的懒加载实例。
  * 该编码器用于将数据编码为二进制格式。
  */
-@get:JvmName("Base2")
-val Base2: BaseCodec by lazy {
-    Base2()
+@get:JvmName("base2")
+val BASE2: BaseCodec by lazy {
+    Base2Codec()
 }
 
 /**
  * 提供Base10编码器的懒加载实例。
  * 该编码器用于将数据编码为十进制格式。
  */
-@get:JvmName("Base10")
-val Base10: BaseCodec by lazy {
-    Base10()
+@get:JvmName("base10")
+val BASE10: BaseCodec by lazy {
+    Base10Codec()
 }
 
 /**
  * 提供Base16编码器的懒加载实例。
  * 该编码器用于将数据编码为十六进制格式。
  */
-@get:JvmName("Base16")
-val Base16: BaseCodec by lazy {
-    Base16()
+@get:JvmName("base16")
+val BASE16: BaseCodec by lazy {
+    Base16Codec()
 }
 
 /**
  * 提供Base64编码器的懒加载实例。
  * 该编码器用于将数据编码为Base64格式，常用于URL安全传输或存储。
  */
-@get:JvmName("Base64")
-val Base64: BaseCodec by lazy {
-    Base64()
+@get:JvmName("base64")
+val BASE64: BaseCodec by lazy {
+    Base64Codec()
+}
+
+@get:JvmName("base64Url")
+val BASE64URL: BaseCodec by lazy {
+    Base64UrlCodec()
 }
 
 /**
  * 提供Base91编码器的懒加载实例。
  * 该编码器用于将数据编码为Base91格式，具有较高的压缩效率。
  */
-@get:JvmName("Base91")
-val Base91: BaseCodec by lazy {
-    Base91()
+@get:JvmName("base91")
+val BASE91: BaseCodec by lazy {
+    Base91Codec()
 }
 
 /**
  * 提供Base256编码器的懒加载实例。
  * 该编码器用于将数据编码为Base256格式，适用于字节级数据处理。
  */
-@get:JvmName("Base256")
-val Base256: BaseCodec by lazy {
-    Base256()
+@get:JvmName("base256")
+val BASE256: BaseCodec by lazy {
+    Base256Codec()
 }

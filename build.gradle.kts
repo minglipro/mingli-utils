@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-03-10 09:16:54
+ * LastUpdate 2026-03-12 10:29:17
  * UpdateUser MingLiPro
  */
 
@@ -50,14 +50,13 @@ base {
 val buildDir: java.nio.file.Path = File("build").toPath()
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(JDKVERSIONS))
     withSourcesJar()
 }
 kotlin {
     jvmToolchain(JDKVERSIONS)
 }
 dependencies {
-
     implementation("org.slf4j:slf4j-api:2.0.17")
     implementation(kotlin("reflect"))
     compileOnly("org.mindrot:jbcrypt:0.4")
@@ -93,11 +92,9 @@ tasks.named<Test>("test") {
 }
 
 
-tasks.withType<JavaExec>().configureEach {
-    jvmArgs?.addAll(
-        listOf(
-            "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8"
-        )
+tasks.withType<JavaExec> {
+    jvmArgs(
+        "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8"
     )
 }
 
@@ -158,7 +155,11 @@ publishing {
     repositories {
         maven {
             name = "MavenRepositoryRaw"
-            url = uri("C:/data/git/maven-repository-raw")
+            url = uri("https://localhost:3000/")
+            credentials {
+                username = System.getenv("sonatype.username")
+                password = System.getenv("sonatype.password")
+            }
         }
     }
     publications {

@@ -15,30 +15,28 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Base64.kt
- * LastUpdate 2026-02-08 03:08:10
+ * CurrentFile Base64UrlCodec.kt
+ * LastUpdate 2026-03-12 10:34:36
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.base
 
-/*
- * Base64编解码工具类
- * 提供Base64编码和解码功能的实现
- */
-internal class Base64 : BaseCodec {
+import java.util.*
+
+internal class Base64UrlCodec : BaseCodec {
 
     /*
      * Base64编码器实例
      * 用于执行字节数组到Base64字符串的编码操作
      */
-    val BASE_64_ENCODER: java.util.Base64.Encoder = java.util.Base64.getEncoder()
+    val encoder: Base64.Encoder = Base64.getUrlEncoder()
 
     /*
      * Base64解码器实例
      * 用于执行Base64字符串到字节数组的解码操作
      */
-    val BASE_64_DECODER: java.util.Base64.Decoder = java.util.Base64.getDecoder()
+    val decoder: Base64.Decoder = Base64.getUrlDecoder()
 
     /*
      * 将字节数组编码为Base64字符串
@@ -47,7 +45,7 @@ internal class Base64 : BaseCodec {
      * @return 编码后的Base64字符串
      */
     override fun encode(bytes: ByteArray): String {
-        return BASE_64_ENCODER.encodeToString(bytes)
+        return encoder.encodeToString(bytes)
     }
 
     /*
@@ -57,6 +55,6 @@ internal class Base64 : BaseCodec {
      * @return 解码后的字节数组
      */
     override fun decode(string: String): ByteArray {
-        return BASE_64_DECODER.decode(string)
+        return decoder.decode(string)
     }
 }

@@ -15,8 +15,8 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Base256.kt
- * LastUpdate 2026-02-08 03:08:10
+ * CurrentFile Base256Codec.kt
+ * LastUpdate 2026-03-12 10:34:36
  * UpdateUser MingLiPro
  */
 
@@ -30,7 +30,7 @@ package com.mingliqiye.utils.base
  * !#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~§±×÷←↑→↓⇒⇔∀∃∅∆∇∈∉∋∌∏∑−∓∕∗∘∙√∛∜∞∟∠∣∥∧∨∩∪∫∬∭∮∯∰∱∲∳∴∵∶∷≈≠≡≤≥≦≧≪≫≺≻⊂⊃⊆⊇⊈⊉⊊⊋⊕⊖⊗⊘⊙⊚⊛⊜⊝⊞⊟⊠⊡⊢⊣⊤⊥⊦⊧⊨⊩⊪⊫⊬⊭⊮⊯⋀⋁⋂⋃⋄⋅⋆⋇⋈⋉⋊⋋⋌⋍⋎⋏⋐⋑⋒⋓⋔⋕⋖⋗⋘⋙⋚⋛⋜⋝⋞⋟⋠⋡⋢⋣⋤⋥⋦⋧⋨⋩▁▂▃▄▅▆▇█▉▊▋▌▍▎▏▐░▒▓▔▕▖▗▘▙
  *
  */
-internal class Base256 : BaseCodec {
+internal class Base256Codec : BaseCodec {
 
     companion object {
         val code = arrayOf(

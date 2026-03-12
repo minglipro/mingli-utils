@@ -15,8 +15,8 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile Base10.kt
- * LastUpdate 2026-02-08 03:08:10
+ * CurrentFile Base10Codec.kt
+ * LastUpdate 2026-03-12 10:34:36
  * UpdateUser MingLiPro
  */
 
@@ -24,11 +24,11 @@ package com.mingliqiye.utils.base
 
 import java.math.BigInteger
 
-internal class Base10 : BaseCodec {
+internal class Base10Codec : BaseCodec {
 
     /**
      * 将字节数组编码为Base10字符串（十进制）
-     * 
+     *
      * @param bytes 需要编码的字节数组
      * @return 编码后的Base10字符串（十进制数字）
      */
@@ -42,7 +42,7 @@ internal class Base10 : BaseCodec {
 
     /**
      * 将Base10字符串解码为字节数组
-     * 
+     *
      * @param string 需要解码的Base10字符串（十进制数字）
      * @return 解码后的字节数组
      */

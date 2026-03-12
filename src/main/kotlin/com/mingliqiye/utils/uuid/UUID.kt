@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2026-03-07 11:02:29
+ * LastUpdate 2026-03-12 10:07:08
  * UpdateUser MingLiPro
  */
 
@@ -25,9 +25,6 @@ package com.mingliqiye.utils.uuid
 import com.mingliqiye.utils.array.copyTo
 import com.mingliqiye.utils.base.BaseCodec
 import com.mingliqiye.utils.base.BaseType
-import com.mingliqiye.utils.base.code.Base256
-import com.mingliqiye.utils.base.code.Base64
-import com.mingliqiye.utils.base.code.Base91
 import com.mingliqiye.utils.random.randomByte
 import com.mingliqiye.utils.random.secureRandom
 import com.mingliqiye.utils.system.macAddressBytes
@@ -83,17 +80,17 @@ class UUID : Serializable {
 
         @JvmStatic
         fun ofBase64ShortString(baseShortString: String): UUID {
-            return UUID(Base64.decode(baseShortString))
+            return UUID(BaseType.BASE64.decode(baseShortString))
         }
 
         @JvmStatic
         fun ofBase256ShortString(baseShortString: String): UUID {
-            return UUID(Base256.decode(baseShortString))
+            return UUID(BaseType.BASE256.decode(baseShortString))
         }
 
         @JvmStatic
         fun ofBase91ShortString(baseShortString: String): UUID {
-            return UUID(Base91.decode(baseShortString))
+            return UUID(BaseType.BASE91.decode(baseShortString))
         }
 
         @JvmStatic
@@ -747,15 +744,15 @@ class UUID : Serializable {
     }
 
     fun getBase64ShortString(): String {
-        return Base64.encode(data).substring(0, 22)
+        return BaseType.BASE64.encode(data).substring(0, 22)
     }
 
     fun getBase91ShortString(): String {
-        return Base91.encode(data)
+        return BaseType.BASE91.encode(data)
     }
 
     fun getBase256ShortString(): String {
-        return Base256.encode(data)
+        return BaseType.BASE256.encode(data)
     }
 
     /**
