@@ -31,7 +31,7 @@ package com.mingliqiye.utils.random
  * @return 指定长度的随机字符串
  */
 fun randomString(length: Int, chars: String): String {
-    val charsd: Array<String?> = chars.split("".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+    val charsd: Array<String> = chars.split("".toRegex()).filter { !it.isEmpty() }.toTypedArray().println()
     val sb = StringBuilder(length)
     // 循环生成随机字符并拼接
     for (i in 0..<length) {
