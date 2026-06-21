@@ -16,16 +16,16 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SystemUtil.kt
- * LastUpdate 2026-03-11 08:44:41
+ * LastUpdate 2026-03-27 09:35:40
  * UpdateUser MingLiPro
  */
 @file:JvmName("SystemUtils")
 
 package com.mingliqiye.utils.system
 
-import com.mingliqiye.utils.random.randomByte
 import java.lang.management.ManagementFactory
 import java.net.*
+import com.mingliqiye.utils.random.Random.nextBytes as randomByte
 
 /**
  * 操作系统名称属性，延迟初始化

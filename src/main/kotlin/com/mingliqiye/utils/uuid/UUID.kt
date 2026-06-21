@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2026-03-12 10:07:08
+ * LastUpdate 2026-06-21 10:40:58
  * UpdateUser MingLiPro
  */
 
@@ -25,8 +25,7 @@ package com.mingliqiye.utils.uuid
 import com.mingliqiye.utils.array.copyTo
 import com.mingliqiye.utils.base.BaseCodec
 import com.mingliqiye.utils.base.BaseType
-import com.mingliqiye.utils.random.randomByte
-import com.mingliqiye.utils.random.secureRandom
+import com.mingliqiye.utils.random.Random
 import com.mingliqiye.utils.system.macAddressBytes
 import com.mingliqiye.utils.time.DateTime
 import com.mingliqiye.utils.time.DateTimeOffset
@@ -38,6 +37,7 @@ import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.atomic.AtomicLong
+import com.mingliqiye.utils.random.Random.nextBytes as randomByte
 import java.util.UUID as JUUID
 
 
@@ -62,7 +62,7 @@ class UUID : Serializable {
 
 
         private var lastTimestamp = 0L
-        private var clockSequence = secureRandom.nextInt(0x3FFF + 1)
+        private var clockSequence = Random.nextInt(0x3FFF + 1)
         private val clockSeqHolder = AtomicLong(0)
 
         /**
@@ -227,8 +227,8 @@ class UUID : Serializable {
                 .to100NanoTime() and 0x0FFFFFFFFFFFFFFFL
             val timeHigh = (timestamp ushr 12) and 0xFFFFFFFFFFFFL
             val timeMid = timestamp and 0x0FFFL
-            val clockSeq = secureRandom.nextInt(16384) and 0x3FFF
-            val node = secureRandom.nextLong() and 0x0000FFFFFFFFFFFFL
+            val clockSeq = Random.nextInt(16384) and 0x3FFF
+            val node = Random.nextLong() and 0x0000FFFFFFFFFFFFL
             val buffer = ByteBuffer.allocate(16)
             buffer.putLong((timeHigh shl 16) or (0x6000L) or (timeMid and 0x0FFF))
             buffer.putShort((0x8000 or (clockSeq and 0x3FFF)).toShort())
@@ -253,7 +253,7 @@ class UUID : Serializable {
             buffer.putInt((instant shr 16).toInt())
             buffer.putShort((instant).toShort())
             buffer.put(randomByte(2))
-            buffer.putLong(secureRandom.nextLong())
+            buffer.putLong(Random.nextLong())
             val bytes = buffer.array()
             bytes[6] = (bytes[6].toInt() and 0x0F or 0x70).toByte()
             bytes[8] = (bytes[8].toInt() and 0x3F or 0x80).toByte()

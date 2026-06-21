@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MetaData.kt
- * LastUpdate 2026-03-11 08:46:40
+ * LastUpdate 2026-05-22 13:27:28
  * UpdateUser MingLiPro
  */
 @file:JvmName("MetaData")
@@ -26,8 +26,10 @@ package com.mingliqiye.utils.metadata
 import com.mingliqiye.utils.resource.ResourceUtils
 import java.util.stream.Collectors.toMap
 
+class MetaDataResource
+
 fun getMetaData(): Map<String, String> {
-    return ResourceUtils.getStringResource("/META-INF/meta-data").split("\n").stream().map {
+    return ResourceUtils.getResourceAsString<MetaDataResource>("/META-INF/meta-data").split("\n").stream().map {
         if (it.isBlank()) {
             return@map null
         }

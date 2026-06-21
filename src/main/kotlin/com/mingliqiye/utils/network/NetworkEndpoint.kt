@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NetworkEndpoint.kt
- * LastUpdate 2026-02-05 10:20:31
+ * LastUpdate 2026-05-23 11:00:33
  * UpdateUser MingLiPro
  */
 
@@ -24,6 +24,7 @@ package com.mingliqiye.utils.network
 
 import java.io.Serializable
 import java.net.InetSocketAddress
+import java.net.SocketAddress
 import java.nio.ByteBuffer
 
 /**
@@ -34,7 +35,7 @@ import java.nio.ByteBuffer
  * @see java.net.InetSocketAddress
  */
 class NetworkEndpoint private constructor(
-    val networkAddress: NetworkAddress, val networkPort: NetworkPort
+    val networkAddress: NetworkAddress, val networkPort: NetworkPort,
 ) : Serializable, InetSocketAddress(networkAddress.toInetAddress(), networkPort.port) {
 
 
@@ -47,10 +48,13 @@ class NetworkEndpoint private constructor(
          * @see InetSocketAddress
          */
         @JvmStatic
-        fun of(address: InetSocketAddress): NetworkEndpoint {
-            return NetworkEndpoint(
-                NetworkAddress.of(address.hostString), NetworkPort(address.port)
-            )
+        fun of(address: SocketAddress): NetworkEndpoint {
+            if (address is InetSocketAddress) {
+                return NetworkEndpoint(
+                    NetworkAddress.of(address.hostString), NetworkPort(address.port)
+                )
+            }
+            throw ClassCastException("${address.javaClass} cannot be cast to InetSocketAddress to NetworkEndpoint")
         }
 
         /**
@@ -117,6 +121,11 @@ class NetworkEndpoint private constructor(
                 s.take(lastColonIndex), s.substring(lastColonIndex + 1).toInt()
             )
         }
+
+        val SocketAddress.networkAddress: NetworkEndpoint
+            get() = of(this)
+        val SocketAddress.hostPortString: String
+            get() = networkAddress.toHostPortString()
     }
 
     /**

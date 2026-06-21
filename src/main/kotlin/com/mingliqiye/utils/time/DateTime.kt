@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.kt
- * LastUpdate 2026-03-07 11:02:42
+ * LastUpdate 2026-03-14 16:12:08
  * UpdateUser MingLiPro
  */
 
@@ -54,7 +54,7 @@ import kotlin.time.Instant
     format = "date-time"
 )
 class DateTime private constructor(
-    private var localDateTime: LocalDateTime, private val zoneId: ZoneId = ZoneId.systemDefault()
+    private var localDateTime: LocalDateTime, private val zoneId: ZoneId = ZoneId.systemDefault(),
 ) : Serializable {
 
     companion object {
@@ -105,6 +105,18 @@ class DateTime private constructor(
             return DateTime(localDateTime)
         }
 
+
+        /**
+         * 根据 LocalDateTime 创建 DateTime 实例。
+         *
+         * @param localDateTime LocalDateTime 对象
+         * @return 返回对应的 DateTime 实例
+         */
+        @JvmStatic
+        fun of(instant: java.time.Instant, zoneId: ZoneId = ZoneId.systemDefault()): DateTime {
+            return DateTime(LocalDateTime.ofInstant(instant, zoneId))
+        }
+
         /**
          * 解析时间字符串并生成 DateTime 实例。
          *
@@ -115,7 +127,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun parse(
-            timestr: String, formatter: String, fillZero: Boolean
+            timestr: String, formatter: String, fillZero: Boolean,
         ): DateTime {
             return DateTime(
                 LocalDateTime.parse(
@@ -127,7 +139,7 @@ class DateTime private constructor(
 
         @JvmStatic
         fun parse(
-            timestr: String
+            timestr: String,
         ): DateTime {
 
             val formatterString = Formatter.STANDARD_DATETIME_MILLISECOUND9.value
@@ -148,7 +160,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun parse(
-            timestr: String, formatter: Formatter, fillZero: Boolean
+            timestr: String, formatter: Formatter, fillZero: Boolean,
         ): DateTime {
             return parse(timestr, formatter.value, fillZero)
         }
@@ -232,7 +244,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun of(
-            year: Int, month: Int, day: Int, hour: Int, minute: Int
+            year: Int, month: Int, day: Int, hour: Int, minute: Int,
         ): DateTime {
             return DateTime(LocalDateTime.of(year, month, day, hour, minute))
         }
@@ -250,7 +262,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun of(
-            year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int
+            year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int,
         ): DateTime {
             return DateTime(
                 LocalDateTime.of(year, month, day, hour, minute, second)
@@ -271,7 +283,7 @@ class DateTime private constructor(
          */
         @JvmStatic
         fun of(
-            year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, nano: Int
+            year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, nano: Int,
         ): DateTime {
             return DateTime(
                 LocalDateTime.of(year, month, day, hour, minute, second, nano)
@@ -311,6 +323,9 @@ class DateTime private constructor(
                 java.time.Instant.ofEpochMilli(epochMilli).atZone(zoneId).toLocalDateTime(), zoneId
             )
         }
+
+        fun LocalDateTime.toDateTime(): DateTime = of(this)
+        fun Date.toDateTime(): DateTime = of(this)
     }
 
     /**

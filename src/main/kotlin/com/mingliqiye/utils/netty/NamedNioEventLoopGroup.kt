@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NamedNioEventLoopGroup.kt
- * LastUpdate 2026-02-05 10:20:31
+ * LastUpdate 2026-06-20 22:01:50
  * UpdateUser MingLiPro
  */
 
@@ -37,7 +37,7 @@ import java.text.MessageFormat
 open class NamedNioEventLoopGroup(
     val template: String = "{0}-{2}-{3}",
     val name: String = "NioEventLoopGroup",
-    nThreads: Int = availableProcessors * 2
+    nThreads: Int = availableProcessors * 2,
 ) :
     NioEventLoopGroup(
         nThreads,

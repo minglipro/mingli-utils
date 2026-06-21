@@ -1,0 +1,60 @@
+{
+  "company": {
+    "name": "未来科技有限公司",
+    "founded": 2015,
+    "employees": 128,
+    "departments": [
+      {
+        "name": "技术部",
+        "manager": "王五",
+        "members": [
+          {
+            "id": "T001",
+            "name": "赵六",
+            "position": "前端工程师",
+            "salary": 18000,
+            "skills": [
+              "JavaScript",
+              "Vue",
+              "React"
+            ]
+          },
+          {
+            "id": "T002",
+            "name": "钱七",
+            "position": "后端工程师",
+            "salary": 20000,
+            "skills": [
+              "Java",
+              "Spring Boot",
+              "MySQL"
+            ]
+          },
+          {
+            "id": "T003",
+            "name": "孙八",
+            "position": "测试工程师",
+            "salary": 15000,
+            "skills": [
+              "自动化测试",
+              "性能测试"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "市场部",
+        "manager": "周九",
+        "members": [
+          {
+            "id": "M001",
+            "name": "吴十",
+            "position": "市场专员",
+            "salary": 12000,
+            "clients": 15
+          }
+        ]
+      }
+    ]
+  }
+}

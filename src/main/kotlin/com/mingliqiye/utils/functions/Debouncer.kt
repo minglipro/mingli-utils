@@ -16,12 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Debouncer.kt
- * LastUpdate 2026-01-11 09:10:30
+ * LastUpdate 2026-05-23 10:30:38
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.functions
 
+import com.mingliqiye.utils.netty.NamedThreadFactory
 import java.util.concurrent.*
 
 /**
@@ -31,7 +32,11 @@ import java.util.concurrent.*
  */
 class Debouncer(private val delay: Long, unit: TimeUnit) {
 
-    private val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+    private val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(
+        NamedThreadFactory { clazz, poolNumber, threadNumber ->
+            "Debouncer-$poolNumber-$threadNumber"
+        }
+    )
     private val delayedMap: ConcurrentHashMap<Any, Future<*>> = ConcurrentHashMap()
     private val delayMillis: Long = unit.toMillis(delay)
 
@@ -60,9 +65,7 @@ class Debouncer(private val delay: Long, unit: TimeUnit) {
         )
 
         // 如果之前存在任务，则取消它
-        if (prev != null) {
-            prev.cancel(true)
-        }
+        prev?.cancel(true)
     }
 
     /**

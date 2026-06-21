@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ByteUtils.kt
- * LastUpdate 2026-03-12 10:09:05
+ * LastUpdate 2026-05-22 13:26:55
  * UpdateUser MingLiPro
  */
 @file:JvmName("ByteUtils")
@@ -88,7 +88,7 @@ const val ESC_RESERVED: Byte = 0x06
  */
 fun ByteArray.getByteArrayString(): MutableList<String> {
     return this.toList().stream().map { a -> String.format("0X%02X", a!!.toInt() and 0xFF) }
-        .collect(SuperStream.toList()) as MutableList<String>
+        .collect(SuperStream.toListCollector()) as MutableList<String>
 }
 
 

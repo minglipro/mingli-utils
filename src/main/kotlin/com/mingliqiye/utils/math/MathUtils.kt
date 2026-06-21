@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MathUtils.kt
- * LastUpdate 2026-02-05 10:25:32
+ * LastUpdate 2026-06-21 10:40:58
  * UpdateUser MingLiPro
  */
 @file:JvmName("MathUtils")
@@ -167,7 +167,7 @@ operator fun BigDecimal.div(value: BigDecimal): BigDecimal = this.divide(value)
  * @return 除法运算结果
  */
 operator fun BigDecimal.div(
-    value: Long
+    value: Long,
 ): BigDecimal = this.divide(BigDecimal(value))
 
 /**
@@ -176,7 +176,7 @@ operator fun BigDecimal.div(
  * @return 除法运算结果
  */
 operator fun BigDecimal.div(
-    value: Int
+    value: Int,
 ): BigDecimal = this.divide(BigDecimal(value))
 
 /**
@@ -185,7 +185,7 @@ operator fun BigDecimal.div(
  * @return 除法运算结果
  */
 operator fun BigDecimal.div(
-    value: Double
+    value: Double,
 ): BigDecimal = this.divide(BigDecimal(value.toString()))
 
 /**
@@ -194,7 +194,7 @@ operator fun BigDecimal.div(
  * @return 除法运算结果
  */
 operator fun BigDecimal.div(
-    value: Float
+    value: Float,
 ): BigDecimal = this.divide(BigDecimal(value.toString()))
 
 /**
@@ -203,7 +203,7 @@ operator fun BigDecimal.div(
  * @return 除法运算结果
  */
 operator fun BigDecimal.div(
-    value: BigInteger
+    value: BigInteger,
 ): BigDecimal = this.divide(BigDecimal(value))
 
 /**
@@ -372,3 +372,63 @@ fun Number.toBigInteger(): BigInteger = BigInteger(this.toString())
  * @return 返回与当前 Number 对象等值且具有指定精度的 BigDecimal 实例。
  */
 fun Number.toBigDecimal(scale: Int): BigDecimal = BigDecimal(this.toString()).setScale(scale)
+
+
+/**
+ * Number 与 BigDecimal 的加法运算符重载
+ *
+ * 允许任意数字类型（Int、Long、Double等）直接与 BigDecimal 进行加法运算
+ * 例如：val result = 100 + BigDecimal("10.5")
+ *
+ * @param value 要相加的 BigDecimal 值
+ * @return 相加后的 BigDecimal 结果
+ *
+ * 注意：通过 toString() 转换可能会丢失精度（如 Double 的精度问题）
+ */
+operator fun Number.plus(value: BigDecimal): BigDecimal = BigDecimal(this.toString()).plus(value)
+
+/**
+ * Number 与 BigDecimal 的减法运算符重载
+ *
+ * 允许任意数字类型直接与 BigDecimal 进行减法运算
+ * 例如：val result = 100 - BigDecimal("10.5")
+ *
+ * @param value 要相减的 BigDecimal 值
+ * @return 相减后的 BigDecimal 结果
+ */
+operator fun Number.minus(value: BigDecimal): BigDecimal = BigDecimal(this.toString()).minus(value)
+
+/**
+ * Number 与 BigDecimal 的乘法运算符重载
+ *
+ * 允许任意数字类型直接与 BigDecimal 进行乘法运算
+ * 例如：val result = 100 * BigDecimal("10.5")
+ *
+ * @param value 要相乘的 BigDecimal 值
+ * @return 相乘后的 BigDecimal 结果
+ */
+operator fun Number.times(value: BigDecimal): BigDecimal = BigDecimal(this.toString()).times(value)
+
+/**
+ * Number 与 BigDecimal 的除法运算符重载
+ *
+ * 允许任意数字类型直接与 BigDecimal 进行除法运算
+ * 例如：val result = 100 / BigDecimal("10.5")
+ *
+ * @param value 要相除的 BigDecimal 值（除数）
+ * @return 相除后的 BigDecimal 结果
+ *
+ * 注意：如果除不尽会抛出 ArithmeticException，建议使用 divide() 方法指定精度
+ */
+operator fun Number.div(value: BigDecimal): BigDecimal = BigDecimal(this.toString()).div(value)
+
+/**
+ * Number 与 BigDecimal 的取余运算符重载
+ *
+ * 允许任意数字类型直接与 BigDecimal 进行取余运算
+ * 例如：val result = 100 % BigDecimal("10.5")
+ *
+ * @param value 取余运算的 BigDecimal 值
+ * @return 取余后的 BigDecimal 结果
+ */
+operator fun Number.rem(value: BigDecimal): BigDecimal = BigDecimal(this.toString()).rem(value)

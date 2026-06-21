@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JSONA.kt
- * LastUpdate 2026-02-26 14:14:18
+ * LastUpdate 2026-03-18 09:14:06
  * UpdateUser MingLiPro
  */
 
@@ -29,10 +29,13 @@ import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.api.type.listType
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
 import com.mingliqiye.utils.json.converters.base.getJsonConverter
+import com.mingliqiye.utils.json.objects.base.JsonItem
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
+import kotlin.io.path.readBytes
 
 /**
  * JSON工具类，提供静态方法访问JSON API功能
@@ -263,7 +266,7 @@ object JSONA {
      */
     @JvmStatic
     fun <T> parse(
-        json: String, type: JsonTypeReference<T>, defaultValue: T
+        json: String, type: JsonTypeReference<T>, defaultValue: T,
     ): T = getJsonApi().parse(json, type, defaultValue)
 
     /**
@@ -401,7 +404,7 @@ object JSONA {
      */
     @JvmStatic
     fun <K, V> parseMap(
-        json: String, keyType: Class<K>, valueType: Class<V>
+        json: String, keyType: Class<K>, valueType: Class<V>,
     ): MutableMap<K, V> = getJsonApi().parseMap(json, keyType, valueType)
 
     /**
@@ -414,7 +417,7 @@ object JSONA {
      */
     @JvmStatic
     inline fun <reified K, reified V> parseMap(
-        json: String
+        json: String,
     ): MutableMap<K, V> = getJsonApi().parseMap(json, K::class.java, V::class.java)
 
     /**
@@ -429,7 +432,6 @@ object JSONA {
     /**
      * 将对象转换为JSON字节数组
      *
-     * @param object 待转换的对象
      * @return 转换后的JSON字节数组
      */
     @JvmStatic
@@ -438,7 +440,6 @@ object JSONA {
     /**
      * 将对象转换为美化格式的JSON字节数组
      *
-     * @param object 待转换的对象
      * @return 转换后的美化格式JSON字节数组
      */
     @JvmStatic
@@ -478,7 +479,6 @@ object JSONA {
     /**
      * 将源对象转换为目标类型的对象
      *
-     * @param T 源对象的类型
      * @param D 目标对象的类型
      * @param source 需要转换的源对象
      * @param destinationClass 目标对象的Class类型
@@ -490,7 +490,6 @@ object JSONA {
     /**
      * 使用内联函数和reified类型参数将源对象转换为目标类型的对象
      *
-     * @param T 源对象的类型
      * @param D 目标对象的类型（通过reified类型参数推断）
      * @param source 需要转换的源对象
      * @return 转换后的目标类型对象
@@ -501,7 +500,6 @@ object JSONA {
     /**
      * 将源对象转换为目标类型的对象，使用JsonTypeReference指定目标类型
      *
-     * @param T 源对象的类型
      * @param D 目标对象的类型
      * @param source 需要转换的源对象
      * @param destinationType 目标对象的JsonTypeReference类型引用
@@ -540,4 +538,86 @@ object JSONA {
 
     @JvmStatic
     fun ObjectMapper.jacksonKotlinObjectMapper(): ObjectMapper = this.registerModule(kotlinModule())
+
+
+    /**
+     * 将 JSON 字符串解析为 JsonItem 对象
+     *
+     * @param json JSON 格式的字符串
+     * @return 解析后的 JsonItem 对象，可以是 JsonObject、JsonArray 或 JsonValue
+     */
+    @JvmStatic
+    fun parseJsonItem(json: String): JsonItem = getJsonApi().parseJsonItem(json)
+
+    /**
+     * 将字节数组解析为 JsonItem 对象
+     * 字节数组会被转换为字符串后再解析
+     *
+     * @param byte JSON 格式的字节数组（通常是 UTF-8 编码）
+     * @return 解析后的 JsonItem 对象
+     */
+    @JvmStatic
+    fun parseJsonItem(byte: ByteArray): JsonItem {
+        return parseJsonItem(String(byte))
+    }
+
+    /**
+     * 将输入流解析为 JsonItem 对象
+     * 会自动关闭输入流
+     *
+     * @param inputStream JSON 数据的输入流
+     * @return 解析后的 JsonItem 对象
+     * @throws IOException 当读取输入流失败时抛出
+     *
+     * 使用示例：
+     * ```
+     * val inputStream = FileInputStream("data.json")
+     * val jsonItem = converter.parseJsonItem(inputStream)
+     * ```
+     */
+    @JvmStatic
+    @Throws(IOException::class)
+    fun parseJsonItem(inputStream: InputStream): JsonItem {
+        inputStream.use {
+            return parseJsonItem(it.readAllBytes())
+        }
+    }
+
+    /**
+     * 将文件解析为 JsonItem 对象
+     *
+     * @param file 包含 JSON 数据的文件
+     * @return 解析后的 JsonItem 对象
+     * @throws IOException 当读取文件失败时抛出
+     *
+     * 使用示例：
+     * ```
+     * val file = File("config.json")
+     * val jsonItem = converter.parseJsonItem(file)
+     * ```
+     */
+    @JvmStatic
+    @Throws(IOException::class)
+    fun parseJsonItem(file: File): JsonItem {
+        return parseJsonItem(file.readBytes())
+    }
+
+    /**
+     * 将文件路径解析为 JsonItem 对象
+     *
+     * @param path 包含 JSON 数据的文件路径
+     * @return 解析后的 JsonItem 对象
+     * @throws IOException 当读取文件失败时抛出
+     *
+     * 使用示例：
+     * ```
+     * val path = Paths.get("data/user.json")
+     * val jsonItem = converter.parseJsonItem(path)
+     * ```
+     */
+    @JvmStatic
+    @Throws(IOException::class)
+    fun parseJsonItem(path: Path): JsonItem {
+        return parseJsonItem(path.readBytes())
+    }
 }

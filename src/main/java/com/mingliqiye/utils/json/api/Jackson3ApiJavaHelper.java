@@ -16,16 +16,18 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3ApiJavaHelper.java
- * LastUpdate 2026-02-26 12:02:13
+ * LastUpdate 2026-03-18 08:32:31
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.json;
+package com.mingliqiye.utils.json.api;
 
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.cfg.MapperBuilder;
 
+
 public class Jackson3ApiJavaHelper {
+    @SuppressWarnings("rawtypes")
     static MapperBuilder rebuild(ObjectMapper objectMapper) {
         return objectMapper.rebuild();
     }

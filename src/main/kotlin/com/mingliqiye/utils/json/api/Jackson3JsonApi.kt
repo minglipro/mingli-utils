@@ -16,27 +16,30 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3JsonApi.kt
- * LastUpdate 2026-03-11 08:46:40
+ * LastUpdate 2026-06-21 10:40:58
  * UpdateUser MingLiPro
  */
 
-package com.mingliqiye.utils.json
+package com.mingliqiye.utils.json.api
 
 import com.mingliqiye.utils.exception.JsonException
+import com.mingliqiye.utils.json.api.JackSon3JsonItem.Companion.getJsonItem
 import com.mingliqiye.utils.json.api.base.JsonApi
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
 import com.mingliqiye.utils.json.converters.base.getJackson3Module
+import com.mingliqiye.utils.json.objects.base.*
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.node.JsonNodeType
 import tools.jackson.databind.node.ObjectNode
 import java.lang.reflect.Type
 
 class Jackson3JsonApi : JsonApi {
 
-    var get: () -> ObjectMapper
-    var set: (ObjectMapper) -> Unit
+    var get: () -> ObjectMapper = { _prObjectMapper!! }
+    var set: (ObjectMapper) -> Unit = { _prObjectMapper = it }
 
     private var _prObjectMapper: ObjectMapper? = null
 
@@ -47,8 +50,6 @@ class Jackson3JsonApi : JsonApi {
 
     constructor(objectMapper: ObjectMapper) {
         _prObjectMapper = objectMapper
-        get = { _prObjectMapper!! }
-        set = { _prObjectMapper = it }
     }
 
     constructor(
@@ -57,6 +58,10 @@ class Jackson3JsonApi : JsonApi {
     ) {
         this.get = get
         this.set = set
+    }
+
+    constructor() {
+        _prObjectMapper = ObjectMapper()
     }
 
     override fun <T> parse(json: String, clazz: Class<T>): T {
@@ -97,7 +102,7 @@ class Jackson3JsonApi : JsonApi {
         return try {
             objectMapper.readTree(json)
             true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -213,5 +218,81 @@ class Jackson3JsonApi : JsonApi {
         val mapperBuilder = Jackson3ApiJavaHelper.rebuild(objectMapper)
         mapperBuilder.addModule(c.getJackson3Module())
         this.objectMapper = mapperBuilder.build()
+    }
+
+    override fun parseJsonItem(json: String): JsonItem {
+        try {
+            return getJsonItem(objectMapper.readTree(json))
+        } catch (e: Exception) {
+            throw JsonException("Failed to parseJsonItem", e)
+        }
+    }
+}
+
+
+class JackSon3JsonItem : JsonItem {
+    companion object {
+        fun getJsonItem(node: JsonNode): JsonItem {
+            return when (node.nodeType) {
+                JsonNodeType.OBJECT -> JackSon3JsonObject(node)
+                JsonNodeType.ARRAY -> JackSon3JsonArray(node)
+                JsonNodeType.BOOLEAN -> JackSon3JsonBoolean(node)
+                JsonNodeType.NULL -> JsonNull()
+                JsonNodeType.NUMBER -> JackSon3JsonNumber(node)
+                JsonNodeType.STRING -> JackSon3JsonString(node)
+                else -> throw IllegalStateException("unknown type ${node.nodeType}")
+            }
+        }
+    }
+}
+
+class JackSon3JsonNumber(node: JsonNode) : JsonNumber(node.asString())
+class JackSon3JsonBoolean(node: JsonNode) : JsonBoolean(node.asBoolean())
+class JackSon3JsonString(node: JsonNode) : JsonString(node.asString())
+
+
+class JackSon3JsonArray(val node: JsonNode) : JsonArray() {
+    override fun getIndex(index: Int): JsonItem {
+        return JackSon3JsonItem.getJsonItem(node.get(index))
+    }
+
+    override fun iteratorArray(): Iterator<IndexedValue<JsonItem>> {
+        val iteet = node.iterator().withIndex()
+        return object : Iterator<IndexedValue<JsonItem>> {
+            override fun next(): IndexedValue<JsonItem> {
+                val it = iteet.next()
+                return IndexedValue(it.index, JackSon3JsonItem.getJsonItem(it.value))
+            }
+
+            override fun hasNext(): Boolean {
+                return iteet.hasNext()
+            }
+
+        }
+    }
+}
+
+class JackSon3JsonObject(val node: JsonNode) : JsonObject() {
+    override fun getField(name: String): JsonItem {
+        return JackSon3JsonItem.getJsonItem(node.get(name))
+    }
+
+    override fun iteratorObject(): Iterator<Map.Entry<String, JsonItem>> {
+        return object : Iterator<Map.Entry<String, JsonItem>> {
+            val it = node.properties().iterator()
+            override fun next(): Map.Entry<String, JsonItem> {
+                val utem = it.next()
+                return object : Map.Entry<String, JsonItem> {
+                    override val key: String
+                        get() = utem.key
+                    override val value: JsonItem
+                        get() = JackSon3JsonItem.getJsonItem(utem.value)
+                }
+            }
+
+            override fun hasNext(): Boolean {
+                return it.hasNext()
+            }
+        }
     }
 }

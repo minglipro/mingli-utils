@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NettyUtils.kt
- * LastUpdate 2026-01-31 20:50:41
+ * LastUpdate 2026-06-20 22:18:39
  * UpdateUser MingLiPro
  */
 
@@ -30,7 +30,10 @@ import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import io.netty.channel.Channel
+import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelInitializer
+import io.netty.channel.ChannelPipeline
+import io.netty.util.concurrent.Future
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
@@ -107,6 +110,26 @@ fun ServerBootstrap.channelInitializer(funa: P1Function<Channel>): ServerBootstr
 }
 
 /**
+ * 为ServerBootstrap配置子管道初始化器
+ *
+ * 该函数用于设置ServerBootstrap的childHandler，当新的客户端连接建立时，
+ * 会调用提供的函数来初始化子管道
+ *
+ * @receiver ServerBootstrap 需要配置的服务器引导程序实例
+ * @param funa 用于初始化管道的回调函数，接收ChannelPipeline作为参数
+ * @return ServerBootstrap 返回当前实例以支持链式调用
+ */
+@JvmName("pipelineInit")
+fun ServerBootstrap.pipelineInitializer(funa: P1Function<ChannelPipeline>): ServerBootstrap {
+    this.childHandler(object : ChannelInitializer<Channel>() {
+        override fun initChannel(ch: Channel) {
+            funa.call(ch.pipeline())
+        }
+    })
+    return this
+}
+
+/**
  * 为Bootstrap配置通道初始化器
  *
  * 该函数用于设置Bootstrap的handler，当客户端连接建立时，
@@ -121,6 +144,26 @@ fun Bootstrap.channelInitializer(funa: P1Function<Channel>): Bootstrap {
     this.handler(object : ChannelInitializer<Channel>() {
         override fun initChannel(ch: Channel) {
             funa.call(ch)
+        }
+    })
+    return this
+}
+
+/**
+ * 为Bootstrap配置管道初始化器
+ *
+ * 该函数用于设置Bootstrap的handler，当客户端连接建立时，
+ * 会调用提供的函数来初始化管道
+ *
+ * @receiver Bootstrap 需要配置的客户端引导程序实例
+ * @param funa 用于初始化管道的回调函数，接收ChannelPipeline作为参数
+ * @return Bootstrap 返回当前实例以支持链式调用
+ */
+@JvmName("pipelineInit")
+fun Bootstrap.pipelineInitializer(funa: P1Function<ChannelPipeline>): Bootstrap {
+    this.handler(object : ChannelInitializer<Channel>() {
+        override fun initChannel(ch: Channel) {
+            funa.call(ch.pipeline())
         }
     })
     return this
@@ -248,7 +291,7 @@ fun Channel.closeSafely() {
 /**
  * 检查通道是否处于活跃状态
  */
-val Channel.isActive: Boolean
+val Channel.isActived: Boolean
     get() = isOpen && isActive
 
 /**
@@ -287,4 +330,9 @@ fun ByteBuf.tryRelease(): Boolean {
     } catch (e: Exception) {
         false
     }
+}
+
+fun ChannelFuture.addChannelListener(
+    listener: (Future<Channel>) -> Unit,
+) {
 }

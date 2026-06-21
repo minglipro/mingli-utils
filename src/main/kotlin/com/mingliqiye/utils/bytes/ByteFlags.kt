@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ByteFlags.kt
- * LastUpdate 2026-01-07 09:37:09
+ * LastUpdate 2026-06-21 10:40:58
  * UpdateUser MingLiPro
  */
 
@@ -47,7 +47,7 @@ data class ByteFlags(
     /** 第 6 位（0x40） */
     var b6: Boolean = false,
     /** 第 7 位（最高位，0x80） */
-    var b7: Boolean = false
+    var b7: Boolean = false,
 ) {
 
     /**
@@ -410,7 +410,7 @@ data class ByteFlags(
          * @return 全 1 的 ByteFlags（值为 0xFF）
          */
         fun allTrue(): ByteFlags {
-            return ByteFlags(true, true, true, true, true, true, true, true)
+            return ByteFlags(b0 = true, b1 = true, b2 = true, b3 = true, b4 = true, b5 = true, b6 = true, b7 = true)
         }
 
         /**

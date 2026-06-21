@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonApi.kt
- * LastUpdate 2026-03-11 08:46:40
+ * LastUpdate 2026-06-21 10:40:58
  * UpdateUser MingLiPro
  */
 
@@ -27,12 +27,15 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
+import com.fasterxml.jackson.databind.node.JsonNodeType
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.mingliqiye.utils.exception.JsonException
+import com.mingliqiye.utils.json.api.JackSonJsonItem.Companion.getJsonItem
 import com.mingliqiye.utils.json.api.base.JsonApi
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
 import com.mingliqiye.utils.json.converters.base.getJacksonModule
+import com.mingliqiye.utils.json.objects.base.*
 
 /**
  * 基于Jackson的JSON处理实现类，提供JSON字符串解析、格式化、合并、节点操作等功能。
@@ -97,7 +100,6 @@ class JacksonJsonApi : JsonApi {
     /**
      * 将对象格式化为JSON字符串
      *
-     * @param `object` 待格式化的对象
      * @return 格式化后的JSON字符串
      * @throws JsonException 当格式化失败时抛出异常
      */
@@ -122,7 +124,6 @@ class JacksonJsonApi : JsonApi {
     /**
      * 将对象格式化为美化（带缩进）的JSON字符串
      *
-     * @param `object` 待格式化的对象
      * @return 美化后的JSON字符串
      * @throws JsonException 当格式化失败时抛出异常
      */
@@ -158,7 +159,7 @@ class JacksonJsonApi : JsonApi {
         return try {
             objectMapper.readTree(json)
             true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -178,7 +179,7 @@ class JacksonJsonApi : JsonApi {
                 if (node.isObject) {
                     result.setAll<JsonNode>(node as ObjectNode)
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
         return try {
@@ -291,6 +292,81 @@ class JacksonJsonApi : JsonApi {
             objectMapper.registerModule(c.getJacksonModule())
         } catch (e: Exception) {
             throw JsonException("Failed to update node value", e)
+        }
+    }
+
+    override fun parseJsonItem(json: String): JsonItem {
+        try {
+            return getJsonItem(objectMapper.readTree(json))
+        } catch (e: Exception) {
+            throw JsonException("Failed to parseJsonItem", e)
+        }
+    }
+}
+
+class JackSonJsonItem : JsonItem {
+    companion object {
+        fun getJsonItem(node: JsonNode): JsonItem {
+            return when (node.nodeType) {
+                JsonNodeType.OBJECT -> JackSonJsonObject(node)
+                JsonNodeType.ARRAY -> JackSonJsonArray(node)
+                JsonNodeType.BOOLEAN -> JackSonJsonBoolean(node)
+                JsonNodeType.NULL -> JsonNull()
+                JsonNodeType.NUMBER -> JackSonJsonNumber(node)
+                JsonNodeType.STRING -> JackSonJsonString(node)
+                else -> throw IllegalStateException("unknown type ${node.nodeType}")
+            }
+        }
+    }
+}
+
+class JackSonJsonNumber(node: JsonNode) : JsonNumber(node.asText())
+class JackSonJsonBoolean(node: JsonNode) : JsonBoolean(node.asBoolean())
+class JackSonJsonString(node: JsonNode) : JsonString(node.asText())
+
+
+class JackSonJsonArray(val node: JsonNode) : JsonArray() {
+    override fun getIndex(index: Int): JsonItem {
+        return getJsonItem(node.get(index))
+    }
+
+    override fun iteratorArray(): Iterator<IndexedValue<JsonItem>> {
+        val iteet = node.iterator().withIndex()
+        return object : Iterator<IndexedValue<JsonItem>> {
+            override fun next(): IndexedValue<JsonItem> {
+                val it = iteet.next()
+                return IndexedValue(it.index, getJsonItem(it.value))
+            }
+
+            override fun hasNext(): Boolean {
+                return iteet.hasNext()
+            }
+
+        }
+    }
+}
+
+class JackSonJsonObject(val node: JsonNode) : JsonObject() {
+    override fun getField(name: String): JsonItem {
+        return getJsonItem(node.get(name))
+    }
+
+    override fun iteratorObject(): Iterator<Map.Entry<String, JsonItem>> {
+        return object : Iterator<Map.Entry<String, JsonItem>> {
+            val it = node.properties().iterator()
+            override fun next(): Map.Entry<String, JsonItem> {
+                val utem = it.next()
+                return object : Map.Entry<String, JsonItem> {
+                    override val key: String
+                        get() = utem.key
+                    override val value: JsonItem
+                        get() = getJsonItem(utem.value)
+                }
+            }
+
+            override fun hasNext(): Boolean {
+                return it.hasNext()
+            }
         }
     }
 }

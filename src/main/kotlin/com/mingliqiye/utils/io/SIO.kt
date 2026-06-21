@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SIO.kt
- * LastUpdate 2026-02-27 12:36:11
+ * LastUpdate 2026-06-21 10:40:58
  * UpdateUser MingLiPro
  */
 
@@ -105,6 +105,14 @@ object SIO {
         this.toHexString().chunked(2).println()
         return this
     }
+
+    fun <T> T.ifOr(boolean: Boolean, pd: T.() -> T): T = if (boolean) {
+        this
+    } else pd(this)
+
+    fun <T> T.ifOrElse(boolean: Boolean, pd: T.() -> T): T = if (!boolean) {
+        this
+    } else pd(this)
 
     /**
      * 扩展函数：将列表以花括号格式打印，元素间用逗号分隔

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ClientScheduleReconnect.kt
- * LastUpdate 2026-01-20 08:10:15
+ * LastUpdate 2026-06-21 10:40:58
  * UpdateUser MingLiPro
  */
 
@@ -119,21 +119,20 @@ abstract class ClientScheduleReconnect {
      * 停止连接时的日志记录回调
      */
     abstract fun onStoppedLog()
+
     abstract fun onConnectClosed()
 
     /**
      * 执行连接操作
      * @return ChannelFuture 连接结果的异步操作对象
      */
-    abstract fun doConnect(): ChannelFuture
+    abstract fun doConnect(bootstrap: Bootstrap): ChannelFuture
 
     /**
      * 初始化引导配置
      * @param bootstrap 要初始化的引导配置对象
      */
-    open fun initBootstrap(bootstrap: Bootstrap) {
-
-    }
+    abstract fun initBootstrap(bootstrap: Bootstrap)
 
     /**
      * 更新重连延迟配置
@@ -151,7 +150,7 @@ abstract class ClientScheduleReconnect {
      * 执行连接操作，设置连接完成监听器
      */
     open fun connect() {
-        doConnect().addListener(object : ChannelFutureListener {
+        doConnect(bootstrap).addListener(object : ChannelFutureListener {
             override fun operationComplete(future: ChannelFuture) {
                 if (future.isSuccess) {
                     onConnected(future.channel())
@@ -165,6 +164,7 @@ abstract class ClientScheduleReconnect {
     /**
      * 停止连接并标记为停止状态
      */
+    @Deprecated("use close()", ReplaceWith("close()"))
     open fun stop() {
         isStop = true
         disConnect()
@@ -176,6 +176,14 @@ abstract class ClientScheduleReconnect {
     open fun disConnect() {
         channel?.close()
         channel = null
+    }
+
+    /**
+     * 停止连接并标记为停止状态
+     */
+    open fun close() {
+        isStop = true
+        disConnect()
     }
 
     /**

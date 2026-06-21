@@ -16,15 +16,15 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3JsonApiAutoConfiguration.kt
- * LastUpdate 2026-02-26 14:24:33
+ * LastUpdate 2026-06-21 10:40:58
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure
 
 import com.mingliqiye.utils.exception.JsonException
-import com.mingliqiye.utils.json.Jackson3JsonApi
 import com.mingliqiye.utils.json.api.JSONA
+import com.mingliqiye.utils.json.api.Jackson3JsonApi
 import com.mingliqiye.utils.json.api.base.JsonApi
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import org.springframework.boot.autoconfigure.AutoConfigureAfter

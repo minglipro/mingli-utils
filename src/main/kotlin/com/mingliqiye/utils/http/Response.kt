@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Response.kt
- * LastUpdate 2026-03-12 10:33:32
+ * LastUpdate 2026-03-14 08:01:32
  * UpdateUser MingLiPro
  */
 
@@ -49,9 +49,18 @@ data class Response<T>(
          * 创建一个默认的成功响应对象
          * 使用默认消息"操作成功"，无数据，状态码200
          *
-         * @return Response<Any> 默认的成功响应对象
+         * @return Response<Nothing> 默认的成功响应对象
          */
         fun ok() = ok("操作成功")
+
+
+        /**
+         * 创建一个默认的错误响应对象
+         * 使用默认消息"服务器错误"，无数据，状态码500
+         *
+         * @return Response<Nothing> 默认的成功响应对象
+         */
+        fun error() = error("服务器错误")
 
         /**
          * 创建一个成功的响应对象（仅包含消息）
@@ -292,5 +301,5 @@ data class Response<T>(
      * @return 格式化的字符串表示
      */
     override fun toString(): String =
-        "Response(time=${getTime()}, message=${getMessage()}, data:[${data?.javaClass?.simpleName}]=${getData()}, statusCode=${getStatusCode()})"
+        "Response<${data?.javaClass?.simpleName ?: "Nothing"}>(time=${getTime()}, message=${getMessage()}, data=${getData()}, statusCode=${getStatusCode()})"
 }

@@ -16,20 +16,24 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonApi.kt
- * LastUpdate 2026-03-11 08:46:40
+ * LastUpdate 2026-03-27 14:19:31
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.api.base
 
+import com.mingliqiye.utils.exception.JsonParserException
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.api.type.listType
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
 import com.mingliqiye.utils.json.converters.base.getJsonConverter
+import com.mingliqiye.utils.json.objects.base.JsonItem
+import okio.IOException
 import java.io.*
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import kotlin.io.path.readBytes
 
 /**
  * JSON处理接口，提供JSON字符串与Java对象之间的相互转换功能
@@ -45,6 +49,7 @@ interface JsonApi {
          * @return 解析后的对象实例
          */
         inline fun <reified T> JsonApi.parse(json: String): T = parse(json, object : JsonTypeReference<T>() {})
+
 
         /**
          * 将JSON字节数组解析为指定泛型类型对象
@@ -247,6 +252,7 @@ interface JsonApi {
     fun <T> parseFrom(path: Path, type: JsonTypeReference<T>): T {
         return parseFrom(path.toFile(), type)
     }
+
 
     /**
      * 从文件读取JSON并解析为指定泛型类型对象
@@ -478,9 +484,123 @@ interface JsonApi {
      */
     fun updateNodeValue(json: String, path: String, newValue: Any): String
 
+    /**
+     * 将任意对象转换为指定类型的对象
+     *
+     * @param source 源对象，可以是 JSON 字符串、JsonItem 或其他对象
+     * @param destinationClass 目标类型的 Class 对象
+     * @return 转换后的目标类型对象
+     *
+     * @param <D> 目标类型泛型参数
+     */
     fun <D> convert(source: Any, destinationClass: Class<D>): D
 
+    /**
+     * 将任意对象转换为指定泛型类型的对象
+     * 用于处理带泛型的复杂类型，如 List<User>、Map<String, User> 等
+     *
+     * @param source 源对象，可以是 JSON 字符串、JsonItem 或其他对象
+     * @param destinationType 目标类型的类型引用，包含泛型信息
+     * @return 转换后的目标类型对象
+     *
+     * @param <D> 目标类型泛型参数
+     *
+     * 使用示例：
+     * ```
+     * val typeRef = object : JsonTypeReference<List<User>>() {}
+     * val userList = converter.convert(jsonString, typeRef)
+     * ```
+     */
     fun <D> convert(source: Any, destinationType: JsonTypeReference<D>): D
 
+    /**
+     * 注册自定义的 JSON 转换器
+     * 用于处理特定类型的自定义序列化和反序列化逻辑
+     *
+     * @param c 自定义的 JSON 转换器实例
+     *
+     * 使用示例：
+     * ```
+     * converter.addJsonConverter(DateJsonConverter())
+     * converter.addJsonConverter(LocalDateTimeJsonConverter())
+     * ```
+     */
     fun addJsonConverter(c: BaseJsonConverter<*, *>)
+
+    /**
+     * 将 JSON 字符串解析为 JsonItem 对象
+     *
+     * @param json JSON 格式的字符串
+     * @return 解析后的 JsonItem 对象，可以是 JsonObject、JsonArray 或 JsonValue
+     * @throws JsonParserException 当 JSON 格式错误时抛出
+     */
+    fun parseJsonItem(json: String): JsonItem
+
+    /**
+     * 将字节数组解析为 JsonItem 对象
+     * 字节数组会被转换为字符串后再解析
+     *
+     * @param byte JSON 格式的字节数组（通常是 UTF-8 编码）
+     * @return 解析后的 JsonItem 对象
+     * @throws JsonParserException 当 JSON 格式错误时抛出
+     */
+    fun parseJsonItem(byte: ByteArray): JsonItem {
+        return parseJsonItem(String(byte))
+    }
+
+    /**
+     * 将输入流解析为 JsonItem 对象
+     * 会自动关闭输入流
+     *
+     * @param inputStream JSON 数据的输入流
+     * @return 解析后的 JsonItem 对象
+     * @throws JsonParserException 当 JSON 格式错误时抛出
+     * @throws IOException 当读取输入流失败时抛出
+     *
+     * 使用示例：
+     * ```
+     * val inputStream = FileInputStream("data.json")
+     * val jsonItem = converter.parseJsonItem(inputStream)
+     * ```
+     */
+    fun parseJsonItem(inputStream: InputStream): JsonItem {
+        inputStream.use {
+            return parseJsonItem(it.readAllBytes())
+        }
+    }
+
+    /**
+     * 将文件解析为 JsonItem 对象
+     *
+     * @param file 包含 JSON 数据的文件
+     * @return 解析后的 JsonItem 对象
+     * @throws IOException 当读取文件失败时抛出
+     *
+     * 使用示例：
+     * ```
+     * val file = File("config.json")
+     * val jsonItem = converter.parseJsonItem(file)
+     * ```
+     */
+    @Throws(IOException::class)
+    fun parseJsonItem(file: File): JsonItem {
+        return parseJsonItem(file.readBytes())
+    }
+
+    /**
+     * 将文件路径解析为 JsonItem 对象
+     *
+     * @param path 包含 JSON 数据的文件路径
+     * @return 解析后的 JsonItem 对象
+     * @throws IOException 当读取文件失败时抛出
+     *
+     * 使用示例：
+     * ```
+     * val path = Paths.get("data/user.json")
+     * val jsonItem = converter.parseJsonItem(path)
+     * ```
+     */
+    fun parseJsonItem(path: Path): JsonItem {
+        return parseJsonItem(path.readBytes())
+    }
 }

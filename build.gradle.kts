@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-03-12 10:29:17
+ * LastUpdate 2026-06-20 21:49:36
  * UpdateUser MingLiPro
  */
 
@@ -59,6 +59,7 @@ kotlin {
 dependencies {
     implementation("org.slf4j:slf4j-api:2.0.17")
     implementation(kotlin("reflect"))
+    api("com.mingliqiye.utils.aliasfor:alias-for:1.0.1")
     compileOnly("org.mindrot:jbcrypt:0.4")
     compileOnly("com.squareup.okhttp3:okhttp:5.3.2")
     compileOnly("com.fasterxml.jackson.core:jackson-databind:2.21.0")
@@ -69,17 +70,25 @@ dependencies {
     compileOnly(fileTree("libs"))
     compileOnly("com.google.code.gson:gson:2.13.2")
     compileOnly("org.mybatis:mybatis:3.5.19")
-    compileOnly("io.netty:netty-all:4.1.130.Final")
+    compileOnly("io.netty:netty-all:4.2.15.Final")
     compileOnly("com.baomidou:mybatis-plus-core:3.5.15")
     compileOnly("net.java.dev.jna:jna:5.17.0")
     compileOnly("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
     compileOnly("com.baomidou:mybatis-plus-extension:3.5.15")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("com.mingliqiye.logger:logger-log4j2:1.0.5")
+    testImplementation("com.mingliqiye.logger:logger-log4j2:1.0.9")
     testImplementation("com.google.code.gson:gson:2.13.2")
+
     testImplementation("com.fasterxml.jackson.core:jackson-databind:2.21.0")
     testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
+
+    testImplementation("tools.jackson.module:jackson-module-kotlin:3.1.0")
+    testImplementation("tools.jackson.core:jackson-databind:3.1.0")
+}
+
+repositories {
+    mavenLocal()
 }
 
 
@@ -154,11 +163,11 @@ tasks.register<Jar>("kotlinDocJar") {
 publishing {
     repositories {
         maven {
-            name = "MavenRepositoryRaw"
-            url = uri("https://localhost:3000/")
+            name = "mingliqiye"
+            url = uri("https://repository.mingliqiye.com/repository/maven")
             credentials {
-                username = System.getenv("sonatype.username")
-                password = System.getenv("sonatype.password")
+                username = System.getenv("mingliqiye.username")
+                password = System.getenv("mingliqiye.password")
             }
         }
     }
@@ -221,6 +230,7 @@ tasks.processResources {
 signing {
     val secretKeyRingFile = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
     val keyId = System.getenv("SIGNING_KEY_ID")
+    useGpgCmd()
     project.ext.set("signing.secretKeyRingFile", secretKeyRingFile)
     project.ext.set("signing.keyId", keyId)
     project.ext.set("signing.password", "")

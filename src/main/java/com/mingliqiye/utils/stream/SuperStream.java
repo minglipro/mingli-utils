@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SuperStream.java
- * LastUpdate 2026-01-20 13:27:09
+ * LastUpdate 2026-04-14 12:00:05
  * UpdateUser MingLiPro
  */
 
@@ -696,7 +696,7 @@ public class SuperStream<T> implements Stream<T> {
      * @param <T> 输入元素的类型
      * @return 产生List的收集器
      */
-    public static <T> Collector<T, ?, List<T>> toList() {
+    public static <T> Collector<T, ?, List<T>> toListCollector() {
         return Collectors.toList();
     }
 
@@ -1219,7 +1219,7 @@ public class SuperStream<T> implements Stream<T> {
      * @return 包含流中所有元素的List
      */
     public List<T> toAList() {
-        return collect(toList());
+        return collect(toListCollector());
     }
 
 }
