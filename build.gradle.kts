@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-06-20 21:49:36
+ * LastUpdate 2026-10-11 16:44:37
  * UpdateUser MingLiPro
  */
 
@@ -33,6 +33,7 @@ plugins {
     kotlin("kapt") version "2.2.20"
     id("org.jetbrains.dokka") version "2.1.0"
     id("org.jetbrains.dokka-javadoc") version "2.1.0"
+    kotlin("plugin.spring") version "2.1.0"
 }
 val GROUPSID = project.properties["GROUPSID"] as String
 val VERSIONS = project.properties["VERSIONS"] as String
@@ -55,6 +56,14 @@ java {
 }
 kotlin {
     jvmToolchain(JDKVERSIONS)
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri("https://maven.mingliqiye.com/")
+    }
+    mavenCentral()
 }
 dependencies {
     implementation("org.slf4j:slf4j-api:2.0.17")
@@ -85,6 +94,7 @@ dependencies {
 
     testImplementation("tools.jackson.module:jackson-module-kotlin:3.1.0")
     testImplementation("tools.jackson.core:jackson-databind:3.1.0")
+    testImplementation(kotlin("test"))
 }
 
 repositories {

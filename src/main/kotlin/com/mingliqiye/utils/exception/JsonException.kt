@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonException.kt
- * LastUpdate 2026-02-07 13:17:50
+ * LastUpdate 2026-10-11 16:53:07
  * UpdateUser MingLiPro
  */
 
@@ -30,15 +30,9 @@ package com.mingliqiye.utils.exception
  * 2. 包含错误信息和原因（Throwable）的构造函数。
  * 3. 仅包含原因（Throwable）的构造函数。
  */
-open class JsonException : MingLiUtilsBaseException {
-    constructor()
-    constructor(message: String) : super(message)
-    constructor(throwable: Throwable) : super(throwable)
-    constructor(message: String, throwable: Throwable) : super(message, throwable)
-    constructor(
-        message: String? = null,
-        throwable: Throwable? = null,
-        enableSuppression: Boolean = false,
-        writableStackTrace: Boolean = false
-    ) : super(message, throwable, enableSuppression, writableStackTrace)
-}
+open class JsonException @JvmOverloads constructor(
+    message: String? = null,
+    throwable: Throwable? = null,
+    enableSuppression: Boolean = false,
+    writableStackTrace: Boolean = true,
+) : MingLiUtilsBaseException(message, throwable, enableSuppression, writableStackTrace)

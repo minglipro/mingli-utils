@@ -16,21 +16,15 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile HttpException.kt
- * LastUpdate 2026-02-05 14:44:15
+ * LastUpdate 2026-10-11 16:52:48
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.exception
 
-open class HttpException : MingLiUtilsBaseException {
-    constructor()
-    constructor(message: String) : super(message)
-    constructor(throwable: Throwable) : super(throwable)
-    constructor(message: String, throwable: Throwable) : super(message, throwable)
-    constructor(
-        message: String? = null,
-        throwable: Throwable? = null,
-        enableSuppression: Boolean = false,
-        writableStackTrace: Boolean = false
-    ) : super(message, throwable, enableSuppression, writableStackTrace)
-}
+open class HttpException @JvmOverloads constructor(
+    message: String? = null,
+    throwable: Throwable? = null,
+    enableSuppression: Boolean = false,
+    writableStackTrace: Boolean = true,
+) : MingLiUtilsBaseException(message, throwable, enableSuppression, writableStackTrace)

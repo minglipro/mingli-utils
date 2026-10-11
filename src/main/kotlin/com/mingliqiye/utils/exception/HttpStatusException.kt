@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile HttpStatusException.kt
- * LastUpdate 2026-02-10 01:12:53
+ * LastUpdate 2026-10-11 17:02:06
  * UpdateUser MingLiPro
  */
 
@@ -29,8 +29,10 @@ package com.mingliqiye.utils.exception
  * @param message 异常信息，默认为 null
  * @param cause 异常原因，默认为 null
  */
-open class HttpStatusException(
-    open val statusCode: Int,
-    override val message: String? = null,
-    override val cause: Throwable? = null
-) : MingLiUtilsBaseException(message, cause)
+open class HttpStatusException @JvmOverloads constructor(
+    val statusCode: Int,
+    message: String? = null,
+    throwable: Throwable? = null,
+    enableSuppression: Boolean = false,
+    writableStackTrace: Boolean = true,
+) : MingLiUtilsBaseException(message, throwable, enableSuppression, writableStackTrace)

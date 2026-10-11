@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile RandomBytes.kt
- * LastUpdate 2026-03-27 14:18:30
+ * LastUpdate 2026-10-11 17:11:11
  * UpdateUser MingLiPro
  */
 package com.mingliqiye.utils.random
@@ -221,7 +221,7 @@ object Random {
      */
     @JvmStatic
     fun String.randomString(length: Int): String = String(CharArray(length) {
-        this[nextInt(0..<this.length)]
+        this[nextInt(indices)]
     })
 
     /**
@@ -239,63 +239,63 @@ object Random {
      * @return 数组中的随机元素
      */
     @JvmStatic
-    fun <T> Array<T>.randomItem(): T = this[nextInt(0..<this.size)]
+    fun <T> Array<T>.randomItem(): T = this[nextInt(indices)]
 
     /**
      * ByteArray类型的扩展函数 - 从字节数组中随机选择一个元素
      * @return 字节数组中的随机字节
      */
     @JvmStatic
-    fun ByteArray.randomItem(): Byte = this[nextInt(0..<this.size)]
+    fun ByteArray.randomItem(): Byte = this[nextInt(indices)]
 
     /**
      * IntArray类型的扩展函数 - 从整数数组中随机选择一个元素
      * @return 整数数组中的随机整数
      */
     @JvmStatic
-    fun IntArray.randomItem(): Int = this[nextInt(0..<this.size)]
+    fun IntArray.randomItem(): Int = this[nextInt(indices)]
 
     /**
      * LongArray类型的扩展函数 - 从长整数数组中随机选择一个元素
      * @return 长整数数组中的随机长整数
      */
     @JvmStatic
-    fun LongArray.randomItem(): Long = this[nextInt(0..<this.size)]
+    fun LongArray.randomItem(): Long = this[nextInt(indices)]
 
     /**
      * FloatArray类型的扩展函数 - 从浮点数数组中随机选择一个元素
      * @return 浮点数数组中的随机浮点数
      */
     @JvmStatic
-    fun FloatArray.randomItem(): Float = this[nextInt(0..<this.size)]
+    fun FloatArray.randomItem(): Float = this[nextInt(indices)]
 
     /**
      * DoubleArray类型的扩展函数 - 从双精度浮点数数组中随机选择一个元素
      * @return 双精度浮点数数组中的随机双精度浮点数
      */
     @JvmStatic
-    fun DoubleArray.randomItem(): Double = this[nextInt(0..<this.size)]
+    fun DoubleArray.randomItem(): Double = this[nextInt(indices)]
 
     /**
      * BooleanArray类型的扩展函数 - 从布尔数组中随机选择一个元素
      * @return 布尔数组中的随机布尔值
      */
     @JvmStatic
-    fun BooleanArray.randomItem(): Boolean = this[nextInt(0..<this.size)]
+    fun BooleanArray.randomItem(): Boolean = this[nextInt(indices)]
 
     /**
      * CharArray类型的扩展函数 - 从字符数组中随机选择一个元素
      * @return 字符数组中的随机字符
      */
     @JvmStatic
-    fun CharArray.randomItem(): Char = this[nextInt(0..<this.size)]
+    fun CharArray.randomItem(): Char = this[nextInt(indices)]
 
     /**
      * ShortArray类型的扩展函数 - 从短整数数组中随机选择一个元素
      * @return 短整数数组中的随机短整数
      */
     @JvmStatic
-    fun ShortArray.randomItem(): Short = this[nextInt(0..<this.size)]
+    fun ShortArray.randomItem(): Short = this[nextInt(indices)]
 
     /**
      * Collection类型的扩展函数 - 从集合中随机选择一个元素
@@ -303,5 +303,5 @@ object Random {
      * @return 集合中的随机元素
      */
     @JvmStatic
-    fun <T> Collection<T>.randomItem(): T = this.elementAt(nextInt(0..<this.size))
+    fun <T> Collection<T>.randomItem(): T = this.elementAt(nextInt(indices))
 }

@@ -16,14 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ReflectUtils.kt
- * LastUpdate 2026-06-21 10:40:58
+ * LastUpdate 2026-10-11 17:11:11
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.reflect
 
 import com.mingliqiye.utils.io.SIO.ifOr
-import java.lang.reflect.AnnotatedElement
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -33,13 +32,15 @@ import kotlin.reflect.jvm.javaMethod
 
 object ReflectUtils {
     private val walker: StackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
-    inline fun <reified T : Annotation> AnnotatedElement.getAnnotation() = this.getAnnotation(T::class.java)
     inline fun <reified T : Any> T.ktClass(): KClass<T> = T::class
+
     var <T : Any> KMutableProperty<T>.value: T
         get() = this.getter.call()
         set(t: T) = this.setter.call(t)
+
     val <T : Any> KProperty<T>.javaGetter: Method
         get() = this.getter.javaMethod!!
+
     val <T : Any> KMutableProperty<T>.javaSetter: Method
         get() = this.getter.javaMethod!!
     val <T : Any> KFunction<T>.java: Method

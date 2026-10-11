@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonAutoConfiguration.kt
- * LastUpdate 2026-03-11 08:46:40
+ * LastUpdate 2026-10-02 16:10:53
  * UpdateUser MingLiPro
  */
 
@@ -91,7 +91,7 @@ open class JacksonAutoConfiguration(objectMapper: ObjectMapper) {
      */
     @Bean
     @Primary
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(JsonApi::class)
     open fun jsonApi(objectMapper: ObjectMapper): JsonApi {
         return JacksonJsonApi(objectMapper).also {
             log.info("JsonApi Bean Auto Configuration Success")

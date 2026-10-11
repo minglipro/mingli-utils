@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SpringBeanUtils.kt
- * LastUpdate 2026-02-26 14:09:02
+ * LastUpdate 2026-10-02 16:18:14
  * UpdateUser MingLiPro
  */
 
@@ -25,6 +25,7 @@ package com.mingliqiye.utils.springboot.bean
 import org.springframework.beans.BeansException
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
+import org.springframework.context.ApplicationContextException
 import org.springframework.stereotype.Component
 
 /**
@@ -37,7 +38,12 @@ class SpringBeanUtils : ApplicationContextAware {
     companion object {
 
         @JvmStatic
-        private var applicationContext: ApplicationContext? = null
+        val applicationContext: ApplicationContext
+            get() = applicationContextBase
+                ?: throw ApplicationContextException("applicationContext isn't ContextInitialized ?")
+
+        private var applicationContextBase: ApplicationContext? = null
+
 
         @Throws(BeansException::class)
         inline fun <reified T : Any> getBean() = getBean(T::class.java)
@@ -53,7 +59,7 @@ class SpringBeanUtils : ApplicationContextAware {
         @JvmStatic
         @Throws(BeansException::class)
         @Suppress("UNCHECKED_CAST")
-        fun getBean(name: String): Any = applicationContext!!.getBean(name)
+        fun getBean(name: String): Any = applicationContext.getBean(name)
 
         /**
          * 根据Bean类型获取Bean实例
@@ -65,7 +71,7 @@ class SpringBeanUtils : ApplicationContextAware {
         @JvmStatic
         @Throws(BeansException::class)
         fun <T : Any> getBean(clazz: Class<T>): T {
-            return applicationContext!!.getBean(clazz)
+            return applicationContext.getBean(clazz)
         }
 
         /**
@@ -79,7 +85,7 @@ class SpringBeanUtils : ApplicationContextAware {
         @JvmStatic
         @Throws(BeansException::class)
         fun <T : Any> getBean(name: String, clazz: Class<T>): T {
-            return applicationContext!!.getBean<T>(name, clazz)
+            return applicationContext.getBean<T>(name, clazz)
         }
     }
 
@@ -92,6 +98,6 @@ class SpringBeanUtils : ApplicationContextAware {
      */
     @Throws(BeansException::class)
     override fun setApplicationContext(applicationContext: ApplicationContext) {
-        SpringBeanUtils.applicationContext = applicationContext
+        applicationContextBase = applicationContext
     }
 }

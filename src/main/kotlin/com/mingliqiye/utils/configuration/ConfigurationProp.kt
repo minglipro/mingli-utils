@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ConfigurationProp.kt
- * LastUpdate 2025-09-19 11:30:04
+ * LastUpdate 2026-07-01 12:37:05
  * UpdateUser MingLiPro
  */
 
@@ -156,7 +156,7 @@ open class ConfigurationProps {
         private fun <T : ConfigurationProps> processFields(
             clazz: Class<T>,
             instance: T,
-            mapsArgs: Map<String, List<String>>
+            mapsArgs: Map<String, List<String>>,
         ) {
             val fields = clazz.declaredFields
 
@@ -194,7 +194,7 @@ open class ConfigurationProps {
         private fun convertValue(
             type: Class<*>,
             values: List<String>,
-            annotation: ConfigurationProp
+            annotation: ConfigurationProp,
         ): Any? {
             val lastValue = values.lastOrNull() ?: return null
 
@@ -248,9 +248,9 @@ open class ConfigurationProps {
             val configurationProp = field.getAnnotation(ConfigurationProp::class.java)
             if (configurationProp != null && configurationProp.showHelper) {
                 val fieldName = configurationProp.name.ifEmpty { field.name }
-                help.append("$fieldName -> 类型: ${field.type.simpleName}")
+                help.append("$fieldName -> Type: ${field.type.simpleName}")
                 if (configurationProp.description.isNotEmpty()) {
-                    help.append(" 描述: ${configurationProp.description}")
+                    help.append(" Description: ${configurationProp.description}")
                 }
                 help.append("\n")
             }

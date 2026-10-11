@@ -16,21 +16,15 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NotFoundResourceException.kt
- * LastUpdate 2026-05-22 13:20:00
+ * LastUpdate 2026-10-11 16:53:58
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.exception
 
-class NotFoundResourceException : MingLiUtilsBaseException {
-    constructor()
-    constructor(message: String) : super(message)
-    constructor(throwable: Throwable) : super(throwable)
-    constructor(message: String, throwable: Throwable) : super(message, throwable)
-    constructor(
-        message: String? = null,
-        throwable: Throwable? = null,
-        enableSuppression: Boolean = false,
-        writableStackTrace: Boolean = false,
-    ) : super(message, throwable, enableSuppression, writableStackTrace)
-}
+class NotFoundResourceException @JvmOverloads constructor(
+    message: String? = null,
+    throwable: Throwable? = null,
+    enableSuppression: Boolean = false,
+    writableStackTrace: Boolean = true,
+) : MingLiUtilsBaseException(message, throwable, enableSuppression, writableStackTrace)

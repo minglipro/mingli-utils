@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NettyUtils.kt
- * LastUpdate 2026-06-20 22:18:39
+ * LastUpdate 2026-06-27 21:40:00
  * UpdateUser MingLiPro
  */
 
@@ -28,12 +28,11 @@ import com.mingliqiye.utils.functions.P1Function
 import io.netty.bootstrap.Bootstrap
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.ByteBuf
+import io.netty.buffer.ByteBufUtil
 import io.netty.buffer.Unpooled
 import io.netty.channel.Channel
-import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelPipeline
-import io.netty.util.concurrent.Future
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
@@ -71,9 +70,7 @@ fun ByteBuf.toByteBuffer(): ByteBuffer {
  * @return ByteArray 转换后的字节数组，包含ByteBuf中所有可读的字节数据
  */
 fun ByteBuf.toByteArray(): ByteArray {
-    val array = ByteArray(this.readableBytes())
-    this.readBytes(array)
-    return array
+    return ByteBufUtil.getBytes(this)
 }
 
 /**
@@ -330,9 +327,4 @@ fun ByteBuf.tryRelease(): Boolean {
     } catch (e: Exception) {
         false
     }
-}
-
-fun ChannelFuture.addChannelListener(
-    listener: (Future<Channel>) -> Unit,
-) {
 }

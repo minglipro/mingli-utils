@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3JsonApiAutoConfiguration.kt
- * LastUpdate 2026-06-21 10:40:58
+ * LastUpdate 2026-10-02 16:11:02
  * UpdateUser MingLiPro
  */
 
@@ -39,7 +39,7 @@ open class Jackson3JsonApiAutoConfiguration {
     private val logger = MingLiLoggerFactory.getLogger<Jackson3JsonApiAutoConfiguration>()
 
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(JsonApi::class)
     open fun jsonApi(jsonMapper: JsonMapper): JsonApi {
         return Jackson3JsonApi(
             get = { jsonMapper },

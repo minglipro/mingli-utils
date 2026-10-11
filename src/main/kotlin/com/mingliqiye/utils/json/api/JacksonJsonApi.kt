@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonApi.kt
- * LastUpdate 2026-06-21 10:40:58
+ * LastUpdate 2026-10-11 16:54:15
  * UpdateUser MingLiPro
  */
 
@@ -117,7 +117,7 @@ class JacksonJsonApi : JsonApi {
         return try {
             objectMapper.writer().with(JsonGenerator.Feature.ESCAPE_NON_ASCII).writeValueAsString(obj)
         } catch (e: Exception) {
-            throw JsonException(e)
+            throw JsonException(throwable = e)
         }
     }
 

@@ -16,21 +16,15 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonObjectCastException.kt
- * LastUpdate 2026-02-09 19:52:21
+ * LastUpdate 2026-10-11 16:53:36
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.exception
 
-class JsonObjectCastException : JsonException {
-    constructor()
-    constructor(message: String) : super(message)
-    constructor(throwable: Throwable) : super(throwable)
-    constructor(message: String, throwable: Throwable) : super(message, throwable)
-    constructor(
-        message: String? = null,
-        throwable: Throwable? = null,
-        enableSuppression: Boolean = false,
-        writableStackTrace: Boolean = false
-    ) : super(message, throwable, enableSuppression, writableStackTrace)
-}
+class JsonObjectCastException @JvmOverloads constructor(
+    message: String? = null,
+    throwable: Throwable? = null,
+    enableSuppression: Boolean = false,
+    writableStackTrace: Boolean = true,
+) : JsonException(message, throwable, enableSuppression, writableStackTrace)

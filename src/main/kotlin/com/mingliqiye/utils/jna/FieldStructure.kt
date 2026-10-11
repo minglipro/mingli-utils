@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile FieldStructure.kt
- * LastUpdate 2025-09-15 22:32:50
+ * LastUpdate 2026-07-02 10:22:42
  * UpdateUser MingLiPro
  */
 
@@ -30,7 +30,7 @@ import java.lang.reflect.Modifier
  * 该类继承自JNA的Structure类，通过反射自动获取子类的公共非静态字段，
  * 并按声明顺序返回字段名列表，用于JNA结构体的字段映射。
  */
-class FieldStructure : Structure() {
+open class FieldStructure : Structure() {
     /**
      * 获取结构体字段顺序列表
      * 通过反射遍历当前类及其父类的所有声明字段，过滤出公共非静态字段，

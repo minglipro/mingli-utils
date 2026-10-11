@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Okhttp3AutoConfiguration.kt
- * LastUpdate 2026-02-27 17:40:32
+ * LastUpdate 2026-10-02 16:10:15
  * UpdateUser MingLiPro
  */
 
@@ -27,6 +27,7 @@ import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.event.ContextClosedEvent
 import org.springframework.context.event.EventListener
@@ -43,14 +44,15 @@ open class Okhttp3AutoConfiguration {
     open var userDefinedBuilder: okhttp3.OkHttpClient.Builder? = null
 
     open fun initOkHttpClient() {
-        if (userDefinedBuilder == null) {
-            okHttpClient = okhttp3.OkHttpClient()
+        okHttpClient = if (userDefinedBuilder == null) {
+            okhttp3.OkHttpClient()
         } else {
             userDefinedBuilder!!.build()
         }
     }
 
     @Bean
+    @ConditionalOnMissingBean
     open fun okHttpClient(): okhttp3.OkHttpClient {
         if (okHttpClient == null) {
             initOkHttpClient()

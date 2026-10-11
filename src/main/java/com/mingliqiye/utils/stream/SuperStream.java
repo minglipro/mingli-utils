@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SuperStream.java
- * LastUpdate 2026-04-14 12:00:05
+ * LastUpdate 2026-10-11 17:23:57
  * UpdateUser MingLiPro
  */
 
@@ -102,6 +102,17 @@ public class SuperStream<T> implements Stream<T> {
     public static SuperStream<Long> of(long... args) {
         return of(Collections.newArrayLists(args));
     }
+
+    /**
+     * 创建一个包含指定布尔元素的SuperStream
+     *
+     * @param args 可变参数的布尔数组
+     * @return 包含指定布尔的SuperStream实例
+     */
+    public static SuperStream<Boolean> of(boolean... args) {
+        return of(Collections.newArrayLists(args));
+    }
+
 
     /**
      * 创建一个包含指定浮点数元素的SuperStream

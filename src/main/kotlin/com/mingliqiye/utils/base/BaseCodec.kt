@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseCodec.kt
- * LastUpdate 2026-02-09 19:58:29
+ * LastUpdate 2026-10-11 16:52:16
  * UpdateUser MingLiPro
  */
 
@@ -43,7 +43,7 @@ interface BaseCodec {
     fun catchEncode(bytes: ByteArray) = try {
         encode(bytes)
     } catch (e: Exception) {
-        throw CodecException(e)
+        throw CodecException(throwable = e)
     }
 
     /**
@@ -56,7 +56,7 @@ interface BaseCodec {
     fun catchDecode(string: String) = try {
         decode(string)
     } catch (e: Exception) {
-        throw CodecException(e)
+        throw CodecException(throwable = e)
     }
 
     /**

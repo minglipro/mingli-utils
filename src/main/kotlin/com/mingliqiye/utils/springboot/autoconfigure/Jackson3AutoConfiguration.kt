@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3AutoConfiguration.kt
- * LastUpdate 2026-03-11 08:46:40
+ * LastUpdate 2026-10-02 16:11:12
  * UpdateUser MingLiPro
  */
 
@@ -28,6 +28,7 @@ import com.mingliqiye.utils.json.converters.base.getJackson3Module
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer
 import org.springframework.context.annotation.Bean
 
@@ -38,6 +39,7 @@ open class Jackson3AutoConfiguration {
     private val logger = MingLiLoggerFactory.getLogger<Jackson3AutoConfiguration>()
 
     @Bean
+    @ConditionalOnMissingBean(JsonMapperBuilderCustomizer::class)
     open fun myJsonMapperCustomizer(): JsonMapperBuilderCustomizer {
         return JsonMapperBuilderCustomizer { builder ->
             builder

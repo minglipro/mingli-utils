@@ -16,22 +16,15 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MingLiUtilsBaseException.kt
- * LastUpdate 2026-02-05 14:41:27
+ * LastUpdate 2026-10-11 16:39:21
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.exception
 
-open class MingLiUtilsBaseException : RuntimeException {
-
-    constructor()
-    constructor(message: String) : super(message)
-    constructor(throwable: Throwable) : super(throwable)
-    constructor(message: String, throwable: Throwable) : super(message, throwable)
-    constructor(
-        message: String? = null,
-        throwable: Throwable? = null,
-        enableSuppression: Boolean = false,
-        writableStackTrace: Boolean = false
-    ) : super(message, throwable, enableSuppression, writableStackTrace)
-}
+open class MingLiUtilsBaseException @JvmOverloads constructor(
+    message: String? = null,
+    cause: Throwable? = null,
+    enableSuppression: Boolean = false,
+    writableStackTrace: Boolean = true,
+) : RuntimeException(message, cause, enableSuppression, writableStackTrace)

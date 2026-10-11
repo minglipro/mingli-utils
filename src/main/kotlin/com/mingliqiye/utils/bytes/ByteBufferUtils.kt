@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ByteBufferUtils.kt
- * LastUpdate 2026-03-11 08:46:40
+ * LastUpdate 2026-07-02 09:31:01
  * UpdateUser MingLiPro
  */
 
