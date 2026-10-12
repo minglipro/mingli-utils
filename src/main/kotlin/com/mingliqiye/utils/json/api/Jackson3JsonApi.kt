@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3JsonApi.kt
- * LastUpdate 2026-06-21 10:40:58
+ * LastUpdate 2026-10-12 13:57:11
  * UpdateUser MingLiPro
  */
 
@@ -63,6 +63,9 @@ class Jackson3JsonApi : JsonApi {
     constructor() {
         _prObjectMapper = ObjectMapper()
     }
+
+
+    fun getObjectMapper() = _prObjectMapper
 
     override fun <T> parse(json: String, clazz: Class<T>): T {
         try {

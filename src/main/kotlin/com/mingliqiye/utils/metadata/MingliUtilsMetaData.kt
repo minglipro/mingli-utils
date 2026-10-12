@@ -16,18 +16,18 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MingliUtilsMetaData.kt
- * LastUpdate 2026-03-11 08:46:40
+ * LastUpdate 2026-10-12 13:32:30
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.metadata
 
-class MingliUtilsMetaData {
-    var buildTime: String = ""
-    var groupId: String = ""
-    var artifactId: String = ""
-    var version: String = ""
-    var buildJdkVersion: String = ""
-    var author: String = ""
-    var website: String = ""
-}
+data class MingliUtilsMetaData(
+    var buildTime: String = "",
+    var groupId: String = "",
+    var artifactId: String = "",
+    var version: String = "",
+    var buildJdkVersion: String = "",
+    var author: String = "",
+    var website: String = "",
+)

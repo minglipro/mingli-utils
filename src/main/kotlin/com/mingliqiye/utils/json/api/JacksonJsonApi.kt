@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonApi.kt
- * LastUpdate 2026-10-11 16:54:15
+ * LastUpdate 2026-10-12 10:48:31
  * UpdateUser MingLiPro
  */
 
@@ -50,6 +50,8 @@ class JacksonJsonApi : JsonApi {
     constructor() {
         this.objectMapper = ObjectMapper()
     }
+
+    fun getObjectMapper() = objectMapper
 
     /**
      * 使用指定的ObjectMapper构造实例

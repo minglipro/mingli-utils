@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseMapperQuery.kt
- * LastUpdate 2026-02-06 13:15:11
+ * LastUpdate 2026-10-12 13:33:03
  * UpdateUser MingLiPro
  */
 
@@ -36,7 +36,7 @@ import com.baomidou.mybatisplus.extension.kotlin.KtUpdateWrapper
 @Deprecated(
     "rename to FastBaseMapper",
     replaceWith = ReplaceWith(
-        expression = "FastBaseMapper<*>",
+        expression = "FastBaseMapper",
         imports = ["com.mingliqiye.utils.mybatisplus.FastBaseMapper"]
     ),
     level = DeprecationLevel.WARNING
