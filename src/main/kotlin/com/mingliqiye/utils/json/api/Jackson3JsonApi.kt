@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3JsonApi.kt
- * LastUpdate 2026-10-12 13:57:11
+ * LastUpdate 2026-10-12 13:59:59
  * UpdateUser MingLiPro
  */
 
@@ -44,9 +44,9 @@ class Jackson3JsonApi : JsonApi {
     private var _prObjectMapper: ObjectMapper? = null
 
 
-    private var objectMapper: ObjectMapper
+    var objectMapper: ObjectMapper
         get() = get()
-        set(value) = set(value)
+        private set(value) = set(value)
 
     constructor(objectMapper: ObjectMapper) {
         _prObjectMapper = objectMapper
@@ -63,9 +63,6 @@ class Jackson3JsonApi : JsonApi {
     constructor() {
         _prObjectMapper = ObjectMapper()
     }
-
-
-    fun getObjectMapper() = _prObjectMapper
 
     override fun <T> parse(json: String, clazz: Class<T>): T {
         try {
@@ -181,8 +178,7 @@ class Jackson3JsonApi : JsonApi {
             return objectMapper.convertValue(source, destinationClass)
         } catch (e: Exception) {
             throw JsonException(
-                "Failed to convert from ${source.javaClass.simpleName} to ${destinationClass.simpleName}",
-                e
+                "Failed to convert from ${source.javaClass.simpleName} to ${destinationClass.simpleName}", e
             )
         }
     }
