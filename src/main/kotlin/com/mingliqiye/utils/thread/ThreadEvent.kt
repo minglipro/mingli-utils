@@ -24,11 +24,17 @@ package com.mingliqiye.utils.thread
 
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 /**
- * 线程事件同步工具类，用于线程间的事件通知和等待
+ * 线程事件同步工具类，用于线程间的事件通知和等待。
+ *
+ * 支持 Kotlin 便捷语法：
+ * - `event()` 读取数据，`event(newData)` 设置数据并唤醒等待线程
+ * - `val value by event` 直接作为属性委托使用
  */
-open class ThreadEvent<T> {
+open class ThreadEvent<T> : ReadWriteProperty<Any?, T> {
 
     private var latch = CountDownLatch(1)
 
@@ -95,6 +101,16 @@ open class ThreadEvent<T> {
     }
 
     /**
+     * 等待事件被设置并获取数据，超时返回 null
+     *
+     * @param timeout 等待超时时间
+     * @param unit 时间单位
+     * @return 事件数据；超时未触发则返回 null
+     */
+    fun awaitAndGetOrNull(timeout: Long, unit: TimeUnit): T? =
+        if (await(timeout, unit)) data else null
+
+    /**
      * 在指定超时时间内等待事件被设置
      *
      * @param timeout 等待超时时间
@@ -105,8 +121,42 @@ open class ThreadEvent<T> {
         return latch.await(timeout, unit)
     }
 
+    /**
+     * 事件是否已被设置（自上次 [reset] 以来）
+     */
+    fun isSet(): Boolean = latch.count == 0L
+
     fun setAndReset(data: T) {
         set(data)
         reset()
+    }
+
+    // ---- Kotlin 便捷语法 ----
+
+    /** 读取事件数据：`val d = event()` */
+    operator fun invoke(): T = data
+
+    /** 设置事件数据并唤醒等待线程：`event(newData)` */
+    operator fun invoke(data: T) = set(data)
+
+    /** 支持属性委托：`var value by event` */
+    override operator fun getValue(thisRef: Any?, property: KProperty<*>): T = data
+
+    /** 支持属性委托：`value = newData` 等价于 [set] */
+    override operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
+
+    /**
+     * 以自身为委托，返回属性委托视图
+     */
+    fun asDelegate(): ReadWriteProperty<Any?, T> = this
+
+    companion object {
+        /**
+         * 创建事件实例
+         *
+         * @param data 初始数据
+         */
+        @JvmStatic
+        fun <T> of(data: T): ThreadEvent<T> = ThreadEvent(data)
     }
 }
