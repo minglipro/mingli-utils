@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile OsPath.kt
- * LastUpdate 2025-09-18 09:47:43
+ * LastUpdate 2026-10-20 20:05:37
  * UpdateUser MingLiPro
  */
 
@@ -26,8 +26,7 @@ package com.mingliqiye.utils.path
 
 import java.io.File
 import java.net.URI
-import java.nio.file.Path
-import java.nio.file.Paths
+import java.nio.file.*
 import java.util.*
 import java.util.function.Consumer
 
@@ -38,6 +37,41 @@ class OsPath private constructor(private val path: Path) : Path by path {
 
     override fun spliterator(): Spliterator<Path?> {
         return path.spliterator()
+    }
+
+    override fun startsWith(other: String): Boolean {
+        return path.startsWith(other)
+    }
+
+    override fun endsWith(other: String): Boolean {
+        return path.endsWith(other)
+    }
+
+    override fun resolve(other: String): Path {
+        return path.resolve(other)
+    }
+
+    override fun resolveSibling(other: Path): Path {
+        return path.resolveSibling(other)
+    }
+
+    override fun resolveSibling(other: String): Path {
+        return path.resolveSibling(other)
+    }
+
+    override fun toFile(): File {
+        return path.toFile()
+    }
+
+    override fun register(
+        watcher: WatchService,
+        vararg events: WatchEvent.Kind<*>,
+    ): WatchKey {
+        return path.register(watcher, *events)
+    }
+
+    override fun iterator(): MutableIterator<Path> {
+        return path.iterator()
     }
 
     companion object {

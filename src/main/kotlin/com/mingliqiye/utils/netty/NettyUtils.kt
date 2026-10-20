@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NettyUtils.kt
- * LastUpdate 2026-06-27 21:40:00
+ * LastUpdate 2026-10-20 20:05:37
  * UpdateUser MingLiPro
  */
 
@@ -323,7 +323,7 @@ fun ByteBuf.releaseSafely(): Boolean {
  */
 fun ByteBuf.tryRelease(): Boolean {
     return try {
-        if (refCnt() > 0) release() else false
+        refCnt() > 0 && release()
     } catch (e: Exception) {
         false
     }
