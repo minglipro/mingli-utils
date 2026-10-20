@@ -15,10 +15,11 @@
  *
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
- * CurrentFile RandomBytes.kt
- * LastUpdate 2026-10-11 17:11:11
+ * CurrentFile Random.kt
+ * LastUpdate 2026-10-20 20:05:37
  * UpdateUser MingLiPro
  */
+
 package com.mingliqiye.utils.random
 
 import java.security.SecureRandom
@@ -44,7 +45,7 @@ object Random {
      * 通过lazy委托延迟初始化
      */
     private val random: Random by lazy {
-        Random
+        Random.Default
     }
 
     /**
