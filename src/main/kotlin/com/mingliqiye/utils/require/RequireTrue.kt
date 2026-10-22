@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile RequireTrue.kt
- * LastUpdate 2026-10-20 20:05:24
+ * LastUpdate 2026-10-20 21:07:55
  * UpdateUser MingLiPro
  */
 
@@ -58,16 +58,17 @@ class Required<T : Throwable>(private val newException: (message: String) -> T) 
 
 }
 
-fun newRequired(): Required<IllegalArgumentException> {
-    return newRequired<IllegalArgumentException>()
-}
-
 fun <T : Throwable> newRequired(clazz: Class<T>): Required<T> {
     return Required {
         newException(clazz, it)
     }
 }
 
+fun newRequired(): Required<IllegalArgumentException> {
+    return newRequired<IllegalArgumentException>()
+}
+
+@JvmName("newRequiredInline")
 inline fun <reified T : Throwable> newRequired(): Required<T> {
     return newRequired(T::class.java)
 }
@@ -84,6 +85,7 @@ fun <T : Throwable> newException(clazz: Class<T>, msg: String): T = try {
 }
 
 @OptIn(ExperimentalContracts::class)
+@JvmName("requireTrueDef")
 fun <T : Throwable> requireTrue(value: Boolean, clazz: Class<T>, lazyMessage: () -> String) {
     contract {
         returns() implies value
@@ -94,6 +96,7 @@ fun <T : Throwable> requireTrue(value: Boolean, clazz: Class<T>, lazyMessage: ()
 }
 
 @OptIn(ExperimentalContracts::class)
+@JvmName("requireTrueInline")
 inline fun <reified T : Throwable> requireTrue(value: Boolean, noinline lazyMessage: () -> String) {
     contract {
         returns() implies value
@@ -102,6 +105,7 @@ inline fun <reified T : Throwable> requireTrue(value: Boolean, noinline lazyMess
 }
 
 @OptIn(ExperimentalContracts::class)
+@JvmName("requireTrueOnBoolean")
 fun <T : Throwable> Boolean.requireTrue(clazz: Class<T>, lazyMessage: () -> String) {
     contract {
         returns() implies this@requireTrue
@@ -110,6 +114,7 @@ fun <T : Throwable> Boolean.requireTrue(clazz: Class<T>, lazyMessage: () -> Stri
 }
 
 @OptIn(ExperimentalContracts::class)
+@JvmName("requireTrueOnBoolean")
 fun <T : Throwable> Boolean.requireTrue(clazz: Class<T>, message: String) {
     contract {
         returns() implies this@requireTrue
@@ -128,6 +133,7 @@ fun <T : Throwable> requireTrue(value: Boolean, clazz: Class<T>, message: String
 }
 
 @OptIn(ExperimentalContracts::class)
+@JvmName("requireTrueInline")
 inline fun <reified T : Throwable> requireTrue(value: Boolean, message: String) {
     contract {
         returns() implies value
@@ -137,6 +143,7 @@ inline fun <reified T : Throwable> requireTrue(value: Boolean, message: String) 
 
 
 @OptIn(ExperimentalContracts::class)
+@JvmName("requireTrueOnBoolean")
 inline fun <reified T : Throwable> Boolean.requireTrue(noinline lazyMessage: () -> String) {
     contract {
         returns() implies this@requireTrue
@@ -146,6 +153,7 @@ inline fun <reified T : Throwable> Boolean.requireTrue(noinline lazyMessage: () 
 }
 
 @OptIn(ExperimentalContracts::class)
+@JvmName("requireTrueOnBoolean")
 inline fun <reified T : Throwable> Boolean.requireTrue(message: String) {
     contract {
         returns() implies this@requireTrue
@@ -163,6 +171,7 @@ fun <T : Throwable> requireTrue(value: Boolean, clazz: Class<T>) {
 }
 
 @OptIn(ExperimentalContracts::class)
+@JvmName("requireTrueInline")
 inline fun <reified T : Throwable> requireTrue(value: Boolean) {
     contract {
         returns() implies value
@@ -170,8 +179,33 @@ inline fun <reified T : Throwable> requireTrue(value: Boolean) {
     requireTrue(value, T::class.java) { DEFAULT_MESSAGE }
 }
 
+@OptIn(ExperimentalContracts::class)
+fun requireTrue(value: Boolean) {
+    contract {
+        returns() implies value
+    }
+    requireTrue(value, IllegalArgumentException::class.java) { DEFAULT_MESSAGE }
+}
 
 @OptIn(ExperimentalContracts::class)
+fun requireTrue(value: Boolean, message: String) {
+    contract {
+        returns() implies value
+    }
+    requireTrue(value, IllegalArgumentException::class.java) { message }
+}
+
+@OptIn(ExperimentalContracts::class)
+fun requireTrue(value: Boolean, lazyMessage: () -> String) {
+    contract {
+        returns() implies value
+    }
+    requireTrue(value, IllegalArgumentException::class.java, lazyMessage)
+}
+
+
+@OptIn(ExperimentalContracts::class)
+@JvmName("requireTrueOnBoolean")
 fun <T : Throwable> Boolean.requireTrue(clazz: Class<T>) {
     contract {
         returns() implies this@requireTrue
@@ -181,6 +215,7 @@ fun <T : Throwable> Boolean.requireTrue(clazz: Class<T>) {
 }
 
 @OptIn(ExperimentalContracts::class)
+@JvmName("requireTrueOnBoolean")
 inline fun <reified T : Throwable> Boolean.requireTrue() {
     contract {
         returns() implies this@requireTrue

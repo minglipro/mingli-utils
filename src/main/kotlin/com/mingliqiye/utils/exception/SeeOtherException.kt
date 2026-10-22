@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SeeOtherException.kt
- * LastUpdate 2026-02-05 14:55:04
+ * LastUpdate 2026-10-22 22:09:19
  * UpdateUser MingLiPro
  */
 
@@ -28,7 +28,7 @@ package com.mingliqiye.utils.exception
  * @param message 异常信息，默认为 "See Other"
  * @param cause 异常原因，默认为 null
  */
-class SeeOtherException(
+class SeeOtherException @JvmOverloads constructor(
     override val message: String? = "See Other",
     override val cause: Throwable? = null,
 ) : HttpStatusException(303, message, cause)

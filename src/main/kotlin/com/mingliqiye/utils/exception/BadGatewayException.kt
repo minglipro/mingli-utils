@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BadGatewayException.kt
- * LastUpdate 2026-02-05 14:55:04
+ * LastUpdate 2026-10-22 22:07:34
  * UpdateUser MingLiPro
  */
 
@@ -28,7 +28,7 @@ package com.mingliqiye.utils.exception
  * @param message 异常信息，默认为 "Bad Gateway"
  * @param cause 异常原因，默认为 null
  */
-class BadGatewayException(
+class BadGatewayException @JvmOverloads constructor(
     override val message: String? = "Bad Gateway",
     override val cause: Throwable? = null,
 ) : HttpStatusException(502, message, cause)

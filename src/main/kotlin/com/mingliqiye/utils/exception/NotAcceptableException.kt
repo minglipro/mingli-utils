@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NotAcceptableException.kt
- * LastUpdate 2026-02-05 14:55:04
+ * LastUpdate 2026-10-22 22:09:19
  * UpdateUser MingLiPro
  */
 
@@ -28,7 +28,7 @@ package com.mingliqiye.utils.exception
  * @param message 异常信息，默认为 "Not Acceptable"
  * @param cause 异常原因，默认为 null
  */
-class NotAcceptableException(
+class NotAcceptableException @JvmOverloads constructor(
     override val message: String? = "Not Acceptable",
     override val cause: Throwable? = null,
 ) : HttpStatusException(406, message, cause)

@@ -16,13 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Pipeline.kt
- * LastUpdate 2026-02-24 09:10:26
+ * LastUpdate 2026-10-20 20:59:13
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.functions
 
-import com.mingliqiye.utils.require.Require
+import com.mingliqiye.utils.require.requireTrue
 import kotlin.reflect.KClass
 
 /**
@@ -159,9 +159,9 @@ class Pipeline<T>(private val value: T) {
      * @return 当前Pipeline实例
      */
     fun require(
-        any: Any, message: String, exception: Class<out Exception> = IllegalArgumentException::class.java
+        any: Any, message: String, exception: Class<out Exception> = IllegalArgumentException::class.java,
     ): Pipeline<T> {
-        Require.require(any == value, message, exception)
+        requireTrue(any == value, exception, message)
         return this
     }
 
@@ -173,9 +173,9 @@ class Pipeline<T>(private val value: T) {
      * @return 当前Pipeline实例
      */
     fun require(
-        any: Any, message: String
+        any: Any, message: String,
     ): Pipeline<T> {
-        Require.require(any == value, message)
+        requireTrue(any == value, message)
         return this
     }
 
@@ -189,9 +189,9 @@ class Pipeline<T>(private val value: T) {
     fun require(
         must: P1RFunction<T, Boolean>,
         message: String,
-        exception: Class<out Throwable> = IllegalArgumentException::class.java
+        exception: Class<out Throwable> = IllegalArgumentException::class.java,
     ): Pipeline<T> {
-        Require.require(must.call(value), message, exception)
+        requireTrue(must.call(value), exception, message)
         return this
     }
 
@@ -205,9 +205,9 @@ class Pipeline<T>(private val value: T) {
     fun require(
         any: Any,
         message: String,
-        exception: KClass<out Throwable> = IllegalArgumentException::class
+        exception: KClass<out Throwable> = IllegalArgumentException::class,
     ): Pipeline<T> {
-        Require.require(any == value, message, exception)
+        requireTrue(any == value, exception.java, message)
         return this
     }
 
@@ -219,11 +219,11 @@ class Pipeline<T>(private val value: T) {
      * @return 当前Pipeline实例
      */
     fun require(
-        must: P1RFunction<T, Boolean>,
+        must: (T) -> Boolean,
         message: String,
-        exception: KClass<out Throwable> = IllegalArgumentException::class
+        exception: KClass<out Throwable> = IllegalArgumentException::class,
     ): Pipeline<T> {
-        Require.require(must.call(value), message, exception)
+        requireTrue(must(value), exception.java, message)
         return this
     }
 
@@ -234,9 +234,9 @@ class Pipeline<T>(private val value: T) {
      * @return 当前Pipeline实例
      */
     fun require(
-        must: P1RFunction<T, Boolean>, message: String
+        must: P1RFunction<T, Boolean>, message: String,
     ): Pipeline<T> {
-        Require.require(must.call(value), message, IllegalArgumentException::class.java)
+        requireTrue(must.call(value), message)
         return this
     }
 
@@ -259,7 +259,7 @@ class Pipeline<T>(private val value: T) {
      */
     fun require(
         predicate: P1RFunction<T, Boolean>,
-        lazyMessage: P1RFunction<T, Any> = P1RFunction { "Requirement failed" }
+        lazyMessage: P1RFunction<T, Any> = P1RFunction { "Requirement failed" },
     ): Pipeline<T> {
         if (!predicate.call(value)) {
             throw IllegalArgumentException(lazyMessage.call(value).toString())

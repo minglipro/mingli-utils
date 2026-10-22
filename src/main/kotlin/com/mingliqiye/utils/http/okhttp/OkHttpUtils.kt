@@ -16,35 +16,45 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile OkHttpUtils.kt
- * LastUpdate 2026-02-27 22:16:15
+ * LastUpdate 2026-10-22 20:20:42
  * UpdateUser MingLiPro
  */
 @file:JvmName("OkHttpUtils")
 
 package com.mingliqiye.utils.http.okhttp
 
-import com.mingliqiye.utils.http.MediaType
-import com.mingliqiye.utils.http.okhttp
 import com.mingliqiye.utils.json.api.JSONA
-import com.mingliqiye.utils.json.api.JSONA.toJson
+import com.mingliqiye.utils.json.api.base.JsonApi
+import com.mingliqiye.utils.json.api.base.JsonApi.Companion.parse
+import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 
 
-inline fun <reified T> Response.json() = body.use {
-    JSONA.parse<T>(it.bytes())
+inline fun <reified T> Response.json(jsonApi: JsonApi? = null): T = body.use {
+    if (jsonApi != null) {
+        return jsonApi.parse<T>(it.bytes())
+    } else {
+        JSONA.parse<T>(it.bytes())
+    }
 }
 
 fun Response.text() = body.use {
     String(it.bytes())
 }
 
-fun OkHttpClient.request() = Request.Builder()
-fun Request.Builder.call(okHttpClient: OkHttpClient) = okHttpClient.newCall(this.build())
 
-fun Request.Builder.postWithJson(data: Any): Request.Builder {
-    data.toJson().toRequestBody(MediaType.APPLICATION_JSON.okhttp())
-    return this
+fun newRequest(calld: Request.Builder.() -> Unit): Request {
+    val request = Request.Builder()
+    calld(request)
+    return request.build()
+}
+
+fun OkHttpClient.newCall(calld: Request.Builder.() -> Unit): Call {
+    return this.newCall(newRequest(calld))
+}
+
+fun OkHttpClient.newExecute(calld: Request.Builder.() -> Unit): Response {
+    return this.newCall(newRequest(calld)).execute()
 }

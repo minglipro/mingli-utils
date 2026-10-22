@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SIO.kt
- * LastUpdate 2026-06-21 10:40:58
+ * LastUpdate 2026-10-22 20:21:49
  * UpdateUser MingLiPro
  */
 
@@ -28,68 +28,6 @@ import com.mingliqiye.utils.string.join
 import org.slf4j.Logger
 import java.io.OutputStream
 import java.io.PrintStream
-
-/**
- * 已弃用的IO对象，所有方法都委托给SIO对象
- * @deprecated 请使用SIO对象替代
- */
-@Deprecated("This IO is deprecated. reName SIO", replaceWith = ReplaceWith("SIO"), level = DeprecationLevel.WARNING)
-object IO {
-    /**
-     * 打印多个参数，使用空格分隔
-     * @param args 要打印的参数数组
-     */
-    @JvmStatic
-    fun print(vararg args: Any?) = SIO.print(*args)
-
-    /**
-     * 打印多个参数并换行，使用空格分隔
-     * @param args 要打印的参数数组
-     */
-    @JvmStatic
-    fun println(vararg args: Any?) = SIO.println(*args)
-
-    /**
-     * 打印多个参数并换行，指定分隔符
-     * @param sp 分隔符
-     * @param args 要打印的参数数组
-     */
-    @JvmStatic
-    fun printlnA(sp: String, vararg args: Any?) = SIO.printlnA(sp, *args)
-
-    /**
-     * 打印多个参数，指定分隔符
-     * @param sp 分隔符，默认为空字符串
-     * @param args 要打印的参数数组
-     */
-    @JvmStatic
-    fun printA(sp: String = "", vararg args: Any?) = SIO.printA(sp, *args)
-
-    /**
-     * 重定向 System.out 到 INFO 级别日志
-     */
-    @JvmStatic
-    fun redirectOutToInfo() = SIO.redirectOutToInfo()
-
-    /**
-     * 重定向 System.err 到 ERROR 级别
-     */
-    @JvmStatic
-    fun redirectErrToError() = SIO.redirectErrToError()
-
-    /**
-     * 完全重定向（包括第三方库的输出）
-     */
-    @JvmStatic
-    fun redirectAll() = SIO.redirectAll()
-
-    /**
-     * 恢复原始输出流
-     */
-    @JvmStatic
-    fun restore() = SIO.restore()
-}
-
 
 /**
  * IO工具类，提供打印功能和系统输出流重定向到日志的功能
