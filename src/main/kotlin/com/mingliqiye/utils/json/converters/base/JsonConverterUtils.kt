@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * ProjectName mingli-utils
+ * ProjectName FastBaseMapper.kt
  * ModuleName mingli-utils.main
  * CurrentFile JsonConverterUtils.kt
- * LastUpdate 2026-02-26 16:01:49
+ * LastUpdate 2026-10-26 23:22:18
  * UpdateUser MingLiPro
  */
 @file:JvmName("JsonConverterUtils")
@@ -74,11 +74,11 @@ inline fun <reified T : BaseJsonConverter<*, *>> com.fasterxml.jackson.databind.
  * @return 配置了自定义序列化器和反序列化器的 SimpleModule 对象。
  */
 fun <F, T> JsonConverter<F, T>.getJacksonModule(): com.fasterxml.jackson.databind.module.SimpleModule =
-    com.fasterxml.jackson.databind.module.SimpleModule("${getFromClass().name}To${getToClass().name}")
+    com.fasterxml.jackson.databind.module.SimpleModule("(${getFromClass().name})-(${getToClass().name})")
         .addSerializer(getFromClass(), JackJsonSerializer(null, this))
         .addDeserializer(getFromClass(), JackJsonDeserializer(null, this))
 
 fun <F, T> JsonConverter<F, T>.getJackson3Module(): tools.jackson.databind.module.SimpleModule =
-    tools.jackson.databind.module.SimpleModule("${getFromClass().name}To${getToClass().name}")
+    tools.jackson.databind.module.SimpleModule("(${getFromClass().name})-(${getToClass().name})")
         .addSerializer(getFromClass(), JackJson3Serializer(null, this))
         .addDeserializer(getFromClass(), JackJson3Deserializer(null, this))

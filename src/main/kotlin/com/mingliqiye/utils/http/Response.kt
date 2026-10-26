@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * ProjectName mingli-utils
+ * ProjectName FastBaseMapper.kt
  * ModuleName mingli-utils.main
  * CurrentFile Response.kt
- * LastUpdate 2026-03-14 08:01:32
+ * LastUpdate 2026-10-26 23:22:18
  * UpdateUser MingLiPro
  */
 
@@ -38,10 +38,15 @@ import com.mingliqiye.utils.time.DateTime
  * @property statusCode HTTP状态码
  */
 data class Response<T>(
-    private val time: String,      // 响应时间，一旦创建不可修改
-    private var message: String,   // 响应消息，可通过setter修改
-    private var data: T?,          // 响应数据，可通过setter修改
-    private var statusCode: Int,   // HTTP状态码，可通过setter修改
+    override val time: String,      // 响应时间，一旦创建不可修改
+    override var message: String,   // 响应消息，可通过setter修改
+    override var data: T?,          // 响应数据，可通过setter修改
+    override var statusCode: Int,   // HTTP状态码，可通过setter修改
+) : BaseResponse<T?>(
+    time,
+    message,
+    data,
+    statusCode,
 ) {
 
     companion object {
@@ -70,10 +75,7 @@ data class Response<T>(
          */
         @JvmStatic
         fun ok(message: String) = Response(
-            time = DateTime.now().format(),
-            message = message,
-            data = null,
-            statusCode = 200
+            time = DateTime.now().format(), message = message, data = null, statusCode = 200
         )
 
         /**
@@ -95,10 +97,7 @@ data class Response<T>(
          */
         @JvmStatic
         fun <T> okData(data: T) = Response(
-            time = DateTime.now().format(),
-            message = "操作成功",
-            data = data,
-            statusCode = 200
+            time = DateTime.now().format(), message = "操作成功", data = data, statusCode = 200
         )
 
         /**
@@ -111,10 +110,7 @@ data class Response<T>(
          */
         @JvmStatic
         fun <T> okData(data: T, message: String) = Response(
-            time = DateTime.now().format(),
-            message = message,
-            data = data,
-            statusCode = 200
+            time = DateTime.now().format(), message = message, data = data, statusCode = 200
         )
 
         /**
@@ -126,10 +122,7 @@ data class Response<T>(
          */
         @JvmStatic
         fun code(statusCode: Int) = Response(
-            time = DateTime.now().format(),
-            message = "操作成功",
-            data = null,
-            statusCode = statusCode
+            time = DateTime.now().format(), message = "操作成功", data = null, statusCode = statusCode
         )
 
         /**
@@ -142,10 +135,7 @@ data class Response<T>(
          */
         @JvmStatic
         fun code(statusCode: Int, message: String) = Response(
-            time = DateTime.now().format(),
-            message = message,
-            data = null,
-            statusCode = statusCode
+            time = DateTime.now().format(), message = message, data = null, statusCode = statusCode
         )
     }
 
@@ -154,74 +144,8 @@ data class Response<T>(
      * 使用当前时间、默认消息"操作成功"、状态码200、无数据
      */
     constructor() : this(
-        time = DateTime.now().format(),
-        message = "操作成功",
-        statusCode = 200,
-        data = null
+        time = DateTime.now().format(), message = "操作成功", statusCode = 200, data = null
     )
-
-    /**
-     * 获取格式化后的时间字符串。
-     *
-     * @return 格式化后的时间字符串
-     */
-    fun getTime(): String = time
-
-    /**
-     * 获取响应消息
-     *
-     * @return String 当前响应消息
-     */
-    fun getMessage(): String = message
-
-    /**
-     * 设置响应消息
-     *
-     * 该方法允许修改响应消息，并返回当前对象以支持链式调用。
-     *
-     * @param message 新的响应消息
-     * @return Response<T> 当前响应对象（支持链式调用）
-     */
-    fun setMessage(message: String): Response<T> {
-        this.message = message
-        return this
-    }
-
-    /**
-     * 获取响应数据
-     *
-     * 返回的响应数据可能为null，调用前应进行空值检查。
-     *
-     * @return T? 响应数据，可能为空
-     */
-    fun getData(): T? = data
-
-    /**
-     * 获取非空数据对象
-     *
-     * 该方法强制解包data属性，如果data为null则会抛出NullPointerException异常。
-     * 适用于确定data不为null的场景，避免重复的空值检查。
-     *
-     * @return T 非空的数据对象
-     * @throws NullPointerException 当data属性为null时抛出此异常
-     */
-    @Throws(NullPointerException::class)
-    fun notNullData(): T {
-        return data ?: throw NullPointerException("at Response.notNullData() because data is null")
-    }
-
-    /**
-     * 设置响应数据
-     *
-     * 该方法允许修改响应数据，并返回当前对象以支持链式调用。
-     *
-     * @param data 新的响应数据
-     * @return Response<T> 当前响应对象（支持链式调用）
-     */
-    fun setData(data: T): Response<T> {
-        this.data = data
-        return this
-    }
 
     /**
      * 创建一个新的Response对象，使用指定的时间
@@ -232,8 +156,7 @@ data class Response<T>(
      * @param time 新的响应时间
      * @return Response<T> 新的响应对象（如果时间相同则返回原对象）
      */
-    fun withTime(time: String): Response<T> =
-        if (this.time == time) this else Response(time, message, data, statusCode)
+    fun withTime(time: String): Response<T> = if (this.time == time) this else Response(time, message, data, statusCode)
 
     /**
      * 创建一个新的Response对象，使用指定的数据
@@ -245,8 +168,7 @@ data class Response<T>(
      * @param data 新的响应数据
      * @return Response<D> 新的响应对象，数据类型为D
      */
-    fun <D> withData(data: D): Response<D> =
-        Response(this.time, this.message, data, this.statusCode)
+    fun <D> withData(data: D): Response<D> = Response(this.time, this.message, data, this.statusCode)
 
     /**
      * 创建一个新的Response对象，使用指定的消息
@@ -272,25 +194,6 @@ data class Response<T>(
     fun withStatusCode(statusCode: Int): Response<T> =
         if (this.statusCode == statusCode) this else Response(time, message, data, statusCode)
 
-    /**
-     * 获取状态码
-     *
-     * @return Int 当前HTTP状态码
-     */
-    fun getStatusCode(): Int = statusCode
-
-    /**
-     * 设置状态码
-     *
-     * 该方法允许修改状态码，并返回当前对象以支持链式调用。
-     *
-     * @param statusCode 新的HTTP状态码
-     * @return Response<T> 当前响应对象（支持链式调用）
-     */
-    fun setStatusCode(statusCode: Int): Response<T> {
-        this.statusCode = statusCode
-        return this
-    }
 
     /**
      * 返回响应对象的字符串表示
@@ -301,5 +204,5 @@ data class Response<T>(
      * @return 格式化的字符串表示
      */
     override fun toString(): String =
-        "Response<${data?.javaClass?.simpleName ?: "Nothing"}>(time=${getTime()}, message=${getMessage()}, data=${getData()}, statusCode=${getStatusCode()})"
+        "Response<${data?.javaClass?.simpleName ?: "Nothing"}>(time=${time}, message=${message}, data=${data}, statusCode=${statusCode})"
 }

@@ -1,0 +1,65 @@
+/*
+ * Copyright 2026 mingliqiye
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ProjectName FastBaseMapper.kt
+ * ModuleName mingli-utils.main
+ * CurrentFile PageData.kt
+ * LastUpdate 2026-10-26 23:22:18
+ * UpdateUser MingLiPro
+ */
+
+package com.mingliqiye.utils.http
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+
+/**
+ * 分页数据类
+ */
+data class PageData<T>(
+    /**
+     * 当前页的数据列表
+     */
+    val records: Collection<T> = emptyList(),
+
+    /**
+     * 总条数（总记录数）
+     */
+    val totalCount: Long = 0,
+
+    /**
+     * 总页数
+     */
+    val totalPages: Long = 0,
+
+    /**
+     * 每页大小
+     */
+    val pageSize: Long = 0,
+
+    /**
+     * 当前页码（从 1 开始）
+     */
+    val pageIndex: Long = 0,
+) {
+    companion object {
+        fun <T> of(page: Page<T>): PageData<T> = PageData(
+            records = page.records,
+            totalCount = page.total,
+            totalPages = page.pages,
+            pageSize = page.size,
+            pageIndex = page.current,
+        )
+    }
+}

@@ -13,15 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# ProjectName mingli-utils
+# ProjectName FastBaseMapper.kt
 # ModuleName mingli-utils.main
 # CurrentFile org.springframework.boot.autoconfigure.AutoConfiguration.imports
-# LastUpdate 2026-02-27 17:39:55
+# LastUpdate 2026-10-26 23:22:18
 # UpdateUser MingLiPro
 #
 
 com.mingliqiye.utils.springboot.autoconfigure.AutoConfiguration
-com.mingliqiye.utils.springboot.autoconfigure.JacksonAutoConfiguration
+com.mingliqiye.utils.springboot.autoconfigure.JacksonJsonAutoConfiguration
+com.mingliqiye.utils.springboot.autoconfigure.JacksonJsonApiAutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.Jackson3AutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.Jackson3JsonApiAutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.Okhttp3AutoConfiguration

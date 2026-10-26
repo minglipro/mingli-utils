@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * ProjectName mingli-utils
+ * ProjectName FastBaseMapper.kt
  * ModuleName mingli-utils.main
  * CurrentFile ObjectPool.kt
- * LastUpdate 2026-10-12 13:57:11
+ * LastUpdate 2026-10-26 23:22:18
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.pool
 
-import com.mingliqiye.utils.require.Require.require
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.Condition
