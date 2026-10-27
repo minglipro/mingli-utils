@@ -16,7 +16,7 @@
  * ProjectName FastBaseMapper.kt
  * ModuleName mingli-utils.main
  * CurrentFile FastBaseMapper.kt
- * LastUpdate 2026-10-26 23:22:18
+ * LastUpdate 2026-10-27 10:23:10
  * UpdateUser MingLiPro
  */
 
@@ -27,11 +27,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryChainWrapper
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.baomidou.mybatisplus.extension.kotlin.KtUpdateChainWrapper
 import com.baomidou.mybatisplus.extension.kotlin.KtUpdateWrapper
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import com.mingliqiye.utils.mybatisplus.FastBaseMapper.Companion.ktQueryChainWrapper
+import com.mingliqiye.utils.mybatisplus.FastBaseMapper.Companion.ktQueryWrapper
+import com.mingliqiye.utils.mybatisplus.FastBaseMapper.Companion.ktUpdateChainWrapper
+import com.mingliqiye.utils.mybatisplus.FastBaseMapper.Companion.ktUpdateWrapper
+import com.mingliqiye.utils.tuple.Tuple
 import kotlin.reflect.KProperty1
 
 /**
@@ -63,42 +69,444 @@ interface FastBaseMapper<T> : BaseMapper<T> {
      */
     fun lambdaUpdateWrapper() = LambdaUpdateWrapper<T>()
 
+
+    /**
+     * [queryWrapper]的简写形式
+     * @return QueryWrapper<T> 查询包装器实例
+     */
+    fun qw() = queryWrapper()
+
+    /**
+     * [updateWrapper]的简写形式
+     * @return UpdateWrapper<T> 更新包装器实例
+     */
+    fun uw() = updateWrapper()
+
+    /**
+     * [lambdaQueryWrapper]的简写形式
+     * @return LambdaQueryWrapper<T> Lambda查询包装器实例
+     */
+    fun lqw() = lambdaQueryWrapper()
+
+    /**
+     * [lambdaUpdateWrapper]的简写形式
+     * @return LambdaUpdateWrapper<T> Lambda更新包装器实例
+     */
+    fun luw() = lambdaUpdateWrapper()
+
+
+    /**
+     * 按字符串列名等值条件查询记录列表
+     * @param R 列值类型
+     * @param column 列名（数据库字段名）
+     * @param value 列值，执行等值匹配
+     * @return List<T> 查询结果列表
+     */
+    fun <R> selectListByColumn(
+        column: String,
+        value: R,
+    ): List<T> = selectListByColumn(column, value, qw())
+
+    /**
+     * 在给定[QueryWrapper]上追加字符串列名等值条件并查询记录列表
+     * @param R 列值类型
+     * @param column 列名（数据库字段名）
+     * @param value 列值，执行等值匹配
+     * @param wrapper 承载查询条件的查询包装器
+     * @return List<T> 查询结果列表
+     */
+    fun <R> selectListByColumn(
+        column: String,
+        value: R,
+        wrapper: QueryWrapper<T>,
+    ): List<T> = selectList(wrapper.eq(column, value))
+
+
+    /**
+     * 按方法引用列等值条件查询记录列表
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值，执行等值匹配
+     * @return List<T> 查询结果列表
+     */
+    fun <R> selectListByColumn(
+        column: SFunction<T, R>,
+        value: R,
+    ): List<T> = selectListByColumn(column, value, lqw())
+
+    /**
+     * 在给定[LambdaQueryWrapper]上追加方法引用列等值条件并查询记录列表
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值，执行等值匹配
+     * @param wrapper 承载查询条件的Lambda查询包装器
+     * @return List<T> 查询结果列表
+     */
+    fun <R> selectListByColumn(
+        column: SFunction<T, R>,
+        value: R,
+        wrapper: LambdaQueryWrapper<T>,
+    ): List<T> = selectList(wrapper.eq(column, value))
+
+    /**
+     * 按方法引用列IN条件查询记录列表，集合为空时直接返回空列表而不执行查询
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值集合，执行IN匹配
+     * @return List<T> 查询结果列表
+     */
+    fun <R> selectListByColumn(
+        column: SFunction<T, R>,
+        value: Collection<R>,
+    ): List<T> = selectListByColumn(column, value, lqw())
+
+    /**
+     * 在给定[LambdaQueryWrapper]上追加方法引用列IN条件并查询记录列表，集合为空时直接返回空列表而不执行查询
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值集合，执行IN匹配
+     * @param wrapper 承载查询条件的Lambda查询包装器
+     * @return List<T> 查询结果列表
+     */
+    fun <R> selectListByColumn(
+        column: SFunction<T, R>,
+        value: Collection<R>,
+        wrapper: LambdaQueryWrapper<T> = lqw(),
+    ): List<T> {
+        if (value.isEmpty()) return emptyList()
+        return selectList(wrapper.`in`(column, value))
+    }
+
+    /**
+     * 按字符串列名IN条件查询记录列表，集合为空时直接返回空列表而不执行查询
+     * @param R 列值类型
+     * @param column 列名（数据库字段名）
+     * @param value 列值集合，执行IN匹配
+     * @return List<T> 查询结果列表
+     */
+    fun <R> selectListByColumn(
+        column: String,
+        value: Collection<R>,
+    ): List<T> = selectListByColumn(column, value, qw())
+
+    /**
+     * 在给定[QueryWrapper]上追加字符串列名IN条件并查询记录列表，集合为空时直接返回空列表而不执行查询
+     * @param R 列值类型
+     * @param column 列名（数据库字段名）
+     * @param value 列值集合，执行IN匹配
+     * @param wrapper 承载查询条件的查询包装器
+     * @return List<T> 查询结果列表
+     */
+    fun <R> selectListByColumn(
+        column: String,
+        value: Collection<R>,
+        wrapper: QueryWrapper<T> = qw(),
+    ): List<T> {
+        if (value.isEmpty()) return emptyList()
+        return selectList(wrapper.`in`(column, value))
+    }
+
+    /**
+     * 字符串列名与列值构成的二元组，用于[selectListByColumns]的可变参数传参
+     * @property t1 列名（数据库字段名）
+     * @property t2 列值
+     */
+    class StringAnyTuple2(
+        val t1: String,
+        val t2: Any,
+    ) : Tuple(2) {
+        operator fun component1() = t1
+        operator fun component2() = t2
+    }
+
+    /**
+     * 方法引用列与列值构成的二元组，用于[selectListByColumns]的可变参数传参
+     * @param T 实体类型
+     * @param D 列值类型
+     * @property t1 实体列的方法引用
+     * @property t2 列值
+     */
+    class SFunctionAnyTuple2<T, D>(
+        val t1: SFunction<T, D>,
+        val t2: D,
+    ) : Tuple(2) {
+        operator fun component1() = t1
+        operator fun component2() = t2
+    }
+
+    /**
+     * 按多个字符串列名等值条件查询记录列表，各列条件以AND连接
+     * @param columns 列名与列值构成的二元组，逐项执行等值匹配
+     * @return List<T> 查询结果列表
+     */
+    fun selectListByColumns(
+        vararg columns: StringAnyTuple2,
+    ): List<T> = selectList(qw().let { wrapper ->
+        columns.forEach { (column, value) ->
+            wrapper.eq(column, value)
+        }
+        wrapper
+    })
+
+    /**
+     * 按多个方法引用列等值条件查询记录列表，各列条件以AND连接
+     * @param columns 方法引用列与列值构成的二元组，逐项执行等值匹配
+     * @return List<T> 查询结果列表
+     */
+    fun selectListByColumns(
+        vararg columns: SFunctionAnyTuple2<T, *>,
+    ): List<T> = selectListByColumns(lqw(), *columns)
+
+    /**
+     * 在给定[LambdaQueryWrapper]上追加多个方法引用列等值条件并查询记录列表，各列条件以AND连接
+     * @param wrapper 承载查询条件的Lambda查询包装器
+     * @param columns 方法引用列与列值构成的二元组，逐项执行等值匹配
+     * @return List<T> 查询结果列表
+     */
+    fun selectListByColumns(
+        wrapper: LambdaQueryWrapper<T>,
+        vararg columns: SFunctionAnyTuple2<T, *>,
+    ): List<T> = selectList(wrapper.let {
+        columns.forEach { (column, value) ->
+            it.eq(column, value)
+        }
+        it
+    })
+
+    /**
+     * 按字符串列名等值条件查询单条记录，结果数量不为1时返回null
+     * @param R 列值类型
+     * @param column 列名（数据库字段名）
+     * @param value 列值，执行等值匹配
+     * @return T? 唯一的查询结果，不存在或多于一条时返回null
+     */
+    fun <R> selectOneByColumn(
+        column: String,
+        value: R,
+    ): T? = selectOneByColumn(column, value, qw())
+
+    /**
+     * 在给定[QueryWrapper]上追加字符串列名等值条件并查询单条记录，结果数量不为1时返回null
+     * @param R 列值类型
+     * @param column 列名（数据库字段名）
+     * @param value 列值，执行等值匹配
+     * @param wrapper 承载查询条件的查询包装器
+     * @return T? 唯一的查询结果，不存在或多于一条时返回null
+     */
+    fun <R> selectOneByColumn(
+        column: String,
+        value: R,
+        wrapper: QueryWrapper<T> = qw(),
+    ): T? = selectOne(
+        wrapper.eq(column, value),
+    )
+
+
+    /**
+     * 按方法引用列等值条件查询单条记录，结果数量不为1时返回null
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值，执行等值匹配
+     * @return T? 唯一的查询结果，不存在或多于一条时返回null
+     */
+    fun <R> selectOneByColumn(
+        column: SFunction<T, R>,
+        value: R,
+    ): T? = selectOneByColumn(
+        column, value, lqw()
+    )
+
+    /**
+     * 在给定[LambdaQueryWrapper]上追加方法引用列等值条件并查询单条记录，结果数量不为1时返回null
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值，执行等值匹配
+     * @param wrapper 承载查询条件的Lambda查询包装器
+     * @return T? 唯一的查询结果，不存在或多于一条时返回null
+     */
+    fun <R> selectOneByColumn(
+        column: SFunction<T, R>,
+        value: R,
+        wrapper: LambdaQueryWrapper<T>,
+    ): T? = selectOne(
+        wrapper.eq(column, value),
+    )
+
+    /**
+     * 按字符串列名等值条件判断记录是否存在
+     * @param R 列值类型
+     * @param column 列名（数据库字段名）
+     * @param value 列值，执行等值匹配
+     * @return Boolean 存在符合条件的记录返回true，否则返回false
+     */
+    fun <R> existsByColumn(
+        column: String,
+        value: R,
+    ): Boolean = existsByColumn(column, value, qw())
+
+    /**
+     * 在给定[QueryWrapper]上追加字符串列名等值条件并判断记录是否存在
+     * @param R 列值类型
+     * @param column 列名（数据库字段名）
+     * @param value 列值，执行等值匹配
+     * @param wrapper 承载查询条件的查询包装器
+     * @return Boolean 存在符合条件的记录返回true，否则返回false
+     */
+    fun <R> existsByColumn(
+        column: String,
+        value: R,
+        wrapper: QueryWrapper<T> = qw(),
+    ): Boolean = exists(
+        wrapper.eq(column, value),
+    )
+
+    /**
+     * 按方法引用列等值条件判断记录是否存在
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值，执行等值匹配
+     * @return Boolean 存在符合条件的记录返回true，否则返回false
+     */
+    fun <R> existsByColumn(
+        column: SFunction<T, R>,
+        value: R,
+    ): Boolean = existsByColumn(column, value, lqw())
+
+    /**
+     * 在给定[LambdaQueryWrapper]上追加方法引用列等值条件并判断记录是否存在
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值，执行等值匹配
+     * @param wrapper 承载查询条件的Lambda查询包装器
+     * @return Boolean 存在符合条件的记录返回true，否则返回false
+     */
+    fun <R> existsByColumn(
+        column: SFunction<T, R>,
+        value: R,
+        wrapper: LambdaQueryWrapper<T> = lqw(),
+    ): Boolean = exists(
+        wrapper.eq(column, value),
+    )
+
+    /**
+     * 按方法引用列IN条件查询记录并构建有序映射，集合为空时直接返回空映射而不执行查询
+     * 返回的[LinkedHashMap]保持入参集合的迭代顺序，缺失的键对应的值为null
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值集合，执行IN匹配
+     * @return LinkedHashMap<R, T?> 以列值为键、实体为值的有序映射
+     */
+    fun <R> selectMapByColumn(
+        column: SFunction<T, R>,
+        value: Collection<R>,
+    ): LinkedHashMap<R, T?> {
+        return selectMapByColumn(column, value, lqw())
+    }
+
+
+    /**
+     * 在给定[LambdaQueryWrapper]上按方法引用列IN条件查询记录并构建有序映射，集合为空时直接返回空映射而不执行查询
+     * 返回的[LinkedHashMap]保持入参集合的迭代顺序，缺失的键对应的值为null
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值集合，执行IN匹配
+     * @param wrapper 承载查询条件的Lambda查询包装器
+     * @return LinkedHashMap<R, T?> 以列值为键、实体为值的有序映射
+     */
+    fun <R> selectMapByColumn(
+        column: SFunction<T, R>,
+        value: Collection<R>,
+        wrapper: LambdaQueryWrapper<T> = lqw(),
+    ): LinkedHashMap<R, T?> {
+        if (value.isEmpty()) return linkedMapOf()
+
+        val data = selectList(wrapper.`in`(column, value))
+
+        val mapdata: Map<R, T> = data.associateBy { column.apply(it) }
+
+        val map = LinkedHashMap<R, T?>(value.size)
+        value.forEach { key ->
+            map[key] = mapdata[key]
+        }
+        return map
+    }
+
+    /**
+     * 按字符串列名IN条件删除记录，集合为空时直接返回0而不执行删除
+     * @param R 列值类型
+     * @param column 列名（数据库字段名）
+     * @param value 列值集合，执行IN匹配
+     * @return Int 被删除的行数
+     */
+    fun <R> deleteByColumn(
+        column: String,
+        value: Collection<R>,
+    ): Int {
+        return deleteByColumn(column, value, qw())
+    }
+
+    /**
+     * 在给定[QueryWrapper]上按字符串列名IN条件删除记录，集合为空时直接返回0而不执行删除
+     * 注意：MyBatis-Plus对空集合的IN条件会整体跳过，若不拦截将导致全表删除
+     * @param R 列值类型
+     * @param column 列名（数据库字段名）
+     * @param value 列值集合，执行IN匹配
+     * @param wrapper 承载查询条件的查询包装器
+     * @return Int 被删除的行数
+     */
+    fun <R> deleteByColumn(
+        column: String,
+        value: Collection<R>,
+        wrapper: QueryWrapper<T> = qw(),
+    ): Int {
+        if (value.isEmpty()) return 0
+        return delete(
+            wrapper.`in`(
+                column, value
+            )
+        )
+    }
+
+    /**
+     * 按方法引用列IN条件删除记录，集合为空时直接返回0而不执行删除
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值集合，执行IN匹配
+     * @return Int 被删除的行数
+     */
+    fun <R> deleteByColumn(
+        column: SFunction<T, R>,
+        value: Collection<R>,
+    ): Int {
+        return deleteByColumn(
+            column, value, lqw()
+        )
+    }
+
+    /**
+     * 在给定[LambdaQueryWrapper]上按方法引用列IN条件删除记录，集合为空时直接返回0而不执行删除
+     * 注意：MyBatis-Plus对空集合的IN条件会整体跳过，若不拦截将导致全表删除
+     * @param R 列值类型
+     * @param column 实体列的方法引用
+     * @param value 列值集合，执行IN匹配
+     * @param wrapper 承载查询条件的Lambda查询包装器
+     * @return Int 被删除的行数
+     */
+    fun <R> deleteByColumn(
+        column: SFunction<T, R>,
+        value: Collection<R>,
+        wrapper: LambdaQueryWrapper<T>,
+    ): Int {
+        if (value.isEmpty()) return 0
+        return delete(
+            wrapper.`in`(
+                column, value
+            )
+        )
+    }
+
+
     companion object {
-
-        /**
-         * 为[BaseMapper]创建[QueryWrapper]实例
-         * @param T 范型类型，通过reified获取实际类型
-         * @receiver BaseMapper<T> 基础映射器实例
-         * @return QueryWrapper<T> 查询包装器实例，使用T类作为参数
-         */
-        inline fun <reified T> BaseMapper<T>.queryWrapper(): QueryWrapper<T> = QueryWrapper<T>(T::class.java)
-
-        /**
-         * 为[BaseMapper]创建[UpdateWrapper]实例
-         * @param T 范型类型，通过reified获取实际类型
-         * @receiver BaseMapper<T> 基础映射器实例
-         * @return UpdateWrapper<T> 更新包装器实例
-         */
-        inline fun <reified T> BaseMapper<T>.updateWrapper(): UpdateWrapper<T> = UpdateWrapper<T>()
-
-        /**
-         * 为[BaseMapper]创建[LambdaQueryWrapper]实例
-         * @param T 范型类型，通过reified获取实际类型
-         * @receiver BaseMapper<T> 基础映射器实例
-         * @return LambdaQueryWrapper<T> Lambda查询包装器实例，使用T类作为参数
-         */
-        inline fun <reified T> BaseMapper<T>.lambdaQueryWrapper(): LambdaQueryWrapper<T> =
-            LambdaQueryWrapper<T>(T::class.java)
-
-        /**
-         * 为[BaseMapper]创建[LambdaUpdateWrapper]实例
-         * @param T 范型类型，通过reified获取实际类型
-         * @receiver BaseMapper<T> 基础映射器实例
-         * @return LambdaUpdateWrapper<T> Lambda更新包装器实例，使用T类作为参数
-         */
-        inline fun <reified T> BaseMapper<T>.lambdaUpdateWrapper(): LambdaUpdateWrapper<T> =
-            LambdaUpdateWrapper<T>(T::class.java)
-
 
         /**
          * 为[BaseMapper]创建[com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper]实例
@@ -154,38 +562,6 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          */
         fun <T : Any> FastBaseMapper<T>.ktUpdateChain(): KtUpdateChainWrapper<T> =
             KtUpdateChainWrapper<T>(this as BaseMapper<T>)
-
-        /**
-         * [queryWrapper]的简写形式
-         * @param T 范型类型，通过reified获取实际类型
-         * @receiver FastBaseMapper<T> 快速映射器实例
-         * @return QueryWrapper<T> 查询包装器实例，使用T类作为参数
-         */
-        inline fun <reified T : Any> FastBaseMapper<T>.qw(): QueryWrapper<T> = queryWrapper()
-
-        /**
-         * [updateWrapper]的简写形式
-         * @param T 范型类型，通过reified获取实际类型
-         * @receiver FastBaseMapper<T> 快速映射器实例
-         * @return UpdateWrapper<T> 更新包装器实例
-         */
-        inline fun <reified T : Any> FastBaseMapper<T>.uw(): UpdateWrapper<T> = updateWrapper()
-
-        /**
-         * [lambdaQueryWrapper]的简写形式
-         * @param T 范型类型，通过reified获取实际类型
-         * @receiver FastBaseMapper<T> 快速映射器实例
-         * @return LambdaQueryWrapper<T> Lambda查询包装器实例，使用T类作为参数
-         */
-        inline fun <reified T : Any> FastBaseMapper<T>.qcw(): LambdaQueryWrapper<T> = lambdaQueryWrapper()
-
-        /**
-         * [lambdaUpdateWrapper]的简写形式
-         * @param T 范型类型，通过reified获取实际类型
-         * @receiver FastBaseMapper<T> 快速映射器实例
-         * @return LambdaUpdateWrapper<T> Lambda更新包装器实例，使用T类作为参数
-         */
-        inline fun <reified T : Any> FastBaseMapper<T>.ucw(): LambdaUpdateWrapper<T> = lambdaUpdateWrapper()
 
         /**
          * [ktQueryWrapper]的简写形式
@@ -262,7 +638,7 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          */
         inline fun <reified T : Any> FastBaseMapper<T>.selectPage(
             page: Page<T>,
-            funs: (wrapper: KtQueryWrapper<T>) -> KtQueryWrapper<T>,
+            funs: (wrapper: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
         ): Page<T> = this.selectPage(page, funs(kqw()))
 
         /**
@@ -277,7 +653,7 @@ interface FastBaseMapper<T> : BaseMapper<T> {
         inline fun <reified T : Any> FastBaseMapper<T>.selectPage(
             current: Long,
             size: Long,
-            funs: (wrapper: KtQueryWrapper<T>) -> KtQueryWrapper<T>,
+            funs: (wrapper: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
         ): Page<T> = this.selectPage(Page(current, size), funs(kqw()))
 
         /**
@@ -331,13 +707,15 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          * @receiver FastBaseMapper<T> 快速映射器实例
          * @param column 实体列属性引用
          * @param value 列值，执行等值匹配
+         * @param funs 附加查询包装器构建函数，在等值条件之前应用
          * @return List<T> 查询结果列表
          */
         inline fun <reified T : Any, R> FastBaseMapper<T>.selectListByColumn(
             column: KProperty1<T, R>,
             value: R,
-        ): List<T> = selectList {
-            it.eq(column, value)
+            funs: (w: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
+        ): List<T> = selectList { wrapper: KtQueryWrapper<T> ->
+            funs(wrapper).eq(column, value)
         }
 
         /**
@@ -347,15 +725,17 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          * @receiver FastBaseMapper<T> 快速映射器实例
          * @param column 实体列属性引用
          * @param value 列值集合，执行IN匹配
+         * @param funs 附加查询包装器构建函数，在IN条件之前应用
          * @return List<T> 查询结果列表
          */
         inline fun <reified T : Any, R> FastBaseMapper<T>.selectListByColumn(
             column: KProperty1<T, R>,
             value: Collection<R>,
+            funs: (w: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
         ): List<T> {
             if (value.isEmpty()) return emptyList()
-            return selectList {
-                it.`in`(column, value)
+            return selectList { wrapper: KtQueryWrapper<T> ->
+                funs(wrapper).`in`(column, value)
             }
         }
 
@@ -364,13 +744,16 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          * @param T 范型类型，必须继承自Any，通过reified获取实际类型
          * @receiver FastBaseMapper<T> 快速映射器实例
          * @param columns 列属性引用与列值的键值对，逐项执行等值匹配
+         * @param funs 附加查询包装器构建函数，在各列等值条件之前应用
          * @return List<T> 查询结果列表
          */
         inline fun <reified T : Any> FastBaseMapper<T>.selectListByColumns(
             vararg columns: Pair<KProperty1<T, *>, Any?>,
-        ): List<T> = selectList { wrapper ->
-            columns.forEach { (column, value) -> wrapper.eq(column, value) }
-            wrapper
+            funs: (w: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
+        ): List<T> = selectList { wrapper: KtQueryWrapper<T> ->
+            val w = funs(wrapper)
+            columns.forEach { (column, value) -> w.eq(column, value) }
+            w
         }
 
         /**
@@ -380,13 +763,15 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          * @receiver FastBaseMapper<T> 快速映射器实例
          * @param column 实体列属性引用
          * @param value 列值，执行等值匹配
+         * @param funs 附加查询包装器构建函数，在等值条件之前应用
          * @return T? 唯一的查询结果，不存在或多于一条时返回null
          */
         inline fun <reified T : Any, R> FastBaseMapper<T>.selectOneByColumn(
             column: KProperty1<T, R>,
             value: R,
-        ): T? = selectOne {
-            it.eq(column, value)
+            funs: (w: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
+        ): T? = selectOne { wrapper: KtQueryWrapper<T> ->
+            funs(wrapper).eq(column, value)
         }
 
         /**
@@ -395,14 +780,16 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          * @param R 列值类型
          * @receiver FastBaseMapper<T> 快速映射器实例
          * @param column 实体列属性引用
+         * @param funs 附加查询包装器构建函数，在等值条件之前应用
          * @param value 列值，执行等值匹配
          * @return Boolean 存在符合条件的记录返回true，否则返回false
          */
         inline fun <reified T : Any, R> FastBaseMapper<T>.existsByColumn(
             column: KProperty1<T, R>,
+            funs: (w: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
             value: R,
-        ): Boolean = exists {
-            it.eq(column, value)
+        ): Boolean = exists { wrapper: KtQueryWrapper<T> ->
+            funs(wrapper).eq(column, value)
         }
 
         /**
@@ -413,20 +800,21 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          * @receiver FastBaseMapper<T> 快速映射器实例
          * @param column 实体列属性引用
          * @param value 列值集合，执行IN匹配
+         * @param funs 附加查询包装器构建函数，在IN条件之前应用
          * @return LinkedHashMap<R, T?> 以列值为键、实体为值的有序映射
          */
         inline fun <reified T : Any, R> FastBaseMapper<T>.selectMapByColumn(
             column: KProperty1<T, R>,
             value: Collection<R>,
+            funs: (w: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
         ): LinkedHashMap<R, T?> {
             if (value.isEmpty()) return linkedMapOf()
 
-            val data = selectList {
-                it.`in`(column, value)
+            val data = selectList { wrapper: KtQueryWrapper<T> ->
+                funs(wrapper).`in`(column, value)
             }
 
-            val mapdata: Map<R, T> = data
-                .associateBy { column(it) }
+            val mapdata: Map<R, T> = data.associateBy { column(it) }
 
             val map = LinkedHashMap<R, T?>(value.size)
             value.forEach { key ->
@@ -442,13 +830,15 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          * @receiver FastBaseMapper<T> 快速映射器实例
          * @param column 实体列属性引用
          * @param value 列值，执行等值匹配
+         * @param funs 附加查询包装器构建函数，在等值条件之前应用
          * @return Int 被删除的行数
          */
         inline fun <reified T : Any, R> FastBaseMapper<T>.deleteByColumn(
             column: KProperty1<T, R>,
             value: R,
-        ): Int = delete {
-            it.eq(column, value)
+            funs: (w: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
+        ): Int = delete { wrapper: KtQueryWrapper<T> ->
+            funs(wrapper).eq(column, value)
         }
 
         /**
@@ -459,18 +849,18 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          * @receiver FastBaseMapper<T> 快速映射器实例
          * @param column 实体列属性引用
          * @param value 列值集合，执行IN匹配
+         * @param funs 附加查询包装器构建函数，在IN条件之前应用
          * @return Int 被删除的行数
          */
         inline fun <reified T : Any, R> FastBaseMapper<T>.deleteByColumn(
             column: KProperty1<T, R>,
             value: Collection<R>,
+            funs: (w: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
         ): Int {
             if (value.isEmpty()) return 0
-            return delete {
-                it.`in`(column, value)
+            return delete { wrapper: KtQueryWrapper<T> ->
+                funs(wrapper).`in`(column, value)
             }
         }
     }
-
-
 }
