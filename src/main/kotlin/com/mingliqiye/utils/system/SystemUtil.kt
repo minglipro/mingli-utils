@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SystemUtil.kt
- * LastUpdate 2026-10-20 18:54:24
+ * LastUpdate 2026-10-28 22:43:54
  * UpdateUser MingLiPro
  */
 @file:JvmName("SystemUtils")
@@ -30,8 +30,7 @@ import com.mingliqiye.utils.random.Random.nextBytes as randomByte
 private val UNIX_PREFIXES = arrayOf("Linux", "AIX", "SunOS", "Mac OS X", "FreeBSD")
 private val HEX_UPPER: Array<String> = Array(256) { "%02X".format(it) }
 
-private fun <T> Enumeration<T>?.toList(): List<T> =
-    if (this == null) emptyList() else Collections.list(this)
+private fun <T> Enumeration<T>?.toList(): List<T> = if (this == null) emptyList() else Collections.list(this)
 
 /**
  * 操作系统名称属性，延迟初始化
@@ -85,8 +84,7 @@ val javaVersionAsInteger: Int by lazy {
     }
     val normalized = if (version.startsWith("1.")) version.substring(2) else version
     val major = normalized.substringBefore('.').substringBefore('-')
-    major.toIntOrNull()
-        ?: throw IllegalStateException("Invalid Java version format: $version")
+    major.toIntOrNull() ?: throw IllegalStateException("Invalid Java version format: $version")
 }
 
 /**
@@ -103,12 +101,8 @@ val isJdk8Plus: Boolean by lazy {
  */
 val localIps: Array<String> by lazy {
     try {
-        activeNetworkInterfaces()
-            .flatMap { it.inetAddresses.toList() }
-            .filterIsInstance<Inet4Address>()
-            .mapNotNull { it.hostAddress }
-            .toList()
-            .toTypedArray()
+        activeNetworkInterfaces().flatMap { it.inetAddresses.toList() }.filterIsInstance<Inet4Address>()
+            .mapNotNull { it.hostAddress }.toList().toTypedArray()
     } catch (e: SocketException) {
         throw RuntimeException("Failed to get local IP addresses", e)
     }
@@ -124,13 +118,8 @@ val localIpsByList: List<String> by lazy { localIps.toList() }
  */
 val loopbackIps: Array<String> by lazy {
     try {
-        NetworkInterface.getNetworkInterfaces().toList()
-            .asSequence()
-            .filter { it.isLoopback && it.isUp }
-            .flatMap { it.inetAddresses.toList().asSequence() }
-            .mapNotNull { it.hostAddress }
-            .toList()
-            .toTypedArray()
+        NetworkInterface.getNetworkInterfaces().toList().asSequence().filter { it.isLoopback && it.isUp }
+            .flatMap { it.inetAddresses.toList().asSequence() }.mapNotNull { it.hostAddress }.toList().toTypedArray()
     } catch (_: SocketException) {
         arrayOf("127.0.0.1")
     }
@@ -160,20 +149,16 @@ val pidAsString: String by lazy {
  * 计算机名；获取失败返回 "unknown"
  */
 val computerName: String by lazy {
-    getEnvVar("COMPUTERNAME")
-        ?: getEnvVar("HOSTNAME")
-        ?: runCatching { InetAddress.getLocalHost().hostName }.getOrNull()?.takeIf { it.isNotBlank() }
-        ?: "unknown"
+    getEnvVar("COMPUTERNAME") ?: getEnvVar("HOSTNAME")
+    ?: runCatching { InetAddress.getLocalHost().hostName }.getOrNull()?.takeIf { it.isNotBlank() } ?: "unknown"
 }
 
 /**
  * 当前用户名；获取失败返回 "unknown"
  */
 val userName: String by lazy {
-    getEnvVar("USERNAME")
-        ?: getEnvVar("USER")
-        ?: runCatching { System.getProperty("user.name") }.getOrNull()?.takeIf { it.isNotBlank() }
-        ?: "unknown"
+    getEnvVar("USERNAME") ?: getEnvVar("USER") ?: runCatching { System.getProperty("user.name") }.getOrNull()
+        ?.takeIf { it.isNotBlank() } ?: "unknown"
 }
 
 private fun getEnvVar(name: String): String? = runCatching {
@@ -187,8 +172,7 @@ private fun getEnvVar(name: String): String? = runCatching {
  */
 val macAddressBytes: ByteArray by lazy {
     val found = try {
-        activeNetworkInterfaces()
-            .mapNotNull { runCatching { it.hardwareAddress }.getOrNull() }
+        activeNetworkInterfaces().mapNotNull { runCatching { it.hardwareAddress }.getOrNull() }
             .firstOrNull { it.isNotEmpty() }
     } catch (_: SocketException) {
         null
@@ -215,14 +199,11 @@ val macAddressFormattedString: String by lazy {
  */
 val allMacAddresses: Map<String, ByteArray> by lazy {
     try {
-        NetworkInterface.getNetworkInterfaces().toList()
-            .asSequence()
-            .filter { !it.isLoopback && !it.isVirtual }
+        NetworkInterface.getNetworkInterfaces().toList().asSequence().filter { !it.isLoopback && !it.isVirtual }
             .mapNotNull { ni ->
                 val mac = runCatching { ni.hardwareAddress }.getOrNull()
                 if (mac != null && mac.isNotEmpty()) ni.name to mac else null
-            }
-            .toMap()
+            }.toMap()
     } catch (_: SocketException) {
         emptyMap()
     }
@@ -243,17 +224,15 @@ val availableProcessors: Int by lazy {
 }
 
 private fun activeNetworkInterfaces(): Sequence<NetworkInterface> =
-    NetworkInterface.getNetworkInterfaces().toList().asSequence()
-        .filter { !it.isLoopback && !it.isVirtual && it.isUp }
+    NetworkInterface.getNetworkInterfaces().toList().asSequence().filter { !it.isLoopback && !it.isVirtual && it.isUp }
 
 
 private val protocol: String by lazy {
     val target = ProtocolAnchor::class.java
     val resourceName = target.simpleName + ".class"
-    val resource: URL = target.getResource(resourceName)
-        ?: throw IllegalStateException(
-            "Unable to locate resource '$resourceName' for class ${target.name}"
-        )
+    val resource: URL = target.getResource(resourceName) ?: throw IllegalStateException(
+        "Unable to locate resource '$resourceName' for class ${target.name}"
+    )
     resource.protocol
 }
 
@@ -282,5 +261,13 @@ val isJswarMode: Boolean get() = protocol == "jswar"
 /** 是否不为 JSWAR 模式 */
 val isNotJswarMode: Boolean get() = protocol != "jswar"
 
+val lineSeparator
+    get() = System.lineSeparator()
+
+const val lineSeparatorLF = "\n"
+
+const val lineSeparatorCR = "\r"
+
+const val lineSeparatorCRLF = lineSeparatorCR + lineSeparatorLF
 
 private object ProtocolAnchor

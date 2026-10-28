@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SpringBeanUtils.kt
- * LastUpdate 2026-10-02 16:18:14
+ * LastUpdate 2026-10-27 12:51:22
  * UpdateUser MingLiPro
  */
 
@@ -43,6 +43,12 @@ class SpringBeanUtils : ApplicationContextAware {
                 ?: throw ApplicationContextException("applicationContext isn't ContextInitialized ?")
 
         private var applicationContextBase: ApplicationContext? = null
+
+        inline fun <reified T : Any> lazyBean(): Lazy<T> = lazy(::getBean)
+
+        inline fun <reified T : Any> lazyBean(name: String): Lazy<T> = lazy {
+            getBean(name, T::class.java)
+        }
 
 
         @Throws(BeansException::class)

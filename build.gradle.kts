@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * ProjectName FastBaseMapper.kt
+ * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-10-26 23:22:18
+ * LastUpdate 2026-10-28 21:50:32
  * UpdateUser MingLiPro
  */
 
@@ -85,6 +85,7 @@ dependencies {
     compileOnly("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
     compileOnly("com.baomidou:mybatis-plus-extension:3.5.15")
     compileOnly("com.baomidou:mybatis-plus-jsqlparser:3.5.15")
+    compileOnly("com.baomidou:mybatis-plus-spring:3.5.9")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("com.mingliqiye.logger:logger-log4j2:1.0.9")

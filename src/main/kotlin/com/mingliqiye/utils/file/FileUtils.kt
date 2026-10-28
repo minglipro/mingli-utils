@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile FileUtils.kt
- * LastUpdate 2026-01-28 10:49:14
+ * LastUpdate 2026-10-28 22:40:34
  * UpdateUser MingLiPro
  */
 @file:JvmName("FileUtils")
@@ -627,7 +627,9 @@ fun File.writeLines(lines: List<String>) {
          */
 fun File.writeLines(lines: List<String>, charset: Charset) {
     this.parentFile?.mkdirs()
-    this.writeLines(lines, charset)
+    for (line in lines) {
+        this.writeText(line + System.lineSeparator(), charset)
+    }
 }
 
 // 复制文件

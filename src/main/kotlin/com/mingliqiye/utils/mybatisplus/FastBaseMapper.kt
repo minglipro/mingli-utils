@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * ProjectName FastBaseMapper.kt
+ * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile FastBaseMapper.kt
- * LastUpdate 2026-10-27 10:23:10
+ * LastUpdate 2026-10-28 22:23:47
  * UpdateUser MingLiPro
  */
 
@@ -37,6 +37,7 @@ import com.mingliqiye.utils.mybatisplus.FastBaseMapper.Companion.ktQueryChainWra
 import com.mingliqiye.utils.mybatisplus.FastBaseMapper.Companion.ktQueryWrapper
 import com.mingliqiye.utils.mybatisplus.FastBaseMapper.Companion.ktUpdateChainWrapper
 import com.mingliqiye.utils.mybatisplus.FastBaseMapper.Companion.ktUpdateWrapper
+import com.mingliqiye.utils.mybatisplus.FastBaseMapper.Companion.selectListByColumns
 import com.mingliqiye.utils.tuple.Tuple
 import kotlin.reflect.KProperty1
 
@@ -786,8 +787,8 @@ interface FastBaseMapper<T> : BaseMapper<T> {
          */
         inline fun <reified T : Any, R> FastBaseMapper<T>.existsByColumn(
             column: KProperty1<T, R>,
-            funs: (w: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
             value: R,
+            funs: (w: KtQueryWrapper<T>) -> KtQueryWrapper<T> = { it },
         ): Boolean = exists { wrapper: KtQueryWrapper<T> ->
             funs(wrapper).eq(column, value)
         }
