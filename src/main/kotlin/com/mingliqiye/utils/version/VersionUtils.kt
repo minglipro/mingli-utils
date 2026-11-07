@@ -35,28 +35,28 @@ import kotlin.math.max
  * @since 3.2.7
  */
 fun isNew(now: String, other: String): Boolean {
-    val otherA = now.split(".")
-    val otherB = other.split(".")
+	val otherA = now.split(".")
+	val otherB = other.split(".")
 
-    val maxLen = max(otherA.size, otherB.size)
+	val maxLen = max(otherA.size, otherB.size)
 
-    for (i in 0..<maxLen) {
+	for (i in 0..<maxLen) {
 
-        val a = if (otherA.size > i) otherA[i].toInt() else null
-        val b = if (otherB.size > i) otherB[i].toInt() else null
+		val a = if (otherA.size > i) otherA[i].toInt() else null
+		val b = if (otherB.size > i) otherB[i].toInt() else null
 
-        if (a == null) {
-            return true
-        }
-        if (b == null) {
-            return false
-        }
-        if (a != b) {
-            return a < b
-        }
-    }
+		if (a == null) {
+			return true
+		}
+		if (b == null) {
+			return false
+		}
+		if (a != b) {
+			return a < b
+		}
+	}
 
-    return false
+	return false
 }
 
 /**
@@ -67,7 +67,7 @@ fun isNew(now: String, other: String): Boolean {
  *
  */
 fun isOld(now: String, other: String): Boolean {
-    return (now != other) && !isNew(now, other)
+	return (now != other) && !isNew(now, other)
 }
 
 /**
@@ -77,7 +77,7 @@ fun isOld(now: String, other: String): Boolean {
  * @return 是否相同
  */
 fun equals(now: String, other: String): Boolean {
-    return now == other
+	return now == other
 }
 
 /**
@@ -88,12 +88,11 @@ fun equals(now: String, other: String): Boolean {
  */
 @JvmName("is")
 fun isOther(now: String, other: String): Boolean? {
-    return if (isNew(now, other)) {
-        true
-    } else if (isOld(now, other)) {
-        false
-    } else {
-        null
-    }
+	return if (isNew(now, other)) {
+		true
+	} else if (isOld(now, other)) {
+		false
+	} else {
+		null
+	}
 }
-

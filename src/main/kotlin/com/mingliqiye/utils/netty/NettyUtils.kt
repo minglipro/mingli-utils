@@ -46,7 +46,7 @@ import java.nio.charset.Charset
  * @return ByteBuf 转换后的Netty ByteBuf对象，该对象包装了原始的ByteBuffer
  */
 fun ByteBuffer.toByteBuf(): ByteBuf {
-    return Unpooled.wrappedBuffer(this)
+	return Unpooled.wrappedBuffer(this)
 }
 
 /**
@@ -58,7 +58,7 @@ fun ByteBuffer.toByteBuf(): ByteBuf {
  * @return ByteBuffer 转换后的java.nio.ByteBuffer对象
  */
 fun ByteBuf.toByteBuffer(): ByteBuffer {
-    return this.nioBuffer()
+	return this.nioBuffer()
 }
 
 /**
@@ -70,7 +70,7 @@ fun ByteBuf.toByteBuffer(): ByteBuffer {
  * @return ByteArray 转换后的字节数组，包含ByteBuf中所有可读的字节数据
  */
 fun ByteBuf.toByteArray(): ByteArray {
-    return ByteBufUtil.getBytes(this)
+	return ByteBufUtil.getBytes(this)
 }
 
 /**
@@ -83,7 +83,7 @@ fun ByteBuf.toByteArray(): ByteArray {
  * @return ByteBuf 转换后的Netty ByteBuf对象，该对象包装了原始的字节数组
  */
 fun ByteArray.toByteBuf(): ByteBuf {
-    return Unpooled.wrappedBuffer(this)
+	return Unpooled.wrappedBuffer(this)
 }
 
 /**
@@ -98,12 +98,12 @@ fun ByteArray.toByteBuf(): ByteBuf {
  */
 @JvmName("channelInit")
 fun ServerBootstrap.channelInitializer(funa: P1Function<Channel>): ServerBootstrap {
-    this.childHandler(object : ChannelInitializer<Channel>() {
-        override fun initChannel(ch: Channel) {
-            funa.call(ch)
-        }
-    })
-    return this
+	this.childHandler(object : ChannelInitializer<Channel>() {
+		override fun initChannel(ch: Channel) {
+			funa.call(ch)
+		}
+	})
+	return this
 }
 
 /**
@@ -118,12 +118,12 @@ fun ServerBootstrap.channelInitializer(funa: P1Function<Channel>): ServerBootstr
  */
 @JvmName("pipelineInit")
 fun ServerBootstrap.pipelineInitializer(funa: P1Function<ChannelPipeline>): ServerBootstrap {
-    this.childHandler(object : ChannelInitializer<Channel>() {
-        override fun initChannel(ch: Channel) {
-            funa.call(ch.pipeline())
-        }
-    })
-    return this
+	this.childHandler(object : ChannelInitializer<Channel>() {
+		override fun initChannel(ch: Channel) {
+			funa.call(ch.pipeline())
+		}
+	})
+	return this
 }
 
 /**
@@ -138,12 +138,12 @@ fun ServerBootstrap.pipelineInitializer(funa: P1Function<ChannelPipeline>): Serv
  */
 @JvmName("channelInit")
 fun Bootstrap.channelInitializer(funa: P1Function<Channel>): Bootstrap {
-    this.handler(object : ChannelInitializer<Channel>() {
-        override fun initChannel(ch: Channel) {
-            funa.call(ch)
-        }
-    })
-    return this
+	this.handler(object : ChannelInitializer<Channel>() {
+		override fun initChannel(ch: Channel) {
+			funa.call(ch)
+		}
+	})
+	return this
 }
 
 /**
@@ -158,12 +158,12 @@ fun Bootstrap.channelInitializer(funa: P1Function<Channel>): Bootstrap {
  */
 @JvmName("pipelineInit")
 fun Bootstrap.pipelineInitializer(funa: P1Function<ChannelPipeline>): Bootstrap {
-    this.handler(object : ChannelInitializer<Channel>() {
-        override fun initChannel(ch: Channel) {
-            funa.call(ch.pipeline())
-        }
-    })
-    return this
+	this.handler(object : ChannelInitializer<Channel>() {
+		override fun initChannel(ch: Channel) {
+			funa.call(ch.pipeline())
+		}
+	})
+	return this
 }
 
 /**
@@ -174,7 +174,7 @@ fun Bootstrap.pipelineInitializer(funa: P1Function<ChannelPipeline>): Bootstrap 
  * @return ByteBuf 转换后的Netty ByteBuf对象
  */
 fun String.toByteBuf(charset: Charset = Charsets.UTF_8): ByteBuf {
-    return Unpooled.wrappedBuffer(this.toByteArray(charset))
+	return Unpooled.wrappedBuffer(this.toByteArray(charset))
 }
 
 /**
@@ -185,8 +185,8 @@ fun String.toByteBuf(charset: Charset = Charsets.UTF_8): ByteBuf {
  * @return String 转换后的字符串
  */
 fun ByteBuf.toString(charset: Charset = Charsets.UTF_8): String {
-    val bytes = this.toByteArray()
-    return String(bytes, charset)
+	val bytes = this.toByteArray()
+	return String(bytes, charset)
 }
 
 
@@ -197,9 +197,9 @@ fun ByteBuf.toString(charset: Charset = Charsets.UTF_8): String {
  * @return ByteBuf 转换后的Netty ByteBuf对象，包含4字节的整数数据
  */
 fun Int.toByteBuf(): ByteBuf {
-    val buffer = Unpooled.buffer(4)
-    buffer.writeInt(this)
-    return buffer
+	val buffer = Unpooled.buffer(4)
+	buffer.writeInt(this)
+	return buffer
 }
 
 /**
@@ -209,9 +209,9 @@ fun Int.toByteBuf(): ByteBuf {
  * @return ByteBuf 转换后的Netty ByteBuf对象，包含8字节的长整数数据
  */
 fun Long.toByteBuf(): ByteBuf {
-    val buffer = Unpooled.buffer(8)
-    buffer.writeLong(this)
-    return buffer
+	val buffer = Unpooled.buffer(8)
+	buffer.writeLong(this)
+	return buffer
 }
 
 /**
@@ -221,7 +221,7 @@ fun Long.toByteBuf(): ByteBuf {
  * @return Int 从ByteBuf中读取的整数值
  */
 fun ByteBuf.toInt(): Int {
-    return this.readInt()
+	return this.readInt()
 }
 
 /**
@@ -231,7 +231,7 @@ fun ByteBuf.toInt(): Int {
  * @return Long 从ByteBuf中读取的长整数值
  */
 fun ByteBuf.toLong(): Long {
-    return this.readLong()
+	return this.readLong()
 }
 
 /**
@@ -241,15 +241,15 @@ fun ByteBuf.toLong(): Long {
  * @return ByteArray 转换后的字节数组
  */
 fun ByteBuf.safeToByteArray(): ByteArray {
-    return if (this.hasArray()) {
-        // 如果是堆内内存，直接获取数组
-        this.array().copyOfRange(this.arrayOffset(), this.arrayOffset() + this.readableBytes())
-    } else {
-        // 如果是堆外内存，使用readBytes
-        val array = ByteArray(this.readableBytes())
-        this.getBytes(this.readerIndex(), array)
-        array
-    }
+	return if (this.hasArray()) {
+		// 如果是堆内内存，直接获取数组
+		this.array().copyOfRange(this.arrayOffset(), this.arrayOffset() + this.readableBytes())
+	} else {
+		// 如果是堆外内存，使用readBytes
+		val array = ByteArray(this.readableBytes())
+		this.getBytes(this.readerIndex(), array)
+		array
+	}
 }
 
 /**
@@ -259,8 +259,8 @@ fun ByteBuf.safeToByteArray(): ByteArray {
  * @return String 十六进制字符串表示
  */
 fun ByteBuf.toHexString(): String {
-    val array = this.safeToByteArray()
-    return array.joinToString("") { "%02x".format(it) }
+	val array = this.safeToByteArray()
+	return array.joinToString("") { "%02x".format(it) }
 }
 
 /**
@@ -270,26 +270,26 @@ fun ByteBuf.toHexString(): String {
  * @return ByteBuf 合并后的ByteBuf对象
  */
 fun combineByteBuf(vararg byteBufs: ByteBuf): ByteBuf {
-    val totalCapacity = byteBufs.sumOf { it.readableBytes() }
-    val combined = Unpooled.buffer(totalCapacity)
-    byteBufs.forEach { combined.writeBytes(it.duplicate()) }
-    return combined
+	val totalCapacity = byteBufs.sumOf { it.readableBytes() }
+	val combined = Unpooled.buffer(totalCapacity)
+	byteBufs.forEach { combined.writeBytes(it.duplicate()) }
+	return combined
 }
 
 /**
  * 安全关闭通道
  */
 fun Channel.closeSafely() {
-    if (isOpen) {
-        close()
-    }
+	if (isOpen) {
+		close()
+	}
 }
 
 /**
  * 检查通道是否处于活跃状态
  */
 val Channel.isActived: Boolean
-    get() = isOpen && isActive
+	get() = isOpen && isActive
 
 /**
  * 异步写入数据到通道
@@ -297,12 +297,12 @@ val Channel.isActived: Boolean
  * @param data 需要写入的数据
  */
 fun Channel.writeAndFlushAsync(data: Any) {
-    writeAndFlush(data).addListener { future ->
-        if (!future.isSuccess) {
-            // 可以在这里添加错误处理逻辑
-            println("Write failed: ${future.cause()}")
-        }
-    }
+	writeAndFlush(data).addListener { future ->
+		if (!future.isSuccess) {
+			// 可以在这里添加错误处理逻辑
+			println("Write failed: ${future.cause()}")
+		}
+	}
 }
 
 /**
@@ -312,7 +312,7 @@ fun Channel.writeAndFlushAsync(data: Any) {
  * @return Boolean 释放操作是否成功
  */
 fun ByteBuf.releaseSafely(): Boolean {
-    return if (refCnt() > 0) release() else true
+	return if (refCnt() > 0) release() else true
 }
 
 /**
@@ -322,9 +322,9 @@ fun ByteBuf.releaseSafely(): Boolean {
  * @return Boolean 释放操作是否成功
  */
 fun ByteBuf.tryRelease(): Boolean {
-    return try {
-        refCnt() > 0 && release()
-    } catch (e: Exception) {
-        false
-    }
+	return try {
+		refCnt() > 0 && release()
+	} catch (e: Exception) {
+		false
+	}
 }

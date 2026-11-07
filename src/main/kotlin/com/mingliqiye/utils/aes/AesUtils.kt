@@ -50,30 +50,30 @@ val SECURE_RANDOM = SecureRandom()
  */
 @Throws(GeneralSecurityException::class)
 fun encrypt(sSrc: String, sKey: String?): String? {
-    if (sKey == null) {
-        return null
-    }
+	if (sKey == null) {
+		return null
+	}
 
-    // 生成密钥
-    val secretKeySpec = createSecretKey(sKey)
+	// 生成密钥
+	val secretKeySpec = createSecretKey(sKey)
 
-    // 生成安全随机IV
-    val iv = ByteArray(GCM_IV_LENGTH)
-    SECURE_RANDOM.nextBytes(iv)
+	// 生成安全随机IV
+	val iv = ByteArray(GCM_IV_LENGTH)
+	SECURE_RANDOM.nextBytes(iv)
 
-    // 初始化加密器
-    val cipher = Cipher.getInstance(TRANSFORMATION)
-    val gcmParameterSpec = GCMParameterSpec(
-        GCM_TAG_LENGTH * 8, iv
-    )
-    cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, gcmParameterSpec)
+	// 初始化加密器
+	val cipher = Cipher.getInstance(TRANSFORMATION)
+	val gcmParameterSpec = GCMParameterSpec(
+		GCM_TAG_LENGTH * 8, iv
+	)
+	cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, gcmParameterSpec)
 
-    val encrypted = cipher.doFinal(
-        sSrc.toByteArray(StandardCharsets.UTF_8)
-    )
-    return BaseType.BASE64.encode(
-        "${BaseType.BASE64.encode(iv)}:${BaseType.BASE64.encode(encrypted)}".toByteArray()
-    )
+	val encrypted = cipher.doFinal(
+		sSrc.toByteArray(StandardCharsets.UTF_8)
+	)
+	return BaseType.BASE64.encode(
+		"${BaseType.BASE64.encode(iv)}:${BaseType.BASE64.encode(encrypted)}".toByteArray()
+	)
 }
 
 /**
@@ -83,29 +83,29 @@ fun encrypt(sSrc: String, sKey: String?): String? {
  * @return 解密后的原始字符串
  */
 fun decrypt(sSrc: String, sKey: String): String? {
-    try {
-        // 分割IV和加密数据
-        val sSrcs = String(BaseType.BASE64.decode(sSrc))
-        val parts: Array<String?> = sSrcs.split(":".toRegex(), limit = 2).toTypedArray()
-        if (parts.size != 2) {
-            return null
-        }
-        val iv = BaseType.BASE64.decode(parts[0]!!)
-        val encryptedData = BaseType.BASE64.decode(parts[1]!!)
-        if (iv.size != GCM_IV_LENGTH) {
-            return null
-        }
-        val secretKeySpec = createSecretKey(sKey)
-        val cipher = Cipher.getInstance(TRANSFORMATION)
-        val gcmParameterSpec = GCMParameterSpec(
-            GCM_TAG_LENGTH * 8, iv
-        )
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, gcmParameterSpec)
-        val original = cipher.doFinal(encryptedData)
-        return String(original, StandardCharsets.UTF_8)
-    } catch (e: Exception) {
-        return null
-    }
+	try {
+		// 分割IV和加密数据
+		val sSrcs = String(BaseType.BASE64.decode(sSrc))
+		val parts: Array<String?> = sSrcs.split(":".toRegex(), limit = 2).toTypedArray()
+		if (parts.size != 2) {
+			return null
+		}
+		val iv = BaseType.BASE64.decode(parts[0]!!)
+		val encryptedData = BaseType.BASE64.decode(parts[1]!!)
+		if (iv.size != GCM_IV_LENGTH) {
+			return null
+		}
+		val secretKeySpec = createSecretKey(sKey)
+		val cipher = Cipher.getInstance(TRANSFORMATION)
+		val gcmParameterSpec = GCMParameterSpec(
+			GCM_TAG_LENGTH * 8, iv
+		)
+		cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, gcmParameterSpec)
+		val original = cipher.doFinal(encryptedData)
+		return String(original, StandardCharsets.UTF_8)
+	} catch (e: Exception) {
+		return null
+	}
 }
 
 /**
@@ -116,8 +116,8 @@ fun decrypt(sSrc: String, sKey: String): String? {
  */
 @Throws(Exception::class)
 private fun createSecretKey(sKey: String): SecretKeySpec {
-    val key = sKey.toByteArray(StandardCharsets.UTF_8)
-    val md = MessageDigest.getInstance("MD5")
-    val digest = md.digest(key)
-    return SecretKeySpec(digest, ALGORITHM)
+	val key = sKey.toByteArray(StandardCharsets.UTF_8)
+	val md = MessageDigest.getInstance("MD5")
+	val digest = md.digest(key)
+	return SecretKeySpec(digest, ALGORITHM)
 }

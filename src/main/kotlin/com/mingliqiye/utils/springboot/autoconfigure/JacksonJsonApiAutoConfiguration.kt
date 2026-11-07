@@ -46,32 +46,32 @@ import org.springframework.context.annotation.Primary
 open class JacksonJsonApiAutoConfiguration {
 
 
-    companion object {
-        private val log: Logger = MingLiLoggerFactory.getLogger("MingliUtils-JacksonAutoConfiguration")
-    }
+	companion object {
+		private val log: Logger = MingLiLoggerFactory.getLogger("MingliUtils-JacksonAutoConfiguration")
+	}
 
 
-    /*
-     * 创建并返回一个 JsonApi Bean 实例。
-     * 该方法会在没有其他 JsonApi Bean 存在时被调用，并将创建的 JacksonJsonApi 实例设置为全局默认的 JSON API。
-     *
-     * @param objectMapper 用于 JSON 操作的 ObjectMapper 实例。
-     * @return 返回配置好的 JsonApi 实例。
-     */
-    @Bean
-    @Primary
-    @ConditionalOnMissingBean(JsonApi::class)
-    open fun jsonApi(objectMapper: ObjectMapper): JsonApi {
-        return JacksonJsonApi(objectMapper).also {
-            log.info("JsonApi Bean Auto Configuration Success")
-            try {
-                JSONA.getJsonApi()
-            } catch (_: NullPointerException) {
-                JSONA.setJsonApi(it)
-                log.info(
-                    "JSONA Using {}", it.javaClass.name
-                )
-            }
-        }
-    }
+	/*
+	 * 创建并返回一个 JsonApi Bean 实例。
+	 * 该方法会在没有其他 JsonApi Bean 存在时被调用，并将创建的 JacksonJsonApi 实例设置为全局默认的 JSON API。
+	 *
+	 * @param objectMapper 用于 JSON 操作的 ObjectMapper 实例。
+	 * @return 返回配置好的 JsonApi 实例。
+	 */
+	@Bean
+	@Primary
+	@ConditionalOnMissingBean(JsonApi::class)
+	open fun jsonApi(objectMapper: ObjectMapper): JsonApi {
+		return JacksonJsonApi(objectMapper).also {
+			log.info("JsonApi Bean Auto Configuration Success")
+			try {
+				JSONA.getJsonApi()
+			} catch (_: NullPointerException) {
+				JSONA.setJsonApi(it)
+				log.info(
+					"JSONA Using {}", it.javaClass.name
+				)
+			}
+		}
+	}
 }

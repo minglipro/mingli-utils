@@ -25,9 +25,9 @@ package com.mingliqiye.utils.springboot.listener
 import java.lang.reflect.Method
 
 data class ApplicationRunnerData(
-    val beanName: String, val order: Int, val bean: Any, val method: Method
+	val beanName: String, val order: Int, val bean: Any, val method: Method,
 ) {
-    fun run() {
-        method.invoke(bean)
-    }
+	fun run() {
+		method.invoke(bean)
+	}
 }

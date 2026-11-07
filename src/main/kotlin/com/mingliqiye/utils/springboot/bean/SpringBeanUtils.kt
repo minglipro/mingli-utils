@@ -35,75 +35,75 @@ import org.springframework.stereotype.Component
 @Component
 class SpringBeanUtils : ApplicationContextAware {
 
-    companion object {
+	companion object {
 
-        @JvmStatic
-        val applicationContext: ApplicationContext
-            get() = applicationContextBase
-                ?: throw ApplicationContextException("applicationContext isn't ContextInitialized ?")
+		@JvmStatic
+		val applicationContext: ApplicationContext
+			get() = applicationContextBase
+				?: throw ApplicationContextException("applicationContext isn't ContextInitialized ?")
 
-        private var applicationContextBase: ApplicationContext? = null
+		private var applicationContextBase: ApplicationContext? = null
 
-        inline fun <reified T : Any> lazyBean(): Lazy<T> = lazy(::getBean)
+		inline fun <reified T : Any> lazyBean(): Lazy<T> = lazy(::getBean)
 
-        inline fun <reified T : Any> lazyBean(name: String): Lazy<T> = lazy {
-            getBean(name, T::class.java)
-        }
-
-
-        @Throws(BeansException::class)
-        inline fun <reified T : Any> getBean() = getBean(T::class.java)
-
-        /**
-         * 根据Bean名称获取Bean实例
-         *
-         * @param name Bean的名称
-         * @return 指定名称的Bean实例
-         * @throws BeansException 当获取Bean失败时抛出
-         * @throws ClassCastException 当类型转换失败时抛出
-         */
-        @JvmStatic
-        @Throws(BeansException::class)
-        @Suppress("UNCHECKED_CAST")
-        fun getBean(name: String): Any = applicationContext.getBean(name)
-
-        /**
-         * 根据Bean类型获取Bean实例
-         *
-         * @param clazz Bean的类型
-         * @return 指定类型的Bean实例
-         * @throws BeansException 当获取Bean失败时抛出
-         */
-        @JvmStatic
-        @Throws(BeansException::class)
-        fun <T : Any> getBean(clazz: Class<T>): T {
-            return applicationContext.getBean(clazz)
-        }
-
-        /**
-         * 根据Bean名称和类型获取Bean实例
-         *
-         * @param name Bean的名称
-         * @param clazz Bean的类型
-         * @return 指定名称和类型的Bean实例
-         * @throws BeansException 当获取Bean失败时抛出
-         */
-        @JvmStatic
-        @Throws(BeansException::class)
-        fun <T : Any> getBean(name: String, clazz: Class<T>): T {
-            return applicationContext.getBean<T>(name, clazz)
-        }
-    }
+		inline fun <reified T : Any> lazyBean(name: String): Lazy<T> = lazy {
+			getBean(name, T::class.java)
+		}
 
 
-    /**
-     * 设置Spring的应用上下文
-     *
-     * @param applicationContext Spring的应用上下文
-     * @throws BeansException 当设置应用上下文失败时抛出
-     */
-    @Throws(BeansException::class)
-    override fun setApplicationContext(applicationContext: ApplicationContext) {
-        applicationContextBase = applicationContext
-    }
+		@Throws(BeansException::class)
+		inline fun <reified T : Any> getBean() = getBean(T::class.java)
+
+		/**
+		 * 根据Bean名称获取Bean实例
+		 *
+		 * @param name Bean的名称
+		 * @return 指定名称的Bean实例
+		 * @throws BeansException 当获取Bean失败时抛出
+		 * @throws ClassCastException 当类型转换失败时抛出
+		 */
+		@JvmStatic
+		@Throws(BeansException::class)
+		@Suppress("UNCHECKED_CAST")
+		fun getBean(name: String): Any = applicationContext.getBean(name)
+
+		/**
+		 * 根据Bean类型获取Bean实例
+		 *
+		 * @param clazz Bean的类型
+		 * @return 指定类型的Bean实例
+		 * @throws BeansException 当获取Bean失败时抛出
+		 */
+		@JvmStatic
+		@Throws(BeansException::class)
+		fun <T : Any> getBean(clazz: Class<T>): T {
+			return applicationContext.getBean(clazz)
+		}
+
+		/**
+		 * 根据Bean名称和类型获取Bean实例
+		 *
+		 * @param name Bean的名称
+		 * @param clazz Bean的类型
+		 * @return 指定名称和类型的Bean实例
+		 * @throws BeansException 当获取Bean失败时抛出
+		 */
+		@JvmStatic
+		@Throws(BeansException::class)
+		fun <T : Any> getBean(name: String, clazz: Class<T>): T {
+			return applicationContext.getBean<T>(name, clazz)
+		}
+	}
+
+
+	/**
+	 * 设置Spring的应用上下文
+	 *
+	 * @param applicationContext Spring的应用上下文
+	 * @throws BeansException 当设置应用上下文失败时抛出
+	 */
+	@Throws(BeansException::class)
+	override fun setApplicationContext(applicationContext: ApplicationContext) {
+		applicationContextBase = applicationContext
+	}
 }

@@ -42,165 +42,165 @@ import kotlin.concurrent.withLock
  * @property initialSize 初始化时预热的对象数量，必须 >= [minSize] 且 <= [maxSize]
  */
 abstract class ObjectPool<T>(
-    private val maxSize: Int = Int.MAX_VALUE,
-    private val minSize: Int = 0,
-    private val initialSize: Int = 1,
+	private val maxSize: Int = Int.MAX_VALUE,
+	private val minSize: Int = 0,
+	private val initialSize: Int = 1,
 ) : Pool<T> {
 
-    /**
-     * 已创建（含空闲与借出）对象的总数，用于容量控制。
-     * 所有读写均在 [lock] 内完成，保证与 [borrowedCount]、[pool] 一致。
-     */
-    private var createdCount: Int = 0
+	/**
+	 * 已创建（含空闲与借出）对象的总数，用于容量控制。
+	 * 所有读写均在 [lock] 内完成，保证与 [borrowedCount]、[pool] 一致。
+	 */
+	private var createdCount: Int = 0
 
-    /** 当前已借出、尚未归还的对象数量（[lock] 保护） */
-    private var borrowedCount: Int = 0
+	/** 当前已借出、尚未归还的对象数量（[lock] 保护） */
+	private var borrowedCount: Int = 0
 
-    /**
-     * 空闲对象队列。全部访问均在 [lock] 内完成，
-     * 因此 [ArrayDeque.size] 即为精确空闲数。
-     */
-    private val pool = ArrayDeque<ObjectPoolData<T>>()
+	/**
+	 * 空闲对象队列。全部访问均在 [lock] 内完成，
+	 * 因此 [ArrayDeque.size] 即为精确空闲数。
+	 */
+	private val pool = ArrayDeque<ObjectPoolData<T>>()
 
-    /** 池是否已关闭 */
-    private val isClosed = AtomicBoolean(false)
+	/** 池是否已关闭 */
+	private val isClosed = AtomicBoolean(false)
 
-    private val lock = ReentrantLock()
-    private val notEmpty: Condition = lock.newCondition()
-    private val notFull: Condition = lock.newCondition()
+	private val lock = ReentrantLock()
+	private val notEmpty: Condition = lock.newCondition()
+	private val notFull: Condition = lock.newCondition()
 
-    init {
-        require(maxSize >= minSize)
-        require(initialSize >= minSize)
-        require(initialSize <= maxSize)
-        require(maxSize > 0)
-        repeat(initialSize) {
-            pool.addLast(init(createdCount++))
-        }
-    }
+	init {
+		require(maxSize >= minSize)
+		require(initialSize >= minSize)
+		require(initialSize <= maxSize)
+		require(maxSize > 0)
+		repeat(initialSize) {
+			pool.addLast(init(createdCount++))
+		}
+	}
 
-    /**
-     * 关闭对象池：销毁所有空闲对象，唤醒所有等待者。
-     * 已借出的对象在归还时会被直接销毁。
-     */
-    override fun close() {
-        lock.withLock {
-            if (!isClosed.compareAndSet(false, true)) {
-                return
-            }
-            while (pool.isNotEmpty()) {
-                val data = pool.removeFirst()
-                runCatching { destroy(data) }
-                createdCount--
-            }
-            notEmpty.signalAll()
-            notFull.signalAll()
-        }
-    }
+	/**
+	 * 关闭对象池：销毁所有空闲对象，唤醒所有等待者。
+	 * 已借出的对象在归还时会被直接销毁。
+	 */
+	override fun close() {
+		lock.withLock {
+			if (!isClosed.compareAndSet(false, true)) {
+				return
+			}
+			while (pool.isNotEmpty()) {
+				val data = pool.removeFirst()
+				runCatching { destroy(data) }
+				createdCount--
+			}
+			notEmpty.signalAll()
+			notFull.signalAll()
+		}
+	}
 
-    /**
-     * 从池中借出一个对象。
-     *
-     * 若池中有空闲对象则直接返回；否则在未达 [maxSize] 时新建；
-     * 达到上限时根据 [timeoutMillis] 阻塞等待归还，超时抛出 [IllegalStateException]。
-     *
-     * @param timeoutMillis 等待超时（毫秒）。<= 0 表示无限等待。
-     */
-    override fun borrow(timeoutMillis: Long): ObjectPoolData<T> {
-        lock.withLock {
-            var remainingNanos = if (timeoutMillis > 0) TimeUnit.MILLISECONDS.toNanos(timeoutMillis) else -1L
+	/**
+	 * 从池中借出一个对象。
+	 *
+	 * 若池中有空闲对象则直接返回；否则在未达 [maxSize] 时新建；
+	 * 达到上限时根据 [timeoutMillis] 阻塞等待归还，超时抛出 [IllegalStateException]。
+	 *
+	 * @param timeoutMillis 等待超时（毫秒）。<= 0 表示无限等待。
+	 */
+	override fun borrow(timeoutMillis: Long): ObjectPoolData<T> {
+		lock.withLock {
+			var remainingNanos = if (timeoutMillis > 0) TimeUnit.MILLISECONDS.toNanos(timeoutMillis) else -1L
 
-            while (true) {
-                if (isClosed.get()) {
-                    throw IllegalStateException("Object pool closed")
-                }
+			while (true) {
+				if (isClosed.get()) {
+					throw IllegalStateException("Object pool closed")
+				}
 
-                // 1. 优先取空闲对象
-                if (pool.isNotEmpty()) {
-                    val data = pool.removeFirst()
-                    borrowedCount++
-                    return data
-                }
+				// 1. 优先取空闲对象
+				if (pool.isNotEmpty()) {
+					val data = pool.removeFirst()
+					borrowedCount++
+					return data
+				}
 
-                // 2. 池未满则创建新对象
-                if (createdCount < maxSize) {
-                    val id = createdCount++
-                    val data = try {
-                        init(id)
-                    } catch (e: Throwable) {
-                        createdCount--
-                        throw e
-                    }
-                    borrowedCount++
-                    return data
-                }
+				// 2. 池未满则创建新对象
+				if (createdCount < maxSize) {
+					val id = createdCount++
+					val data = try {
+						init(id)
+					} catch (e: Throwable) {
+						createdCount--
+						throw e
+					}
+					borrowedCount++
+					return data
+				}
 
-                // 3. 池已满且无空闲，等待归还
-                if (remainingNanos < 0) {
-                    notEmpty.await()
-                } else if (remainingNanos == 0L) {
-                    throw IllegalStateException("Timeout waiting for object from pool")
-                } else {
-                    remainingNanos = notEmpty.awaitNanos(remainingNanos)
-                    if (remainingNanos <= 0L) {
-                        throw IllegalStateException("Timeout waiting for object from pool")
-                    }
-                }
-            }
-        }
-    }
+				// 3. 池已满且无空闲，等待归还
+				if (remainingNanos < 0) {
+					notEmpty.await()
+				} else if (remainingNanos == 0L) {
+					throw IllegalStateException("Timeout waiting for object from pool")
+				} else {
+					remainingNanos = notEmpty.awaitNanos(remainingNanos)
+					if (remainingNanos <= 0L) {
+						throw IllegalStateException("Timeout waiting for object from pool")
+					}
+				}
+			}
+		}
+	}
 
-    /**
-     * 归还对象到池中。
-     * 若池已关闭或对象不属于当前池，则直接销毁；否则回填到空闲队列并唤醒等待者。
-     */
-    override fun returnObject(obj: ObjectPoolData<T>) {
-        lock.withLock {
-            borrowedCount--
+	/**
+	 * 归还对象到池中。
+	 * 若池已关闭或对象不属于当前池，则直接销毁；否则回填到空闲队列并唤醒等待者。
+	 */
+	override fun returnObject(obj: ObjectPoolData<T>) {
+		lock.withLock {
+			borrowedCount--
 
-            if (isClosed.get() || obj.objectPool !== this) {
-                runCatching { destroy(obj) }
-                createdCount--
-                notFull.signal()
-                return
-            }
+			if (isClosed.get() || obj.objectPool !== this) {
+				runCatching { destroy(obj) }
+				createdCount--
+				notFull.signal()
+				return
+			}
 
-            pool.addLast(obj)
-            notEmpty.signal()
-        }
-    }
+			pool.addLast(obj)
+			notEmpty.signal()
+		}
+	}
 
-    /**
-     * 当前空闲对象数量（精确值）。
-     * 通过短暂持锁读取，与 [activeSize]/[totalSize] 各自独立但均为调用瞬间的真实值。
-     */
-    fun idleSize(): Int = lock.withLock { pool.size }
+	/**
+	 * 当前空闲对象数量（精确值）。
+	 * 通过短暂持锁读取，与 [activeSize]/[totalSize] 各自独立但均为调用瞬间的真实值。
+	 */
+	fun idleSize(): Int = lock.withLock { pool.size }
 
-    /** 当前已借出、尚未归还的对象数量（精确值） */
-    fun activeSize(): Int = lock.withLock { borrowedCount }
+	/** 当前已借出、尚未归还的对象数量（精确值） */
+	fun activeSize(): Int = lock.withLock { borrowedCount }
 
-    /** 已创建对象总数，含空闲与借出（精确值） */
-    fun totalSize(): Int = lock.withLock { createdCount }
+	/** 已创建对象总数，含空闲与借出（精确值） */
+	fun totalSize(): Int = lock.withLock { createdCount }
 
-    /** 池是否已关闭 */
-    fun closed(): Boolean = isClosed.get()
+	/** 池是否已关闭 */
+	fun closed(): Boolean = isClosed.get()
 
-    /**
-     * 一次性读取空闲 / 借出 / 总数 的一致快照（同一把锁内）。
-     *
-     * 相比分别调用三个方法，可避免三者之间因并发导致的不自洽
-     * （例如 `idle + active != total`）。
-     */
-    fun snapshot(): PoolSnapshot = lock.withLock {
-        PoolSnapshot(idle = pool.size, active = borrowedCount, total = createdCount, closed = isClosed.get())
-    }
+	/**
+	 * 一次性读取空闲 / 借出 / 总数 的一致快照（同一把锁内）。
+	 *
+	 * 相比分别调用三个方法，可避免三者之间因并发导致的不自洽
+	 * （例如 `idle + active != total`）。
+	 */
+	fun snapshot(): PoolSnapshot = lock.withLock {
+		PoolSnapshot(idle = pool.size, active = borrowedCount, total = createdCount, closed = isClosed.get())
+	}
 
-    /**
-     * 池状态快照。
-     * @property idle 空闲对象数
-     * @property active 已借出对象数
-     * @property total 已创建对象总数（= idle + active）
-     * @property closed 池是否已关闭
-     */
-    data class PoolSnapshot(val idle: Int, val active: Int, val total: Int, val closed: Boolean)
+	/**
+	 * 池状态快照。
+	 * @property idle 空闲对象数
+	 * @property active 已借出对象数
+	 * @property total 已创建对象总数（= idle + active）
+	 * @property closed 池是否已关闭
+	 */
+	data class PoolSnapshot(val idle: Int, val active: Int, val total: Int, val closed: Boolean)
 }

@@ -29,6 +29,6 @@ package com.mingliqiye.utils.exception
  * @param cause 异常原因，默认为 null
  */
 class FoundException @JvmOverloads constructor(
-    override val message: String? = "Found",
-    override val cause: Throwable? = null,
+	override val message: String? = "Found",
+	override val cause: Throwable? = null,
 ) : HttpStatusException(302, message, cause)

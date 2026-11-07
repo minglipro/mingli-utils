@@ -32,15 +32,15 @@ import com.mingliqiye.utils.json.api.type.JsonTypeReference
  */
 interface BaseJsonBooleanConverter<E> : BaseJsonConverter<E, Boolean> {
 
-    /**
-     * 获取目标类型的引用信息。
-     *
-     * 该方法返回一个 [JsonTypeReference] 对象，表示目标类型为 [Boolean]。
-     * 此方法重写了父接口中的定义，并通过 [JsonTypeReference.Companion.of] 方法获取布尔类型的引用。
-     *
-     * @return [JsonTypeReference<Boolean>] 表示布尔类型的引用。
-     * @throws Exception 如果在获取类型引用时发生异常，则抛出此异常。
-     */
-    @Throws(Exception::class)
-    override fun getToType() = JsonTypeReference.of<Boolean>()
+	/**
+	 * 获取目标类型的引用信息。
+	 *
+	 * 该方法返回一个 [JsonTypeReference] 对象，表示目标类型为 [Boolean]。
+	 * 此方法重写了父接口中的定义，并通过 [JsonTypeReference.Companion.of] 方法获取布尔类型的引用。
+	 *
+	 * @return [JsonTypeReference<Boolean>] 表示布尔类型的引用。
+	 * @throws Exception 如果在获取类型引用时发生异常，则抛出此异常。
+	 */
+	@Throws(Exception::class)
+	override fun getToType() = JsonTypeReference.of<Boolean>()
 }

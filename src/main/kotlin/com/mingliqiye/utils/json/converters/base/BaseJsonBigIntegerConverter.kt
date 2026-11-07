@@ -33,13 +33,13 @@ import java.math.BigInteger
  */
 interface BaseJsonBigIntegerConverter<E> : BaseJsonConverter<E, BigInteger> {
 
-    /**
-     * 获取目标类型的引用，用于 JSON 反序列化时确定目标类型。
-     * 该方法重写了父接口中的 [getToType] 方法，并返回 `BigInteger` 类型的引用。
-     *
-     * @return 返回 [JsonTypeReference] 对象，表示 `BigInteger` 类型的引用。
-     * @throws Exception 如果在获取类型引用过程中发生异常，则抛出该异常。
-     */
-    @Throws(Exception::class)
-    override fun getToType() = JsonTypeReference.of<BigInteger>()
+	/**
+	 * 获取目标类型的引用，用于 JSON 反序列化时确定目标类型。
+	 * 该方法重写了父接口中的 [getToType] 方法，并返回 `BigInteger` 类型的引用。
+	 *
+	 * @return 返回 [JsonTypeReference] 对象，表示 `BigInteger` 类型的引用。
+	 * @throws Exception 如果在获取类型引用过程中发生异常，则抛出该异常。
+	 */
+	@Throws(Exception::class)
+	override fun getToType() = JsonTypeReference.of<BigInteger>()
 }

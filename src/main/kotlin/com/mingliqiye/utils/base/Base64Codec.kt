@@ -30,35 +30,35 @@ import java.util.*
  */
 internal class Base64Codec : BaseCodec {
 
-    /*
-     * Base64编码器实例
-     * 用于执行字节数组到Base64字符串的编码操作
-     */
-    val encoder: Base64.Encoder = Base64.getEncoder()
+	/*
+	 * Base64编码器实例
+	 * 用于执行字节数组到Base64字符串的编码操作
+	 */
+	val encoder: Base64.Encoder = Base64.getEncoder()
 
-    /*
-     * Base64解码器实例
-     * 用于执行Base64字符串到字节数组的解码操作
-     */
-    val decoder: Base64.Decoder = Base64.getDecoder()
+	/*
+	 * Base64解码器实例
+	 * 用于执行Base64字符串到字节数组的解码操作
+	 */
+	val decoder: Base64.Decoder = Base64.getDecoder()
 
-    /*
-     * 将字节数组编码为Base64字符串
-     *
-     * @param bytes 待编码的字节数组
-     * @return 编码后的Base64字符串
-     */
-    override fun encode(bytes: ByteArray): String {
-        return encoder.encodeToString(bytes)
-    }
+	/*
+	 * 将字节数组编码为Base64字符串
+	 *
+	 * @param bytes 待编码的字节数组
+	 * @return 编码后的Base64字符串
+	 */
+	override fun encode(bytes: ByteArray): String {
+		return encoder.encodeToString(bytes)
+	}
 
-    /*
-     * 将Base64字符串解码为字节数组
-     *
-     * @param string 待解码的Base64字符串
-     * @return 解码后的字节数组
-     */
-    override fun decode(string: String): ByteArray {
-        return decoder.decode(string)
-    }
+	/*
+	 * 将Base64字符串解码为字节数组
+	 *
+	 * @param string 待解码的Base64字符串
+	 * @return 解码后的字节数组
+	 */
+	override fun decode(string: String): ByteArray {
+		return decoder.decode(string)
+	}
 }

@@ -34,13 +34,13 @@ import com.mingliqiye.utils.array.copyTo
  * @since 4.6.2
  */
 fun uuidToMysql(uuid: ByteArray): ByteArray {
-    return ByteArray(16).also {
-        // 按照MySQL UUID存储格式重新排列字节：前4字节、中间2字节、后2字节、最后8字节
-        uuid.copyTo(it, 0, 4, 4)
-            .copyTo(it, 4, 2, 2)
-            .copyTo(it, 6, 0, 2)
-            .copyTo(it, 8, 8, 8)
-    }
+	return ByteArray(16).also {
+		// 按照MySQL UUID存储格式重新排列字节：前4字节、中间2字节、后2字节、最后8字节
+		uuid.copyTo(it, 0, 4, 4)
+			.copyTo(it, 4, 2, 2)
+			.copyTo(it, 6, 0, 2)
+			.copyTo(it, 8, 8, 8)
+	}
 }
 
 /**
@@ -52,11 +52,11 @@ fun uuidToMysql(uuid: ByteArray): ByteArray {
  * @since 4.6.2
  */
 fun mysqlToUuid(uuid: ByteArray): ByteArray {
-    return ByteArray(16).also {
-        // 按照标准UUID格式恢复字节顺序：第6-7字节、第4-5字节、第0-3字节、第8-15字节
-        uuid.copyTo(it, 0, 6, 2)
-            .copyTo(it, 2, 4, 2)
-            .copyTo(it, 4, 0, 4)
-            .copyTo(it, 8, 8, 8)
-    }
+	return ByteArray(16).also {
+		// 按照标准UUID格式恢复字节顺序：第6-7字节、第4-5字节、第0-3字节、第8-15字节
+		uuid.copyTo(it, 0, 6, 2)
+			.copyTo(it, 2, 4, 2)
+			.copyTo(it, 4, 0, 4)
+			.copyTo(it, 8, 8, 8)
+	}
 }

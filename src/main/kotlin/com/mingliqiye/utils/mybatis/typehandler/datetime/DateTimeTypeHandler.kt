@@ -38,35 +38,35 @@ import java.sql.Types.TIMESTAMP
 @MappedTypes(DateTime::class)
 class DateTimeTypeHandler : QuickBaseTypeHandler<DateTime>() {
 
-    override fun getValue(
-        vg: QuickBaseTypeHandlerValueGetter,
-        ct: CallType,
-        ci: Int?,
-        cn: String?
-    ): DateTime? {
-        val data = (when (ct) {
-            CallType.RESULTSET_INDEX -> vg.resultSet!!.getTimestamp(ci!!)
-            CallType.RESULTSET_NAME -> vg.resultSet!!.getTimestamp(cn!!)
-            CallType.CALLABLE_STATEMENT_INDEX -> vg.callableStatement!!.getTimestamp(ci!!)
-        })
-        if (data == null) {
-            return null
-        }
-        return DateTime.of(
-            data
-        )
-    }
+	override fun getValue(
+		vg: QuickBaseTypeHandlerValueGetter,
+		ct: CallType,
+		ci: Int?,
+		cn: String?,
+	): DateTime? {
+		val data = (when (ct) {
+			CallType.RESULTSET_INDEX -> vg.resultSet!!.getTimestamp(ci!!)
+			CallType.RESULTSET_NAME -> vg.resultSet!!.getTimestamp(cn!!)
+			CallType.CALLABLE_STATEMENT_INDEX -> vg.callableStatement!!.getTimestamp(ci!!)
+		})
+		if (data == null) {
+			return null
+		}
+		return DateTime.of(
+			data
+		)
+	}
 
-    override fun setValue(
-        ps: PreparedStatement,
-        index: Int,
-        parameter: DateTime?,
-        jdbcType: JdbcType?
-    ) {
-        if (parameter == null) {
-            ps.setNull(index, TIMESTAMP)
-            return
-        }
-        ps.setTimestamp(index, Timestamp.valueOf(parameter.toLocalDateTime()))
-    }
+	override fun setValue(
+		ps: PreparedStatement,
+		index: Int,
+		parameter: DateTime?,
+		jdbcType: JdbcType?,
+	) {
+		if (parameter == null) {
+			ps.setNull(index, TIMESTAMP)
+			return
+		}
+		ps.setTimestamp(index, Timestamp.valueOf(parameter.toLocalDateTime()))
+	}
 }

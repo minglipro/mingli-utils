@@ -35,54 +35,54 @@ import java.sql.PreparedStatement
 @MappedTypes(UUID::class)
 class MysqlUUIDBinaryTypeHandler : QuickBaseTypeHandler<UUID>() {
 
-    companion object {
-        /**
-         * 将字节数组转换为UUID对象
-         *
-         * @param byteArray 字节数组
-         * @return UUID对象，如果字节数组为null则返回null
-         */
-        private fun toUUID(byteArray: ByteArray?): UUID? {
-            return byteArray?.let { UUID.of(mysqlToUuid(it)) }
-        }
+	companion object {
+		/**
+		 * 将字节数组转换为UUID对象
+		 *
+		 * @param byteArray 字节数组
+		 * @return UUID对象，如果字节数组为null则返回null
+		 */
+		private fun toUUID(byteArray: ByteArray?): UUID? {
+			return byteArray?.let { UUID.of(mysqlToUuid(it)) }
+		}
 
-        /**
-         * 将UUID对象转换为字节数组
-         *
-         * @param uuid UUID对象
-         * @return 字节数组，如果UUID为null则返回null
-         */
-        fun toByteArray(uuid: UUID?): ByteArray? {
-            return uuid?.let { uuidToMysql(it.toBytes()) }
-        }
-    }
+		/**
+		 * 将UUID对象转换为字节数组
+		 *
+		 * @param uuid UUID对象
+		 * @return 字节数组，如果UUID为null则返回null
+		 */
+		fun toByteArray(uuid: UUID?): ByteArray? {
+			return uuid?.let { uuidToMysql(it.toBytes()) }
+		}
+	}
 
-    override fun getValue(
-        vg: QuickBaseTypeHandlerValueGetter, ct: CallType, ci: Int?, cn: String?
-    ): UUID? {
+	override fun getValue(
+		vg: QuickBaseTypeHandlerValueGetter, ct: CallType, ci: Int?, cn: String?,
+	): UUID? {
 
-        val data: ByteArray? = when (ct) {
-            CallType.RESULTSET_NAME -> vg.resultSet!!.getBytes(cn!!)
-            CallType.RESULTSET_INDEX -> vg.resultSet!!.getBytes(ci!!)
-            CallType.CALLABLE_STATEMENT_INDEX -> vg.resultSet!!.getBytes(ci!!)
-        }
-        if (data == null) {
-            return null
-        }
+		val data: ByteArray? = when (ct) {
+			CallType.RESULTSET_NAME -> vg.resultSet!!.getBytes(cn!!)
+			CallType.RESULTSET_INDEX -> vg.resultSet!!.getBytes(ci!!)
+			CallType.CALLABLE_STATEMENT_INDEX -> vg.resultSet!!.getBytes(ci!!)
+		}
+		if (data == null) {
+			return null
+		}
 
-        return toUUID(
-            data
-        )
-    }
+		return toUUID(
+			data
+		)
+	}
 
-    override fun setValue(
-        ps: PreparedStatement, index: Int, parameter: UUID?, jdbcType: JdbcType?
-    ) {
-        if (parameter == null) {
-            ps.setNull(index, java.sql.Types.BINARY)
-            return
-        }
-        ps.setBytes(index, toByteArray(parameter))
-    }
+	override fun setValue(
+		ps: PreparedStatement, index: Int, parameter: UUID?, jdbcType: JdbcType?,
+	) {
+		if (parameter == null) {
+			ps.setNull(index, java.sql.Types.BINARY)
+			return
+		}
+		ps.setBytes(index, toByteArray(parameter))
+	}
 
 }

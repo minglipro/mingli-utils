@@ -44,24 +44,24 @@ import java.security.NoSuchAlgorithmException
  */
 @Throws(IOException::class, NoSuchAlgorithmException::class)
 fun calculateFileHash(file: File, algorithm: String): String {
-    // 检查文件是否存在
-    if (!file.exists()) {
-        throw IOException("File not found: " + file.absolutePath)
-    }
+	// 检查文件是否存在
+	if (!file.exists()) {
+		throw IOException("File not found: " + file.absolutePath)
+	}
 
-    val digest = MessageDigest.getInstance(algorithm)
+	val digest = MessageDigest.getInstance(algorithm)
 
-    FileInputStream(file).use { fis ->
-        val buffer = ByteArray(8192)
-        var bytesRead: Int
+	FileInputStream(file).use { fis ->
+		val buffer = ByteArray(8192)
+		var bytesRead: Int
 
-        // 分块读取文件内容并更新摘要
-        while (fis.read(buffer).also { bytesRead = it } != -1) {
-            digest.update(buffer, 0, bytesRead)
-        }
-    }
+		// 分块读取文件内容并更新摘要
+		while (fis.read(buffer).also { bytesRead = it } != -1) {
+			digest.update(buffer, 0, bytesRead)
+		}
+	}
 
-    return bytesToHex(digest.digest())
+	return bytesToHex(digest.digest())
 }
 
 /**
@@ -71,7 +71,7 @@ fun calculateFileHash(file: File, algorithm: String): String {
  * @return 加密后的 BCrypt 哈希字符串
  */
 fun bcrypt(string: String): String {
-    return hashpw(string)
+	return hashpw(string)
 }
 
 /**
@@ -82,5 +82,5 @@ fun bcrypt(string: String): String {
  * @return 如果匹配返回 true，否则返回 false
  */
 fun checkBcrypt(string: String, bcrypted: String): Boolean {
-    return checkpw(string, bcrypted)
+	return checkpw(string, bcrypted)
 }

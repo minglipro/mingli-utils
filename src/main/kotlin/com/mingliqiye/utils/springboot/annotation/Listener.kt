@@ -27,6 +27,6 @@ import org.springframework.stereotype.Component
 
 @Component
 annotation class Listener(
-    @get:AliasFor(annotation = Component::class)
-    val value: String = ""
+	@get:AliasFor(annotation = Component::class)
+	val value: String = "",
 )

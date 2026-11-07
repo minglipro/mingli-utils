@@ -26,66 +26,66 @@ import java.io.Serializable
 import java.nio.ByteBuffer
 
 class NetworkPort : Serializable {
-    val port: Int
+	val port: Int
 
-    constructor(port: Int) {
-        testPort(port)
-        this.port = port
-    }
+	constructor(port: Int) {
+		testPort(port)
+		this.port = port
+	}
 
-    fun toByteArray(): ByteArray {
-        val byteArray = ByteArray(2)
-        byteArray[0] = (port shr 8 and 0xFF).toByte()
-        byteArray[1] = (port and 0xFF).toByte()
-        return byteArray
-    }
+	fun toByteArray(): ByteArray {
+		val byteArray = ByteArray(2)
+		byteArray[0] = (port shr 8 and 0xFF).toByte()
+		byteArray[1] = (port and 0xFF).toByte()
+		return byteArray
+	}
 
-    fun writeToByteBuffer(byteBuffer: ByteBuffer): ByteBuffer {
-        return byteBuffer.put(toByteArray())
-    }
+	fun writeToByteBuffer(byteBuffer: ByteBuffer): ByteBuffer {
+		return byteBuffer.put(toByteArray())
+	}
 
-    companion object {
+	companion object {
 
-        /**
-         * 创建NetworkPort实例
-         * @param port 端口号
-         * @return NetworkPort实例
-         */
-        @JvmStatic
-        fun of(port: Int): NetworkPort {
-            return NetworkPort(port)
-        }
+		/**
+		 * 创建NetworkPort实例
+		 * @param port 端口号
+		 * @return NetworkPort实例
+		 */
+		@JvmStatic
+		fun of(port: Int): NetworkPort {
+			return NetworkPort(port)
+		}
 
-        /**
-         * 从字节数组创建NetworkPort实例
-         * @param byteArray 包含端口信息的字节数组（长度至少为2）
-         * @return NetworkPort实例
-         */
-        @JvmStatic
-        fun of(byteArray: ByteArray): NetworkPort {
-            // 将字节数组的前两个字节转换为端口号
-            val port = ((byteArray[0].toInt() and 0xFF) shl 8) or (byteArray[1].toInt() and 0xFF)
-            return of(port)
-        }
+		/**
+		 * 从字节数组创建NetworkPort实例
+		 * @param byteArray 包含端口信息的字节数组（长度至少为2）
+		 * @return NetworkPort实例
+		 */
+		@JvmStatic
+		fun of(byteArray: ByteArray): NetworkPort {
+			// 将字节数组的前两个字节转换为端口号
+			val port = ((byteArray[0].toInt() and 0xFF) shl 8) or (byteArray[1].toInt() and 0xFF)
+			return of(port)
+		}
 
-        /**
-         * 从ByteBuffer创建NetworkPort实例
-         * @param byteBuffer 包含端口信息的ByteBuffer
-         * @return NetworkPort实例
-         */
-        @JvmStatic
-        fun of(byteBuffer: ByteBuffer): NetworkPort {
-            val byteArray = ByteArray(2)
-            byteBuffer.get(byteArray)
-            return of(byteArray)
-        }
+		/**
+		 * 从ByteBuffer创建NetworkPort实例
+		 * @param byteBuffer 包含端口信息的ByteBuffer
+		 * @return NetworkPort实例
+		 */
+		@JvmStatic
+		fun of(byteBuffer: ByteBuffer): NetworkPort {
+			val byteArray = ByteArray(2)
+			byteBuffer.get(byteArray)
+			return of(byteArray)
+		}
 
-        @JvmStatic
-        fun testPort(port: Int) {
-            // 验证端口号范围是否在0-65535之间
-            if (port !in 0..65535) {
-                throw NetworkException("$port 不是正确的端口号")
-            }
-        }
-    }
+		@JvmStatic
+		fun testPort(port: Int) {
+			// 验证端口号范围是否在0-65535之间
+			if (port !in 0..65535) {
+				throw NetworkException("$port 不是正确的端口号")
+			}
+		}
+	}
 }

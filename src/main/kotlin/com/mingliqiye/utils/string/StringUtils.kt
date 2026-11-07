@@ -48,10 +48,10 @@ val NULLISH_STRINGS = setOf("null", "NaN", "undefined", "None", "none")
 @OptIn(ExperimentalContracts::class)
 @JvmName("isEmpty")
 fun String?.isNullish(): Boolean {
-    contract {
-        returns(false) implies (this@isNullish != null)
-    }
-    return this.isNullOrBlank() || this in NULLISH_STRINGS
+	contract {
+		returns(false) implies (this@isNullish != null)
+	}
+	return this.isNullOrBlank() || this in NULLISH_STRINGS
 }
 
 @JvmName("__Formatde")
@@ -67,53 +67,53 @@ fun String.formatd(vararg args: Any) = com.mingliqiye.utils.string.format(this, 
  * @return 格式化后的字符串
  */
 fun format(str: String, vararg args: Any?): String {
-    var argIndex = 0
-    val result = StringBuilder()
-    var lastIndex = 0
+	var argIndex = 0
+	val result = StringBuilder()
+	var lastIndex = 0
 
-    // 匹配所有非转义的 {}
-    val pattern = Regex("(?<!\\\\)\\{}")
-    val matches = pattern.findAll(str)
+	// 匹配所有非转义的 {}
+	val pattern = Regex("(?<!\\\\)\\{}")
+	val matches = pattern.findAll(str)
 
-    for (match in matches) {
-        // 添加匹配前的文本
-        result.append(str, lastIndex, match.range.first)
+	for (match in matches) {
+		// 添加匹配前的文本
+		result.append(str, lastIndex, match.range.first)
 
-        // 替换占位符
-        if (argIndex < args.size) {
-            result.append(args[argIndex].toString())
-            argIndex++
-        }
+		// 替换占位符
+		if (argIndex < args.size) {
+			result.append(args[argIndex].toString())
+			argIndex++
+		}
 
-        lastIndex = match.range.last + 1
-    }
+		lastIndex = match.range.last + 1
+	}
 
-    // 添加剩余文本
-    if (lastIndex < str.length) {
-        result.append(str, lastIndex, str.length)
-    }
+	// 添加剩余文本
+	if (lastIndex < str.length) {
+		result.append(str, lastIndex, str.length)
+	}
 
-    // 处理转义的 \\{}（替换为 {}）
-    val finalResult = result.toString().replace("\\{}", "{}")
+	// 处理转义的 \\{}（替换为 {}）
+	val finalResult = result.toString().replace("\\{}", "{}")
 
-    // 检查参数数量
-    val placeholderCount = matches.count()
-    if (placeholderCount != args.size) {
-        log.warn(
-            "Placeholder Count: {}, Argument Count: {}",
-            placeholderCount, args.size
-        )
-        log.warn("Template: {}", str)
-        log.warn(
-            "Arguments: [{}]",
-            ", ".join(args) {
-                if (it.isNull()) return@join "null:null"
-                "${it.javaClass.simpleName}:$it"
-            }
-        )
-    }
+	// 检查参数数量
+	val placeholderCount = matches.count()
+	if (placeholderCount != args.size) {
+		log.warn(
+			"Placeholder Count: {}, Argument Count: {}",
+			placeholderCount, args.size
+		)
+		log.warn("Template: {}", str)
+		log.warn(
+			"Arguments: [{}]",
+			", ".join(args) {
+				if (it.isNull()) return@join "null:null"
+				"${it.javaClass.simpleName}:$it"
+			}
+		)
+	}
 
-    return finalResult
+	return finalResult
 }
 
 
@@ -124,12 +124,12 @@ fun format(str: String, vararg args: Any?): String {
  * @return 转换后的Unicode编码字符串，每个字符都以\\u开头的十六进制形式表示
  */
 fun stringToUnicode(str: String): String {
-    val sb = java.lang.StringBuilder()
-    val c = str.toCharArray()
-    for (value in c) {
-        sb.append(stringToUnicode(value))
-    }
-    return sb.toString()
+	val sb = java.lang.StringBuilder()
+	val c = str.toCharArray()
+	for (value in c) {
+		sb.append(stringToUnicode(value))
+	}
+	return sb.toString()
 }
 
 /**
@@ -139,7 +139,7 @@ fun stringToUnicode(str: String): String {
  * @return 返回格式为"\\uXXXX"的Unicode转义字符串，其中XXXX为字符的十六进制Unicode码点
  */
 fun stringToUnicode(c: Char): String {
-    return "\\u" + String.format("%04x", c.code)
+	return "\\u" + String.format("%04x", c.code)
 }
 
 /**
@@ -149,7 +149,7 @@ fun stringToUnicode(c: Char): String {
  * @return 返回格式为"\\uXXXX"的Unicode字符串，其中XXXX是参数c的十六进制表示
  */
 fun stringToUnicode(c: Int): String {
-    return "\\u" + Integer.toHexString(c)
+	return "\\u" + Integer.toHexString(c)
 }
 
 /**
@@ -161,17 +161,17 @@ fun stringToUnicode(c: Int): String {
  * @return 转换后的普通字符串，包含对应的Unicode字符
  */
 fun unicodeToString(unicode: String): String {
-    val sb = java.lang.StringBuilder()
-    // 按照Unicode转义符分割字符串，得到包含十六进制编码的数组
-    val hex: Array<String?> = unicode.split("\\\\u".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    // 从索引1开始遍历，因为分割后的第一个元素是转义符前面的内容（可能为空）
-    for (i in 1..<hex.size) {
-        // 将十六进制字符串转换为整数，作为字符的Unicode码点
-        val index = hex[i]!!.toInt(16)
-        // 将Unicode码点转换为对应字符并添加到结果中
-        sb.append(index.toChar())
-    }
-    return sb.toString()
+	val sb = java.lang.StringBuilder()
+	// 按照Unicode转义符分割字符串，得到包含十六进制编码的数组
+	val hex: Array<String?> = unicode.split("\\\\u".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+	// 从索引1开始遍历，因为分割后的第一个元素是转义符前面的内容（可能为空）
+	for (i in 1..<hex.size) {
+		// 将十六进制字符串转换为整数，作为字符的Unicode码点
+		val index = hex[i]!!.toInt(16)
+		// 将Unicode码点转换为对应字符并添加到结果中
+		sb.append(index.toChar())
+	}
+	return sb.toString()
 }
 
 /**
@@ -181,7 +181,7 @@ fun unicodeToString(unicode: String): String {
  * @return 指定初始容量的StringBuilder实例
  */
 fun stringBuilder(i: Int): java.lang.StringBuilder {
-    return StringBuilder(i)
+	return StringBuilder(i)
 }
 
 /**
@@ -190,7 +190,7 @@ fun stringBuilder(i: Int): java.lang.StringBuilder {
  * @return 包含当前字符串内容的StringBuilder实例
  */
 fun String.stringBuilder(): java.lang.StringBuilder {
-    return StringBuilder(this)
+	return StringBuilder(this)
 }
 
 /**
@@ -200,7 +200,7 @@ fun String.stringBuilder(): java.lang.StringBuilder {
  * @return 分割后的字符串列表
  */
 fun split(str: String, separator: String): List<String> {
-    return str.split(separator)
+	return str.split(separator)
 }
 
 /**
@@ -210,16 +210,16 @@ fun split(str: String, separator: String): List<String> {
  * @return 连接后的字符串
  */
 fun <T> List<T>.join(separator: String, getstring: (T) -> String = { it.toString() }): String {
-    // 使用StringBuilder构建结果字符串
-    val sb = StringBuilder()
-    for (i in this.indices) {
-        sb.append(this[i])
-        // 除了最后一个元素外，都在后面添加分隔符
-        if (i != this.size - 1) {
-            sb.append(separator)
-        }
-    }
-    return sb.toString()
+	// 使用StringBuilder构建结果字符串
+	val sb = StringBuilder()
+	for (i in this.indices) {
+		sb.append(this[i])
+		// 除了最后一个元素外，都在后面添加分隔符
+		if (i != this.size - 1) {
+			sb.append(separator)
+		}
+	}
+	return sb.toString()
 }
 
 /**
@@ -229,49 +229,49 @@ fun <T> List<T>.join(separator: String, getstring: (T) -> String = { it.toString
  * @return 连接后的字符串
  */
 fun <T> String.join(list: List<T>, getstring: (T) -> String = { it.toString() }): String {
-    // 使用StringBuilder构建结果字符串
-    val sb = StringBuilder()
-    for (i in list.indices) {
-        sb.append(getstring(list[i]))
-        // 除了最后一个元素外，都在后面添加当前字符串作为分隔符
-        if (i != list.size - 1) {
-            sb.append(this)
-        }
-    }
-    return sb.toString()
+	// 使用StringBuilder构建结果字符串
+	val sb = StringBuilder()
+	for (i in list.indices) {
+		sb.append(getstring(list[i]))
+		// 除了最后一个元素外，都在后面添加当前字符串作为分隔符
+		if (i != list.size - 1) {
+			sb.append(this)
+		}
+	}
+	return sb.toString()
 }
 
 fun <T> String.join(array: Array<T>, getstring: (T) -> String = { it.toString() }): String {
-    // 使用StringBuilder构建结果字符串
-    val sb = StringBuilder()
-    for (i in array.indices) {
-        sb.append(getstring(array[i]))
-        // 除了最后一个元素外，都在后面添加当前字符串作为分隔符
-        if (i != array.size - 1) {
-            sb.append(this)
-        }
-    }
-    return sb.toString()
+	// 使用StringBuilder构建结果字符串
+	val sb = StringBuilder()
+	for (i in array.indices) {
+		sb.append(getstring(array[i]))
+		// 除了最后一个元素外，都在后面添加当前字符串作为分隔符
+		if (i != array.size - 1) {
+			sb.append(this)
+		}
+	}
+	return sb.toString()
 }
 
 fun String?.parserTemplate(template: String): List<String>? {
-    if (this == null) return null
-    val regex: Regex = Regex(
-        "^" +
-                template
-                    .replace("\\", "\\\\")
-                    .replace("(", "\\(")
-                    .replace(")", "\\)")
-                    .replace("[", "\\[")
-                    .replace("]", "\\]")
-                    .replace("+", "\\+")
-                    .replace("=", "\\=")
-                    .replace("{}", "((?s).*)") + "$".toRegex()
-    )
-    val datas = regex.find(this)?.groupValues ?: return null
-    return List(datas.size - 1) {
-        datas[it + 1]
-    }
+	if (this == null) return null
+	val regex: Regex = Regex(
+		"^" +
+				template
+					.replace("\\", "\\\\")
+					.replace("(", "\\(")
+					.replace(")", "\\)")
+					.replace("[", "\\[")
+					.replace("]", "\\]")
+					.replace("+", "\\+")
+					.replace("=", "\\=")
+					.replace("{}", "((?s).*)") + "$".toRegex()
+	)
+	val datas = regex.find(this)?.groupValues ?: return null
+	return List(datas.size - 1) {
+		datas[it + 1]
+	}
 }
 
 
@@ -280,24 +280,24 @@ fun String.urlDecode() = URLDecoder.decode(this, Charsets.UTF_8.name())
 
 
 fun String.hmacSHA256String(keyS: String): String {
-    val instance = Mac.getInstance("HmacSHA256")
-    val key = keyS.toByteArray()
-    instance.init(SecretKeySpec(key, 0, key.size, "HmacSHA256"))
-    val bytes = instance.doFinal(this.toByteArray())
-    return BASE16.encode(bytes)
+	val instance = Mac.getInstance("HmacSHA256")
+	val key = keyS.toByteArray()
+	instance.init(SecretKeySpec(key, 0, key.size, "HmacSHA256"))
+	val bytes = instance.doFinal(this.toByteArray())
+	return BASE16.encode(bytes)
 }
 
 fun String.md5String(): String {
-    val instance = MessageDigest.getInstance("MD5")
-    instance.update(this.toByteArray())
-    val bytes = instance.digest()
-    return BASE16.encode(bytes)
+	val instance = MessageDigest.getInstance("MD5")
+	instance.update(this.toByteArray())
+	val bytes = instance.digest()
+	return BASE16.encode(bytes)
 }
 
 fun String.hmacMd5String(keyS: String): String {
-    val instance = Mac.getInstance("HmacMD5")
-    val key = keyS.toByteArray()
-    instance.init(SecretKeySpec(key, 0, key.size, "HmacSHA256"))
-    val bytes = instance.doFinal(this.toByteArray())
-    return BASE16.encode(bytes)
+	val instance = Mac.getInstance("HmacMD5")
+	val key = keyS.toByteArray()
+	instance.init(SecretKeySpec(key, 0, key.size, "HmacSHA256"))
+	val bytes = instance.doFinal(this.toByteArray())
+	return BASE16.encode(bytes)
 }

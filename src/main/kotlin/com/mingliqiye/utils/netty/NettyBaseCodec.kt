@@ -48,69 +48,69 @@ import io.netty.handler.codec.MessageToMessageCodec
  */
 abstract class NettyBaseCodec<I : Any, O : Any> : MessageToMessageCodec<I, O>() {
 
-    /**
-     * 解码方法（Netty 框架回调）
-     *
-     * 将入站消息 I 转换为 O，并添加到输出列表
-     *
-     * @param ctx ChannelHandler 上下文，可用于获取 Channel 等信息
-     * @param msg 入站消息（类型为 I）
-     * @param out 输出列表，解码后的消息（类型为 O）将被添加到此列表
-     *
-     * @see decode 抽象方法，由子类实现具体的解码逻辑
-     */
-    override fun decode(ctx: ChannelHandlerContext, msg: I, out: MutableList<Any>) {
-        // 调用子类实现的抽象解码方法，将结果添加到输出列表
-        out.add(decode(msg, ctx, out))
-    }
+	/**
+	 * 解码方法（Netty 框架回调）
+	 *
+	 * 将入站消息 I 转换为 O，并添加到输出列表
+	 *
+	 * @param ctx ChannelHandler 上下文，可用于获取 Channel 等信息
+	 * @param msg 入站消息（类型为 I）
+	 * @param out 输出列表，解码后的消息（类型为 O）将被添加到此列表
+	 *
+	 * @see decode 抽象方法，由子类实现具体的解码逻辑
+	 */
+	override fun decode(ctx: ChannelHandlerContext, msg: I, out: MutableList<Any>) {
+		// 调用子类实现的抽象解码方法，将结果添加到输出列表
+		out.add(decode(msg, ctx, out))
+	}
 
-    /**
-     * 编码方法（Netty 框架回调）
-     *
-     * 将出站消息 O 转换为 I，并添加到输出列表
-     *
-     * @param ctx ChannelHandler 上下文
-     * @param msg 出站消息（类型为 O）
-     * @param out 输出列表，编码后的消息（类型为 I）将被添加到此列表
-     *
-     * @see encode 抽象方法，由子类实现具体的编码逻辑
-     */
-    override fun encode(ctx: ChannelHandlerContext, msg: O, out: MutableList<Any>) {
-        // 调用子类实现的抽象编码方法，将结果添加到输出列表
-        out.add(encode(msg, ctx, out))
-    }
+	/**
+	 * 编码方法（Netty 框架回调）
+	 *
+	 * 将出站消息 O 转换为 I，并添加到输出列表
+	 *
+	 * @param ctx ChannelHandler 上下文
+	 * @param msg 出站消息（类型为 O）
+	 * @param out 输出列表，编码后的消息（类型为 I）将被添加到此列表
+	 *
+	 * @see encode 抽象方法，由子类实现具体的编码逻辑
+	 */
+	override fun encode(ctx: ChannelHandlerContext, msg: O, out: MutableList<Any>) {
+		// 调用子类实现的抽象编码方法，将结果添加到输出列表
+		out.add(encode(msg, ctx, out))
+	}
 
-    /**
-     * 抽象解码方法
-     *
-     * 子类必须实现此方法，定义具体的解码逻辑
-     * 将类型 I 的消息转换为类型 O
-     *
-     * @param inData 输入数据（类型 I），需要被解码
-     * @param channelHandlerContext ChannelHandler 上下文
-     * @param outList 输出列表，可用于在解码过程中添加多个消息（目前设计为单一返回值，outList 暂未使用）
-     * @return 解码后的数据（类型 O）
-     */
-    abstract fun decode(
-        inData: I,
-        channelHandlerContext: ChannelHandlerContext,
-        outList: MutableList<Any>,
-    ): O
+	/**
+	 * 抽象解码方法
+	 *
+	 * 子类必须实现此方法，定义具体的解码逻辑
+	 * 将类型 I 的消息转换为类型 O
+	 *
+	 * @param inData 输入数据（类型 I），需要被解码
+	 * @param channelHandlerContext ChannelHandler 上下文
+	 * @param outList 输出列表，可用于在解码过程中添加多个消息（目前设计为单一返回值，outList 暂未使用）
+	 * @return 解码后的数据（类型 O）
+	 */
+	abstract fun decode(
+		inData: I,
+		channelHandlerContext: ChannelHandlerContext,
+		outList: MutableList<Any>,
+	): O
 
-    /**
-     * 抽象编码方法
-     *
-     * 子类必须实现此方法，定义具体的编码逻辑
-     * 将类型 O 的消息转换为类型 I
-     *
-     * @param inData 输入数据（类型 O），需要被编码
-     * @param channelHandlerContext ChannelHandler 上下文
-     * @param outList 输出列表，可用于在编码过程中添加多个消息（目前设计为单一返回值，outList 暂未使用）
-     * @return 编码后的数据（类型 I）
-     */
-    abstract fun encode(
-        inData: O,
-        channelHandlerContext: ChannelHandlerContext,
-        outList: MutableList<Any>,
-    ): I
+	/**
+	 * 抽象编码方法
+	 *
+	 * 子类必须实现此方法，定义具体的编码逻辑
+	 * 将类型 O 的消息转换为类型 I
+	 *
+	 * @param inData 输入数据（类型 O），需要被编码
+	 * @param channelHandlerContext ChannelHandler 上下文
+	 * @param outList 输出列表，可用于在编码过程中添加多个消息（目前设计为单一返回值，outList 暂未使用）
+	 * @return 编码后的数据（类型 I）
+	 */
+	abstract fun encode(
+		inData: O,
+		channelHandlerContext: ChannelHandlerContext,
+		outList: MutableList<Any>,
+	): I
 }

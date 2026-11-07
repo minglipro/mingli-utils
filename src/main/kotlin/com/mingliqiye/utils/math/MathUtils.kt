@@ -167,7 +167,7 @@ operator fun BigDecimal.div(value: BigDecimal): BigDecimal = this.divide(value)
  * @return 除法运算结果
  */
 operator fun BigDecimal.div(
-    value: Long,
+	value: Long,
 ): BigDecimal = this.divide(BigDecimal(value))
 
 /**
@@ -176,7 +176,7 @@ operator fun BigDecimal.div(
  * @return 除法运算结果
  */
 operator fun BigDecimal.div(
-    value: Int,
+	value: Int,
 ): BigDecimal = this.divide(BigDecimal(value))
 
 /**
@@ -185,7 +185,7 @@ operator fun BigDecimal.div(
  * @return 除法运算结果
  */
 operator fun BigDecimal.div(
-    value: Double,
+	value: Double,
 ): BigDecimal = this.divide(BigDecimal(value.toString()))
 
 /**
@@ -194,7 +194,7 @@ operator fun BigDecimal.div(
  * @return 除法运算结果
  */
 operator fun BigDecimal.div(
-    value: Float,
+	value: Float,
 ): BigDecimal = this.divide(BigDecimal(value.toString()))
 
 /**
@@ -203,7 +203,7 @@ operator fun BigDecimal.div(
  * @return 除法运算结果
  */
 operator fun BigDecimal.div(
-    value: BigInteger,
+	value: BigInteger,
 ): BigDecimal = this.divide(BigDecimal(value))
 
 /**

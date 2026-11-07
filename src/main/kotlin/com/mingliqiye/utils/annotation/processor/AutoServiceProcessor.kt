@@ -35,70 +35,70 @@ import javax.tools.StandardLocation
 
 @SupportedAnnotationTypes("com.mingliqiye.utils.annotation.AutoService")
 class AutoServiceProcessor : AbstractProcessor() {
-    override fun init(processingEnv: ProcessingEnvironment) {
-        super.init(processingEnv)
-    }
+	override fun init(processingEnv: ProcessingEnvironment) {
+		super.init(processingEnv)
+	}
 
-    override fun process(
-        annotations: Set<TypeElement>,
-        roundEnv: RoundEnvironment,
-    ): Boolean {
+	override fun process(
+		annotations: Set<TypeElement>,
+		roundEnv: RoundEnvironment,
+	): Boolean {
 
-        val service = mutableMapOf<String, MutableList<String>>()
-        val elements = roundEnv.getElementsAnnotatedWith(AutoService::class.java)
-        if (elements.isEmpty()) return false
-        for (element in elements) {
-            val autoServiceAnnotation = element.getAnnotation(AutoService::class.java)
-            var asd = (try {
-                autoServiceAnnotation!!.value.map { it.java.name }
-            } catch (e: MirroredTypesException) {
-                e.typeMirrors.map(TypeMirror::toString)
-            })
+		val service = mutableMapOf<String, MutableList<String>>()
+		val elements = roundEnv.getElementsAnnotatedWith(AutoService::class.java)
+		if (elements.isEmpty()) return false
+		for (element in elements) {
+			val autoServiceAnnotation = element.getAnnotation(AutoService::class.java)
+			var asd = (try {
+				autoServiceAnnotation!!.value.map { it.java.name }
+			} catch (e: MirroredTypesException) {
+				e.typeMirrors.map(TypeMirror::toString)
+			})
 
-            if (asd.isEmpty()) {
-                if (element is TypeElement) {
-                    asd = element.interfaces.map { it.toString() }
-                }
-            }
-            for (data in asd) {
-                var ldata: MutableList<String>? = service[data]
-                if (ldata == null) {
-                    ldata = mutableListOf()
-                    service[data] = ldata
-                }
-                ldata.add(element.toString())
-            }
-        }
-        processClassAnnotation(service)
-        return true
-    }
+			if (asd.isEmpty()) {
+				if (element is TypeElement) {
+					asd = element.interfaces.map { it.toString() }
+				}
+			}
+			for (data in asd) {
+				var ldata: MutableList<String>? = service[data]
+				if (ldata == null) {
+					ldata = mutableListOf()
+					service[data] = ldata
+				}
+				ldata.add(element.toString())
+			}
+		}
+		processClassAnnotation(service)
+		return true
+	}
 
-    fun processClassAnnotation(map: Map<String, MutableList<String>>) {
-        map.forEach { (interfaceName, implementations) ->
-            if (implementations.isEmpty()) {
-                println("警告: $interfaceName 的实现列表为空!")
-                return@forEach
-            }
-            try {
-                val serviceFile = processingEnv.filer.createResource(
-                    StandardLocation.CLASS_OUTPUT,
-                    "",
-                    "META-INF/services/$interfaceName"
-                )
-                val content = StringBuilder()
-                serviceFile.openWriter().use { writer ->
-                    implementations.forEach { impl ->
-                        val line = "$impl\n"
-                        content.append(line)
-                        writer.write(line)
-                    }
-                    writer.flush()
-                }
+	fun processClassAnnotation(map: Map<String, MutableList<String>>) {
+		map.forEach { (interfaceName, implementations) ->
+			if (implementations.isEmpty()) {
+				println("警告: $interfaceName 的实现列表为空!")
+				return@forEach
+			}
+			try {
+				val serviceFile = processingEnv.filer.createResource(
+					StandardLocation.CLASS_OUTPUT,
+					"",
+					"META-INF/services/$interfaceName"
+				)
+				val content = StringBuilder()
+				serviceFile.openWriter().use { writer ->
+					implementations.forEach { impl ->
+						val line = "$impl\n"
+						content.append(line)
+						writer.write(line)
+					}
+					writer.flush()
+				}
 
-            } catch (e: Exception) {
-                println("文件创建失败: ${e.javaClass.name} - ${e.message}")
-                e.printStackTrace()
-            }
-        }
-    }
+			} catch (e: Exception) {
+				println("文件创建失败: ${e.javaClass.name} - ${e.message}")
+				e.printStackTrace()
+			}
+		}
+	}
 }

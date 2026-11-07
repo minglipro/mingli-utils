@@ -33,146 +33,146 @@ import java.nio.file.Path
  */
 interface BaseCodec {
 
-    /**
-     * 对字节数组进行编码，并捕获可能发生的异常。
-     *
-     * @param bytes 需要编码的字节数组
-     * @return 编码后的字符串结果
-     * @throws CodecException 如果编码过程中发生异常
-     */
-    fun catchEncode(bytes: ByteArray) = try {
-        encode(bytes)
-    } catch (e: Exception) {
-        throw CodecException(throwable = e)
-    }
+	/**
+	 * 对字节数组进行编码，并捕获可能发生的异常。
+	 *
+	 * @param bytes 需要编码的字节数组
+	 * @return 编码后的字符串结果
+	 * @throws CodecException 如果编码过程中发生异常
+	 */
+	fun catchEncode(bytes: ByteArray) = try {
+		encode(bytes)
+	} catch (e: Exception) {
+		throw CodecException(throwable = e)
+	}
 
-    /**
-     * 对字符串进行解码，并捕获可能发生的异常。
-     *
-     * @param string 需要解码的字符串
-     * @return 解码后的字节数组结果
-     * @throws CodecException 如果解码过程中发生异常
-     */
-    fun catchDecode(string: String) = try {
-        decode(string)
-    } catch (e: Exception) {
-        throw CodecException(throwable = e)
-    }
+	/**
+	 * 对字符串进行解码，并捕获可能发生的异常。
+	 *
+	 * @param string 需要解码的字符串
+	 * @return 解码后的字节数组结果
+	 * @throws CodecException 如果解码过程中发生异常
+	 */
+	fun catchDecode(string: String) = try {
+		decode(string)
+	} catch (e: Exception) {
+		throw CodecException(throwable = e)
+	}
 
-    /**
-     * 将字节数组编码为字符串。
-     *
-     * @param bytes 需要编码的字节数组
-     * @return 编码后的字符串结果
-     */
-    fun encode(bytes: ByteArray): String
+	/**
+	 * 将字节数组编码为字符串。
+	 *
+	 * @param bytes 需要编码的字节数组
+	 * @return 编码后的字符串结果
+	 */
+	fun encode(bytes: ByteArray): String
 
-    /**
-     * 将字符串解码为字节数组。
-     *
-     * @param string 需要解码的字符串
-     * @return 解码后的字节数组结果
-     */
-    fun decode(string: String): ByteArray
+	/**
+	 * 将字符串解码为字节数组。
+	 *
+	 * @param string 需要解码的字符串
+	 * @return 解码后的字节数组结果
+	 */
+	fun decode(string: String): ByteArray
 
-    /**
-     * 对文件内容进行编码。
-     *
-     * @param file 需要编码的文件对象
-     * @return 文件内容编码后的字符串结果
-     */
-    fun encode(file: File) = catchEncode(file.readBytes())
+	/**
+	 * 对文件内容进行编码。
+	 *
+	 * @param file 需要编码的文件对象
+	 * @return 文件内容编码后的字符串结果
+	 */
+	fun encode(file: File) = catchEncode(file.readBytes())
 
-    /**
-     * 将字符串解码后写入指定文件。
-     *
-     * @param file 目标文件对象
-     * @param string 需要解码的字符串
-     */
-    fun decode(file: File, string: String) =
-        file.writeBytes(catchDecode(string))
+	/**
+	 * 将字符串解码后写入指定文件。
+	 *
+	 * @param file 目标文件对象
+	 * @param string 需要解码的字符串
+	 */
+	fun decode(file: File, string: String) =
+		file.writeBytes(catchDecode(string))
 
-    /**
-     * 安全地对文件内容进行编码，如果发生异常则返回 null。
-     *
-     * @param file 需要编码的文件对象
-     * @return 文件内容编码后的字符串结果，若失败则返回 null
-     */
-    fun encodeSafe(file: File) = try {
-        encode(file)
-    } catch (_: Exception) {
-        null
-    }
+	/**
+	 * 安全地对文件内容进行编码，如果发生异常则返回 null。
+	 *
+	 * @param file 需要编码的文件对象
+	 * @return 文件内容编码后的字符串结果，若失败则返回 null
+	 */
+	fun encodeSafe(file: File) = try {
+		encode(file)
+	} catch (_: Exception) {
+		null
+	}
 
-    /**
-     * 安全地将字符串解码并写入指定文件，如果成功则返回 true，否则返回 false。
-     *
-     * @param file 目标文件对象
-     * @param string 需要解码的字符串
-     * @return 操作是否成功的布尔值
-     */
-    fun decodeSafe(file: File, string: String) = try {
-        decode(file, string)
-        true
-    } catch (_: Exception) {
-        false
-    }
+	/**
+	 * 安全地将字符串解码并写入指定文件，如果成功则返回 true，否则返回 false。
+	 *
+	 * @param file 目标文件对象
+	 * @param string 需要解码的字符串
+	 * @return 操作是否成功的布尔值
+	 */
+	fun decodeSafe(file: File, string: String) = try {
+		decode(file, string)
+		true
+	} catch (_: Exception) {
+		false
+	}
 
-    /**
-     * 对路径指向的文件内容进行编码。
-     *
-     * @param path 需要编码的文件路径
-     * @return 文件内容编码后的字符串结果
-     */
-    fun encode(path: Path) = catchEncode(path.toFile().readBytes())
+	/**
+	 * 对路径指向的文件内容进行编码。
+	 *
+	 * @param path 需要编码的文件路径
+	 * @return 文件内容编码后的字符串结果
+	 */
+	fun encode(path: Path) = catchEncode(path.toFile().readBytes())
 
-    /**
-     * 将字符串解码后写入指定路径的文件。
-     *
-     * @param path 目标文件路径
-     * @param string 需要解码的字符串
-     */
-    fun decode(path: Path, string: String) = path.toFile().writeBytes(catchDecode(string))
+	/**
+	 * 将字符串解码后写入指定路径的文件。
+	 *
+	 * @param path 目标文件路径
+	 * @param string 需要解码的字符串
+	 */
+	fun decode(path: Path, string: String) = path.toFile().writeBytes(catchDecode(string))
 
-    /**
-     * 安全地对路径指向的文件内容进行编码，如果发生异常则返回 null。
-     *
-     * @param path 需要编码的文件路径
-     * @return 文件内容编码后的字符串结果，若失败则返回 null
-     */
-    fun encodeSafe(path: Path) = try {
-        encode(path)
-    } catch (_: Exception) {
-        null
-    }
+	/**
+	 * 安全地对路径指向的文件内容进行编码，如果发生异常则返回 null。
+	 *
+	 * @param path 需要编码的文件路径
+	 * @return 文件内容编码后的字符串结果，若失败则返回 null
+	 */
+	fun encodeSafe(path: Path) = try {
+		encode(path)
+	} catch (_: Exception) {
+		null
+	}
 
-    /**
-     * 安全地将字符串解码并写入指定路径的文件，如果成功则返回 true，否则返回 false。
-     *
-     * @param path 目标文件路径
-     * @param string 需要解码的字符串
-     * @return 操作是否成功的布尔值
-     */
-    fun decodeSafe(path: Path, string: String) = try {
-        decode(path, string)
-        true
-    } catch (_: Exception) {
-        false
-    }
+	/**
+	 * 安全地将字符串解码并写入指定路径的文件，如果成功则返回 true，否则返回 false。
+	 *
+	 * @param path 目标文件路径
+	 * @param string 需要解码的字符串
+	 * @return 操作是否成功的布尔值
+	 */
+	fun decodeSafe(path: Path, string: String) = try {
+		decode(path, string)
+		true
+	} catch (_: Exception) {
+		false
+	}
 
-    /**
-     * 对字符串进行编码。
-     *
-     * @param string 需要编码的字符串
-     * @return 编码后的字符串结果
-     */
-    fun encode(string: String) = catchEncode(string.toByteArray())
+	/**
+	 * 对字符串进行编码。
+	 *
+	 * @param string 需要编码的字符串
+	 * @return 编码后的字符串结果
+	 */
+	fun encode(string: String) = catchEncode(string.toByteArray())
 
-    /**
-     * 将字符串解码为 UTF-8 格式的字符串。
-     *
-     * @param string 需要解码的字符串
-     * @return 解码后的 UTF-8 字符串结果
-     */
-    fun decodetoString(string: String) = catchDecode(string).toString(Charsets.UTF_8)
+	/**
+	 * 将字符串解码为 UTF-8 格式的字符串。
+	 *
+	 * @param string 需要解码的字符串
+	 * @return 解码后的 UTF-8 字符串结果
+	 */
+	fun decodetoString(string: String) = catchDecode(string).toString(Charsets.UTF_8)
 }

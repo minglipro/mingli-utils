@@ -36,27 +36,27 @@ package com.mingliqiye.utils.thread
  * @param uncaughtHandler 未捕获异常处理器
  */
 fun Runnable.startThread(
-    name: String? = null,
-    daemon: Boolean = true,
-    uncaughtHandler: Thread.UncaughtExceptionHandler? = null,
+	name: String? = null,
+	daemon: Boolean = true,
+	uncaughtHandler: Thread.UncaughtExceptionHandler? = null,
 ): Thread = Thread(this).apply {
-    if (name != null) this.name = name
-    isDaemon = daemon
-    if (uncaughtHandler != null) setUncaughtExceptionHandler(uncaughtHandler)
-    start()
+	if (name != null) this.name = name
+	isDaemon = daemon
+	if (uncaughtHandler != null) setUncaughtExceptionHandler(uncaughtHandler)
+	start()
 }
 
 /**
  * 将 [Runnable] 包装为新线程但不启动
  */
 fun Runnable.asThread(
-    name: String? = null,
-    daemon: Boolean = true,
-    uncaughtHandler: Thread.UncaughtExceptionHandler? = null,
+	name: String? = null,
+	daemon: Boolean = true,
+	uncaughtHandler: Thread.UncaughtExceptionHandler? = null,
 ): Thread = Thread(this).apply {
-    if (name != null) this.name = name
-    isDaemon = daemon
-    if (uncaughtHandler != null) setUncaughtExceptionHandler(uncaughtHandler)
+	if (name != null) this.name = name
+	isDaemon = daemon
+	if (uncaughtHandler != null) setUncaughtExceptionHandler(uncaughtHandler)
 }
 
 // ---- Thread 扩展 ----
@@ -69,31 +69,31 @@ fun Runnable.asThread(
  * ```
  */
 fun Thread.onUncaught(action: (Thread, Throwable) -> Unit): Thread = apply {
-    setUncaughtExceptionHandler(Thread.UncaughtExceptionHandler { t, e -> action(t, e) })
+	setUncaughtExceptionHandler(Thread.UncaughtExceptionHandler { t, e -> action(t, e) })
 }
 
 /**
  * 安静休眠：忽略中断，但恢复线程中断状态以便上层感知
  */
 fun Thread.sleepQuietly(millis: Long, nanos: Int = 0) {
-    try {
-        Thread.sleep(millis, nanos)
-    } catch (_: InterruptedException) {
-        interrupt() // 恢复中断标志
-    }
+	try {
+		Thread.sleep(millis, nanos)
+	} catch (_: InterruptedException) {
+		interrupt() // 恢复中断标志
+	}
 }
 
 /**
  * 若线程尚未启动则启动，返回自身（链式风格）；已终止线程无法重启，静默忽略。
  */
 fun Thread.startIfNotStarted(): Thread {
-    if (isAlive) return this
-    return try {
-        start()
-        this
-    } catch (_: IllegalThreadStateException) {
-        this
-    }
+	if (isAlive) return this
+	return try {
+		start()
+		this
+	} catch (_: IllegalThreadStateException) {
+		this
+	}
 }
 
 /**
@@ -102,20 +102,20 @@ fun Thread.startIfNotStarted(): Thread {
  * @return 是否在中断前正常结束
  */
 fun Thread.joinQuietly(millis: Long = 0): Boolean = try {
-    join(millis)
-    !isAlive
+	join(millis)
+	!isAlive
 } catch (_: InterruptedException) {
-    false
+	false
 }
 
 /**
  * 转储线程调用栈（便于排查卡死问题）
  */
 fun Thread.dumpStackTrace(): String = buildString {
-    append("thread [").append(name).append("] state=").append(state)
-    stackTrace.forEach { element ->
-        append("\n\tat ").append(element)
-    }
+	append("thread [").append(name).append("] state=").append(state)
+	stackTrace.forEach { element ->
+		append("\n\tat ").append(element)
+	}
 }
 
 // ---- 顶层便捷函数 ----
@@ -128,35 +128,35 @@ fun Thread.dumpStackTrace(): String = buildString {
  * ```
  */
 fun daemonThread(
-    name: String = "MingLiDaemon",
-    start: Boolean = true,
-    uncaughtHandler: Thread.UncaughtExceptionHandler? = null,
-    block: () -> Unit,
+	name: String = "MingLiDaemon",
+	start: Boolean = true,
+	uncaughtHandler: Thread.UncaughtExceptionHandler? = null,
+	block: () -> Unit,
 ): Thread = Thread(block, name).apply {
-    isDaemon = true
-    if (uncaughtHandler != null) setUncaughtExceptionHandler(uncaughtHandler)
-    if (start) start()
+	isDaemon = true
+	if (uncaughtHandler != null) setUncaughtExceptionHandler(uncaughtHandler)
+	if (start) start()
 }
 
 /**
  * 创建非守护线程
  */
 fun userThread(
-    name: String = "MingLiUser",
-    start: Boolean = true,
-    uncaughtHandler: Thread.UncaughtExceptionHandler? = null,
-    block: () -> Unit,
+	name: String = "MingLiUser",
+	start: Boolean = true,
+	uncaughtHandler: Thread.UncaughtExceptionHandler? = null,
+	block: () -> Unit,
 ): Thread = Thread(block, name).apply {
-    isDaemon = false
-    if (uncaughtHandler != null) setUncaughtExceptionHandler(uncaughtHandler)
-    if (start) start()
+	isDaemon = false
+	if (uncaughtHandler != null) setUncaughtExceptionHandler(uncaughtHandler)
+	if (start) start()
 }
 
 /**
  * 便捷构造未捕获异常处理器
  */
 fun uncaughtExceptionHandler(action: (Thread, Throwable) -> Unit): Thread.UncaughtExceptionHandler =
-    Thread.UncaughtExceptionHandler { t, e -> action(t, e) }
+	Thread.UncaughtExceptionHandler { t, e -> action(t, e) }
 
 /**
  * 获取当前线程

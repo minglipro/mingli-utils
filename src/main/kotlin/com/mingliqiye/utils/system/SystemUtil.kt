@@ -36,36 +36,36 @@ private fun <T> Enumeration<T>?.toList(): List<T> = if (this == null) emptyList(
  * 操作系统名称属性，延迟初始化
  */
 val osName: String? by lazy {
-    runCatching { System.getProperty("os.name") }.getOrNull()
+	runCatching { System.getProperty("os.name") }.getOrNull()
 }
 
 /**
  * 判断当前操作系统是否为 Windows
  */
 val isWindows: Boolean by lazy {
-    osName?.startsWith("Windows") == true
+	osName?.startsWith("Windows") == true
 }
 
 /**
  * 判断当前操作系统是否为 Mac
  */
 val isMac: Boolean by lazy {
-    osName?.startsWith("Mac") == true
+	osName?.startsWith("Mac") == true
 }
 
 /**
  * 判断当前操作系统是否为 Unix/Linux（含 macOS）
  */
 val isUnix: Boolean by lazy {
-    val name = osName ?: return@lazy false
-    UNIX_PREFIXES.any { name.startsWith(it) }
+	val name = osName ?: return@lazy false
+	UNIX_PREFIXES.any { name.startsWith(it) }
 }
 
 /**
  * JDK 版本号属性，延迟初始化
  */
 val jdkVersion: String? by lazy {
-    runCatching { System.getProperty("java.specification.version") }.getOrNull()
+	runCatching { System.getProperty("java.specification.version") }.getOrNull()
 }
 
 /**
@@ -76,22 +76,22 @@ val jdkVersion: String? by lazy {
  * @throws IllegalStateException 无法解析出整数版本时抛出
  */
 val javaVersionAsInteger: Int by lazy {
-    val version = jdkVersion
-    if (version.isNullOrBlank()) {
-        throw IllegalStateException(
-            "Unable to determine Java version from property 'java.specification.version'"
-        )
-    }
-    val normalized = if (version.startsWith("1.")) version.substring(2) else version
-    val major = normalized.substringBefore('.').substringBefore('-')
-    major.toIntOrNull() ?: throw IllegalStateException("Invalid Java version format: $version")
+	val version = jdkVersion
+	if (version.isNullOrBlank()) {
+		throw IllegalStateException(
+			"Unable to determine Java version from property 'java.specification.version'"
+		)
+	}
+	val normalized = if (version.startsWith("1.")) version.substring(2) else version
+	val major = normalized.substringBefore('.').substringBefore('-')
+	major.toIntOrNull() ?: throw IllegalStateException("Invalid Java version format: $version")
 }
 
 /**
  * 判断当前 JDK 版本是否大于 8
  */
 val isJdk8Plus: Boolean by lazy {
-    javaVersionAsInteger > 8
+	javaVersionAsInteger > 8
 }
 
 /**
@@ -100,12 +100,12 @@ val isJdk8Plus: Boolean by lazy {
  * @throws RuntimeException 网络接口枚举失败时抛出
  */
 val localIps: Array<String> by lazy {
-    try {
-        activeNetworkInterfaces().flatMap { it.inetAddresses.toList() }.filterIsInstance<Inet4Address>()
-            .mapNotNull { it.hostAddress }.toList().toTypedArray()
-    } catch (e: SocketException) {
-        throw RuntimeException("Failed to get local IP addresses", e)
-    }
+	try {
+		activeNetworkInterfaces().flatMap { it.inetAddresses.toList() }.filterIsInstance<Inet4Address>()
+			.mapNotNull { it.hostAddress }.toList().toTypedArray()
+	} catch (e: SocketException) {
+		throw RuntimeException("Failed to get local IP addresses", e)
+	}
 }
 
 /**
@@ -117,12 +117,12 @@ val localIpsByList: List<String> by lazy { localIps.toList() }
  * 本地回环地址数组；枚举失败时至少包含 `127.0.0.1`
  */
 val loopbackIps: Array<String> by lazy {
-    try {
-        NetworkInterface.getNetworkInterfaces().toList().asSequence().filter { it.isLoopback && it.isUp }
-            .flatMap { it.inetAddresses.toList().asSequence() }.mapNotNull { it.hostAddress }.toList().toTypedArray()
-    } catch (_: SocketException) {
-        arrayOf("127.0.0.1")
-    }
+	try {
+		NetworkInterface.getNetworkInterfaces().toList().asSequence().filter { it.isLoopback && it.isUp }
+			.flatMap { it.inetAddresses.toList().asSequence() }.mapNotNull { it.hostAddress }.toList().toTypedArray()
+	} catch (_: SocketException) {
+		arrayOf("127.0.0.1")
+	}
 }
 
 /**
@@ -134,35 +134,35 @@ val loopbackIpsByList: List<String> by lazy { loopbackIps.toList() }
  * 当前进程 PID；获取失败返回 -1
  */
 val getPid: Long by lazy {
-    runCatching { ProcessHandle.current().pid() }.getOrElse { -1L }
+	runCatching { ProcessHandle.current().pid() }.getOrElse { -1L }
 }
 
 /**
  * 当前进程 PID 字符串；获取失败返回 "-1"
  */
 val pidAsString: String by lazy {
-    val pid = getPid
-    if (pid == -1L) "-1" else pid.toString()
+	val pid = getPid
+	if (pid == -1L) "-1" else pid.toString()
 }
 
 /**
  * 计算机名；获取失败返回 "unknown"
  */
 val computerName: String by lazy {
-    getEnvVar("COMPUTERNAME") ?: getEnvVar("HOSTNAME")
-    ?: runCatching { InetAddress.getLocalHost().hostName }.getOrNull()?.takeIf { it.isNotBlank() } ?: "unknown"
+	getEnvVar("COMPUTERNAME") ?: getEnvVar("HOSTNAME")
+	?: runCatching { InetAddress.getLocalHost().hostName }.getOrNull()?.takeIf { it.isNotBlank() } ?: "unknown"
 }
 
 /**
  * 当前用户名；获取失败返回 "unknown"
  */
 val userName: String by lazy {
-    getEnvVar("USERNAME") ?: getEnvVar("USER") ?: runCatching { System.getProperty("user.name") }.getOrNull()
-        ?.takeIf { it.isNotBlank() } ?: "unknown"
+	getEnvVar("USERNAME") ?: getEnvVar("USER") ?: runCatching { System.getProperty("user.name") }.getOrNull()
+		?.takeIf { it.isNotBlank() } ?: "unknown"
 }
 
 private fun getEnvVar(name: String): String? = runCatching {
-    System.getenv(name)?.takeIf { it.isNotBlank() }
+	System.getenv(name)?.takeIf { it.isNotBlank() }
 }.getOrNull()
 
 /**
@@ -171,69 +171,69 @@ private fun getEnvVar(name: String): String? = runCatching {
  * 未找到可用网卡时回退为 6 字节随机数，避免下游拿到空数组导致错误。
  */
 val macAddressBytes: ByteArray by lazy {
-    val found = try {
-        activeNetworkInterfaces().mapNotNull { runCatching { it.hardwareAddress }.getOrNull() }
-            .firstOrNull { it.isNotEmpty() }
-    } catch (_: SocketException) {
-        null
-    }
-    found ?: randomByte(6)
+	val found = try {
+		activeNetworkInterfaces().mapNotNull { runCatching { it.hardwareAddress }.getOrNull() }
+			.firstOrNull { it.isNotEmpty() }
+	} catch (_: SocketException) {
+		null
+	}
+	found ?: randomByte(6)
 }
 
 /**
  * 本机 MAC 地址的十六进制字符串列表（大写）
  */
 val macAddressStringList: List<String> by lazy {
-    macAddressBytes.map { HEX_UPPER[it.toInt() and 0xFF] }
+	macAddressBytes.map { HEX_UPPER[it.toInt() and 0xFF] }
 }
 
 /**
  * 本机 MAC 地址的格式化字符串，如 `00:11:22:33:44:55`
  */
 val macAddressFormattedString: String by lazy {
-    macAddressBytes.joinToString(":") { HEX_UPPER[it.toInt() and 0xFF] }
+	macAddressBytes.joinToString(":") { HEX_UPPER[it.toInt() and 0xFF] }
 }
 
 /**
  * 所有非回环、非虚拟网卡的 MAC 地址映射，key 为网卡名
  */
 val allMacAddresses: Map<String, ByteArray> by lazy {
-    try {
-        NetworkInterface.getNetworkInterfaces().toList().asSequence().filter { !it.isLoopback && !it.isVirtual }
-            .mapNotNull { ni ->
-                val mac = runCatching { ni.hardwareAddress }.getOrNull()
-                if (mac != null && mac.isNotEmpty()) ni.name to mac else null
-            }.toMap()
-    } catch (_: SocketException) {
-        emptyMap()
-    }
+	try {
+		NetworkInterface.getNetworkInterfaces().toList().asSequence().filter { !it.isLoopback && !it.isVirtual }
+			.mapNotNull { ni ->
+				val mac = runCatching { ni.hardwareAddress }.getOrNull()
+				if (mac != null && mac.isNotEmpty()) ni.name to mac else null
+			}.toMap()
+	} catch (_: SocketException) {
+		emptyMap()
+	}
 }
 
 /**
  * 所有网卡 MAC 地址的十六进制字符串列表映射
  */
 val allMacAddressesStringList: Map<String, List<String>> by lazy {
-    allMacAddresses.mapValues { (_, bytes) -> bytes.map { HEX_UPPER[it.toInt() and 0xFF] } }
+	allMacAddresses.mapValues { (_, bytes) -> bytes.map { HEX_UPPER[it.toInt() and 0xFF] } }
 }
 
 /**
  * 可用处理器数量
  */
 val availableProcessors: Int by lazy {
-    Runtime.getRuntime().availableProcessors()
+	Runtime.getRuntime().availableProcessors()
 }
 
 private fun activeNetworkInterfaces(): Sequence<NetworkInterface> =
-    NetworkInterface.getNetworkInterfaces().toList().asSequence().filter { !it.isLoopback && !it.isVirtual && it.isUp }
+	NetworkInterface.getNetworkInterfaces().toList().asSequence().filter { !it.isLoopback && !it.isVirtual && it.isUp }
 
 
 private val protocol: String by lazy {
-    val target = ProtocolAnchor::class.java
-    val resourceName = target.simpleName + ".class"
-    val resource: URL = target.getResource(resourceName) ?: throw IllegalStateException(
-        "Unable to locate resource '$resourceName' for class ${target.name}"
-    )
-    resource.protocol
+	val target = ProtocolAnchor::class.java
+	val resourceName = target.simpleName + ".class"
+	val resource: URL = target.getResource(resourceName) ?: throw IllegalStateException(
+		"Unable to locate resource '$resourceName' for class ${target.name}"
+	)
+	resource.protocol
 }
 
 
@@ -262,7 +262,7 @@ val isJswarMode: Boolean get() = protocol == "jswar"
 val isNotJswarMode: Boolean get() = protocol != "jswar"
 
 val lineSeparator
-    get() = System.lineSeparator()
+	get() = System.lineSeparator()
 
 const val lineSeparatorLF = "\n"
 

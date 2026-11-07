@@ -34,244 +34,244 @@ import java.io.PrintStream
  */
 object SIO {
 
-    /**
-     * 扩展函数：将字节数组以十六进制格式打印，每两个字符用空格分隔
-     * @return 原始字节数组
-     */
-    @JvmStatic
-    fun ByteArray.println(): ByteArray {
-        this.toHexString().chunked(2).println()
-        return this
-    }
+	/**
+	 * 扩展函数：将字节数组以十六进制格式打印，每两个字符用空格分隔
+	 * @return 原始字节数组
+	 */
+	@JvmStatic
+	fun ByteArray.println(): ByteArray {
+		this.toHexString().chunked(2).println()
+		return this
+	}
 
-    fun <T> T.ifOr(boolean: Boolean, pd: T.() -> T): T = if (boolean) {
-        this
-    } else pd(this)
+	fun <T> T.ifOr(boolean: Boolean, pd: T.() -> T): T = if (boolean) {
+		this
+	} else pd(this)
 
-    fun <T> T.ifOrElse(boolean: Boolean, pd: T.() -> T): T = if (!boolean) {
-        this
-    } else pd(this)
+	fun <T> T.ifOrElse(boolean: Boolean, pd: T.() -> T): T = if (!boolean) {
+		this
+	} else pd(this)
 
-    /**
-     * 扩展函数：将列表以花括号格式打印，元素间用逗号分隔
-     * @return 原始列表
-     */
-    @JvmStatic
-    fun <T> List<T>.println(): List<T> {
-        println("{" + ",".join(this) + "}")
-        return this
-    }
+	/**
+	 * 扩展函数：将列表以花括号格式打印，元素间用逗号分隔
+	 * @return 原始列表
+	 */
+	@JvmStatic
+	fun <T> List<T>.println(): List<T> {
+		println("{" + ",".join(this) + "}")
+		return this
+	}
 
-    /**
-     * 扩展函数：将数组以花括号格式打印，元素间用逗号分隔
-     * @return 原始数组
-     */
-    @JvmStatic
-    fun <T> Array<T>.println(): Array<T> {
-        println("{" + ",".join(this) + "}")
-        return this
-    }
+	/**
+	 * 扩展函数：将数组以花括号格式打印，元素间用逗号分隔
+	 * @return 原始数组
+	 */
+	@JvmStatic
+	fun <T> Array<T>.println(): Array<T> {
+		println("{" + ",".join(this) + "}")
+		return this
+	}
 
-    /**
-     * 扩展函数：打印任意对象并返回该对象
-     * @return 原始对象
-     */
-    @JvmStatic
-    fun <T> T.println(): T {
-        println(this)
-        return this
-    }
+	/**
+	 * 扩展函数：打印任意对象并返回该对象
+	 * @return 原始对象
+	 */
+	@JvmStatic
+	fun <T> T.println(): T {
+		println(this)
+		return this
+	}
 
-    /**
-     * 原始标准输出流的备份
-     */
-    @JvmStatic
-    val originalOut: PrintStream = System.out
+	/**
+	 * 原始标准输出流的备份
+	 */
+	@JvmStatic
+	val originalOut: PrintStream = System.out
 
-    /**
-     * 原始错误输出流的备份
-     */
-    @JvmStatic
-    val originalErr: PrintStream = System.err
+	/**
+	 * 原始错误输出流的备份
+	 */
+	@JvmStatic
+	val originalErr: PrintStream = System.err
 
-    /**
-     * 用于记录标准输出的日志记录器
-     */
-    @JvmStatic
-    val outLog: Logger = MingLiLoggerFactory.getLogger("out")
+	/**
+	 * 用于记录标准输出的日志记录器
+	 */
+	@JvmStatic
+	val outLog: Logger = MingLiLoggerFactory.getLogger("out")
 
-    /**
-     * 用于记录错误输出的日志记录器
-     */
-    @JvmStatic
-    val errLog: Logger = MingLiLoggerFactory.getLogger("err")
+	/**
+	 * 用于记录错误输出的日志记录器
+	 */
+	@JvmStatic
+	val errLog: Logger = MingLiLoggerFactory.getLogger("err")
 
-    /**
-     * 打印多个参数，使用空格分隔
-     * @param args 要打印的参数数组
-     */
-    @JvmStatic
-    fun print(vararg args: Any?) {
-        printA(" ", *args)
-    }
+	/**
+	 * 打印多个参数，使用空格分隔
+	 * @param args 要打印的参数数组
+	 */
+	@JvmStatic
+	fun print(vararg args: Any?) {
+		printA(" ", *args)
+	}
 
-    /**
-     * 打印多个参数并换行，使用空格分隔
-     * @param args 要打印的参数数组
-     */
-    @JvmStatic
-    fun println(vararg args: Any?) {
-        printlnA(" ", *args)
-    }
+	/**
+	 * 打印多个参数并换行，使用空格分隔
+	 * @param args 要打印的参数数组
+	 */
+	@JvmStatic
+	fun println(vararg args: Any?) {
+		printlnA(" ", *args)
+	}
 
-    /**
-     * 打印多个参数并换行，指定分隔符
-     * @param sp 分隔符
-     * @param args 要打印的参数数组
-     */
-    @JvmStatic
-    fun printlnA(sp: String, vararg args: Any?) {
-        printA(" ", *args)
-        kotlin.io.println()
-    }
+	/**
+	 * 打印多个参数并换行，指定分隔符
+	 * @param sp 分隔符
+	 * @param args 要打印的参数数组
+	 */
+	@JvmStatic
+	fun printlnA(sp: String, vararg args: Any?) {
+		printA(" ", *args)
+		kotlin.io.println()
+	}
 
-    /**
-     * 打印多个参数，指定分隔符
-     * @param sp 分隔符，默认为空字符串
-     * @param args 要打印的参数数组
-     */
-    @JvmStatic
-    fun printA(sp: String = "", vararg args: Any?) {
-        if (args.isEmpty()) {
-            kotlin.io.println()
-        }
-        val sb = StringBuilder()
-        for (i in args.indices) {
-            sb.append(args[i])
-            if (i < args.size - 1) sb.append(sp)
-        }
-        kotlin.io.print(sb)
-    }
+	/**
+	 * 打印多个参数，指定分隔符
+	 * @param sp 分隔符，默认为空字符串
+	 * @param args 要打印的参数数组
+	 */
+	@JvmStatic
+	fun printA(sp: String = "", vararg args: Any?) {
+		if (args.isEmpty()) {
+			kotlin.io.println()
+		}
+		val sb = StringBuilder()
+		for (i in args.indices) {
+			sb.append(args[i])
+			if (i < args.size - 1) sb.append(sp)
+		}
+		kotlin.io.print(sb)
+	}
 
-    /**
-     * 重定向 System.out 到 INFO 级别日志
-     * 创建自定义PrintStream，将输出内容缓冲并记录到INFO级别日志中
-     */
-    @JvmStatic
-    fun redirectOutToInfo() {
-        val outLogger = PrintStream(object : OutputStream() {
-            private val buffer = StringBuilder()
+	/**
+	 * 重定向 System.out 到 INFO 级别日志
+	 * 创建自定义PrintStream，将输出内容缓冲并记录到INFO级别日志中
+	 */
+	@JvmStatic
+	fun redirectOutToInfo() {
+		val outLogger = PrintStream(object : OutputStream() {
+			private val buffer = StringBuilder()
 
-            override fun write(b: Int) {
-                if (b == '\n'.code) {
-                    flushBuffer()
-                } else {
-                    buffer.append(b.toChar())
-                }
-            }
+			override fun write(b: Int) {
+				if (b == '\n'.code) {
+					flushBuffer()
+				} else {
+					buffer.append(b.toChar())
+				}
+			}
 
-            override fun write(b: ByteArray, off: Int, len: Int) {
-                val str = String(b, off, len)
-                if (str.contains("\n")) {
-                    val lines = str.split("\n")
-                    lines.forEachIndexed { index, line ->
-                        if (index == lines.size - 1 && !str.endsWith("\n")) {
-                            buffer.append(line)
-                        } else {
-                            buffer.append(line)
-                            flushBuffer()
-                        }
-                    }
-                } else {
-                    buffer.append(str)
-                }
-            }
+			override fun write(b: ByteArray, off: Int, len: Int) {
+				val str = String(b, off, len)
+				if (str.contains("\n")) {
+					val lines = str.split("\n")
+					lines.forEachIndexed { index, line ->
+						if (index == lines.size - 1 && !str.endsWith("\n")) {
+							buffer.append(line)
+						} else {
+							buffer.append(line)
+							flushBuffer()
+						}
+					}
+				} else {
+					buffer.append(str)
+				}
+			}
 
-            private fun flushBuffer() {
-                val message = buffer.toString().trim()
-                if (message.isNotBlank()) {
-                    outLog.info(message)
-                }
-                buffer.clear()
-            }
+			private fun flushBuffer() {
+				val message = buffer.toString().trim()
+				if (message.isNotBlank()) {
+					outLog.info(message)
+				}
+				buffer.clear()
+			}
 
-            override fun flush() {
-                flushBuffer()
-                super.flush()
-            }
-        }, true)
+			override fun flush() {
+				flushBuffer()
+				super.flush()
+			}
+		}, true)
 
-        System.setOut(outLogger)
-    }
+		System.setOut(outLogger)
+	}
 
-    /**
-     * 重定向 System.err 到 ERROR 级别
-     * 创建自定义PrintStream，将错误输出内容缓冲并记录到ERROR级别日志中
-     */
-    @JvmStatic
-    fun redirectErrToError() {
-        val errLogger = PrintStream(object : OutputStream() {
-            private val buffer = StringBuilder()
+	/**
+	 * 重定向 System.err 到 ERROR 级别
+	 * 创建自定义PrintStream，将错误输出内容缓冲并记录到ERROR级别日志中
+	 */
+	@JvmStatic
+	fun redirectErrToError() {
+		val errLogger = PrintStream(object : OutputStream() {
+			private val buffer = StringBuilder()
 
-            override fun write(b: Int) {
-                if (b == '\n'.code) {
-                    flushBuffer()
-                } else {
-                    buffer.append(b.toChar())
-                }
-            }
+			override fun write(b: Int) {
+				if (b == '\n'.code) {
+					flushBuffer()
+				} else {
+					buffer.append(b.toChar())
+				}
+			}
 
-            override fun write(b: ByteArray, off: Int, len: Int) {
-                val str = String(b, off, len)
-                if (str.contains("\n")) {
-                    val lines = str.split("\n")
-                    lines.forEachIndexed { index, line ->
-                        if (index == lines.size - 1 && !str.endsWith("\n")) {
-                            buffer.append(line)
-                        } else {
-                            buffer.append(line)
-                            flushBuffer()
-                        }
-                    }
-                } else {
-                    buffer.append(str)
-                }
-            }
+			override fun write(b: ByteArray, off: Int, len: Int) {
+				val str = String(b, off, len)
+				if (str.contains("\n")) {
+					val lines = str.split("\n")
+					lines.forEachIndexed { index, line ->
+						if (index == lines.size - 1 && !str.endsWith("\n")) {
+							buffer.append(line)
+						} else {
+							buffer.append(line)
+							flushBuffer()
+						}
+					}
+				} else {
+					buffer.append(str)
+				}
+			}
 
-            private fun flushBuffer() {
-                val message = buffer.toString().trim()
-                if (message.isNotBlank()) {
-                    errLog.error(message)
-                }
-                buffer.clear()
-            }
+			private fun flushBuffer() {
+				val message = buffer.toString().trim()
+				if (message.isNotBlank()) {
+					errLog.error(message)
+				}
+				buffer.clear()
+			}
 
-            override fun flush() {
-                flushBuffer()
-                super.flush()
-            }
-        }, true)
+			override fun flush() {
+				flushBuffer()
+				super.flush()
+			}
+		}, true)
 
-        System.setErr(errLogger)
-    }
+		System.setErr(errLogger)
+	}
 
-    /**
-     * 完全重定向（包括第三方库的输出）
-     * 同时重定向标准输出和错误输出到对应的日志级别
-     */
-    @JvmStatic
-    fun redirectAll() {
-        redirectOutToInfo()
-        redirectErrToError()
-    }
+	/**
+	 * 完全重定向（包括第三方库的输出）
+	 * 同时重定向标准输出和错误输出到对应的日志级别
+	 */
+	@JvmStatic
+	fun redirectAll() {
+		redirectOutToInfo()
+		redirectErrToError()
+	}
 
-    /**
-     * 恢复原始输出流
-     * 将System.out和System.err恢复到原始状态
-     */
-    @JvmStatic
-    fun restore() {
-        System.setOut(originalOut)
-        System.setErr(originalErr)
-    }
+	/**
+	 * 恢复原始输出流
+	 * 将System.out和System.err恢复到原始状态
+	 */
+	@JvmStatic
+	fun restore() {
+		System.setOut(originalOut)
+		System.setErr(originalErr)
+	}
 }

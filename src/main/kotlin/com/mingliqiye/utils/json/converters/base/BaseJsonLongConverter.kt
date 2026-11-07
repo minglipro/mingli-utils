@@ -32,12 +32,12 @@ import com.mingliqiye.utils.json.api.type.JsonTypeReference
  */
 interface BaseJsonLongConverter<E> : BaseJsonConverter<E, Long> {
 
-    /**
-     * 获取目标类型的引用，用于标识此转换器的目标类型为 [Long]。
-     *
-     * @return 返回 [JsonTypeReference] 的实例，表示目标类型为 [Long]。
-     * @throws Exception 如果在获取类型引用时发生异常，则抛出此异常。
-     */
-    @Throws(Exception::class)
-    override fun getToType() = JsonTypeReference.of<Long>()
+	/**
+	 * 获取目标类型的引用，用于标识此转换器的目标类型为 [Long]。
+	 *
+	 * @return 返回 [JsonTypeReference] 的实例，表示目标类型为 [Long]。
+	 * @throws Exception 如果在获取类型引用时发生异常，则抛出此异常。
+	 */
+	@Throws(Exception::class)
+	override fun getToType() = JsonTypeReference.of<Long>()
 }

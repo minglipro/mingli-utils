@@ -29,6 +29,6 @@ package com.mingliqiye.utils.exception
  * @param cause 异常原因，默认为 null
  */
 class ConflictException @JvmOverloads constructor(
-    override val message: String? = "Conflict",
-    override val cause: Throwable? = null,
+	override val message: String? = "Conflict",
+	override val cause: Throwable? = null,
 ) : HttpStatusException(409, message, cause)

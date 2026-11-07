@@ -29,6 +29,6 @@ package com.mingliqiye.utils.exception
  * @param cause 异常原因，默认为 null
  */
 class ServiceUnavailableException @JvmOverloads constructor(
-    override val message: String? = "Service Unavailable",
-    override val cause: Throwable? = null,
+	override val message: String? = "Service Unavailable",
+	override val cause: Throwable? = null,
 ) : HttpStatusException(503, message, cause)

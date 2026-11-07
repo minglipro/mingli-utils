@@ -41,9 +41,9 @@ internal val SECURE_RANDOM = SecureRandom()
  * @return 包含随机字节的 ByteArray。
  */
 fun getRandomBytes(length: Int): ByteArray {
-    val bytes = ByteArray(length)
-    SECURE_RANDOM.nextBytes(bytes)
-    return bytes
+	val bytes = ByteArray(length)
+	SECURE_RANDOM.nextBytes(bytes)
+	return bytes
 }
 
 /**
@@ -54,8 +54,8 @@ fun getRandomBytes(length: Int): ByteArray {
  * @return 经过哈希处理后的密钥字节数组。
  */
 fun createSecretKey(algorithm: String, data: ByteArray): ByteArray {
-    val md = MessageDigest.getInstance(algorithm)
-    return md.digest(data)
+	val md = MessageDigest.getInstance(algorithm)
+	return md.digest(data)
 }
 
 /**
@@ -66,7 +66,7 @@ fun createSecretKey(algorithm: String, data: ByteArray): ByteArray {
  * @return 经过哈希处理后的密钥字节数组。
  */
 fun createSecretKey(algorithm: String, data: String): ByteArray {
-    return createSecretKey(algorithm, data.toByteArray())
+	return createSecretKey(algorithm, data.toByteArray())
 }
 
 /**
@@ -77,7 +77,7 @@ fun createSecretKey(algorithm: String, data: String): ByteArray {
  * @return 根据输入数据和算法生成的 SecretKey 对象。
  */
 fun createSecretKeySpec(algorithm: String, data: String): SecretKey {
-    return SecretKeySpec(createSecretKey(algorithm, data), algorithm)
+	return SecretKeySpec(createSecretKey(algorithm, data), algorithm)
 }
 
 /**
@@ -88,5 +88,5 @@ fun createSecretKeySpec(algorithm: String, data: String): SecretKey {
  * @return 根据输入数据和算法生成的 SecretKey 对象。
  */
 fun createSecretKeySpec(algorithm: String, data: ByteArray): SecretKey {
-    return SecretKeySpec(createSecretKey(algorithm, data), algorithm)
+	return SecretKeySpec(createSecretKey(algorithm, data), algorithm)
 }

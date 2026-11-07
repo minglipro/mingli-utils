@@ -23,9 +23,9 @@
 package com.mingliqiye.utils.logger
 
 enum class MingLiLoggerLevel {
-    TRACE,
-    DEBUG,
-    INFO,
-    WARN,
-    ERROR
+	TRACE,
+	DEBUG,
+	INFO,
+	WARN,
+	ERROR
 }

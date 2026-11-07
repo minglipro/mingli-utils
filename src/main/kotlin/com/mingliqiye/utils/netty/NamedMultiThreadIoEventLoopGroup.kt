@@ -38,15 +38,15 @@ import java.text.MessageFormat
  * @param selectorProvider NIO 提供者
  */
 open class NamedMultiThreadIoEventLoopGroup(
-    val template: String = "{0}-{2}-{3}",
-    val name: String = "NamedMultiThreadIoEventLoopGroup",
-    nThreads: Int = availableProcessors * 2,
-    selectorProvider: SelectorProvider = SelectorProvider.provider(),
+	val template: String = "{0}-{2}-{3}",
+	val name: String = "NamedMultiThreadIoEventLoopGroup",
+	nThreads: Int = availableProcessors * 2,
+	selectorProvider: SelectorProvider = SelectorProvider.provider(),
 ) :
-    MultiThreadIoEventLoopGroup(
-        nThreads,
-        NamedThreadFactory(
-            getName = { a, b, c -> MessageFormat.format(template, name, a, b, c) }
-        ),
-        NioIoHandler.newFactory(selectorProvider),
-    )
+	MultiThreadIoEventLoopGroup(
+		nThreads,
+		NamedThreadFactory(
+			getName = { a, b, c -> MessageFormat.format(template, name, a, b, c) }
+		),
+		NioIoHandler.newFactory(selectorProvider),
+	)

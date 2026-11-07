@@ -31,26 +31,26 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.javaMethod
 
 object ReflectUtils {
-    private val walker: StackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
-    inline fun <reified T : Any> T.ktClass(): KClass<T> = T::class
+	private val walker: StackWalker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
+	inline fun <reified T : Any> T.ktClass(): KClass<T> = T::class
 
-    var <T : Any> KMutableProperty<T>.value: T
-        get() = this.getter.call()
-        set(t: T) = this.setter.call(t)
+	var <T : Any> KMutableProperty<T>.value: T
+		get() = this.getter.call()
+		set(t: T) = this.setter.call(t)
 
-    val <T : Any> KProperty<T>.javaGetter: Method
-        get() = this.getter.javaMethod!!
+	val <T : Any> KProperty<T>.javaGetter: Method
+		get() = this.getter.javaMethod!!
 
-    val <T : Any> KMutableProperty<T>.javaSetter: Method
-        get() = this.getter.javaMethod!!
-    val <T : Any> KFunction<T>.java: Method
-        get() = this.javaMethod!!
+	val <T : Any> KMutableProperty<T>.javaSetter: Method
+		get() = this.getter.javaMethod!!
+	val <T : Any> KFunction<T>.java: Method
+		get() = this.javaMethod!!
 
-    fun getStackFrame(skip: Long = 0, limit: Long = 0): List<StackWalker.StackFrame> {
-        return walker.walk {
-            it.skip(skip + 2).ifOr(limit == 0L) {
-                limit(limit)
-            }.toList()
-        }
-    }
+	fun getStackFrame(skip: Long = 0, limit: Long = 0): List<StackWalker.StackFrame> {
+		return walker.walk {
+			it.skip(skip + 2).ifOr(limit == 0L) {
+				limit(limit)
+			}.toList()
+		}
+	}
 }

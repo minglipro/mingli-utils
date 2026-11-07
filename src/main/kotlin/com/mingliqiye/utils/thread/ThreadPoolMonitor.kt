@@ -31,68 +31,68 @@ import java.util.concurrent.TimeUnit
  * 线程池运行快照，一次调用获取全部关键指标。
  */
 data class ThreadPoolSnapshot(
-    /** 当前线程数 */
-    val poolSize: Int,
-    /** 核心线程数 */
-    val corePoolSize: Int,
-    /** 最大线程数 */
-    val maximumPoolSize: Int,
-    /** 历史最大线程数 */
-    val largestPoolSize: Int,
-    /** 正在执行任务的线程数 */
-    val activeThreads: Int,
-    /** 队列中等待执行的任务数 */
-    val queueSize: Int,
-    /** 队列剩余容量（无界队列为 [Int.MAX_VALUE]） */
-    val queueRemainingCapacity: Int,
-    /** 已完成任务数 */
-    val completedTasks: Long,
-    /** 已提交任务总数 */
-    val totalTasks: Long,
-    /** 是否已调用 shutdown */
-    val isShutdown: Boolean,
-    /** 是否已终止 */
-    val isTerminated: Boolean,
+	/** 当前线程数 */
+	val poolSize: Int,
+	/** 核心线程数 */
+	val corePoolSize: Int,
+	/** 最大线程数 */
+	val maximumPoolSize: Int,
+	/** 历史最大线程数 */
+	val largestPoolSize: Int,
+	/** 正在执行任务的线程数 */
+	val activeThreads: Int,
+	/** 队列中等待执行的任务数 */
+	val queueSize: Int,
+	/** 队列剩余容量（无界队列为 [Int.MAX_VALUE]） */
+	val queueRemainingCapacity: Int,
+	/** 已完成任务数 */
+	val completedTasks: Long,
+	/** 已提交任务总数 */
+	val totalTasks: Long,
+	/** 是否已调用 shutdown */
+	val isShutdown: Boolean,
+	/** 是否已终止 */
+	val isTerminated: Boolean,
 ) {
-    /** 线程利用率 = 活跃线程 / 最大线程，取值 [0.0, 1.0] */
-    val utilization: Double
-        get() = if (maximumPoolSize <= 0) 0.0
-        else activeThreads.toDouble() / maximumPoolSize
+	/** 线程利用率 = 活跃线程 / 最大线程，取值 [0.0, 1.0] */
+	val utilization: Double
+		get() = if (maximumPoolSize <= 0) 0.0
+		else activeThreads.toDouble() / maximumPoolSize
 
-    /** 队列积压率 = 队列任务 / 队列容量，无界队列返回 0.0 */
-    val queueLoad: Double
-        get() {
-            val capacity = queueSize + queueRemainingCapacity
-            return if (capacity <= 0 || capacity == Int.MAX_VALUE) 0.0
-            else queueSize.toDouble() / capacity
-        }
+	/** 队列积压率 = 队列任务 / 队列容量，无界队列返回 0.0 */
+	val queueLoad: Double
+		get() {
+			val capacity = queueSize + queueRemainingCapacity
+			return if (capacity <= 0 || capacity == Int.MAX_VALUE) 0.0
+			else queueSize.toDouble() / capacity
+		}
 
-    override fun toString(): String = buildString {
-        append("ThreadPoolSnapshot[")
-        append("size=$poolSize/$maximumPoolSize(core=$corePoolSize,largest=$largestPoolSize)")
-        append(",active=$activeThreads,util=${"%.1f".format(utilization * 100)}%")
-        append(",queue=$queueSize,load=${"%.1f".format(queueLoad * 100)}%")
-        append(",done=$completedTasks/$totalTasks")
-        append(",shutdown=$isShutdown,terminated=$isTerminated")
-        append("]")
-    }
+	override fun toString(): String = buildString {
+		append("ThreadPoolSnapshot[")
+		append("size=$poolSize/$maximumPoolSize(core=$corePoolSize,largest=$largestPoolSize)")
+		append(",active=$activeThreads,util=${"%.1f".format(utilization * 100)}%")
+		append(",queue=$queueSize,load=${"%.1f".format(queueLoad * 100)}%")
+		append(",done=$completedTasks/$totalTasks")
+		append(",shutdown=$isShutdown,terminated=$isTerminated")
+		append("]")
+	}
 }
 
 /**
  * 获取线程池当前运行快照
  */
 fun ThreadPoolExecutor.snapshot(): ThreadPoolSnapshot = ThreadPoolSnapshot(
-    poolSize = poolSize,
-    corePoolSize = corePoolSize,
-    maximumPoolSize = maximumPoolSize,
-    largestPoolSize = largestPoolSize,
-    activeThreads = activeCount,
-    queueSize = queue.size,
-    queueRemainingCapacity = queue.remainingCapacity(),
-    completedTasks = completedTaskCount,
-    totalTasks = taskCount,
-    isShutdown = isShutdown,
-    isTerminated = isTerminated,
+	poolSize = poolSize,
+	corePoolSize = corePoolSize,
+	maximumPoolSize = maximumPoolSize,
+	largestPoolSize = largestPoolSize,
+	activeThreads = activeCount,
+	queueSize = queue.size,
+	queueRemainingCapacity = queue.remainingCapacity(),
+	completedTasks = completedTaskCount,
+	totalTasks = taskCount,
+	isShutdown = isShutdown,
+	isTerminated = isTerminated,
 )
 
 /**
@@ -111,12 +111,12 @@ fun ThreadPoolExecutor.snapshot(): ThreadPoolSnapshot = ThreadPoolSnapshot(
  * @return 可取消的定时任务句柄
  */
 fun ThreadPoolExecutor.monitor(
-    interval: Long,
-    unit: TimeUnit = TimeUnit.SECONDS,
-    scheduler: ScheduledExecutorService = GlobalThreadPool.scheduled,
-    action: (ThreadPoolSnapshot) -> Unit,
+	interval: Long,
+	unit: TimeUnit = TimeUnit.SECONDS,
+	scheduler: ScheduledExecutorService = GlobalThreadPool.scheduled,
+	action: (ThreadPoolSnapshot) -> Unit,
 ): ScheduledFuture<*> =
-    scheduler.scheduleAtFixedRate({ action(snapshot()) }, interval, interval, unit)
+	scheduler.scheduleAtFixedRate({ action(snapshot()) }, interval, interval, unit)
 
 /**
  * 打印线程池运行报告（多行字符串）

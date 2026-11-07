@@ -34,40 +34,40 @@ import java.lang.reflect.Field
  * @return 返回一个新的对象实例，其字段值与原对象一致。
  */
 fun <T : Any> clone(obj: T): T {
-    val clazz = obj.javaClass
-    val constructor = clazz.getDeclaredConstructor().apply {
-        isAccessible = true
-    }
-    val instance = constructor.newInstance()
+	val clazz = obj.javaClass
+	val constructor = clazz.getDeclaredConstructor().apply {
+		isAccessible = true
+	}
+	val instance = constructor.newInstance()
 
-    // 遍历类及其父类的所有字段进行赋值
-    var currentClass: Class<*>? = clazz
-    while (currentClass != null) {
-        currentClass.declaredFields.forEach { field ->
-            if (!java.lang.reflect.Modifier.isStatic(field.modifiers)) {
-                field.isAccessible = true
-                field.set(instance, field.get(obj))
-            }
-        }
-        currentClass = currentClass.superclass
-    }
+	// 遍历类及其父类的所有字段进行赋值
+	var currentClass: Class<*>? = clazz
+	while (currentClass != null) {
+		currentClass.declaredFields.forEach { field ->
+			if (!java.lang.reflect.Modifier.isStatic(field.modifiers)) {
+				field.isAccessible = true
+				field.set(instance, field.get(obj))
+			}
+		}
+		currentClass = currentClass.superclass
+	}
 
-    return instance
+	return instance
 }
 
 /**
  * 定义 DTO 拷贝行为的枚举类型。
  */
 enum class DotCopyType {
-    /**
-     * 表示使用点拷贝（.copy）方式处理字段。
-     */
-    DOT_COPY,
+	/**
+	 * 表示使用点拷贝（.copy）方式处理字段。
+	 */
+	DOT_COPY,
 
-    /**
-     * 表示普通拷贝方式处理字段。
-     */
-    COPY
+	/**
+	 * 表示普通拷贝方式处理字段。
+	 */
+	COPY
 }
 
 /**
@@ -77,10 +77,10 @@ enum class DotCopyType {
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(
-    AnnotationTarget.TYPE_PARAMETER,
-    AnnotationTarget.VALUE_PARAMETER,
-    AnnotationTarget.FIELD,
-    AnnotationTarget.PROPERTY
+	AnnotationTarget.TYPE_PARAMETER,
+	AnnotationTarget.VALUE_PARAMETER,
+	AnnotationTarget.FIELD,
+	AnnotationTarget.PROPERTY
 )
 annotation class DtoCopy(val type: DotCopyType = DotCopyType.COPY)
 
@@ -92,40 +92,40 @@ annotation class DtoCopy(val type: DotCopyType = DotCopyType.COPY)
  * @return 返回一个新的目标 DTO 实例，字段值已从源对象拷贝。
  */
 fun <R : Any> toDto(obj: Any, dtoClass: Class<R>): R {
-    val instance = dtoClass.getDeclaredConstructor().apply {
-        isAccessible = true
-    }.newInstance()
+	val instance = dtoClass.getDeclaredConstructor().apply {
+		isAccessible = true
+	}.newInstance()
 
-    val sourceFields = getAllFields(obj.javaClass)
+	val sourceFields = getAllFields(obj.javaClass)
 
-    for (sourceField in sourceFields) {
-        sourceField.isAccessible = true
-        val fieldName = sourceField.name
-        val fieldValue = sourceField.get(obj)
+	for (sourceField in sourceFields) {
+		sourceField.isAccessible = true
+		val fieldName = sourceField.name
+		val fieldValue = sourceField.get(obj)
 
-        try {
-            val targetField = dtoClass.getDeclaredField(fieldName).apply {
-                isAccessible = true
-            }
-            if (java.lang.reflect.Modifier.isStatic(targetField.modifiers)) {
-                continue
-            }
-            val ta = targetField.getAnnotation(DtoCopy::class.java)
-            if (ta != null) {
-                if (ta.type == DotCopyType.DOT_COPY) {
-                    continue
-                }
-            }
-            targetField.set(instance, fieldValue)
+		try {
+			val targetField = dtoClass.getDeclaredField(fieldName).apply {
+				isAccessible = true
+			}
+			if (java.lang.reflect.Modifier.isStatic(targetField.modifiers)) {
+				continue
+			}
+			val ta = targetField.getAnnotation(DtoCopy::class.java)
+			if (ta != null) {
+				if (ta.type == DotCopyType.DOT_COPY) {
+					continue
+				}
+			}
+			targetField.set(instance, fieldValue)
 
-        } catch (e: NoSuchFieldException) {
-            continue
-        } catch (e: IllegalArgumentException) {
-            continue
-        }
-    }
+		} catch (e: NoSuchFieldException) {
+			continue
+		} catch (e: IllegalArgumentException) {
+			continue
+		}
+	}
 
-    return instance
+	return instance
 }
 
 /**
@@ -135,12 +135,11 @@ fun <R : Any> toDto(obj: Any, dtoClass: Class<R>): R {
  * @return 包含所有字段的列表。
  */
 private fun getAllFields(clazz: Class<*>): List<Field> {
-    val fields = mutableListOf<Field>()
-    var currentClass: Class<*>? = clazz
-    while (currentClass != null && currentClass != Any::class.java) {
-        fields.addAll(currentClass.declaredFields)
-        currentClass = currentClass.superclass
-    }
-    return fields
+	val fields = mutableListOf<Field>()
+	var currentClass: Class<*>? = clazz
+	while (currentClass != null && currentClass != Any::class.java) {
+		fields.addAll(currentClass.declaredFields)
+		currentClass = currentClass.superclass
+	}
+	return fields
 }
-

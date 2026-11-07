@@ -34,77 +34,77 @@ import java.util.concurrent.Future
  */
 object ThreadRunner {
 
-    var executorService: ExecutorService? = null
+	var executorService: ExecutorService? = null
 
-    /**
-     * 关闭线程池执行器
-     * 首先尝试正常关闭，如果失败则强制关闭
-     */
-    @JvmStatic
-    fun close() {
-        try {
-            executorService?.shutdown()
-        } catch (_: Exception) {
-            executorService?.shutdownNow()
-        }
-    }
+	/**
+	 * 关闭线程池执行器
+	 * 首先尝试正常关闭，如果失败则强制关闭
+	 */
+	@JvmStatic
+	fun close() {
+		try {
+			executorService?.shutdown()
+		} catch (_: Exception) {
+			executorService?.shutdownNow()
+		}
+	}
 
-    /**
-     * 初始化线程池执行器
-     * 创建固定大小的线程池，线程数量为可用处理器核心数的两倍
-     *
-     * @param string 线程名称前缀，默认为"MingliUtilThread"
-     */
-    @JvmStatic
-    fun init(string: String = "MingliUtilThread") {
-        executorService = Executors.newFixedThreadPool(
-            availableProcessors * 2,
-            NamedThreadFactory { clazz, poolNumber, threadNumber ->
-                "$string #$threadNumber"
-            })
-    }
+	/**
+	 * 初始化线程池执行器
+	 * 创建固定大小的线程池，线程数量为可用处理器核心数的两倍
+	 *
+	 * @param string 线程名称前缀，默认为"MingliUtilThread"
+	 */
+	@JvmStatic
+	fun init(string: String = "MingliUtilThread") {
+		executorService = Executors.newFixedThreadPool(
+			availableProcessors * 2,
+			NamedThreadFactory { clazz, poolNumber, threadNumber ->
+				"$string #$threadNumber"
+			})
+	}
 
-    /**
-     * 异步执行Runnable任务
-     *
-     * @param runnable 要执行的Runnable任务
-     * @return Future对象，可用于获取任务执行结果或控制任务状态
-     */
-    @JvmStatic
-    fun runThread(runnable: Runnable): Future<*> {
-        return executorService!!.submit(runnable)
-    }
+	/**
+	 * 异步执行Runnable任务
+	 *
+	 * @param runnable 要执行的Runnable任务
+	 * @return Future对象，可用于获取任务执行结果或控制任务状态
+	 */
+	@JvmStatic
+	fun runThread(runnable: Runnable): Future<*> {
+		return executorService!!.submit(runnable)
+	}
 
-    /**
-     * 异步执行Callable任务
-     *
-     * @param runnable 要执行的Callable任务
-     * @return Future对象，可用于获取任务执行结果或控制任务状态
-     */
-    @JvmStatic
-    fun <T> runThread(runnable: Callable<T>): Future<T> {
-        return executorService!!.submit(runnable)
-    }
+	/**
+	 * 异步执行Callable任务
+	 *
+	 * @param runnable 要执行的Callable任务
+	 * @return Future对象，可用于获取任务执行结果或控制任务状态
+	 */
+	@JvmStatic
+	fun <T> runThread(runnable: Callable<T>): Future<T> {
+		return executorService!!.submit(runnable)
+	}
 
-    /**
-     * 同步执行Runnable任务，阻塞等待任务完成
-     *
-     * @param runnable 要执行的Runnable任务
-     * @return 任务执行结果（通常为null）
-     */
-    @JvmStatic
-    fun runThreadAwait(runnable: Runnable): Any {
-        return executorService!!.submit(runnable).get()
-    }
+	/**
+	 * 同步执行Runnable任务，阻塞等待任务完成
+	 *
+	 * @param runnable 要执行的Runnable任务
+	 * @return 任务执行结果（通常为null）
+	 */
+	@JvmStatic
+	fun runThreadAwait(runnable: Runnable): Any {
+		return executorService!!.submit(runnable).get()
+	}
 
-    /**
-     * 同步执行Callable任务，阻塞等待任务完成并返回结果
-     *
-     * @param runnable 要执行的Callable任务
-     * @return 任务执行结果
-     */
-    @JvmStatic
-    fun <T> runThreadAwait(runnable: Callable<T>): T {
-        return executorService!!.submit(runnable).get()
-    }
+	/**
+	 * 同步执行Callable任务，阻塞等待任务完成并返回结果
+	 *
+	 * @param runnable 要执行的Callable任务
+	 * @return 任务执行结果
+	 */
+	@JvmStatic
+	fun <T> runThreadAwait(runnable: Callable<T>): T {
+		return executorService!!.submit(runnable).get()
+	}
 }

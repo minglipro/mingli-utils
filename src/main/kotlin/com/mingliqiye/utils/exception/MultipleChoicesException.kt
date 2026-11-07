@@ -29,6 +29,6 @@ package com.mingliqiye.utils.exception
  * @param cause 异常原因，默认为 null
  */
 class MultipleChoicesException @JvmOverloads constructor(
-    override val message: String? = "Multiple Choices",
-    override val cause: Throwable? = null,
+	override val message: String? = "Multiple Choices",
+	override val cause: Throwable? = null,
 ) : HttpStatusException(300, message, cause)

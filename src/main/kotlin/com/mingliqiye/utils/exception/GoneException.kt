@@ -29,6 +29,6 @@ package com.mingliqiye.utils.exception
  * @param cause 异常原因，默认为 null
  */
 class GoneException @JvmOverloads constructor(
-    override val message: String? = "Gone",
-    override val cause: Throwable? = null,
+	override val message: String? = "Gone",
+	override val cause: Throwable? = null,
 ) : HttpStatusException(410, message, cause)

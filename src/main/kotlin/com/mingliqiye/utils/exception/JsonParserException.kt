@@ -23,8 +23,8 @@
 package com.mingliqiye.utils.exception
 
 class JsonParserException @JvmOverloads constructor(
-    message: String? = null,
-    throwable: Throwable? = null,
-    enableSuppression: Boolean = false,
-    writableStackTrace: Boolean = true,
+	message: String? = null,
+	throwable: Throwable? = null,
+	enableSuppression: Boolean = false,
+	writableStackTrace: Boolean = true,
 ) : JsonException(message, throwable, enableSuppression, writableStackTrace)

@@ -24,5 +24,5 @@ package com.mingliqiye.utils.springboot.annotation
 
 @Target(AnnotationTarget.FUNCTION)
 annotation class ApplicationStartedRunner(
-    val order: Int = Int.MIN_VALUE,
+	val order: Int = Int.MIN_VALUE,
 )

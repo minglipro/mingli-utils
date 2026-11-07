@@ -32,15 +32,15 @@ import com.mingliqiye.utils.json.api.type.JsonTypeReference
  */
 interface BaseJsonShortConverter<E> : BaseJsonConverter<E, Short> {
 
-    /**
-     * 获取目标类型的引用信息。
-     *
-     * 该方法重写了父接口中的 [getToType] 方法，返回 [Short] 类型的 [JsonTypeReference] 实例。
-     * 通过 [JsonTypeReference.Companion.of] 方法创建类型引用。
-     *
-     * @return [JsonTypeReference] 表示 [Short] 类型的引用。
-     * @throws Exception 如果在获取类型引用过程中发生异常，则抛出该异常。
-     */
-    @Throws(Exception::class)
-    override fun getToType() = JsonTypeReference.of<Short>()
+	/**
+	 * 获取目标类型的引用信息。
+	 *
+	 * 该方法重写了父接口中的 [getToType] 方法，返回 [Short] 类型的 [JsonTypeReference] 实例。
+	 * 通过 [JsonTypeReference.Companion.of] 方法创建类型引用。
+	 *
+	 * @return [JsonTypeReference] 表示 [Short] 类型的引用。
+	 * @throws Exception 如果在获取类型引用过程中发生异常，则抛出该异常。
+	 */
+	@Throws(Exception::class)
+	override fun getToType() = JsonTypeReference.of<Short>()
 }

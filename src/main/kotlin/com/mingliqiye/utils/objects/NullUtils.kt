@@ -28,26 +28,26 @@ import kotlin.contracts.contract
 
 @OptIn(ExperimentalContracts::class)
 fun Any?.isNotNull(): Boolean {
-    contract {
-        returns(true) implies (this@isNotNull != null)
-    }
-    return !isNull()
+	contract {
+		returns(true) implies (this@isNotNull != null)
+	}
+	return !isNull()
 }
 
 @OptIn(ExperimentalContracts::class)
 fun Any?.isNull(): Boolean {
-    contract {
-        returns(false) implies (this@isNull != null)
-    }
-    return this == null
+	contract {
+		returns(false) implies (this@isNull != null)
+	}
+	return this == null
 }
 
 fun areEquals(a: Any?, b: Any?) = (a == null && b == null) || (a == b)
 
 @OptIn(ExperimentalContracts::class)
 fun areEqualsNoNull(a: Any?, b: Any?): Boolean {
-    contract {
-        returns(true) implies (a != null && b != null)
-    }
-    return a != null && b != null && a == b
+	contract {
+		returns(true) implies (a != null && b != null)
+	}
+	return a != null && b != null && a == b
 }

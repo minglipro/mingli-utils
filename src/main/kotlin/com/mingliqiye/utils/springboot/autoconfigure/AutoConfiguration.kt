@@ -32,18 +32,18 @@ import org.springframework.context.annotation.ComponentScan
  */
 @AutoConfiguration
 @ComponentScan(
-    "com.mingliqiye.utils.springboot.bean",
-    "com.mingliqiye.utils.springboot.converters",
-    "com.mingliqiye.utils.springboot.listener",
+	"com.mingliqiye.utils.springboot.bean",
+	"com.mingliqiye.utils.springboot.converters",
+	"com.mingliqiye.utils.springboot.listener",
 )
 open class AutoConfiguration {
 
-    /**
-     * 初始化块，在类实例化时执行。
-     *
-     * 调用printBanner方法打印启动横幅，并记录日志表示自动配置成功。
-     */
-    init {
-        com.mingliqiye.utils.main.Main.printb()
-    }
+	/**
+	 * 初始化块，在类实例化时执行。
+	 *
+	 * 调用printBanner方法打印启动横幅，并记录日志表示自动配置成功。
+	 */
+	init {
+		com.mingliqiye.utils.main.Main.printb()
+	}
 }

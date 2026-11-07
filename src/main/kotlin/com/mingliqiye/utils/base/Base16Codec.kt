@@ -27,28 +27,28 @@ package com.mingliqiye.utils.base
  * 提供字节数组与十六进制字符串之间的相互转换功能
  */
 internal class Base16Codec : BaseCodec {
-    /**
-     * 将字节数组编码为十六进制字符串
-     * @param bytes 待编码的字节数组
-     * @return 编码后的十六进制字符串，每个字节对应两位十六进制字符
-     */
-    override fun encode(bytes: ByteArray): String {
-        // 将每个字节转换为两位十六进制字符串并拼接
-        return bytes.joinToString("") {
-            it.toInt().and(0xff).toString(16).padStart(2, '0')
-        }
-    }
+	/**
+	 * 将字节数组编码为十六进制字符串
+	 * @param bytes 待编码的字节数组
+	 * @return 编码后的十六进制字符串，每个字节对应两位十六进制字符
+	 */
+	override fun encode(bytes: ByteArray): String {
+		// 将每个字节转换为两位十六进制字符串并拼接
+		return bytes.joinToString("") {
+			it.toInt().and(0xff).toString(16).padStart(2, '0')
+		}
+	}
 
-    /**
-     * 将十六进制字符串解码为字节数组
-     * @param string 待解码的十六进制字符串
-     * @return 解码后的字节数组
-     */
-    override fun decode(string: String): ByteArray {
-        // 按每两个字符分组，转换为字节
-        return string.chunked(2).map {
-            it.toInt(16).toByte()
-        }.toByteArray()
-    }
+	/**
+	 * 将十六进制字符串解码为字节数组
+	 * @param string 待解码的十六进制字符串
+	 * @return 解码后的字节数组
+	 */
+	override fun decode(string: String): ByteArray {
+		// 按每两个字符分组，转换为字节
+		return string.chunked(2).map {
+			it.toInt(16).toByte()
+		}.toByteArray()
+	}
 
 }

@@ -35,13 +35,13 @@ import java.text.MessageFormat
  * @param nThreads 线程数量，默认为核心数的2倍
  */
 open class NamedNioEventLoopGroup(
-    val template: String = "{0}-{2}-{3}",
-    val name: String = "NioEventLoopGroup",
-    nThreads: Int = availableProcessors * 2,
+	val template: String = "{0}-{2}-{3}",
+	val name: String = "NioEventLoopGroup",
+	nThreads: Int = availableProcessors * 2,
 ) :
-    NioEventLoopGroup(
-        nThreads,
-        NamedThreadFactory(
-            getName = { a, b, c -> MessageFormat.format(template, name, a, b, c) }
-        )
-    )
+	NioEventLoopGroup(
+		nThreads,
+		NamedThreadFactory(
+			getName = { a, b, c -> MessageFormat.format(template, name, a, b, c) }
+		)
+	)

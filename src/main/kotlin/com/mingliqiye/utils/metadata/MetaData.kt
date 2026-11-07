@@ -29,28 +29,28 @@ import java.util.stream.Collectors.toMap
 class MetaDataResource
 
 fun getMetaData(): Map<String, String> {
-    return ResourceUtils.getResourceAsString<MetaDataResource>("/META-INF/meta-data").split("\n").stream().map {
-        if (it.isBlank()) {
-            return@map null
-        }
-        val split = it.split("=")
-        if (split.size == 2) {
-            split[0] to split[1]
-        } else {
-            return@map null
-        }
-    }.filter { it != null }.collect(toMap({ it!!.first }, { it!!.second }))
+	return ResourceUtils.getResourceAsString<MetaDataResource>("/META-INF/meta-data").split("\n").stream().map {
+		if (it.isBlank()) {
+			return@map null
+		}
+		val split = it.split("=")
+		if (split.size == 2) {
+			split[0] to split[1]
+		} else {
+			return@map null
+		}
+	}.filter { it != null }.collect(toMap({ it!!.first }, { it!!.second }))
 }
 
 val mingliUtilsMetaData: MingliUtilsMetaData by lazy {
-    val metaData = getMetaData()
-    MingliUtilsMetaData().apply {
-        buildTime = metaData["buildTime"] ?: ""
-        groupId = metaData["groupId"] ?: ""
-        artifactId = metaData["artifactId"] ?: ""
-        version = metaData["version"] ?: ""
-        buildJdkVersion = metaData["buildJdkVersion"] ?: ""
-        author = metaData["author"] ?: ""
-        website = metaData["website"] ?: ""
-    }
+	val metaData = getMetaData()
+	MingliUtilsMetaData().apply {
+		buildTime = metaData["buildTime"] ?: ""
+		groupId = metaData["groupId"] ?: ""
+		artifactId = metaData["artifactId"] ?: ""
+		version = metaData["version"] ?: ""
+		buildJdkVersion = metaData["buildJdkVersion"] ?: ""
+		author = metaData["author"] ?: ""
+		website = metaData["website"] ?: ""
+	}
 }

@@ -32,12 +32,12 @@ import com.mingliqiye.utils.json.api.type.JsonTypeReference
  * @param E 泛型参数，表示需要转换的目标对象类型。
  */
 interface BaseJsonByteConverter<E> : BaseJsonConverter<E, Byte> {
-    /**
-     * 获取目标类型的引用，用于标识转换的目标类型为 Byte。
-     *
-     * @return 返回 JsonTypeReference 类型的实例，表示目标类型为 Byte。
-     * @throws Exception 如果在获取类型引用过程中发生异常，则抛出该异常。
-     */
-    @Throws(Exception::class)
-    override fun getToType() = JsonTypeReference.of<Byte>()
+	/**
+	 * 获取目标类型的引用，用于标识转换的目标类型为 Byte。
+	 *
+	 * @return 返回 JsonTypeReference 类型的实例，表示目标类型为 Byte。
+	 * @throws Exception 如果在获取类型引用过程中发生异常，则抛出该异常。
+	 */
+	@Throws(Exception::class)
+	override fun getToType() = JsonTypeReference.of<Byte>()
 }

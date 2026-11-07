@@ -30,33 +30,33 @@ import tools.jackson.databind.ValueDeserializer
 
 
 class JackJson3Deserializer<F, T>(
-    val property: BeanProperty? = null,
-    val jsonConverter: JsonConverter<F, T>
+	val property: BeanProperty? = null,
+	val jsonConverter: JsonConverter<F, T>,
 ) : ValueDeserializer<F>() {
 
-    override fun deserialize(
-        p: JsonParser,
-        ctxt: DeserializationContext?
-    ): F? {
-        if (p.currentToken() == JsonToken.VALUE_NULL) return null
-        return jsonConverter.deConvert(p.readValueAs(jsonConverter.getToClass()), object : AnnotationGetter {
-            override fun <T : Annotation> get(clazz: Class<T>): T? = property?.getAnnotation(clazz)
-        })
-    }
+	override fun deserialize(
+		p: JsonParser,
+		ctxt: DeserializationContext?,
+	): F? {
+		if (p.currentToken() == JsonToken.VALUE_NULL) return null
+		return jsonConverter.deConvert(p.readValueAs(jsonConverter.getToClass()), object : AnnotationGetter {
+			override fun <T : Annotation> get(clazz: Class<T>): T? = property?.getAnnotation(clazz)
+		})
+	}
 
-    /**
-     * 上下文感知方法：设置当前属性信息。
-     *
-     * @param ctxt 反序列化上下文，可选参数。
-     * @param property 当前属性信息。
-     * @return 返回当前反序列化器实例。
-     */
-    override fun createContextual(
-        ctxt: DeserializationContext?,
-        property: BeanProperty?
-    ): JackJson3Deserializer<F, T> {
-        return JackJson3Deserializer(property, jsonConverter)
-    }
+	/**
+	 * 上下文感知方法：设置当前属性信息。
+	 *
+	 * @param ctxt 反序列化上下文，可选参数。
+	 * @param property 当前属性信息。
+	 * @return 返回当前反序列化器实例。
+	 */
+	override fun createContextual(
+		ctxt: DeserializationContext?,
+		property: BeanProperty?,
+	): JackJson3Deserializer<F, T> {
+		return JackJson3Deserializer(property, jsonConverter)
+	}
 
 
 }

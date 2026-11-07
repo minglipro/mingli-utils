@@ -30,33 +30,33 @@ import java.io.*
 
 @JvmName("_inline_deepClone")
 inline fun <reified T : Serializable> T.deepClone(): T {
-    return deepClone(this)
+	return deepClone(this)
 }
 
 inline fun <reified T> T.deepJsonClone(): T {
-    try {
-        return JSONA.convert(this as Any, this!!.javaClass) as T
-    } catch (e: Exception) {
-        throw JsonException(
-            "Failed to deep clone object using JSON", e
-        )
-    }
+	try {
+		return JSONA.convert(this as Any, this!!.javaClass) as T
+	} catch (e: Exception) {
+		throw JsonException(
+			"Failed to deep clone object using JSON", e
+		)
+	}
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T : Serializable?> deepClone(obj: T): T {
-    try {
-        val bao = ByteArrayOutputStream()
-        val oos = ObjectOutputStream(bao)
-        oos.writeObject(obj)
-        val bis = ByteArrayInputStream(
-            bao.toByteArray()
-        )
-        val ois = ObjectInputStream(bis)
-        return ois.readObject() as T
-    } catch (e: IOException) {
-        throw RuntimeException(e)
-    } catch (e: ClassNotFoundException) {
-        throw RuntimeException(e)
-    }
+	try {
+		val bao = ByteArrayOutputStream()
+		val oos = ObjectOutputStream(bao)
+		oos.writeObject(obj)
+		val bis = ByteArrayInputStream(
+			bao.toByteArray()
+		)
+		val ois = ObjectInputStream(bis)
+		return ois.readObject() as T
+	} catch (e: IOException) {
+		throw RuntimeException(e)
+	} catch (e: ClassNotFoundException) {
+		throw RuntimeException(e)
+	}
 }

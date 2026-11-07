@@ -35,15 +35,15 @@ import java.math.BigDecimal
  */
 interface BaseJsonBigDecimalConverter<E> : BaseJsonConverter<E, BigDecimal> {
 
-    /**
-     * 获取目标类型的引用信息。
-     *
-     * 该方法返回一个 [JsonTypeReference] 对象，表示目标类型为 [BigDecimal]。
-     * 通过调用 [JsonTypeReference.Companion.of] 方法创建类型引用。
-     *
-     * @return 目标类型 [BigDecimal] 的类型引用。
-     * @throws Exception 如果在获取类型引用时发生异常。
-     */
-    @Throws(Exception::class)
-    override fun getToType() = JsonTypeReference.of<BigDecimal>()
+	/**
+	 * 获取目标类型的引用信息。
+	 *
+	 * 该方法返回一个 [JsonTypeReference] 对象，表示目标类型为 [BigDecimal]。
+	 * 通过调用 [JsonTypeReference.Companion.of] 方法创建类型引用。
+	 *
+	 * @return 目标类型 [BigDecimal] 的类型引用。
+	 * @throws Exception 如果在获取类型引用时发生异常。
+	 */
+	@Throws(Exception::class)
+	override fun getToType() = JsonTypeReference.of<BigDecimal>()
 }

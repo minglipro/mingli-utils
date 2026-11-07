@@ -31,81 +31,81 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 open class NamedThreadFactory(private val getName: NamedThreadFactoryNameGetter) : ThreadFactory {
 
-    companion object {
+	companion object {
 
-        @JvmStatic
-        private val allThreadPoolNumber = AtomicInteger(0)
+		@JvmStatic
+		private val allThreadPoolNumber = AtomicInteger(0)
 
-        /**
-         * 函数式接口，用于定义线程名称生成规则
-         */
-        @FunctionalInterface
-        fun interface NamedThreadFactoryNameGetter {
-            /**
-             * 获取线程名称
-             * @param clazz 线程工厂类
-             * @param poolNumber 线程池编号
-             * @param threadNumber 线程编号
-             * @return 生成的线程名称
-             */
-            fun getName(clazz: Class<out NamedThreadFactory>, poolNumber: Int, threadNumber: Int): String
-        }
+		/**
+		 * 函数式接口，用于定义线程名称生成规则
+		 */
+		@FunctionalInterface
+		fun interface NamedThreadFactoryNameGetter {
+			/**
+			 * 获取线程名称
+			 * @param clazz 线程工厂类
+			 * @param poolNumber 线程池编号
+			 * @param threadNumber 线程编号
+			 * @return 生成的线程名称
+			 */
+			fun getName(clazz: Class<out NamedThreadFactory>, poolNumber: Int, threadNumber: Int): String
+		}
 
-        /**
-         * 默认的线程名称生成器
-         */
-        @JvmStatic
-        val defaultGetName =
-            NamedThreadFactoryNameGetter { clazz, poolNumber, threadNumber -> "${clazz.simpleName}-$poolNumber-$threadNumber" }
+		/**
+		 * 默认的线程名称生成器
+		 */
+		@JvmStatic
+		val defaultGetName =
+			NamedThreadFactoryNameGetter { clazz, poolNumber, threadNumber -> "${clazz.simpleName}-$poolNumber-$threadNumber" }
 
-        /**
-         * 创建命名线程工厂实例
-         * @param name 线程名称前缀
-         * @return NamedThreadFactory实例
-         */
-        @JvmStatic
-        fun of(name: String): NamedThreadFactory {
-            return NamedThreadFactory { a, b, c ->
-                "$name-$c"
-            }
-        }
+		/**
+		 * 创建命名线程工厂实例
+		 * @param name 线程名称前缀
+		 * @return NamedThreadFactory实例
+		 */
+		@JvmStatic
+		fun of(name: String): NamedThreadFactory {
+			return NamedThreadFactory { a, b, c ->
+				"$name-$c"
+			}
+		}
 
-        /**
-         * 创建命名线程工厂实例
-         * @param getter 线程名称生成器，默认使用defaultGetName
-         * @return NamedThreadFactory实例
-         */
-        @JvmStatic
-        fun of(getter: NamedThreadFactoryNameGetter = defaultGetName): NamedThreadFactory {
-            return NamedThreadFactory(getter)
-        }
-    }
+		/**
+		 * 创建命名线程工厂实例
+		 * @param getter 线程名称生成器，默认使用defaultGetName
+		 * @return NamedThreadFactory实例
+		 */
+		@JvmStatic
+		fun of(getter: NamedThreadFactoryNameGetter = defaultGetName): NamedThreadFactory {
+			return NamedThreadFactory(getter)
+		}
+	}
 
-    // 当前线程工厂的线程计数器
-    private val threadNumber = AtomicInteger(0)
+	// 当前线程工厂的线程计数器
+	private val threadNumber = AtomicInteger(0)
 
-    // 全局线程池计数器，用于标识不同的线程池
-    private val threadPoolNumber = allThreadPoolNumber.addAndGet(1)
+	// 全局线程池计数器，用于标识不同的线程池
+	private val threadPoolNumber = allThreadPoolNumber.addAndGet(1)
 
-    /**
-     * 获取线程名称
-     * @param clazz 线程工厂类
-     * @param poolNumber 线程池编号
-     * @param threadNumber 线程编号
-     * @return 生成的线程名称
-     */
-    open fun getThreadName(clazz: Class<out NamedThreadFactory>, poolNumber: Int, threadNumber: Int) =
-        getName.getName(clazz, poolNumber, threadNumber)
+	/**
+	 * 获取线程名称
+	 * @param clazz 线程工厂类
+	 * @param poolNumber 线程池编号
+	 * @param threadNumber 线程编号
+	 * @return 生成的线程名称
+	 */
+	open fun getThreadName(clazz: Class<out NamedThreadFactory>, poolNumber: Int, threadNumber: Int) =
+		getName.getName(clazz, poolNumber, threadNumber)
 
-    /**
-     * 创建新线程
-     * @param r 线程执行的任务
-     * @return 新创建的线程对象
-     */
-    override fun newThread(r: Runnable): Thread {
-        return Thread(r).let {
-            it.name = getThreadName(this.javaClass, threadPoolNumber, threadNumber.addAndGet(1))
-            it
-        }
-    }
+	/**
+	 * 创建新线程
+	 * @param r 线程执行的任务
+	 * @return 新创建的线程对象
+	 */
+	override fun newThread(r: Runnable): Thread {
+		return Thread(r).let {
+			it.name = getThreadName(this.javaClass, threadPoolNumber, threadNumber.addAndGet(1))
+			it
+		}
+	}
 }

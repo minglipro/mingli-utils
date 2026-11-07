@@ -32,15 +32,15 @@ import com.mingliqiye.utils.json.api.type.JsonTypeReference
  */
 interface BaseJsonStringConverter<E> : BaseJsonConverter<E, String> {
 
-    /**
-     * 获取目标类型的引用信息。
-     *
-     * 该方法重写了父接口中的 [getToType] 方法，返回一个表示 [String] 类型的 [JsonTypeReference] 实例。
-     * 此方法可能抛出异常，因此使用 [@Throws(Exception::class)] 注解标记。
-     *
-     * @return 返回一个 [JsonTypeReference] 实例，表示目标类型为 [String]。
-     * @throws Exception 如果在获取类型引用时发生错误，则抛出此异常。
-     */
-    @Throws(Exception::class)
-    override fun getToType() = JsonTypeReference.of<String>()
+	/**
+	 * 获取目标类型的引用信息。
+	 *
+	 * 该方法重写了父接口中的 [getToType] 方法，返回一个表示 [String] 类型的 [JsonTypeReference] 实例。
+	 * 此方法可能抛出异常，因此使用 [@Throws(Exception::class)] 注解标记。
+	 *
+	 * @return 返回一个 [JsonTypeReference] 实例，表示目标类型为 [String]。
+	 * @throws Exception 如果在获取类型引用时发生错误，则抛出此异常。
+	 */
+	@Throws(Exception::class)
+	override fun getToType() = JsonTypeReference.of<String>()
 }

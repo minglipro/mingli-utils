@@ -37,5 +37,5 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
 annotation class AutoService(
-    val value: Array<KClass<*>> = []
+	val value: Array<KClass<*>> = [],
 )

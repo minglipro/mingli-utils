@@ -31,8 +31,8 @@ package com.mingliqiye.utils.exception
  * 3. 仅包含原因（Throwable）的构造函数。
  */
 open class JsonException @JvmOverloads constructor(
-    message: String? = null,
-    throwable: Throwable? = null,
-    enableSuppression: Boolean = false,
-    writableStackTrace: Boolean = true,
+	message: String? = null,
+	throwable: Throwable? = null,
+	enableSuppression: Boolean = false,
+	writableStackTrace: Boolean = true,
 ) : MingLiUtilsBaseException(message, throwable, enableSuppression, writableStackTrace)

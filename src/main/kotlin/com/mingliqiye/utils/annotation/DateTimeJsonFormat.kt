@@ -33,7 +33,7 @@ import com.mingliqiye.utils.time.Formatter
  */
 @Target(AnnotationTarget.FIELD)
 annotation class DateTimeJsonFormat(
-    val value: Formatter = Formatter.NONE,
-    val formatter: String = "",
-    val repcZero: Boolean = true,
+	val value: Formatter = Formatter.NONE,
+	val formatter: String = "",
+	val repcZero: Boolean = true,
 )

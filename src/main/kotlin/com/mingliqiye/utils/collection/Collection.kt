@@ -36,7 +36,7 @@ import java.util.stream.Collectors
  * @return 转换后的数组
  */
 inline fun <reified T> Collection<T>.toArray(): Array<T> {
-    return arrayOf(*this.toTypedArray())
+	return arrayOf(*this.toTypedArray())
 }
 
 /**
@@ -49,11 +49,11 @@ inline fun <reified T> Collection<T>.toArray(): Array<T> {
  */
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T, V> Collection<T>.toMap(noinline v: (T) -> V): Map<T, V> {
-    return this.stream().collect(
-        SuperStream.toMap(
-            v
-        )
-    ) as Map<T, V>
+	return this.stream().collect(
+		SuperStream.toMap(
+			v
+		)
+	) as Map<T, V>
 }
 
 /**
@@ -67,11 +67,11 @@ inline fun <reified T, V> Collection<T>.toMap(noinline v: (T) -> V): Map<T, V> {
  * @return 转换后的 Map
  */
 inline fun <reified T, V, K> Collection<T>.toMap(noinline k: (T) -> K, noinline v: (T) -> V): Map<K, V> {
-    return this.stream().collect(
-        Collectors.toMap(
-            k, v
-        )
-    )
+	return this.stream().collect(
+		Collectors.toMap(
+			k, v
+		)
+	)
 }
 
 /**
@@ -82,7 +82,7 @@ inline fun <reified T, V, K> Collection<T>.toMap(noinline k: (T) -> K, noinline 
  * @return 转换后的 Set
  */
 fun <T> toSet(array: Array<T>): Set<T> {
-    return array.toSet()
+	return array.toSet()
 }
 
 
@@ -93,13 +93,13 @@ fun <T> toSet(array: Array<T>): Set<T> {
  * @return 第一个元素或 null
  */
 inline fun <reified T> Collection<T>.getFirst(): T? {
-    if (this.isEmpty()) {
-        return null
-    }
-    if (this is MutableList<T>) {
-        return this.first()
-    }
-    return this.iterator().next()
+	if (this.isEmpty()) {
+		return null
+	}
+	if (this is MutableList<T>) {
+		return this.first()
+	}
+	return this.iterator().next()
 }
 
 /**
@@ -109,10 +109,10 @@ inline fun <reified T> Collection<T>.getFirst(): T? {
  * @return 第一个元素或 null
  */
 inline fun <reified T> Array<T>.getFirst(): T? {
-    if (this.isEmpty()) {
-        return null
-    }
-    return this.first()
+	if (this.isEmpty()) {
+		return null
+	}
+	return this.first()
 }
 
 /**
@@ -122,17 +122,17 @@ inline fun <reified T> Array<T>.getFirst(): T? {
  * @return 最后一个元素或 null
  */
 inline fun <reified T> Collection<T>.getLast(): T? {
-    if (this.isEmpty()) {
-        return null
-    }
-    if (this is MutableList<T>) {
-        return this.last()
-    }
-    var lastElement: T? = null
-    for (element in this) {
-        lastElement = element
-    }
-    return lastElement
+	if (this.isEmpty()) {
+		return null
+	}
+	if (this is MutableList<T>) {
+		return this.last()
+	}
+	var lastElement: T? = null
+	for (element in this) {
+		lastElement = element
+	}
+	return lastElement
 }
 
 /**
@@ -142,10 +142,10 @@ inline fun <reified T> Collection<T>.getLast(): T? {
  * @return 最后一个元素或 null
  */
 inline fun <reified T> Array<T>.getLast(): T? {
-    if (this.isEmpty()) {
-        return null
-    }
-    return this.last()
+	if (this.isEmpty()) {
+		return null
+	}
+	return this.last()
 }
 
 
@@ -158,22 +158,22 @@ inline fun <reified T> Array<T>.getLast(): T? {
  * @return 指定索引处的元素或默认值
  */
 inline fun <reified T> Collection<T>.getOrDefault(
-    index: Int, defaultValue: T
+	index: Int, defaultValue: T,
 ): T {
-    if (!(!this.isEmpty() && index < this.size)) {
-        return defaultValue
-    }
-    if (this is List<T>) {
-        return this[index]
-    }
-    var i = 0
-    for (element in this) {
-        if (i == index) {
-            return element
-        }
-        i++
-    }
-    return defaultValue
+	if (!(!this.isEmpty() && index < this.size)) {
+		return defaultValue
+	}
+	if (this is List<T>) {
+		return this[index]
+	}
+	var i = 0
+	for (element in this) {
+		if (i == index) {
+			return element
+		}
+		i++
+	}
+	return defaultValue
 }
 
 /**
@@ -183,7 +183,7 @@ inline fun <reified T> Collection<T>.getOrDefault(
  * @return 新创建的 ArrayList
  */
 fun <T> newArrayList(): ArrayList<T> {
-    return ArrayList()
+	return ArrayList()
 }
 
 /**
@@ -194,7 +194,7 @@ fun <T> newArrayList(): ArrayList<T> {
  * @return 新创建的 ArrayList
  */
 fun <T> newArrayList(size: Int): ArrayList<T> {
-    return ArrayList()
+	return ArrayList()
 }
 
 /**
@@ -205,7 +205,7 @@ fun <T> newArrayList(size: Int): ArrayList<T> {
  * @return 新创建的 ArrayList
  */
 fun <T> newArrayList(vararg elements: T): ArrayList<T> {
-    return newArrayList(elements.asList())
+	return newArrayList(elements.asList())
 }
 
 /**
@@ -215,7 +215,7 @@ fun <T> newArrayList(vararg elements: T): ArrayList<T> {
  * @return 新创建的 ArrayList
  */
 fun <T> Collection<T>.newArrayLists(): ArrayList<T> {
-    return newArrayList(this)
+	return newArrayList(this)
 }
 
 /**
@@ -226,7 +226,7 @@ fun <T> Collection<T>.newArrayLists(): ArrayList<T> {
  * @return 新创建的 ArrayList
  */
 fun <T> newArrayLists(elements: Array<T>): ArrayList<T> {
-    return newArrayList(elements.asList())
+	return newArrayList(elements.asList())
 }
 
 /**
@@ -237,7 +237,7 @@ fun <T> newArrayLists(elements: Array<T>): ArrayList<T> {
  * @return 新创建的 ArrayList
  */
 fun <T> newArrayList(elements: Collection<T>): ArrayList<T> {
-    return ArrayList(elements.toList())
+	return ArrayList(elements.toList())
 }
 
 /**
@@ -248,7 +248,7 @@ fun <T> newArrayList(elements: Collection<T>): ArrayList<T> {
  * @return 新创建的 ArrayList
  */
 fun <T> newArrayList(elements: Iterable<T>): ArrayList<T> {
-    return newArrayList(elements.toList())
+	return newArrayList(elements.toList())
 }
 
 /**
@@ -259,7 +259,7 @@ fun <T> newArrayList(elements: Iterable<T>): ArrayList<T> {
  * @return 新创建的 ArrayList
  */
 fun <T> newArrayList(elements: Sequence<T>): ArrayList<T> {
-    return newArrayList(elements.toList())
+	return newArrayList(elements.toList())
 }
 
 /**
@@ -269,7 +269,7 @@ fun <T> newArrayList(elements: Sequence<T>): ArrayList<T> {
  * @return 新创建的 LinkedList
  */
 fun <T> newLinkedList(): LinkedList<T> {
-    return LinkedList()
+	return LinkedList()
 }
 
 /**
@@ -280,9 +280,9 @@ fun <T> newLinkedList(): LinkedList<T> {
  * @return 新创建的 LinkedList
  */
 fun <T> newLinkedList(vararg elements: T): LinkedList<T> {
-    val list = newLinkedList<T>()
-    list.addAll(elements.asList())
-    return list
+	val list = newLinkedList<T>()
+	list.addAll(elements.asList())
+	return list
 }
 
 /**
@@ -293,9 +293,9 @@ fun <T> newLinkedList(vararg elements: T): LinkedList<T> {
  * @return 新创建的 LinkedList
  */
 fun <T> newLinkedList(elements: Collection<T>): LinkedList<T> {
-    val list = newLinkedList<T>()
-    list.addAll(elements)
-    return list
+	val list = newLinkedList<T>()
+	list.addAll(elements)
+	return list
 }
 
 /**
@@ -306,11 +306,11 @@ fun <T> newLinkedList(elements: Collection<T>): LinkedList<T> {
  * @return 新创建的 LinkedList
  */
 fun <T> newLinkedList(elements: Iterable<T>): LinkedList<T> {
-    val list = newLinkedList<T>()
-    for (element in elements) {
-        list.add(element)
-    }
-    return list
+	val list = newLinkedList<T>()
+	for (element in elements) {
+		list.add(element)
+	}
+	return list
 }
 
 /**
@@ -321,7 +321,7 @@ fun <T> newLinkedList(elements: Iterable<T>): LinkedList<T> {
  * @return 新创建的 LinkedList
  */
 fun <T> newLinkedList(elements: Sequence<T>): LinkedList<T> {
-    return newLinkedList(elements.toList())
+	return newLinkedList(elements.toList())
 }
 
 /**
@@ -331,7 +331,7 @@ fun <T> newLinkedList(elements: Sequence<T>): LinkedList<T> {
  * @return 新创建的 Vector
  */
 fun <T> newVector(): Vector<T> {
-    return Vector()
+	return Vector()
 }
 
 /**
@@ -342,9 +342,9 @@ fun <T> newVector(): Vector<T> {
  * @return 新创建的 Vector
  */
 fun <T> newVector(vararg elements: T): Vector<T> {
-    val vector = newVector<T>()
-    vector.addAll(elements.asList())
-    return vector
+	val vector = newVector<T>()
+	vector.addAll(elements.asList())
+	return vector
 }
 
 /**
@@ -355,9 +355,9 @@ fun <T> newVector(vararg elements: T): Vector<T> {
  * @return 新创建的 Vector
  */
 fun <T> newVector(elements: Collection<T>): Vector<T> {
-    val vector = newVector<T>()
-    vector.addAll(elements)
-    return vector
+	val vector = newVector<T>()
+	vector.addAll(elements)
+	return vector
 }
 
 /**
@@ -368,11 +368,11 @@ fun <T> newVector(elements: Collection<T>): Vector<T> {
  * @return 新创建的 Vector
  */
 fun <T> newVector(elements: Iterable<T>): Vector<T> {
-    val vector = newVector<T>()
-    for (element in elements) {
-        vector.add(element)
-    }
-    return vector
+	val vector = newVector<T>()
+	for (element in elements) {
+		vector.add(element)
+	}
+	return vector
 }
 
 /**
@@ -383,7 +383,7 @@ fun <T> newVector(elements: Iterable<T>): Vector<T> {
  * @return 新创建的 Vector
  */
 fun <T> newVector(elements: Sequence<T>): Vector<T> {
-    return newVector(elements.toList())
+	return newVector(elements.toList())
 }
 
 
@@ -394,7 +394,7 @@ fun <T> newVector(elements: Sequence<T>): Vector<T> {
  * @return 新创建的 HashSet
  */
 fun <T> newHashSet(): HashSet<T> {
-    return HashSet()
+	return HashSet()
 }
 
 /**
@@ -405,7 +405,7 @@ fun <T> newHashSet(): HashSet<T> {
  * @return 新创建的 HashSet
  */
 fun <T> newHashSet(size: Int): HashSet<T> {
-    return HashSet(size)
+	return HashSet(size)
 }
 
 /**
@@ -416,9 +416,9 @@ fun <T> newHashSet(size: Int): HashSet<T> {
  * @return 新创建的 HashSet
  */
 fun <T> newHashSet(vararg elements: T): HashSet<T> {
-    val set = newHashSet<T>()
-    set.addAll(elements.asList())
-    return set
+	val set = newHashSet<T>()
+	set.addAll(elements.asList())
+	return set
 }
 
 /**
@@ -429,9 +429,9 @@ fun <T> newHashSet(vararg elements: T): HashSet<T> {
  * @return 新创建的 HashSet
  */
 fun <T> newHashSet(elements: Collection<T>): HashSet<T> {
-    val set = newHashSet<T>()
-    set.addAll(elements)
-    return set
+	val set = newHashSet<T>()
+	set.addAll(elements)
+	return set
 }
 
 /**
@@ -442,11 +442,11 @@ fun <T> newHashSet(elements: Collection<T>): HashSet<T> {
  * @return 新创建的 HashSet
  */
 fun <T> newHashSet(elements: Iterable<T>): HashSet<T> {
-    val set = newHashSet<T>()
-    for (element in elements) {
-        set.add(element)
-    }
-    return set
+	val set = newHashSet<T>()
+	for (element in elements) {
+		set.add(element)
+	}
+	return set
 }
 
 /**
@@ -457,7 +457,7 @@ fun <T> newHashSet(elements: Iterable<T>): HashSet<T> {
  * @return 新创建的 HashSet
  */
 fun <T> newHashSet(elements: Sequence<T>): HashSet<T> {
-    return newHashSet(elements.toSet())
+	return newHashSet(elements.toSet())
 }
 
 /**
@@ -467,7 +467,7 @@ fun <T> newHashSet(elements: Sequence<T>): HashSet<T> {
  * @return 新创建的 LinkedHashSet
  */
 fun <T> newLinkedHashSet(): LinkedHashSet<T> {
-    return LinkedHashSet()
+	return LinkedHashSet()
 }
 
 /**
@@ -478,7 +478,7 @@ fun <T> newLinkedHashSet(): LinkedHashSet<T> {
  * @return 新创建的 LinkedHashSet
  */
 fun <T> newLinkedHashSet(size: Int): LinkedHashSet<T> {
-    return LinkedHashSet(size)
+	return LinkedHashSet(size)
 }
 
 /**
@@ -489,9 +489,9 @@ fun <T> newLinkedHashSet(size: Int): LinkedHashSet<T> {
  * @return 新创建的 LinkedHashSet
  */
 fun <T> newLinkedHashSet(vararg elements: T): LinkedHashSet<T> {
-    val set = newLinkedHashSet<T>()
-    set.addAll(elements.asList())
-    return set
+	val set = newLinkedHashSet<T>()
+	set.addAll(elements.asList())
+	return set
 }
 
 /**
@@ -502,9 +502,9 @@ fun <T> newLinkedHashSet(vararg elements: T): LinkedHashSet<T> {
  * @return 新创建的 LinkedHashSet
  */
 fun <T> newLinkedHashSet(elements: Collection<T>): LinkedHashSet<T> {
-    val set = newLinkedHashSet<T>()
-    set.addAll(elements)
-    return set
+	val set = newLinkedHashSet<T>()
+	set.addAll(elements)
+	return set
 }
 
 /**
@@ -515,11 +515,11 @@ fun <T> newLinkedHashSet(elements: Collection<T>): LinkedHashSet<T> {
  * @return 新创建的 LinkedHashSet
  */
 fun <T> newLinkedHashSet(elements: Iterable<T>): LinkedHashSet<T> {
-    val set = newLinkedHashSet<T>()
-    for (element in elements) {
-        set.add(element)
-    }
-    return set
+	val set = newLinkedHashSet<T>()
+	for (element in elements) {
+		set.add(element)
+	}
+	return set
 }
 
 /**
@@ -530,7 +530,7 @@ fun <T> newLinkedHashSet(elements: Iterable<T>): LinkedHashSet<T> {
  * @return 新创建的 LinkedHashSet
  */
 fun <T> newLinkedHashSet(elements: Sequence<T>): LinkedHashSet<T> {
-    return newLinkedHashSet(elements.toSet())
+	return newLinkedHashSet(elements.toSet())
 }
 
 /**
@@ -540,7 +540,7 @@ fun <T> newLinkedHashSet(elements: Sequence<T>): LinkedHashSet<T> {
  * @return 新创建的 TreeSet
  */
 fun <T : Comparable<T>> newTreeSet(): TreeSet<T> {
-    return TreeSet()
+	return TreeSet()
 }
 
 /**
@@ -551,9 +551,9 @@ fun <T : Comparable<T>> newTreeSet(): TreeSet<T> {
  * @return 新创建的 TreeSet
  */
 fun <T : Comparable<T>> newTreeSet(vararg elements: T): TreeSet<T> {
-    val set = newTreeSet<T>()
-    set.addAll(elements.asList())
-    return set
+	val set = newTreeSet<T>()
+	set.addAll(elements.asList())
+	return set
 }
 
 /**
@@ -564,9 +564,9 @@ fun <T : Comparable<T>> newTreeSet(vararg elements: T): TreeSet<T> {
  * @return 新创建的 TreeSet
  */
 fun <T : Comparable<T>> newTreeSet(elements: Collection<T>): TreeSet<T> {
-    val set = newTreeSet<T>()
-    set.addAll(elements)
-    return set
+	val set = newTreeSet<T>()
+	set.addAll(elements)
+	return set
 }
 
 /**
@@ -577,11 +577,11 @@ fun <T : Comparable<T>> newTreeSet(elements: Collection<T>): TreeSet<T> {
  * @return 新创建的 TreeSet
  */
 fun <T : Comparable<T>> newTreeSet(elements: Iterable<T>): TreeSet<T> {
-    val set = newTreeSet<T>()
-    for (element in elements) {
-        set.add(element)
-    }
-    return set
+	val set = newTreeSet<T>()
+	for (element in elements) {
+		set.add(element)
+	}
+	return set
 }
 
 /**
@@ -592,7 +592,7 @@ fun <T : Comparable<T>> newTreeSet(elements: Iterable<T>): TreeSet<T> {
  * @return 新创建的 TreeSet
  */
 fun <T : Comparable<T>> newTreeSet(elements: Sequence<T>): TreeSet<T> {
-    return newTreeSet(elements.toSet())
+	return newTreeSet(elements.toSet())
 }
 
 
@@ -603,7 +603,7 @@ fun <T : Comparable<T>> newTreeSet(elements: Sequence<T>): TreeSet<T> {
  * @return 转换后的 ArrayList
  */
 fun newArrayLists(elements: ByteArray): ArrayList<Byte> {
-    return ArrayList(elements.toList())
+	return ArrayList(elements.toList())
 }
 
 /**
@@ -613,7 +613,7 @@ fun newArrayLists(elements: ByteArray): ArrayList<Byte> {
  * @return 转换后的 ArrayList
  */
 fun newArrayLists(elements: ShortArray): ArrayList<Short> {
-    return ArrayList(elements.toList())
+	return ArrayList(elements.toList())
 }
 
 /**
@@ -623,7 +623,7 @@ fun newArrayLists(elements: ShortArray): ArrayList<Short> {
  * @return 转换后的 ArrayList
  */
 fun newArrayLists(elements: IntArray): ArrayList<Int> {
-    return ArrayList(elements.toList())
+	return ArrayList(elements.toList())
 }
 
 /**
@@ -633,7 +633,7 @@ fun newArrayLists(elements: IntArray): ArrayList<Int> {
  * @return 转换后的 ArrayList
  */
 fun newArrayLists(elements: LongArray): ArrayList<Long> {
-    return ArrayList(elements.toList())
+	return ArrayList(elements.toList())
 }
 
 /**
@@ -643,7 +643,7 @@ fun newArrayLists(elements: LongArray): ArrayList<Long> {
  * @return 转换后的 ArrayList
  */
 fun newArrayLists(elements: FloatArray): ArrayList<Float> {
-    return ArrayList(elements.toList())
+	return ArrayList(elements.toList())
 }
 
 /**
@@ -653,7 +653,7 @@ fun newArrayLists(elements: FloatArray): ArrayList<Float> {
  * @return 转换后的 ArrayList
  */
 fun newArrayLists(elements: DoubleArray): ArrayList<Double> {
-    return ArrayList(elements.toList())
+	return ArrayList(elements.toList())
 }
 
 /**
@@ -663,7 +663,7 @@ fun newArrayLists(elements: DoubleArray): ArrayList<Double> {
  * @return 转换后的 ArrayList
  */
 fun newArrayLists(elements: BooleanArray): ArrayList<Boolean> {
-    return ArrayList(elements.toList())
+	return ArrayList(elements.toList())
 }
 
 /**
@@ -673,7 +673,7 @@ fun newArrayLists(elements: BooleanArray): ArrayList<Boolean> {
  * @return 转换后的 ArrayList
  */
 fun newArrayLists(elements: CharArray): ArrayList<Char> {
-    return ArrayList(elements.toList())
+	return ArrayList(elements.toList())
 }
 
 /**
@@ -683,7 +683,7 @@ fun newArrayLists(elements: CharArray): ArrayList<Char> {
  * @return 新创建的 CopyOnWriteArrayList
  */
 fun <T> newCopyOnWriteArrayList(): java.util.concurrent.CopyOnWriteArrayList<T> {
-    return java.util.concurrent.CopyOnWriteArrayList()
+	return java.util.concurrent.CopyOnWriteArrayList()
 }
 
 /**
@@ -694,7 +694,7 @@ fun <T> newCopyOnWriteArrayList(): java.util.concurrent.CopyOnWriteArrayList<T> 
  * @return 新创建的 CopyOnWriteArrayList
  */
 fun <T> newCopyOnWriteArrayList(vararg elements: T): java.util.concurrent.CopyOnWriteArrayList<T> {
-    return java.util.concurrent.CopyOnWriteArrayList(elements.asList())
+	return java.util.concurrent.CopyOnWriteArrayList(elements.asList())
 }
 
 /**
@@ -705,7 +705,7 @@ fun <T> newCopyOnWriteArrayList(vararg elements: T): java.util.concurrent.CopyOn
  * @return 新创建的 CopyOnWriteArrayList
  */
 fun <T> newCopyOnWriteArrayList(elements: Collection<T>): java.util.concurrent.CopyOnWriteArrayList<T> {
-    return java.util.concurrent.CopyOnWriteArrayList(elements)
+	return java.util.concurrent.CopyOnWriteArrayList(elements)
 }
 
 /**
@@ -715,7 +715,7 @@ fun <T> newCopyOnWriteArrayList(elements: Collection<T>): java.util.concurrent.C
  * @return 新创建的 Stack
  */
 fun <T> newStack(): Stack<T> {
-    return Stack()
+	return Stack()
 }
 
 /**
@@ -726,9 +726,9 @@ fun <T> newStack(): Stack<T> {
  * @return 新创建的 Stack
  */
 fun <T> newStack(vararg elements: T): Stack<T> {
-    val stack = newStack<T>()
-    stack.addAll(elements.asList())
-    return stack
+	val stack = newStack<T>()
+	stack.addAll(elements.asList())
+	return stack
 }
 
 /**
@@ -739,9 +739,9 @@ fun <T> newStack(vararg elements: T): Stack<T> {
  * @return 新创建的 Stack
  */
 fun <T> newStack(elements: Collection<T>): Stack<T> {
-    val stack = newStack<T>()
-    stack.addAll(elements)
-    return stack
+	val stack = newStack<T>()
+	stack.addAll(elements)
+	return stack
 
 }
 
@@ -753,7 +753,7 @@ fun <T> newStack(elements: Collection<T>): Stack<T> {
  * @return 新创建的 TreeSet
  */
 fun <T> newTreeSet(comparator: Comparator<T>): TreeSet<T> {
-    return TreeSet(comparator)
+	return TreeSet(comparator)
 }
 
 /**
@@ -765,9 +765,9 @@ fun <T> newTreeSet(comparator: Comparator<T>): TreeSet<T> {
  * @return 新创建的 TreeSet
  */
 fun <T> newTreeSet(comparator: Comparator<T>, vararg elements: T): TreeSet<T> {
-    val set = newTreeSet(comparator)
-    set.addAll(elements.asList())
-    return set
+	val set = newTreeSet(comparator)
+	set.addAll(elements.asList())
+	return set
 }
 
 /**
@@ -779,9 +779,9 @@ fun <T> newTreeSet(comparator: Comparator<T>, vararg elements: T): TreeSet<T> {
  * @return 新创建的 TreeSet
  */
 fun <T> newTreeSet(comparator: Comparator<T>, elements: Collection<T>): TreeSet<T> {
-    val set = newTreeSet(comparator)
-    set.addAll(elements)
-    return set
+	val set = newTreeSet(comparator)
+	set.addAll(elements)
+	return set
 }
 
 /**
@@ -793,11 +793,11 @@ fun <T> newTreeSet(comparator: Comparator<T>, elements: Collection<T>): TreeSet<
  * @return 新创建的 TreeSet
  */
 fun <T> newTreeSet(comparator: Comparator<T>, elements: Iterable<T>): TreeSet<T> {
-    val set = newTreeSet(comparator)
-    for (element in elements) {
-        set.add(element)
-    }
-    return set
+	val set = newTreeSet(comparator)
+	for (element in elements) {
+		set.add(element)
+	}
+	return set
 }
 
 /**
@@ -809,7 +809,7 @@ fun <T> newTreeSet(comparator: Comparator<T>, elements: Iterable<T>): TreeSet<T>
  * @return 新创建的 TreeSet
  */
 fun <T> newTreeSet(comparator: Comparator<T>, elements: Sequence<T>): TreeSet<T> {
-    return newTreeSet(comparator, elements.toSet())
+	return newTreeSet(comparator, elements.toSet())
 }
 
 /**
@@ -819,7 +819,7 @@ fun <T> newTreeSet(comparator: Comparator<T>, elements: Sequence<T>): TreeSet<T>
  * @return 新创建的 CopyOnWriteArrayList
  */
 fun <T> Collection<T>.newCopyOnWriteArrayLists(): java.util.concurrent.CopyOnWriteArrayList<T> {
-    return java.util.concurrent.CopyOnWriteArrayList(this)
+	return java.util.concurrent.CopyOnWriteArrayList(this)
 }
 
 /**
@@ -829,9 +829,9 @@ fun <T> Collection<T>.newCopyOnWriteArrayLists(): java.util.concurrent.CopyOnWri
  * @return 新创建的 Stack
  */
 fun <T> Collection<T>.newStacks(): Stack<T> {
-    val stack = Stack<T>()
-    stack.addAll(this)
-    return stack
+	val stack = Stack<T>()
+	stack.addAll(this)
+	return stack
 }
 
 /**
@@ -841,9 +841,9 @@ fun <T> Collection<T>.newStacks(): Stack<T> {
  * @return 新创建的 TreeSet
  */
 fun <T> Collection<T>.newTreeSets(): TreeSet<T> where T : Comparable<T> {
-    val set = TreeSet<T>()
-    set.addAll(this)
-    return set
+	val set = TreeSet<T>()
+	set.addAll(this)
+	return set
 }
 
 /**
@@ -854,9 +854,9 @@ fun <T> Collection<T>.newTreeSets(): TreeSet<T> where T : Comparable<T> {
  * @return 新创建的 TreeSet
  */
 fun <T> Collection<T>.newTreeSets(comparator: Comparator<T>): TreeSet<T> {
-    val set = TreeSet(comparator)
-    set.addAll(this)
-    return set
+	val set = TreeSet(comparator)
+	set.addAll(this)
+	return set
 }
 
 /**
@@ -866,11 +866,11 @@ fun <T> Collection<T>.newTreeSets(comparator: Comparator<T>): TreeSet<T> {
  * @return 转换后的字节数组
  */
 fun toArray(list: List<Byte>): ByteArray {
-    val arr = ByteArray(list.size)
-    for (i in list.indices) {
-        arr[i] = list[i]
-    }
-    return arr
+	val arr = ByteArray(list.size)
+	for (i in list.indices) {
+		arr[i] = list[i]
+	}
+	return arr
 }
 
 
@@ -881,11 +881,11 @@ fun toArray(list: List<Byte>): ByteArray {
  * @return 转换后的短整型数组
  */
 fun toArray(list: List<Short>): ShortArray {
-    val arr = ShortArray(list.size)
-    for (i in list.indices) {
-        arr[i] = list[i]
-    }
-    return arr
+	val arr = ShortArray(list.size)
+	for (i in list.indices) {
+		arr[i] = list[i]
+	}
+	return arr
 }
 
 /**
@@ -895,11 +895,11 @@ fun toArray(list: List<Short>): ShortArray {
  * @return 转换后的整型数组
  */
 fun toArray(list: List<Int>): IntArray {
-    val arr = IntArray(list.size)
-    for (i in list.indices) {
-        arr[i] = list[i]
-    }
-    return arr
+	val arr = IntArray(list.size)
+	for (i in list.indices) {
+		arr[i] = list[i]
+	}
+	return arr
 }
 
 /**
@@ -909,11 +909,11 @@ fun toArray(list: List<Int>): IntArray {
  * @return 转换后的长整型数组
  */
 fun toArray(list: List<Long>): LongArray {
-    val arr = LongArray(list.size)
-    for (i in list.indices) {
-        arr[i] = list[i]
-    }
-    return arr
+	val arr = LongArray(list.size)
+	for (i in list.indices) {
+		arr[i] = list[i]
+	}
+	return arr
 }
 
 /**
@@ -923,11 +923,11 @@ fun toArray(list: List<Long>): LongArray {
  * @return 转换后的浮点数组
  */
 fun toArray(list: List<Float>): FloatArray {
-    val arr = FloatArray(list.size)
-    for (i in list.indices) {
-        arr[i] = list[i]
-    }
-    return arr
+	val arr = FloatArray(list.size)
+	for (i in list.indices) {
+		arr[i] = list[i]
+	}
+	return arr
 }
 
 /**
@@ -937,11 +937,11 @@ fun toArray(list: List<Float>): FloatArray {
  * @return 转换后的双精度浮点数组
  */
 fun toArray(list: List<Double>): DoubleArray {
-    val arr = DoubleArray(list.size)
-    for (i in list.indices) {
-        arr[i] = list[i]
-    }
-    return arr
+	val arr = DoubleArray(list.size)
+	for (i in list.indices) {
+		arr[i] = list[i]
+	}
+	return arr
 }
 
 /**
@@ -951,11 +951,11 @@ fun toArray(list: List<Double>): DoubleArray {
  * @return 转换后的布尔数组
  */
 fun toArray(list: List<Boolean>): BooleanArray {
-    val arr = BooleanArray(list.size)
-    for (i in list.indices) {
-        arr[i] = list[i]
-    }
-    return arr
+	val arr = BooleanArray(list.size)
+	for (i in list.indices) {
+		arr[i] = list[i]
+	}
+	return arr
 }
 
 /**
@@ -965,11 +965,11 @@ fun toArray(list: List<Boolean>): BooleanArray {
  * @return 转换后的字符数组
  */
 fun toArray(list: List<Char>): CharArray {
-    val arr = CharArray(list.size)
-    for (i in list.indices) {
-        arr[i] = list[i]
-    }
-    return arr
+	val arr = CharArray(list.size)
+	for (i in list.indices) {
+		arr[i] = list[i]
+	}
+	return arr
 }
 
 
@@ -981,13 +981,13 @@ fun toArray(list: List<Char>): CharArray {
  * @return 转换后的数组
  */
 inline fun <reified T> toArray(list: List<T>): Array<T> {
-    if (list.isEmpty())
-        return arrayOf<T>()
-    return SuperStream.of<T>(list)
-        .toArray(T::class.java)
+	if (list.isEmpty())
+		return arrayOf<T>()
+	return SuperStream.of<T>(list)
+		.toArray(T::class.java)
 }
 
 fun <T> toArray(list: List<T>, clazz: Class<T>): Array<T> {
-    return SuperStream.of<T>(list)
-        .toArray(clazz)
+	return SuperStream.of<T>(list)
+		.toArray(clazz)
 }

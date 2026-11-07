@@ -34,68 +34,68 @@ import java.util.concurrent.atomic.AtomicReference
  */
 class IsChanged<T> {
 
-    /**
-     * 使用 AtomicReference 来保证对数据的原子操作
-     */
-    private val atomicReferenceData: AtomicReference<T> = AtomicReference()
+	/**
+	 * 使用 AtomicReference 来保证对数据的原子操作
+	 */
+	private val atomicReferenceData: AtomicReference<T> = AtomicReference()
 
-    constructor()
+	constructor()
 
-    /**
-     * 带参数的构造函数，使用指定的初始值初始化
-     *
-     * @param data 初始数据值
-     */
-    constructor(data: T) : super() {
-        atomicReferenceData.set(data)
-    }
+	/**
+	 * 带参数的构造函数，使用指定的初始值初始化
+	 *
+	 * @param data 初始数据值
+	 */
+	constructor(data: T) : super() {
+		atomicReferenceData.set(data)
+	}
 
-    /**
-     * 设置新的数据值，不检查是否发生变化
-     *
-     * @param data 要设置的新数据值
-     */
-    fun set(data: T) {
-        atomicReferenceData.set(data)
-    }
+	/**
+	 * 设置新的数据值，不检查是否发生变化
+	 *
+	 * @param data 要设置的新数据值
+	 */
+	fun set(data: T) {
+		atomicReferenceData.set(data)
+	}
 
-    /**
-     * 获取当前数据值
-     *
-     * @return 当前数据值
-     */
-    fun get(): T {
-        return atomicReferenceData.get()
-    }
+	/**
+	 * 获取当前数据值
+	 *
+	 * @return 当前数据值
+	 */
+	fun get(): T {
+		return atomicReferenceData.get()
+	}
 
-    /**
-     * 设置新的数据值并返回旧的数据值
-     *
-     * @param data 要设置的新数据值
-     * @return 设置前的旧数据值
-     */
-    fun setAndGet(data: T): T {
-        return atomicReferenceData.getAndSet(data)
-    }
+	/**
+	 * 设置新的数据值并返回旧的数据值
+	 *
+	 * @param data 要设置的新数据值
+	 * @return 设置前的旧数据值
+	 */
+	fun setAndGet(data: T): T {
+		return atomicReferenceData.getAndSet(data)
+	}
 
-    /**
-     * 设置新的数据值，如果新值与当前值不同则更新并返回 true，否则返回 false
-     * 使用 CAS(Compare-And-Swap) 操作确保线程安全
-     *
-     * @param data 要设置的新数据值
-     * @return 如果值发生变化返回 true，否则返回 false
-     */
-    fun setAndChanged(data: T): Boolean {
-        var currentData: T
-        do {
-            currentData = get()
-            // 如果新值与当前值相等，则认为没有变化，直接返回 false
-            if (Objects.equals(data, currentData)) {
-                return false
-            }
-            // 使用 CAS 操作尝试更新值，如果失败则重试
-        } while (!atomicReferenceData.compareAndSet(currentData, data))
-        // 成功更新值，返回 true 表示发生了变化
-        return true
-    }
+	/**
+	 * 设置新的数据值，如果新值与当前值不同则更新并返回 true，否则返回 false
+	 * 使用 CAS(Compare-And-Swap) 操作确保线程安全
+	 *
+	 * @param data 要设置的新数据值
+	 * @return 如果值发生变化返回 true，否则返回 false
+	 */
+	fun setAndChanged(data: T): Boolean {
+		var currentData: T
+		do {
+			currentData = get()
+			// 如果新值与当前值相等，则认为没有变化，直接返回 false
+			if (Objects.equals(data, currentData)) {
+				return false
+			}
+			// 使用 CAS 操作尝试更新值，如果失败则重试
+		} while (!atomicReferenceData.compareAndSet(currentData, data))
+		// 成功更新值，返回 true 表示发生了变化
+		return true
+	}
 }

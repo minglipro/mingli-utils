@@ -22,13 +22,7 @@
 
 package com.mingliqiye.utils.thread
 
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ExecutionException
-import java.util.concurrent.Executor
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Future
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
+import java.util.concurrent.*
 import java.util.function.Supplier
 
 // ---- ExecutorService 扩展 ----
@@ -43,13 +37,13 @@ import java.util.function.Supplier
  * @return 线程池是否在超时前正常终止
  */
 fun ExecutorService.shutdownGracefully(
-    timeout: Long = 30,
-    unit: TimeUnit = TimeUnit.SECONDS,
+	timeout: Long = 30,
+	unit: TimeUnit = TimeUnit.SECONDS,
 ): Boolean {
-    shutdown()
-    if (awaitTermination(timeout, unit)) return true
-    shutdownNow()
-    return awaitTermination(timeout, unit)
+	shutdown()
+	if (awaitTermination(timeout, unit)) return true
+	shutdownNow()
+	return awaitTermination(timeout, unit)
 }
 
 /**
@@ -58,12 +52,12 @@ fun ExecutorService.shutdownGracefully(
  * @throws IllegalStateException 线程池未能在超时时间内终止
  */
 fun ExecutorService.shutdownAndAwait(
-    timeout: Long = 30,
-    unit: TimeUnit = TimeUnit.SECONDS,
+	timeout: Long = 30,
+	unit: TimeUnit = TimeUnit.SECONDS,
 ) {
-    check(shutdownGracefully(timeout, unit)) {
-        "executor did not terminate within $timeout $unit"
-    }
+	check(shutdownGracefully(timeout, unit)) {
+		"executor did not terminate within $timeout $unit"
+	}
 }
 
 // ---- Future 扩展 ----
@@ -72,48 +66,48 @@ fun ExecutorService.shutdownAndAwait(
  * 阻塞等待任务完成并返回结果；[ExecutionException] 自动解包抛出原始异常。
  */
 fun <T> Future<T>.await(): T = try {
-    get()
+	get()
 } catch (e: ExecutionException) {
-    throw e.cause ?: e
+	throw e.cause ?: e
 }
 
 /**
  * 阻塞等待任务完成，返回结果；超时或执行失败返回 null。
  */
 fun <T> Future<T>.getOrNull(
-    timeout: Long = Long.MAX_VALUE,
-    unit: TimeUnit = TimeUnit.MILLISECONDS,
+	timeout: Long = Long.MAX_VALUE,
+	unit: TimeUnit = TimeUnit.MILLISECONDS,
 ): T? = try {
-    get(timeout, unit)
+	get(timeout, unit)
 } catch (_: Exception) {
-    null
+	null
 }
 
 /**
  * 阻塞等待任务完成，失败或超时返回默认值。
  */
 fun <T> Future<T>.getOrDefault(
-    default: T,
-    timeout: Long = Long.MAX_VALUE,
-    unit: TimeUnit = TimeUnit.MILLISECONDS,
+	default: T,
+	timeout: Long = Long.MAX_VALUE,
+	unit: TimeUnit = TimeUnit.MILLISECONDS,
 ): T = getOrNull(timeout, unit) ?: default
 
 /**
  * 非阻塞取消任务
  */
 fun Future<*>.cancelQuietly(): Boolean = try {
-    cancel(true)
+	cancel(true)
 } catch (_: Exception) {
-    false
+	false
 }
 
 /**
  * 带超时等待：超时抛出 [TimeoutException]，失败抛出原始异常
  */
 fun <T> Future<T>.await(timeout: Long, unit: TimeUnit): T = try {
-    get(timeout, unit)
+	get(timeout, unit)
 } catch (e: ExecutionException) {
-    throw e.cause ?: e
+	throw e.cause ?: e
 }
 
 // ---- CompletableFuture 便捷创建 ----
@@ -129,22 +123,22 @@ fun <T> Future<T>.await(timeout: Long, unit: TimeUnit): T = try {
  * @param executor 执行任务的线程池，默认使用公共 ForkJoinPool
  */
 fun <T> completableFuture(
-    executor: Executor? = null,
-    block: () -> T,
+	executor: Executor? = null,
+	block: () -> T,
 ): CompletableFuture<T> = if (executor == null) {
-    CompletableFuture.supplyAsync(Supplier(block))
+	CompletableFuture.supplyAsync(Supplier(block))
 } else {
-    CompletableFuture.supplyAsync(Supplier(block), executor)
+	CompletableFuture.supplyAsync(Supplier(block), executor)
 }
 
 /**
  * 在指定线程池创建无返回值 [CompletableFuture]
  */
 fun runCompletableFuture(
-    executor: Executor? = null,
-    block: () -> Unit,
+	executor: Executor? = null,
+	block: () -> Unit,
 ): CompletableFuture<Void> = if (executor == null) {
-    CompletableFuture.runAsync(block)
+	CompletableFuture.runAsync(block)
 } else {
-    CompletableFuture.runAsync(block, executor)
+	CompletableFuture.runAsync(block, executor)
 }

@@ -30,27 +30,27 @@ package com.mingliqiye.utils.uuid
  * @property isnotSpace 是否不包含空格（true表示无空格，false表示有空格）
  */
 enum class UUIDFormatType(val isUpper: Boolean, val isnotSpace: Boolean) {
-    /**
-     * 大写带分隔符
-     * 使用大写字母并保留空格分隔符
-     */
-    UPPER_SPACE(true, false),
+	/**
+	 * 大写带分隔符
+	 * 使用大写字母并保留空格分隔符
+	 */
+	UPPER_SPACE(true, false),
 
-    /**
-     * 小写带分隔符
-     * 使用小写字母并保留空格分隔符
-     */
-    NO_UPPER_SPACE(false, false),
+	/**
+	 * 小写带分隔符
+	 * 使用小写字母并保留空格分隔符
+	 */
+	NO_UPPER_SPACE(false, false),
 
-    /**
-     * 小写无分隔符
-     * 使用小写字母且不包含空格分隔符
-     */
-    NO_UPPER_NO_SPACE(false, true),
+	/**
+	 * 小写无分隔符
+	 * 使用小写字母且不包含空格分隔符
+	 */
+	NO_UPPER_NO_SPACE(false, true),
 
-    /**
-     * 大写无分隔符
-     * 使用大写字母且不包含空格分隔符
-     */
-    UPPER_NO_SPACE(true, true),
+	/**
+	 * 大写无分隔符
+	 * 使用大写字母且不包含空格分隔符
+	 */
+	UPPER_NO_SPACE(true, true),
 }

@@ -23,17 +23,17 @@
 package com.mingliqiye.utils.network
 
 class NetworkException : RuntimeException {
-    /**
-     * 构造一个带有指定详细消息的网络异常
-     *
-     * @param message 异常的详细消息
-     */
-    constructor(message: String?) : super(message)
+	/**
+	 * 构造一个带有指定详细消息的网络异常
+	 *
+	 * @param message 异常的详细消息
+	 */
+	constructor(message: String?) : super(message)
 
-    /**
-     * 构造一个网络异常，指定原因异常
-     *
-     * @param e 导致此异常的原因异常
-     */
-    constructor(e: Exception?) : super(e)
+	/**
+	 * 构造一个网络异常，指定原因异常
+	 *
+	 * @param e 导致此异常的原因异常
+	 */
+	constructor(e: Exception?) : super(e)
 }

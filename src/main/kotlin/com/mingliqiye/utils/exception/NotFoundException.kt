@@ -29,6 +29,6 @@ package com.mingliqiye.utils.exception
  * @param cause 异常原因，默认为 null
  */
 class NotFoundException @JvmOverloads constructor(
-    override val message: String? = "Not Found",
-    override val cause: Throwable? = null,
+	override val message: String? = "Not Found",
+	override val cause: Throwable? = null,
 ) : HttpStatusException(404, message, cause)

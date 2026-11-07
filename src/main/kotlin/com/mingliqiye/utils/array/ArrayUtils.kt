@@ -61,7 +61,7 @@ fun String.toHexByteArray(): ByteArray = BaseType.BASE16.decode(this.lowercase()
  */
 @JvmName("arrayCopy")
 fun <T> Array<T>.copyTo(dest: Array<T>, srcPos: Int, distPos: Int, len: Int): Array<T> = this.also {
-    System.arraycopy(this, srcPos, dest, distPos, len)
+	System.arraycopy(this, srcPos, dest, distPos, len)
 }
 
 /**
@@ -76,12 +76,12 @@ fun <T> Array<T>.copyTo(dest: Array<T>, srcPos: Int, distPos: Int, len: Int): Ar
  */
 @JvmName("arrayCopy")
 fun <T> Array<T>.copyTo(srcPos: Int, distPos: Int, len: Int): Array<T> =
-    java.lang.reflect.Array.newInstance(this.javaClass.componentType, len).also {
-        System.arraycopy(this, srcPos, it, distPos, len)
-    }.let {
-        @Suppress("UNCHECKED_CAST")
-        it as Array<T>
-    }
+	java.lang.reflect.Array.newInstance(this.javaClass.componentType, len).also {
+		System.arraycopy(this, srcPos, it, distPos, len)
+	}.let {
+		@Suppress("UNCHECKED_CAST")
+		it as Array<T>
+	}
 
 /**
  * 将源数组的指定范围复制到当前数组
@@ -96,7 +96,7 @@ fun <T> Array<T>.copyTo(srcPos: Int, distPos: Int, len: Int): Array<T> =
  */
 @JvmName("arrayCopyFrom")
 fun <T> Array<T>.copyFrom(src: Array<T>, srcPos: Int, distPos: Int, len: Int): Array<T> = this.also {
-    System.arraycopy(src, srcPos, this, distPos, len)
+	System.arraycopy(src, srcPos, this, distPos, len)
 }
 
 /* ==================== BooleanArray 扩展 ==================== */
@@ -107,7 +107,7 @@ fun <T> Array<T>.copyFrom(src: Array<T>, srcPos: Int, distPos: Int, len: Int): A
  */
 @JvmName("arrayCopy")
 fun BooleanArray.copyTo(dest: BooleanArray, srcPos: Int, distPos: Int, len: Int): BooleanArray = this.also {
-    System.arraycopy(this, srcPos, dest, distPos, len)
+	System.arraycopy(this, srcPos, dest, distPos, len)
 }
 
 /**
@@ -116,9 +116,9 @@ fun BooleanArray.copyTo(dest: BooleanArray, srcPos: Int, distPos: Int, len: Int)
  */
 @JvmName("arrayCopy")
 fun BooleanArray.copyTo(srcPos: Int, distPos: Int, len: Int): BooleanArray =
-    BooleanArray(len).also { newArray ->
-        System.arraycopy(this, srcPos, newArray, distPos, len)
-    }
+	BooleanArray(len).also { newArray ->
+		System.arraycopy(this, srcPos, newArray, distPos, len)
+	}
 
 /**
  * @see Array.copyFrom
@@ -126,7 +126,7 @@ fun BooleanArray.copyTo(srcPos: Int, distPos: Int, len: Int): BooleanArray =
  */
 @JvmName("arrayCopyFrom")
 fun BooleanArray.copyFrom(src: BooleanArray, srcPos: Int, distPos: Int, len: Int): BooleanArray = this.also {
-    System.arraycopy(src, srcPos, this, distPos, len)
+	System.arraycopy(src, srcPos, this, distPos, len)
 }
 
 /* ==================== ByteArray 扩展 ==================== */
@@ -137,7 +137,7 @@ fun BooleanArray.copyFrom(src: BooleanArray, srcPos: Int, distPos: Int, len: Int
  */
 @JvmName("arrayCopy")
 fun ByteArray.copyTo(dest: ByteArray, srcPos: Int, distPos: Int, len: Int): ByteArray = this.also {
-    System.arraycopy(this, srcPos, dest, distPos, len)
+	System.arraycopy(this, srcPos, dest, distPos, len)
 }
 
 /**
@@ -146,9 +146,9 @@ fun ByteArray.copyTo(dest: ByteArray, srcPos: Int, distPos: Int, len: Int): Byte
  */
 @JvmName("arrayCopy")
 fun ByteArray.copyTo(srcPos: Int, distPos: Int, len: Int): ByteArray =
-    ByteArray(len).also { newArray ->
-        System.arraycopy(this, srcPos, newArray, distPos, len)
-    }
+	ByteArray(len).also { newArray ->
+		System.arraycopy(this, srcPos, newArray, distPos, len)
+	}
 
 /**
  * @see Array.copyFrom
@@ -156,7 +156,7 @@ fun ByteArray.copyTo(srcPos: Int, distPos: Int, len: Int): ByteArray =
  */
 @JvmName("arrayCopyFrom")
 fun ByteArray.copyFrom(src: ByteArray, srcPos: Int, distPos: Int, len: Int): ByteArray = this.also {
-    System.arraycopy(src, srcPos, this, distPos, len)
+	System.arraycopy(src, srcPos, this, distPos, len)
 }
 
 /* ==================== CharArray 扩展 ==================== */
@@ -167,7 +167,7 @@ fun ByteArray.copyFrom(src: ByteArray, srcPos: Int, distPos: Int, len: Int): Byt
  */
 @JvmName("arrayCopy")
 fun CharArray.copyTo(dest: CharArray, srcPos: Int, distPos: Int, len: Int): CharArray = this.also {
-    System.arraycopy(this, srcPos, dest, distPos, len)
+	System.arraycopy(this, srcPos, dest, distPos, len)
 }
 
 /**
@@ -176,9 +176,9 @@ fun CharArray.copyTo(dest: CharArray, srcPos: Int, distPos: Int, len: Int): Char
  */
 @JvmName("arrayCopy")
 fun CharArray.copyTo(srcPos: Int, distPos: Int, len: Int): CharArray =
-    CharArray(len).also { newArray ->
-        System.arraycopy(this, srcPos, newArray, distPos, len)
-    }
+	CharArray(len).also { newArray ->
+		System.arraycopy(this, srcPos, newArray, distPos, len)
+	}
 
 /**
  * @see Array.copyFrom
@@ -186,7 +186,7 @@ fun CharArray.copyTo(srcPos: Int, distPos: Int, len: Int): CharArray =
  */
 @JvmName("arrayCopyFrom")
 fun CharArray.copyFrom(src: CharArray, srcPos: Int, distPos: Int, len: Int): CharArray = this.also {
-    System.arraycopy(src, srcPos, this, distPos, len)
+	System.arraycopy(src, srcPos, this, distPos, len)
 }
 
 /* ==================== DoubleArray 扩展 ==================== */
@@ -197,7 +197,7 @@ fun CharArray.copyFrom(src: CharArray, srcPos: Int, distPos: Int, len: Int): Cha
  */
 @JvmName("arrayCopy")
 fun DoubleArray.copyTo(dest: DoubleArray, srcPos: Int, distPos: Int, len: Int): DoubleArray = this.also {
-    System.arraycopy(this, srcPos, dest, distPos, len)
+	System.arraycopy(this, srcPos, dest, distPos, len)
 }
 
 /**
@@ -206,9 +206,9 @@ fun DoubleArray.copyTo(dest: DoubleArray, srcPos: Int, distPos: Int, len: Int): 
  */
 @JvmName("arrayCopy")
 fun DoubleArray.copyTo(srcPos: Int, distPos: Int, len: Int): DoubleArray =
-    DoubleArray(len).also { newArray ->
-        System.arraycopy(this, srcPos, newArray, distPos, len)
-    }
+	DoubleArray(len).also { newArray ->
+		System.arraycopy(this, srcPos, newArray, distPos, len)
+	}
 
 /**
  * @see Array.copyFrom
@@ -216,7 +216,7 @@ fun DoubleArray.copyTo(srcPos: Int, distPos: Int, len: Int): DoubleArray =
  */
 @JvmName("arrayCopyFrom")
 fun DoubleArray.copyFrom(src: DoubleArray, srcPos: Int, distPos: Int, len: Int): DoubleArray = this.also {
-    System.arraycopy(src, srcPos, this, distPos, len)
+	System.arraycopy(src, srcPos, this, distPos, len)
 }
 
 /* ==================== FloatArray 扩展 ==================== */
@@ -227,7 +227,7 @@ fun DoubleArray.copyFrom(src: DoubleArray, srcPos: Int, distPos: Int, len: Int):
  */
 @JvmName("arrayCopy")
 fun FloatArray.copyTo(dest: FloatArray, srcPos: Int, distPos: Int, len: Int): FloatArray = this.also {
-    System.arraycopy(this, srcPos, dest, distPos, len)
+	System.arraycopy(this, srcPos, dest, distPos, len)
 }
 
 /**
@@ -236,9 +236,9 @@ fun FloatArray.copyTo(dest: FloatArray, srcPos: Int, distPos: Int, len: Int): Fl
  */
 @JvmName("arrayCopy")
 fun FloatArray.copyTo(srcPos: Int, distPos: Int, len: Int): FloatArray =
-    FloatArray(len).also { newArray ->
-        System.arraycopy(this, srcPos, newArray, distPos, len)
-    }
+	FloatArray(len).also { newArray ->
+		System.arraycopy(this, srcPos, newArray, distPos, len)
+	}
 
 /**
  * @see Array.copyFrom
@@ -246,7 +246,7 @@ fun FloatArray.copyTo(srcPos: Int, distPos: Int, len: Int): FloatArray =
  */
 @JvmName("arrayCopyFrom")
 fun FloatArray.copyFrom(src: FloatArray, srcPos: Int, distPos: Int, len: Int): FloatArray = this.also {
-    System.arraycopy(src, srcPos, this, distPos, len)
+	System.arraycopy(src, srcPos, this, distPos, len)
 }
 
 /* ==================== IntArray 扩展 ==================== */
@@ -257,7 +257,7 @@ fun FloatArray.copyFrom(src: FloatArray, srcPos: Int, distPos: Int, len: Int): F
  */
 @JvmName("arrayCopy")
 fun IntArray.copyTo(dest: IntArray, srcPos: Int, distPos: Int, len: Int): IntArray = this.also {
-    System.arraycopy(this, srcPos, dest, distPos, len)
+	System.arraycopy(this, srcPos, dest, distPos, len)
 }
 
 /**
@@ -266,9 +266,9 @@ fun IntArray.copyTo(dest: IntArray, srcPos: Int, distPos: Int, len: Int): IntArr
  */
 @JvmName("arrayCopy")
 fun IntArray.copyTo(srcPos: Int, distPos: Int, len: Int): IntArray =
-    IntArray(len).also { newArray ->
-        System.arraycopy(this, srcPos, newArray, distPos, len)
-    }
+	IntArray(len).also { newArray ->
+		System.arraycopy(this, srcPos, newArray, distPos, len)
+	}
 
 /**
  * @see Array.copyFrom
@@ -276,7 +276,7 @@ fun IntArray.copyTo(srcPos: Int, distPos: Int, len: Int): IntArray =
  */
 @JvmName("arrayCopyFrom")
 fun IntArray.copyFrom(src: IntArray, srcPos: Int, distPos: Int, len: Int): IntArray = this.also {
-    System.arraycopy(src, srcPos, this, distPos, len)
+	System.arraycopy(src, srcPos, this, distPos, len)
 }
 
 /* ==================== LongArray 扩展 ==================== */
@@ -287,7 +287,7 @@ fun IntArray.copyFrom(src: IntArray, srcPos: Int, distPos: Int, len: Int): IntAr
  */
 @JvmName("arrayCopy")
 fun LongArray.copyTo(dest: LongArray, srcPos: Int, distPos: Int, len: Int): LongArray = this.also {
-    System.arraycopy(this, srcPos, dest, distPos, len)
+	System.arraycopy(this, srcPos, dest, distPos, len)
 }
 
 /**
@@ -296,9 +296,9 @@ fun LongArray.copyTo(dest: LongArray, srcPos: Int, distPos: Int, len: Int): Long
  */
 @JvmName("arrayCopy")
 fun LongArray.copyTo(srcPos: Int, distPos: Int, len: Int): LongArray =
-    LongArray(len).also { newArray ->
-        System.arraycopy(this, srcPos, newArray, distPos, len)
-    }
+	LongArray(len).also { newArray ->
+		System.arraycopy(this, srcPos, newArray, distPos, len)
+	}
 
 /**
  * @see Array.copyFrom
@@ -306,7 +306,7 @@ fun LongArray.copyTo(srcPos: Int, distPos: Int, len: Int): LongArray =
  */
 @JvmName("arrayCopyFrom")
 fun LongArray.copyFrom(src: LongArray, srcPos: Int, distPos: Int, len: Int): LongArray = this.also {
-    System.arraycopy(src, srcPos, this, distPos, len)
+	System.arraycopy(src, srcPos, this, distPos, len)
 }
 
 /* ==================== ShortArray 扩展 ==================== */
@@ -317,7 +317,7 @@ fun LongArray.copyFrom(src: LongArray, srcPos: Int, distPos: Int, len: Int): Lon
  */
 @JvmName("arrayCopy")
 fun ShortArray.copyTo(dest: ShortArray, srcPos: Int, distPos: Int, len: Int): ShortArray = this.also {
-    System.arraycopy(this, srcPos, dest, distPos, len)
+	System.arraycopy(this, srcPos, dest, distPos, len)
 }
 
 /**
@@ -326,9 +326,9 @@ fun ShortArray.copyTo(dest: ShortArray, srcPos: Int, distPos: Int, len: Int): Sh
  */
 @JvmName("arrayCopy")
 fun ShortArray.copyTo(srcPos: Int, distPos: Int, len: Int): ShortArray =
-    ShortArray(len).also { newArray ->
-        System.arraycopy(this, srcPos, newArray, distPos, len)
-    }
+	ShortArray(len).also { newArray ->
+		System.arraycopy(this, srcPos, newArray, distPos, len)
+	}
 
 /**
  * @see Array.copyFrom
@@ -336,5 +336,5 @@ fun ShortArray.copyTo(srcPos: Int, distPos: Int, len: Int): ShortArray =
  */
 @JvmName("arrayCopyFrom")
 fun ShortArray.copyFrom(src: ShortArray, srcPos: Int, distPos: Int, len: Int): ShortArray = this.also {
-    System.arraycopy(src, srcPos, this, distPos, len)
+	System.arraycopy(src, srcPos, this, distPos, len)
 }

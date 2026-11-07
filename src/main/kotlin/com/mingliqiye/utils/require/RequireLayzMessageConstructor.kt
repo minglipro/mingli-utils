@@ -24,5 +24,5 @@ package com.mingliqiye.utils.require
 
 @FunctionalInterface
 fun interface RequireLayzMessageConstructor {
-    fun call(): String
+	fun call(): String
 }

@@ -31,73 +31,73 @@ import java.util.*
 import java.util.function.Consumer
 
 class OsPath private constructor(private val path: Path) : Path by path {
-    override fun forEach(action: Consumer<in Path>?) {
-        path.forEach(action)
-    }
+	override fun forEach(action: Consumer<in Path>?) {
+		path.forEach(action)
+	}
 
-    override fun spliterator(): Spliterator<Path?> {
-        return path.spliterator()
-    }
+	override fun spliterator(): Spliterator<Path?> {
+		return path.spliterator()
+	}
 
-    override fun startsWith(other: String): Boolean {
-        return path.startsWith(other)
-    }
+	override fun startsWith(other: String): Boolean {
+		return path.startsWith(other)
+	}
 
-    override fun endsWith(other: String): Boolean {
-        return path.endsWith(other)
-    }
+	override fun endsWith(other: String): Boolean {
+		return path.endsWith(other)
+	}
 
-    override fun resolve(other: String): Path {
-        return path.resolve(other)
-    }
+	override fun resolve(other: String): Path {
+		return path.resolve(other)
+	}
 
-    override fun resolveSibling(other: Path): Path {
-        return path.resolveSibling(other)
-    }
+	override fun resolveSibling(other: Path): Path {
+		return path.resolveSibling(other)
+	}
 
-    override fun resolveSibling(other: String): Path {
-        return path.resolveSibling(other)
-    }
+	override fun resolveSibling(other: String): Path {
+		return path.resolveSibling(other)
+	}
 
-    override fun toFile(): File {
-        return path.toFile()
-    }
+	override fun toFile(): File {
+		return path.toFile()
+	}
 
-    override fun register(
-        watcher: WatchService,
-        vararg events: WatchEvent.Kind<*>,
-    ): WatchKey {
-        return path.register(watcher, *events)
-    }
+	override fun register(
+		watcher: WatchService,
+		vararg events: WatchEvent.Kind<*>,
+	): WatchKey {
+		return path.register(watcher, *events)
+	}
 
-    override fun iterator(): MutableIterator<Path> {
-        return path.iterator()
-    }
+	override fun iterator(): MutableIterator<Path> {
+		return path.iterator()
+	}
 
-    companion object {
-        @JvmStatic
-        fun of(path: String): OsPath {
-            return of(Paths.get(path))
-        }
+	companion object {
+		@JvmStatic
+		fun of(path: String): OsPath {
+			return of(Paths.get(path))
+		}
 
-        @JvmStatic
-        fun of(path: Path): OsPath {
-            return OsPath(path)
-        }
+		@JvmStatic
+		fun of(path: Path): OsPath {
+			return OsPath(path)
+		}
 
-        @JvmStatic
-        fun of(uri: URI): OsPath {
-            return OsPath(Paths.get(uri))
-        }
+		@JvmStatic
+		fun of(uri: URI): OsPath {
+			return OsPath(Paths.get(uri))
+		}
 
-        @JvmStatic
-        fun of(file: File): OsPath {
-            return OsPath(file.toPath())
-        }
+		@JvmStatic
+		fun of(file: File): OsPath {
+			return OsPath(file.toPath())
+		}
 
-        @JvmStatic
-        fun getCwd(): OsPath {
-            return OsPath(Paths.get(""))
-        }
-    }
+		@JvmStatic
+		fun getCwd(): OsPath {
+			return OsPath(Paths.get(""))
+		}
+	}
 }

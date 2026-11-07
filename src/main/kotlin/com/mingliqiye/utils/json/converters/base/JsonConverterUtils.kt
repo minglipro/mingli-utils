@@ -37,36 +37,36 @@ val log = MingLiLoggerFactory.getLogger("com.mingliqiye.utils.json.converters.ba
  * @return 返回与给定类型对应的Class对象；如果无法解析，则返回null。
  */
 fun getClass(type: Type?): Class<*>? {
-    // 尝试将type直接转换为Class类型，如果失败则检查是否为ParameterizedType
-    val clazz: Class<*>? = type as? Class<*> ?: if (type is ParameterizedType) {
-        // 如果是ParameterizedType，则递归获取其原始类型
-        getClass(type.rawType)
-    } else {
-        null
-    }
-    return clazz
+	// 尝试将type直接转换为Class类型，如果失败则检查是否为ParameterizedType
+	val clazz: Class<*>? = type as? Class<*> ?: if (type is ParameterizedType) {
+		// 如果是ParameterizedType，则递归获取其原始类型
+		getClass(type.rawType)
+	} else {
+		null
+	}
+	return clazz
 }
 
 inline fun <reified T : JsonConverter<*, *>> getJsonConverter(): T = getJsonConverter(T::class.java)
 
 @Suppress("UNCHECKED_CAST")
 fun <T : JsonConverter<*, *>> getJsonConverter(clazz: Class<T>): T {
-    try {
-        return clazz.getDeclaredMethod(
-            "getJsonConverter"
-        ).invoke(null) as T
-    } catch (e: Exception) {
-        log.error("实现于 JsonConverter<*, *> 的类 必须实现静态方法 JsonConverter<*, *> getJsonConverter()", e)
-        throw e
-    }
+	try {
+		return clazz.getDeclaredMethod(
+			"getJsonConverter"
+		).invoke(null) as T
+	} catch (e: Exception) {
+		log.error("实现于 JsonConverter<*, *> 的类 必须实现静态方法 JsonConverter<*, *> getJsonConverter()", e)
+		throw e
+	}
 }
 
 fun <T : BaseJsonConverter<*, *>> com.fasterxml.jackson.databind.ObjectMapper.addJsonConverter(clazz: Class<T>): com.fasterxml.jackson.databind.ObjectMapper =
-    this.registerModule(getJsonConverter(clazz).getJacksonModule())
+	this.registerModule(getJsonConverter(clazz).getJacksonModule())
 
 @JvmName("inline_addJsonConverter")
 inline fun <reified T : BaseJsonConverter<*, *>> com.fasterxml.jackson.databind.ObjectMapper.addJsonConverter(): com.fasterxml.jackson.databind.ObjectMapper =
-    this.registerModule(getJsonConverter(T::class.java).getJacksonModule())
+	this.registerModule(getJsonConverter(T::class.java).getJacksonModule())
 
 /**
  * 创建并返回一个 Jackson 模块，该模块包含自定义的序列化器和反序列化器。
@@ -74,11 +74,11 @@ inline fun <reified T : BaseJsonConverter<*, *>> com.fasterxml.jackson.databind.
  * @return 配置了自定义序列化器和反序列化器的 SimpleModule 对象。
  */
 fun <F, T> JsonConverter<F, T>.getJacksonModule(): com.fasterxml.jackson.databind.module.SimpleModule =
-    com.fasterxml.jackson.databind.module.SimpleModule("(${getFromClass().name})-(${getToClass().name})")
-        .addSerializer(getFromClass(), JackJsonSerializer(null, this))
-        .addDeserializer(getFromClass(), JackJsonDeserializer(null, this))
+	com.fasterxml.jackson.databind.module.SimpleModule("(${getFromClass().name})-(${getToClass().name})")
+		.addSerializer(getFromClass(), JackJsonSerializer(null, this))
+		.addDeserializer(getFromClass(), JackJsonDeserializer(null, this))
 
 fun <F, T> JsonConverter<F, T>.getJackson3Module(): tools.jackson.databind.module.SimpleModule =
-    tools.jackson.databind.module.SimpleModule("(${getFromClass().name})-(${getToClass().name})")
-        .addSerializer(getFromClass(), JackJson3Serializer(null, this))
-        .addDeserializer(getFromClass(), JackJson3Deserializer(null, this))
+	tools.jackson.databind.module.SimpleModule("(${getFromClass().name})-(${getToClass().name})")
+		.addSerializer(getFromClass(), JackJson3Serializer(null, this))
+		.addDeserializer(getFromClass(), JackJson3Deserializer(null, this))

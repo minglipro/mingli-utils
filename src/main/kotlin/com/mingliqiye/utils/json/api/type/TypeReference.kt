@@ -28,67 +28,67 @@ import java.lang.reflect.Type
 import java.lang.reflect.WildcardType
 
 class TypeReference(
-    val rawClass: Type,
-    vararg paramType: Type
+	val rawClass: Type,
+	vararg paramType: Type,
 ) : ParameterizedType {
 
-    private val typeArguments: Array<out Type> = paramType
-    override fun getActualTypeArguments(): Array<out Type> = typeArguments
+	private val typeArguments: Array<out Type> = paramType
+	override fun getActualTypeArguments(): Array<out Type> = typeArguments
 
-    override fun getRawType(): Type = rawClass
+	override fun getRawType(): Type = rawClass
 
-    override fun getOwnerType(): Type? = null
+	override fun getOwnerType(): Type? = null
 
 
-    override fun toString(): String = "${getRawString(rawClass)}<${
-        ",".join(typeArguments) { getRawString(it) }
-    }>"
+	override fun toString(): String = "${getRawString(rawClass)}<${
+		",".join(typeArguments) { getRawString(it) }
+	}>"
 
-    companion object {
+	companion object {
 
-        fun getRawString(type: Type): String {
-            return when (type) {
-                is Class<*> -> type.name
-                is WildcardType -> {
-                    val upperBounds = type.upperBounds
-                    val lowerBounds = type.lowerBounds
-                    when {
-                        upperBounds.isNotEmpty() && upperBounds[0] != Any::class.java -> {
-                            "? extends ${getRawString(upperBounds[0])}"
-                        }
+		fun getRawString(type: Type): String {
+			return when (type) {
+				is Class<*> -> type.name
+				is WildcardType -> {
+					val upperBounds = type.upperBounds
+					val lowerBounds = type.lowerBounds
+					when {
+						upperBounds.isNotEmpty() && upperBounds[0] != Any::class.java -> {
+							"? extends ${getRawString(upperBounds[0])}"
+						}
 
-                        lowerBounds.isNotEmpty() -> {
-                            "? super ${getRawString(lowerBounds[0])}"
-                        }
+						lowerBounds.isNotEmpty() -> {
+							"? super ${getRawString(lowerBounds[0])}"
+						}
 
-                        else -> "?"
-                    }
-                }
+						else -> "?"
+					}
+				}
 
-                is ParameterizedType -> {
-                    of(type).toString()
-                }
+				is ParameterizedType -> {
+					of(type).toString()
+				}
 
-                else -> type.typeName
-            }
-        }
+				else -> type.typeName
+			}
+		}
 
-        inline fun <reified T> of(): TypeReference {
-            return of((object : JsonTypeReference<T>() {}).type)
-        }
+		inline fun <reified T> of(): TypeReference {
+			return of((object : JsonTypeReference<T>() {}).type)
+		}
 
-        fun of(type: Type): TypeReference {
-            return when (type) {
-                is Class<*> -> TypeReference(type)
-                is ParameterizedType -> TypeReference(type.rawType, *type.actualTypeArguments)
-                is WildcardType -> {
-                    // 处理通配符类型，返回上界类型
-                    val upperBound = type.upperBounds.firstOrNull() ?: Any::class.java
-                    TypeReference(upperBound)
-                }
+		fun of(type: Type): TypeReference {
+			return when (type) {
+				is Class<*> -> TypeReference(type)
+				is ParameterizedType -> TypeReference(type.rawType, *type.actualTypeArguments)
+				is WildcardType -> {
+					// 处理通配符类型，返回上界类型
+					val upperBound = type.upperBounds.firstOrNull() ?: Any::class.java
+					TypeReference(upperBound)
+				}
 
-                else -> throw IllegalStateException("无法获取类型: $type")
-            }
-        }
-    }
+				else -> throw IllegalStateException("无法获取类型: $type")
+			}
+		}
+	}
 }

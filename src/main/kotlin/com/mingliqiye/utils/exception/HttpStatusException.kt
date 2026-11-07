@@ -30,9 +30,9 @@ package com.mingliqiye.utils.exception
  * @param cause 异常原因，默认为 null
  */
 open class HttpStatusException @JvmOverloads constructor(
-    val statusCode: Int,
-    message: String? = null,
-    throwable: Throwable? = null,
-    enableSuppression: Boolean = false,
-    writableStackTrace: Boolean = true,
+	val statusCode: Int,
+	message: String? = null,
+	throwable: Throwable? = null,
+	enableSuppression: Boolean = false,
+	writableStackTrace: Boolean = true,
 ) : MingLiUtilsBaseException(message, throwable, enableSuppression, writableStackTrace)

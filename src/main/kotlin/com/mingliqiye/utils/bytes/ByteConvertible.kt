@@ -28,23 +28,23 @@ import java.nio.ByteBuffer
 
 interface ByteConvertible : Serializable {
 
-    fun toBytes(): ByteArray
+	fun toBytes(): ByteArray
 
-    fun writeToStream(outputStream: OutputStream) {
-        outputStream.write(toBytes())
-    }
+	fun writeToStream(outputStream: OutputStream) {
+		outputStream.write(toBytes())
+	}
 
-    fun putToByteBuffer(byteBuffer: ByteBuffer) {
-        byteBuffer.put(toBytes())
-    }
+	fun putToByteBuffer(byteBuffer: ByteBuffer) {
+		byteBuffer.put(toBytes())
+	}
 
-    companion object {
-        fun OutputStream.write(byteConvertible: ByteConvertible) {
-            byteConvertible.writeToStream(this)
-        }
+	companion object {
+		fun OutputStream.write(byteConvertible: ByteConvertible) {
+			byteConvertible.writeToStream(this)
+		}
 
-        fun ByteBuffer.put(byteConvertible: ByteConvertible) {
-            byteConvertible.putToByteBuffer(this)
-        }
-    }
+		fun ByteBuffer.put(byteConvertible: ByteConvertible) {
+			byteConvertible.putToByteBuffer(this)
+		}
+	}
 }

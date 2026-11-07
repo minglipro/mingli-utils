@@ -41,23 +41,23 @@ import java.io.OutputStream
  */
 @Throws(IOException::class)
 fun InputStream.readVarNumber(size: Int = 8): Long {
-    var numRead = 0
-    var result: Long = 0
-    var read: Byte
-    do {
-        read = this.read().let {
-            if (it == -1) {
-                throw IOException("Reached end of stream")
-            }
-            it.toByte()
-        }
-        result = result or ((read.toLong() and 127) shl (7 * numRead))
-        numRead++
-        if (numRead > size) {
-            throw IOException("VarNumber is too big")
-        }
-    } while ((read.toLong() and 128) != 0L)
-    return result
+	var numRead = 0
+	var result: Long = 0
+	var read: Byte
+	do {
+		read = this.read().let {
+			if (it == -1) {
+				throw IOException("Reached end of stream")
+			}
+			it.toByte()
+		}
+		result = result or ((read.toLong() and 127) shl (7 * numRead))
+		numRead++
+		if (numRead > size) {
+			throw IOException("VarNumber is too big")
+		}
+	} while ((read.toLong() and 128) != 0L)
+	return result
 }
 
 /**
@@ -102,20 +102,20 @@ fun InputStream.readVarLong(): Long = this.readVarNumber()
  */
 @Throws(IOException::class)
 fun OutputStream.writeVarNumber(value: Long, size: Int = 8) {
-    var v = value
-    var numWritten = 0
+	var v = value
+	var numWritten = 0
 
-    while (v >= 0x80 && numWritten < size - 1) {
-        this.write((v and 0x7F or 0x80).toInt())
-        v = v ushr 7
-        numWritten++
-    }
+	while (v >= 0x80 && numWritten < size - 1) {
+		this.write((v and 0x7F or 0x80).toInt())
+		v = v ushr 7
+		numWritten++
+	}
 
-    if (numWritten >= size) {
-        throw IOException("VarNumber is too big")
-    }
+	if (numWritten >= size) {
+		throw IOException("VarNumber is too big")
+	}
 
-    this.write(v.toInt())
+	this.write(v.toInt())
 }
 
 /**

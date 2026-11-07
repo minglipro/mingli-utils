@@ -22,11 +22,7 @@
 
 package com.mingliqiye.utils.thread
 
-import java.util.concurrent.Callable
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Future
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 
 // ---- 并行执行 ----
 
@@ -43,50 +39,50 @@ import java.util.concurrent.TimeUnit
  * ```
  */
 fun <T> runParallel(
-    vararg tasks: () -> T,
-    executor: ExecutorService = GlobalThreadPool.io,
+	vararg tasks: () -> T,
+	executor: ExecutorService = GlobalThreadPool.io,
 ): List<T> = executor.invokeAllAndGet(tasks.map { Callable(it) })
 
 /**
  * 并行执行全部任务，阻塞等待所有完成，按输入顺序返回结果
  */
 fun <T> runParallel(
-    tasks: Collection<() -> T>,
-    executor: ExecutorService = GlobalThreadPool.io,
+	tasks: Collection<() -> T>,
+	executor: ExecutorService = GlobalThreadPool.io,
 ): List<T> = executor.invokeAllAndGet(tasks.map { Callable(it) })
 
 /**
  * 并行执行全部任务，任一任务在超时时间内未完成则抛出 [java.util.concurrent.TimeoutException]
  */
 fun <T> runParallelWithin(
-    timeout: Long,
-    unit: TimeUnit = TimeUnit.MILLISECONDS,
-    executor: ExecutorService = GlobalThreadPool.io,
-    tasks: Collection<() -> T>,
+	timeout: Long,
+	unit: TimeUnit = TimeUnit.MILLISECONDS,
+	executor: ExecutorService = GlobalThreadPool.io,
+	tasks: Collection<() -> T>,
 ): List<T> {
-    val futures = tasks.map { executor.submit(Callable(it)) }
-    val deadline = System.nanoTime() + unit.toNanos(timeout)
-    return futures.map { future ->
-        val remaining = deadline - System.nanoTime()
-        if (remaining <= 0) throw java.util.concurrent.TimeoutException("runParallel timeout $timeout $unit")
-        future.get(remaining, TimeUnit.NANOSECONDS)
-    }
+	val futures = tasks.map { executor.submit(Callable(it)) }
+	val deadline = System.nanoTime() + unit.toNanos(timeout)
+	return futures.map { future ->
+		val remaining = deadline - System.nanoTime()
+		if (remaining <= 0) throw java.util.concurrent.TimeoutException("runParallel timeout $timeout $unit")
+		future.get(remaining, TimeUnit.NANOSECONDS)
+	}
 }
 
 /**
  * 执行全部任务，返回第一个成功完成的任务结果，其余任务取消。
  */
 fun <T> firstCompleted(
-    vararg tasks: () -> T,
-    executor: ExecutorService = GlobalThreadPool.io,
+	vararg tasks: () -> T,
+	executor: ExecutorService = GlobalThreadPool.io,
 ): T = executor.invokeAny(tasks.map { Callable(it) })
 
 /**
  * 执行全部任务，返回第一个成功完成的任务结果，其余任务取消
  */
 fun <T> firstCompleted(
-    tasks: Collection<() -> T>,
-    executor: ExecutorService = GlobalThreadPool.io,
+	tasks: Collection<() -> T>,
+	executor: ExecutorService = GlobalThreadPool.io,
 ): T = executor.invokeAny(tasks.map { Callable(it) })
 
 // ---- 集合工具 ----
@@ -100,13 +96,13 @@ fun <T> awaitAll(futures: Collection<Future<T>>): List<T> = futures.map { it.awa
  * 提交全部 Callable 并阻塞等待所有完成，任一失败抛出原始异常
  */
 fun <T> ExecutorService.invokeAllAndGet(tasks: Collection<Callable<T>>): List<T> =
-    invokeAll(tasks).map { it.await() }
+	invokeAll(tasks).map { it.await() }
 
 /**
  * 等待所有 Future 完成，失败的任务返回 null（不中断整体流程）
  */
 fun <T> awaitAllOrNull(futures: Collection<Future<T>>): List<T?> =
-    futures.map { it.getOrNull() }
+	futures.map { it.getOrNull() }
 
 // ---- 重试 ----
 
@@ -121,33 +117,33 @@ fun <T> awaitAllOrNull(futures: Collection<Future<T>>): List<T?> =
  * @param delayMillis 每次重试前的等待毫秒数
  */
 fun <T> callWithRetry(
-    times: Int,
-    delayMillis: Long = 0,
-    task: () -> T,
+	times: Int,
+	delayMillis: Long = 0,
+	task: () -> T,
 ): T {
-    require(times >= 1) { "times must be >= 1: $times" }
-    var last: Throwable? = null
-    repeat(times) { attempt ->
-        try {
-            return task()
-        } catch (t: Throwable) {
-            last = t
-            // 最后一次失败不再等待
-            if (attempt < times - 1 && delayMillis > 0) {
-                Thread.sleep(delayMillis)
-            }
-        }
-    }
-    throw last ?: IllegalStateException("unreachable")
+	require(times >= 1) { "times must be >= 1: $times" }
+	var last: Throwable? = null
+	repeat(times) { attempt ->
+		try {
+			return task()
+		} catch (t: Throwable) {
+			last = t
+			// 最后一次失败不再等待
+			if (attempt < times - 1 && delayMillis > 0) {
+				Thread.sleep(delayMillis)
+			}
+		}
+	}
+	throw last ?: IllegalStateException("unreachable")
 }
 
 /**
  * 在全局 IO 池中带重试执行任务
  */
 fun <T> callAsyncWithRetry(
-    times: Int,
-    delayMillis: Long = 0,
-    task: () -> T,
+	times: Int,
+	delayMillis: Long = 0,
+	task: () -> T,
 ): Future<T> = GlobalThreadPool.io.submit(Callable { callWithRetry(times, delayMillis, task) })
 
 // ---- 定时任务 ----
@@ -160,29 +156,29 @@ fun <T> callAsyncWithRetry(
  * ```
  */
 fun delayRun(
-    delay: Long,
-    unit: TimeUnit = TimeUnit.MILLISECONDS,
-    action: () -> Unit,
+	delay: Long,
+	unit: TimeUnit = TimeUnit.MILLISECONDS,
+	action: () -> Unit,
 ): ScheduledFuture<*> = GlobalThreadPool.scheduled.schedule(action, delay, unit)
 
 /**
  * 以固定频率执行任务（周期 = 任务耗时 + [period]），全局定时池
  */
 fun scheduleWithFixedDelay(
-    period: Long,
-    unit: TimeUnit = TimeUnit.MILLISECONDS,
-    initialDelay: Long = 0,
-    action: () -> Unit,
+	period: Long,
+	unit: TimeUnit = TimeUnit.MILLISECONDS,
+	initialDelay: Long = 0,
+	action: () -> Unit,
 ): ScheduledFuture<*> =
-    GlobalThreadPool.scheduled.scheduleWithFixedDelay(action, initialDelay, period, unit)
+	GlobalThreadPool.scheduled.scheduleWithFixedDelay(action, initialDelay, period, unit)
 
 /**
  * 以固定频率执行任务（周期恒定为 [period]），全局定时池
  */
 fun scheduleAtFixedRate(
-    period: Long,
-    unit: TimeUnit = TimeUnit.MILLISECONDS,
-    initialDelay: Long = 0,
-    action: () -> Unit,
+	period: Long,
+	unit: TimeUnit = TimeUnit.MILLISECONDS,
+	initialDelay: Long = 0,
+	action: () -> Unit,
 ): ScheduledFuture<*> =
-    GlobalThreadPool.scheduled.scheduleAtFixedRate(action, initialDelay, period, unit)
+	GlobalThreadPool.scheduled.scheduleAtFixedRate(action, initialDelay, period, unit)

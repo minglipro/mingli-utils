@@ -87,8 +87,8 @@ const val ESC_RESERVED: Byte = 0x06
  * @return 包含每个字节对应十六进制字符串的列表
  */
 fun ByteArray.getByteArrayString(): MutableList<String> {
-    return this.toList().stream().map { a -> String.format("0X%02X", a!!.toInt() and 0xFF) }
-        .collect(SuperStream.toListCollector()) as MutableList<String>
+	return this.toList().stream().map { a -> String.format("0X%02X", a!!.toInt() and 0xFF) }
+		.collect(SuperStream.toListCollector()) as MutableList<String>
 }
 
 
@@ -99,12 +99,12 @@ fun ByteArray.getByteArrayString(): MutableList<String> {
  * @throws NumberFormatException 当字符不是有效的十六进制字符时抛出
  */
 fun Char.hexDigitToValue(): Int {
-    return when (this) {
-        in '0'..'9' -> this - '0'
-        in 'A'..'F' -> this - 'A' + 10
-        in 'a'..'f' -> this - 'a' + 10
-        else -> throw NumberFormatException("Invalid hex character: $this")
-    }
+	return when (this) {
+		in '0'..'9' -> this - '0'
+		in 'A'..'F' -> this - 'A' + 10
+		in 'a'..'f' -> this - 'a' + 10
+		else -> throw NumberFormatException("Invalid hex character: $this")
+	}
 }
 
 /**
@@ -114,7 +114,7 @@ fun Char.hexDigitToValue(): Int {
  * @return 转换后的字节数组
  */
 fun hexStringToByteArray(string: String): ByteArray {
-    return string.hexToByteArray()
+	return string.hexToByteArray()
 }
 
 
@@ -125,5 +125,5 @@ fun hexStringToByteArray(string: String): ByteArray {
  * @return 对应的十六进制字符串
  */
 fun bytesToHex(bytes: ByteArray): String {
-    return BaseType.BASE16.encode(bytes)
+	return BaseType.BASE16.encode(bytes)
 }

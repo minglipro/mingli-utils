@@ -23,21 +23,21 @@
 package com.mingliqiye.utils.mybatis
 
 enum class CallType {
-    /**
-     * 通过索引访问结果集
-     * 使用数字索引位置来获取结果集中的数据
-     */
-    RESULTSET_INDEX,
+	/**
+	 * 通过索引访问结果集
+	 * 使用数字索引位置来获取结果集中的数据
+	 */
+	RESULTSET_INDEX,
 
-    /**
-     * 通过名称访问结果集
-     * 使用列名来获取结果集中的数据
-     */
-    RESULTSET_NAME,
+	/**
+	 * 通过名称访问结果集
+	 * 使用列名来获取结果集中的数据
+	 */
+	RESULTSET_NAME,
 
-    /**
-     * 通过索引访问可调用语句
-     * 使用数字索引位置来获取可调用语句中的数据
-     */
-    CALLABLE_STATEMENT_INDEX
+	/**
+	 * 通过索引访问可调用语句
+	 * 使用数字索引位置来获取可调用语句中的数据
+	 */
+	CALLABLE_STATEMENT_INDEX
 }

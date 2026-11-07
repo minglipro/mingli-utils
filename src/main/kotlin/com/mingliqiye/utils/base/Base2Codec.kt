@@ -23,37 +23,37 @@
 package com.mingliqiye.utils.base
 
 internal class Base2Codec : BaseCodec {
-    override fun encode(bytes: ByteArray): String {
-        if (bytes.isEmpty()) return ""
-        val result = StringBuilder()
-        for ((index, byte) in bytes.withIndex()) {
-            val unsignedByte = byte.toInt() and 0xFF
-            val binary = unsignedByte.toString(2).padStart(8, '0')
-            result.append(binary)
-        }
-        return result.toString()
-    }
+	override fun encode(bytes: ByteArray): String {
+		if (bytes.isEmpty()) return ""
+		val result = StringBuilder()
+		for ((index, byte) in bytes.withIndex()) {
+			val unsignedByte = byte.toInt() and 0xFF
+			val binary = unsignedByte.toString(2).padStart(8, '0')
+			result.append(binary)
+		}
+		return result.toString()
+	}
 
-    override fun decode(string: String): ByteArray {
-        if (string.length % 8 != 0) {
-            throw IllegalArgumentException(
-                "BASE1字符串长度必须是8的倍数，当前长度: ${string.length}"
-            )
-        }
-        if (!string.matches(Regex("[01]+"))) {
-            throw IllegalArgumentException(
-                "BASE1字符串只能包含字符'0'和'1'"
-            )
-        }
-        val byteCount = string.length / 8
-        val result = ByteArray(byteCount)
-        for (i in 0 until byteCount) {
-            val startIndex = i * 8
-            val endIndex = startIndex + 8
-            val binaryStr = string.substring(startIndex, endIndex)
-            val byteValue = binaryStr.toInt(2)
-            result[i] = byteValue.toByte()
-        }
-        return result
-    }
+	override fun decode(string: String): ByteArray {
+		if (string.length % 8 != 0) {
+			throw IllegalArgumentException(
+				"BASE1字符串长度必须是8的倍数，当前长度: ${string.length}"
+			)
+		}
+		if (!string.matches(Regex("[01]+"))) {
+			throw IllegalArgumentException(
+				"BASE1字符串只能包含字符'0'和'1'"
+			)
+		}
+		val byteCount = string.length / 8
+		val result = ByteArray(byteCount)
+		for (i in 0 until byteCount) {
+			val startIndex = i * 8
+			val endIndex = startIndex + 8
+			val binaryStr = string.substring(startIndex, endIndex)
+			val byteValue = binaryStr.toInt(2)
+			result[i] = byteValue.toByte()
+		}
+		return result
+	}
 }

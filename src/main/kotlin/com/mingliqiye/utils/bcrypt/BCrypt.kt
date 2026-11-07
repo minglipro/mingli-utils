@@ -30,30 +30,30 @@ import org.mindrot.jbcrypt.BCrypt as JBCrypt
 
 
 fun hashpw(string: String): String {
-    return hashpw(string, gensalt())
+	return hashpw(string, gensalt())
 }
 
 
 fun hashpw(string: String, salt: String = gensalt()): String {
-    return JBCrypt.hashpw(string, salt)
+	return JBCrypt.hashpw(string, salt)
 }
 
 
 fun checkpw(string: String, bcrypted: String): Boolean {
-    return JBCrypt.checkpw(string, bcrypted)
+	return JBCrypt.checkpw(string, bcrypted)
 }
 
 
 fun gensalt(): String {
-    return JBCrypt.gensalt()
+	return JBCrypt.gensalt()
 }
 
 
 fun gensalt(long: Int): String {
-    return JBCrypt.gensalt(long)
+	return JBCrypt.gensalt(long)
 }
 
 
 fun gensalt(long: Int, secureRandom: SecureRandom): String {
-    return JBCrypt.gensalt(long, secureRandom)
+	return JBCrypt.gensalt(long, secureRandom)
 }

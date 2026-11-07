@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile FieldStructure.kt
- * LastUpdate 2026-07-02 10:22:42
+ * LastUpdate 2026-11-04 11:53:07
  * UpdateUser MingLiPro
  */
 
@@ -30,31 +30,31 @@ import java.lang.reflect.Modifier
  * 该类继承自JNA的Structure类，通过反射自动获取子类的公共非静态字段，
  * 并按声明顺序返回字段名列表，用于JNA结构体的字段映射。
  */
-open class FieldStructure : Structure() {
-    /**
-     * 获取结构体字段顺序列表
-     * 通过反射遍历当前类及其父类的所有声明字段，过滤出公共非静态字段，
-     * 按照字段在类中声明的顺序返回字段名列表。
-     *
-     * @return 包含字段名的列表，按声明顺序排列
-     */
-    override fun getFieldOrder(): MutableList<String> {
-        val fieldOrderList: MutableList<String> = ArrayList()
-        var cls: Class<*> = javaClass
-        while (cls != FieldStructure::class.java) {
-            val fields = cls.getDeclaredFields()
-            var modifiers: Int
-            for (field in fields) {
-                modifiers = field.modifiers
-                if (Modifier.isStatic(modifiers) ||
-                    !Modifier.isPublic(modifiers)
-                ) {
-                    continue
-                }
-                fieldOrderList.add(field.name)
-            }
-            cls = cls.getSuperclass()
-        }
-        return fieldOrderList
-    }
+abstract class FieldStructure : Structure() {
+	/**
+	 * 获取结构体字段顺序列表
+	 * 通过反射遍历当前类及其父类的所有声明字段，过滤出公共非静态字段，
+	 * 按照字段在类中声明的顺序返回字段名列表。
+	 *
+	 * @return 包含字段名的列表，按声明顺序排列
+	 */
+	override fun getFieldOrder(): MutableList<String> {
+		val fieldOrderList: MutableList<String> = ArrayList()
+		var cls: Class<*> = javaClass
+		while (cls != FieldStructure::class.java) {
+			val fields = cls.getDeclaredFields()
+			var modifiers: Int
+			for (field in fields) {
+				modifiers = field.modifiers
+				if (Modifier.isStatic(modifiers) ||
+					!Modifier.isPublic(modifiers)
+				) {
+					continue
+				}
+				fieldOrderList.add(field.name)
+			}
+			cls = cls.getSuperclass()
+		}
+		return fieldOrderList
+	}
 }

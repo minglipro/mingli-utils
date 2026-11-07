@@ -23,11 +23,11 @@
 package com.mingliqiye.utils.metadata
 
 data class MingliUtilsMetaData(
-    var buildTime: String = "",
-    var groupId: String = "",
-    var artifactId: String = "",
-    var version: String = "",
-    var buildJdkVersion: String = "",
-    var author: String = "",
-    var website: String = "",
+	var buildTime: String = "",
+	var groupId: String = "",
+	var artifactId: String = "",
+	var version: String = "",
+	var buildJdkVersion: String = "",
+	var author: String = "",
+	var website: String = "",
 )

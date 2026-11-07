@@ -32,7 +32,7 @@ import com.mingliqiye.utils.base.*
  */
 @get:JvmName("base2")
 val BASE2: BaseCodec by lazy {
-    Base2Codec()
+	Base2Codec()
 }
 
 /**
@@ -41,7 +41,7 @@ val BASE2: BaseCodec by lazy {
  */
 @get:JvmName("base10")
 val BASE10: BaseCodec by lazy {
-    Base10Codec()
+	Base10Codec()
 }
 
 /**
@@ -50,7 +50,7 @@ val BASE10: BaseCodec by lazy {
  */
 @get:JvmName("base16")
 val BASE16: BaseCodec by lazy {
-    Base16Codec()
+	Base16Codec()
 }
 
 /**
@@ -59,12 +59,12 @@ val BASE16: BaseCodec by lazy {
  */
 @get:JvmName("base64")
 val BASE64: BaseCodec by lazy {
-    Base64Codec()
+	Base64Codec()
 }
 
 @get:JvmName("base64Url")
 val BASE64URL: BaseCodec by lazy {
-    Base64UrlCodec()
+	Base64UrlCodec()
 }
 
 /**
@@ -73,7 +73,7 @@ val BASE64URL: BaseCodec by lazy {
  */
 @get:JvmName("base91")
 val BASE91: BaseCodec by lazy {
-    Base91Codec()
+	Base91Codec()
 }
 
 /**
@@ -82,5 +82,5 @@ val BASE91: BaseCodec by lazy {
  */
 @get:JvmName("base256")
 val BASE256: BaseCodec by lazy {
-    Base256Codec()
+	Base256Codec()
 }

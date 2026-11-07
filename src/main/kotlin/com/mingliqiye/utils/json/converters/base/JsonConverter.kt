@@ -31,61 +31,61 @@ import com.mingliqiye.utils.json.api.type.JsonTypeReference
  * @param T 目标类型，表示转换后的对象类型。
  */
 interface JsonConverter<F, T> {
-    /**
-     * 将源对象转换为目标对象。
-     *
-     * @param obj 源对象，可能为 null。
-     * @param annotationGetter 注解获取器，用于获取字段上的注解信息。
-     * @return 转换后的目标对象，可能为 null。
-     * @throws Exception 转换过程中可能抛出的异常。
-     */
-    @Throws(Exception::class)
-    fun convert(obj: F?, annotationGetter: AnnotationGetter): T?
+	/**
+	 * 将源对象转换为目标对象。
+	 *
+	 * @param obj 源对象，可能为 null。
+	 * @param annotationGetter 注解获取器，用于获取字段上的注解信息。
+	 * @return 转换后的目标对象，可能为 null。
+	 * @throws Exception 转换过程中可能抛出的异常。
+	 */
+	@Throws(Exception::class)
+	fun convert(obj: F?, annotationGetter: AnnotationGetter): T?
 
-    /**
-     * 将目标对象反向转换为源对象。
-     *
-     * @param obj 目标对象，可能为 null。
-     * @param annotationGetter 注解获取器，用于获取字段上的注解信息。
-     * @return 反向转换后的源对象，可能为 null。
-     * @throws Exception 转换过程中可能抛出的异常。
-     */
-    @Throws(Exception::class)
-    fun deConvert(obj: T?, annotationGetter: AnnotationGetter): F?
+	/**
+	 * 将目标对象反向转换为源对象。
+	 *
+	 * @param obj 目标对象，可能为 null。
+	 * @param annotationGetter 注解获取器，用于获取字段上的注解信息。
+	 * @return 反向转换后的源对象，可能为 null。
+	 * @throws Exception 转换过程中可能抛出的异常。
+	 */
+	@Throws(Exception::class)
+	fun deConvert(obj: T?, annotationGetter: AnnotationGetter): F?
 
-    /**
-     * 获取源类型的类型引用。
-     *
-     * @return 源类型的 JsonTypeReference 对象。
-     * @throws Exception 获取过程中可能抛出的异常。
-     */
-    @Throws(Exception::class)
-    fun getFromType(): JsonTypeReference<F>
+	/**
+	 * 获取源类型的类型引用。
+	 *
+	 * @return 源类型的 JsonTypeReference 对象。
+	 * @throws Exception 获取过程中可能抛出的异常。
+	 */
+	@Throws(Exception::class)
+	fun getFromType(): JsonTypeReference<F>
 
-    /**
-     * 获取目标类型的类型引用。
-     *
-     * @return 目标类型的 JsonTypeReference 对象。
-     * @throws Exception 获取过程中可能抛出的异常。
-     */
-    @Throws(Exception::class)
-    fun getToType(): JsonTypeReference<T>
+	/**
+	 * 获取目标类型的类型引用。
+	 *
+	 * @return 目标类型的 JsonTypeReference 对象。
+	 * @throws Exception 获取过程中可能抛出的异常。
+	 */
+	@Throws(Exception::class)
+	fun getToType(): JsonTypeReference<T>
 
-    /**
-     * 获取源类型的原始类。
-     *
-     * @return 源类型的 Class 对象。
-     * @throws Exception 获取过程中可能抛出的异常。
-     */
-    @Throws(Exception::class)
-    fun getFromClass() = getFromType().getRawType()
+	/**
+	 * 获取源类型的原始类。
+	 *
+	 * @return 源类型的 Class 对象。
+	 * @throws Exception 获取过程中可能抛出的异常。
+	 */
+	@Throws(Exception::class)
+	fun getFromClass() = getFromType().getRawType()
 
-    /**
-     * 获取目标类型的原始类。
-     *
-     * @return 目标类型的 Class 对象。
-     * @throws Exception 获取过程中可能抛出的异常。
-     */
-    @Throws(Exception::class)
-    fun getToClass() = getToType().getRawType()
+	/**
+	 * 获取目标类型的原始类。
+	 *
+	 * @return 目标类型的 Class 对象。
+	 * @throws Exception 获取过程中可能抛出的异常。
+	 */
+	@Throws(Exception::class)
+	fun getToClass() = getToType().getRawType()
 }

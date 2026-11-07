@@ -28,38 +28,38 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page
  * 分页数据类
  */
 data class PageData<T>(
-    /**
-     * 当前页的数据列表
-     */
-    val records: Collection<T> = emptyList(),
+	/**
+	 * 当前页的数据列表
+	 */
+	val records: Collection<T> = emptyList(),
 
-    /**
-     * 总条数（总记录数）
-     */
-    val totalCount: Long = 0,
+	/**
+	 * 总条数（总记录数）
+	 */
+	val totalCount: Long = 0,
 
-    /**
-     * 总页数
-     */
-    val totalPages: Long = 0,
+	/**
+	 * 总页数
+	 */
+	val totalPages: Long = 0,
 
-    /**
-     * 每页大小
-     */
-    val pageSize: Long = 0,
+	/**
+	 * 每页大小
+	 */
+	val pageSize: Long = 0,
 
-    /**
-     * 当前页码（从 1 开始）
-     */
-    val pageIndex: Long = 0,
+	/**
+	 * 当前页码（从 1 开始）
+	 */
+	val pageIndex: Long = 0,
 ) {
-    companion object {
-        fun <T> of(page: Page<T>): PageData<T> = PageData(
-            records = page.records,
-            totalCount = page.total,
-            totalPages = page.pages,
-            pageSize = page.size,
-            pageIndex = page.current,
-        )
-    }
+	companion object {
+		fun <T> of(page: Page<T>): PageData<T> = PageData(
+			records = page.records,
+			totalCount = page.total,
+			totalPages = page.pages,
+			pageSize = page.size,
+			pageIndex = page.current,
+		)
+	}
 }

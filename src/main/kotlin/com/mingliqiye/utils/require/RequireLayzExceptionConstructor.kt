@@ -24,5 +24,5 @@ package com.mingliqiye.utils.require
 
 @FunctionalInterface
 fun interface RequireLayzExceptionConstructor {
-    fun call(): Throwable
+	fun call(): Throwable
 }

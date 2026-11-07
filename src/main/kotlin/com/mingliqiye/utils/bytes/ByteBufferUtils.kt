@@ -40,7 +40,7 @@ import java.nio.charset.Charset
  * @return 当前 [ByteBuffer] 实例（支持链式调用）
  */
 fun ByteBuffer.putString(string: String, charset: Charset = Charsets.UTF_8): ByteBuffer =
-    this.put(string.toByteArray(charset)).put(0x00)
+	this.put(string.toByteArray(charset)).put(0x00)
 
 /**
  * 从 [ByteBuffer] 中读取一个以空字节（`0x00`）结尾的字符串。
@@ -53,15 +53,15 @@ fun ByteBuffer.putString(string: String, charset: Charset = Charsets.UTF_8): Byt
  * @throws BufferUnderflowException 如果缓冲区中没有足够的字节（即未找到终止符）
  */
 fun ByteBuffer.getString(charset: Charset = Charsets.UTF_8): String {
-    val data = ArrayList<Byte>()
-    while (true) {
-        val byte = this.get()
-        if (byte == 0x00.toByte()) {
-            break
-        }
-        data.add(byte)
-    }
-    return String(data.toByteArray(), charset)
+	val data = ArrayList<Byte>()
+	while (true) {
+		val byte = this.get()
+		if (byte == 0x00.toByte()) {
+			break
+		}
+		data.add(byte)
+	}
+	return String(data.toByteArray(), charset)
 }
 
 /**
@@ -72,9 +72,9 @@ fun ByteBuffer.getString(charset: Charset = Charsets.UTF_8): String {
  * @return 包含剩余字节的新字节数组
  */
 fun ByteBuffer.toByteArray(): ByteArray {
-    val ba = ByteArray(this.remaining())
-    this.get(ba)
-    return ba
+	val ba = ByteArray(this.remaining())
+	this.get(ba)
+	return ba
 }
 
 /**
@@ -87,18 +87,18 @@ fun ByteBuffer.toByteArray(): ByteArray {
  * @throws IndexOutOfBoundsException 如果列表长度不足 8
  */
 fun ByteBuffer.putByteFlags(
-    bit: List<Boolean> = List(8) { false },
+	bit: List<Boolean> = List(8) { false },
 ): ByteBuffer = this.putByteFlags(
-    ByteFlags(
-        bit[0],
-        bit[1],
-        bit[2],
-        bit[3],
-        bit[4],
-        bit[5],
-        bit[6],
-        bit[7],
-    )
+	ByteFlags(
+		bit[0],
+		bit[1],
+		bit[2],
+		bit[3],
+		bit[4],
+		bit[5],
+		bit[6],
+		bit[7],
+	)
 )
 
 /**
@@ -111,18 +111,18 @@ fun ByteBuffer.putByteFlags(
  * @throws IndexOutOfBoundsException 如果数组长度不足 8
  */
 fun ByteBuffer.putByteFlags(
-    bit: BooleanArray = BooleanArray(8),
+	bit: BooleanArray = BooleanArray(8),
 ): ByteBuffer = this.putByteFlags(
-    ByteFlags(
-        bit[0],
-        bit[1],
-        bit[2],
-        bit[3],
-        bit[4],
-        bit[5],
-        bit[6],
-        bit[7],
-    )
+	ByteFlags(
+		bit[0],
+		bit[1],
+		bit[2],
+		bit[3],
+		bit[4],
+		bit[5],
+		bit[6],
+		bit[7],
+	)
 )
 
 /**
@@ -149,25 +149,25 @@ fun ByteBuffer.putByteFlags(byteFlags: ByteFlags): ByteBuffer = this.put(byteFla
  * @return 当前 [ByteBuffer] 实例（支持链式调用）
  */
 fun ByteBuffer.putByteFlags(
-    bit0: Boolean = false,
-    bit1: Boolean = false,
-    bit2: Boolean = false,
-    bit3: Boolean = false,
-    bit4: Boolean = false,
-    bit5: Boolean = false,
-    bit6: Boolean = false,
-    bit7: Boolean = false,
+	bit0: Boolean = false,
+	bit1: Boolean = false,
+	bit2: Boolean = false,
+	bit3: Boolean = false,
+	bit4: Boolean = false,
+	bit5: Boolean = false,
+	bit6: Boolean = false,
+	bit7: Boolean = false,
 ): ByteBuffer = this.putByteFlags(
-    ByteFlags(
-        bit0,
-        bit1,
-        bit2,
-        bit3,
-        bit4,
-        bit5,
-        bit6,
-        bit7,
-    )
+	ByteFlags(
+		bit0,
+		bit1,
+		bit2,
+		bit3,
+		bit4,
+		bit5,
+		bit6,
+		bit7,
+	)
 )
 
 /**
@@ -204,7 +204,7 @@ fun ByteBuffer.putBoolean(boolean: Boolean): ByteBuffer = this.put(if (boolean) 
  * @return 包装后的 [ByteBuffer] 实例
  */
 fun ByteArray.toByteBuffer(): ByteBuffer {
-    return ByteBuffer.wrap(this)
+	return ByteBuffer.wrap(this)
 }
 
 /**
@@ -219,19 +219,19 @@ fun ByteArray.toByteBuffer(): ByteBuffer {
  * @throws IOException 当读取过程中发生IO异常时抛出。
  */
 fun ByteBuffer.getVarLong(size: Int = 8): Long {
-    var numRead = 0
-    var result: Long = 0
-    var read: Byte
-    do {
-        read = this.get()
-        // 将当前字节的有效7位数据左移相应位置后与结果进行按位或运算
-        result = result or ((read.toLong() and 127) shl (7 * numRead))
-        numRead++
-        if (numRead > size) {
-            throw IOException("VarNumber is too big")
-        }
-    } while ((read.toLong() and 128) != 0L)
-    return result
+	var numRead = 0
+	var result: Long = 0
+	var read: Byte
+	do {
+		read = this.get()
+		// 将当前字节的有效7位数据左移相应位置后与结果进行按位或运算
+		result = result or ((read.toLong() and 127) shl (7 * numRead))
+		numRead++
+		if (numRead > size) {
+			throw IOException("VarNumber is too big")
+		}
+	} while ((read.toLong() and 128) != 0L)
+	return result
 }
 
 /**
@@ -269,13 +269,13 @@ fun ByteBuffer.getVarLong(): Long = this.getVarLong(8)
  * @return 当前ByteBuffer实例（支持链式调用）
  */
 fun ByteBuffer.putVarLong(value: Long): ByteBuffer {
-    var v = value
-    while (v >= 0x80) {
-        this.put((v and 0x7F or 0x80).toByte())
-        v = v shr 7
-    }
-    this.put(v.toByte())
-    return this
+	var v = value
+	while (v >= 0x80) {
+		this.put((v and 0x7F or 0x80).toByte())
+		v = v shr 7
+	}
+	this.put(v.toByte())
+	return this
 }
 
 /**

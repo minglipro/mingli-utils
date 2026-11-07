@@ -32,53 +32,53 @@ import java.util.concurrent.*
  */
 class Debouncer(private val delay: Long, unit: TimeUnit) {
 
-    private val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(
-        NamedThreadFactory { clazz, poolNumber, threadNumber ->
-            "Debouncer-$poolNumber-$threadNumber"
-        }
-    )
-    private val delayedMap: ConcurrentHashMap<Any, Future<*>> = ConcurrentHashMap()
-    private val delayMillis: Long = unit.toMillis(delay)
+	private val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(
+		NamedThreadFactory { clazz, poolNumber, threadNumber ->
+			"Debouncer-$poolNumber-$threadNumber"
+		}
+	)
+	private val delayedMap: ConcurrentHashMap<Any, Future<*>> = ConcurrentHashMap()
+	private val delayMillis: Long = unit.toMillis(delay)
 
-    /**
-     * 执行防抖操作，如果在指定延迟时间内再次调用相同key的任务，则取消之前的任务并重新计时
-     *
-     * @param key  任务的唯一标识符，用于区分不同任务
-     * @param task 要执行的任务
-     */
-    fun debounce(key: Any, task: Runnable) {
-        // 提交新任务并获取之前可能存在的任务
-        val prev = delayedMap.put(
-            key,
-            scheduler.schedule(
-                {
-                    try {
-                        task.run()
-                    } finally {
-                        // 任务执行完成后从映射中移除
-                        delayedMap.remove(key)
-                    }
-                },
-                delayMillis,
-                TimeUnit.MILLISECONDS
-            )
-        )
+	/**
+	 * 执行防抖操作，如果在指定延迟时间内再次调用相同key的任务，则取消之前的任务并重新计时
+	 *
+	 * @param key  任务的唯一标识符，用于区分不同任务
+	 * @param task 要执行的任务
+	 */
+	fun debounce(key: Any, task: Runnable) {
+		// 提交新任务并获取之前可能存在的任务
+		val prev = delayedMap.put(
+			key,
+			scheduler.schedule(
+				{
+					try {
+						task.run()
+					} finally {
+						// 任务执行完成后从映射中移除
+						delayedMap.remove(key)
+					}
+				},
+				delayMillis,
+				TimeUnit.MILLISECONDS
+			)
+		)
 
-        // 如果之前存在任务，则取消它
-        prev?.cancel(true)
-    }
+		// 如果之前存在任务，则取消它
+		prev?.cancel(true)
+	}
 
-    /**
-     * 关闭防抖器，取消所有待执行的任务并关闭调度器
-     */
-    fun shutdown() {
-        // 先取消所有延迟任务
-        for (future in delayedMap.values) {
-            future.cancel(true)
-        }
-        delayedMap.clear()
+	/**
+	 * 关闭防抖器，取消所有待执行的任务并关闭调度器
+	 */
+	fun shutdown() {
+		// 先取消所有延迟任务
+		for (future in delayedMap.values) {
+			future.cancel(true)
+		}
+		delayedMap.clear()
 
-        // 再关闭调度器
-        scheduler.shutdownNow()
-    }
+		// 再关闭调度器
+		scheduler.shutdownNow()
+	}
 }

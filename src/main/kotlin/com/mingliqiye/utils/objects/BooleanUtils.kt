@@ -24,17 +24,17 @@ package com.mingliqiye.utils.objects
 
 class BooleanIfFunction(private val boolean: Boolean) {
 
-    fun elses(function: () -> Unit): Boolean {
-        if (boolean) {
-            function()
-        }
-        return !boolean
-    }
+	fun elses(function: () -> Unit): Boolean {
+		if (boolean) {
+			function()
+		}
+		return !boolean
+	}
 }
 
 inline fun Boolean.ifs(function: () -> Unit): BooleanIfFunction {
-    return if (this) {
-        function()
-        BooleanIfFunction(false)
-    } else BooleanIfFunction(true)
+	return if (this) {
+		function()
+		BooleanIfFunction(false)
+	} else BooleanIfFunction(true)
 }

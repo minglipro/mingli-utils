@@ -26,5 +26,5 @@ import okhttp3.OkHttpClient
 
 @FunctionalInterface
 fun interface OkhttpBuilder {
-    fun customize(builder: OkHttpClient.Builder): OkHttpClient.Builder
+	fun customize(builder: OkHttpClient.Builder): OkHttpClient.Builder
 }

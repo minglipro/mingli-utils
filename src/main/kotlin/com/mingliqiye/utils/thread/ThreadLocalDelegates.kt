@@ -39,16 +39,16 @@ import kotlin.reflect.KProperty
  * 每个线程读写互不影响，切换线程后自动获得新线程的隔离值。
  */
 class ThreadLocalDelegate<T>(
-    private val threadLocal: ThreadLocal<T>,
+	private val threadLocal: ThreadLocal<T>,
 ) : ReadWriteProperty<Any?, T> {
 
-    override fun getValue(thisRef: Any?, property: KProperty<*>): T = threadLocal.get()
+	override fun getValue(thisRef: Any?, property: KProperty<*>): T = threadLocal.get()
 
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        threadLocal.set(value)
-    }
+	override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+		threadLocal.set(value)
+	}
 
-    override fun toString(): String = threadLocal.toString()
+	override fun toString(): String = threadLocal.toString()
 }
 
 /**
@@ -57,7 +57,7 @@ class ThreadLocalDelegate<T>(
  * @param initial 每个线程首次访问时的初始化器
  */
 fun <T> threadLocal(initial: () -> T): ThreadLocalDelegate<T> =
-    ThreadLocalDelegate(ThreadLocal.withInitial(Supplier(initial)))
+	ThreadLocalDelegate(ThreadLocal.withInitial(Supplier(initial)))
 
 /**
  * 创建无初始值的线程局部属性委托，属性类型需声明为可空：
@@ -67,7 +67,7 @@ fun <T> threadLocal(initial: () -> T): ThreadLocalDelegate<T> =
  * ```
  */
 fun <T : Any> nullableThreadLocal(): ThreadLocalDelegate<T?> =
-    ThreadLocalDelegate(ThreadLocal())
+	ThreadLocalDelegate(ThreadLocal())
 
 /**
  * 将已有 [ThreadLocal] 实例包装为属性委托

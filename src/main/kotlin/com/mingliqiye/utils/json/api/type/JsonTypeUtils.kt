@@ -36,11 +36,11 @@ import java.util.*
  * @return 如果类型匹配则返回 true，否则返回 false
  */
 fun isTypeOf(type: Type, expectedClass: Class<*>): Boolean {
-    return when (type) {
-        is Class<*> -> expectedClass.isAssignableFrom(type)
-        is ParameterizedType -> isTypeOf(type.rawType, expectedClass)
-        else -> false
-    }
+	return when (type) {
+		is Class<*> -> expectedClass.isAssignableFrom(type)
+		is ParameterizedType -> isTypeOf(type.rawType, expectedClass)
+		else -> false
+	}
 }
 
 /**
@@ -52,15 +52,15 @@ fun isTypeOf(type: Type, expectedClass: Class<*>): Boolean {
  * @throws IllegalArgumentException 当无法获取指定索引的泛型参数时抛出异常
  */
 fun getGenericParameter(type: Type, index: Int): Type {
-    if (type is ParameterizedType) {
-        val typeArgs = type.actualTypeArguments
-        if (index >= 0 && index < typeArgs.size) {
-            return typeArgs[index]
-        }
-    }
-    throw IllegalArgumentException(
-        "无法获取泛型参数: $type at index $index"
-    )
+	if (type is ParameterizedType) {
+		val typeArgs = type.actualTypeArguments
+		if (index >= 0 && index < typeArgs.size) {
+			return typeArgs[index]
+		}
+	}
+	throw IllegalArgumentException(
+		"无法获取泛型参数: $type at index $index"
+	)
 }
 
 /**
@@ -70,24 +70,24 @@ fun getGenericParameter(type: Type, index: Int): Type {
  * @return 类型名称字符串
  */
 fun getTypeName(type: Type): String {
-    return when (type) {
-        is Class<*> -> type.simpleName
-        is ParameterizedType -> {
-            val rawType = type.rawType as Class<*>
-            val typeArgs = type.actualTypeArguments
+	return when (type) {
+		is Class<*> -> type.simpleName
+		is ParameterizedType -> {
+			val rawType = type.rawType as Class<*>
+			val typeArgs = type.actualTypeArguments
 
-            val sb = StringBuilder(rawType.simpleName)
-            sb.append("<")
-            for (i in typeArgs.indices) {
-                if (i > 0) sb.append(", ")
-                sb.append(getTypeName(typeArgs[i]))
-            }
-            sb.append(">")
-            sb.toString()
-        }
+			val sb = StringBuilder(rawType.simpleName)
+			sb.append("<")
+			for (i in typeArgs.indices) {
+				if (i > 0) sb.append(", ")
+				sb.append(getTypeName(typeArgs[i]))
+			}
+			sb.append(">")
+			sb.toString()
+		}
 
-        else -> type.typeName
-    }
+		else -> type.typeName
+	}
 }
 
 /**
@@ -98,28 +98,28 @@ fun getTypeName(type: Type): String {
  * @return 表示数组类型的 JsonTypeReference 对象
  */
 fun <T> arrayType(componentType: Class<T>): JsonTypeReference<Array<T>> {
-    return object : JsonTypeReference<Array<T>>() {
-        private val arrayType: Type = java.lang.reflect.Array.newInstance(
-            componentType, 0
-        ).javaClass
+	return object : JsonTypeReference<Array<T>>() {
+		private val arrayType: Type = java.lang.reflect.Array.newInstance(
+			componentType, 0
+		).javaClass
 
-        override var type: Type = Any::class.java
-            get() = object : ParameterizedType {
-                private val actualTypeArguments = arrayOf<Type>(componentType)
+		override var type: Type = Any::class.java
+			get() = object : ParameterizedType {
+				private val actualTypeArguments = arrayOf<Type>(componentType)
 
-                override fun getActualTypeArguments(): Array<Type> {
-                    return actualTypeArguments
-                }
+				override fun getActualTypeArguments(): Array<Type> {
+					return actualTypeArguments
+				}
 
-                override fun getRawType(): Type {
-                    return arrayType
-                }
+				override fun getRawType(): Type {
+					return arrayType
+				}
 
-                override fun getOwnerType(): Type? {
-                    return null
-                }
-            }
-    }
+				override fun getOwnerType(): Type? {
+					return null
+				}
+			}
+	}
 }
 
 /**
@@ -132,22 +132,22 @@ fun <T> arrayType(componentType: Class<T>): JsonTypeReference<Array<T>> {
  */
 fun <T> listType(componentType: Class<T>): JsonTypeReference<List<T>> {
 
-    return object : JsonTypeReference<List<T>>() {
-        override var type: Type = Any::class.java
-            get() = object : ParameterizedType {
-                override fun getActualTypeArguments(): Array<Type> {
-                    return arrayOf(componentType)
-                }
+	return object : JsonTypeReference<List<T>>() {
+		override var type: Type = Any::class.java
+			get() = object : ParameterizedType {
+				override fun getActualTypeArguments(): Array<Type> {
+					return arrayOf(componentType)
+				}
 
-                override fun getRawType(): Type {
-                    return List::class.java
-                }
+				override fun getRawType(): Type {
+					return List::class.java
+				}
 
-                override fun getOwnerType(): Type? {
-                    return null
-                }
-            }
-    }
+				override fun getOwnerType(): Type? {
+					return null
+				}
+			}
+	}
 }
 
 /**
@@ -162,40 +162,40 @@ fun <T> listType(componentType: Class<T>): JsonTypeReference<List<T>> {
  */
 fun <K, V> MapType(keyType: Class<K>, valueType: Class<V>): JsonTypeReference<Map<K, V>> {
 
-    return object : JsonTypeReference<Map<K, V>>() {
-        override var type: Type = Any::class.java
-            get() = object : ParameterizedType {
-                override fun getActualTypeArguments(): Array<Type> {
-                    return arrayOf(keyType, valueType)
-                }
+	return object : JsonTypeReference<Map<K, V>>() {
+		override var type: Type = Any::class.java
+			get() = object : ParameterizedType {
+				override fun getActualTypeArguments(): Array<Type> {
+					return arrayOf(keyType, valueType)
+				}
 
-                override fun getRawType(): Type {
-                    return Map::class.java
-                }
+				override fun getRawType(): Type {
+					return Map::class.java
+				}
 
-                override fun getOwnerType(): Type? {
-                    return null
-                }
+				override fun getOwnerType(): Type? {
+					return null
+				}
 
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) return true
-                    if (other !is ParameterizedType) return false
+				override fun equals(other: Any?): Boolean {
+					if (this === other) return true
+					if (other !is ParameterizedType) return false
 
-                    val that = other
-                    return (Objects.equals(
-                        rawType,
-                        that.rawType
-                    ) && actualTypeArguments.contentEquals(that.actualTypeArguments) && Objects.equals(
-                        ownerType,
-                        that.ownerType
-                    ))
-                }
+					val that = other
+					return (Objects.equals(
+						rawType,
+						that.rawType
+					) && actualTypeArguments.contentEquals(that.actualTypeArguments) && Objects.equals(
+						ownerType,
+						that.ownerType
+					))
+				}
 
-                override fun hashCode(): Int {
-                    return (actualTypeArguments.contentHashCode() xor Objects.hashCode(rawType) xor Objects.hashCode(
-                        ownerType
-                    ))
-                }
-            }
-    }
+				override fun hashCode(): Int {
+					return (actualTypeArguments.contentHashCode() xor Objects.hashCode(rawType) xor Objects.hashCode(
+						ownerType
+					))
+				}
+			}
+	}
 }

@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class StringToUUIDConverter : Converter<String, UUID> {
-    override fun convert(source: String): UUID {
-        return UUID.of(source)
-    }
+	override fun convert(source: String): UUID {
+		return UUID.of(source)
+	}
 }

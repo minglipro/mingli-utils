@@ -35,40 +35,40 @@ import io.netty.channel.ChannelHandlerContext
  */
 class ByteArrayCodec : NettyBaseCodec<ByteBuf, ByteArray>() {
 
-    /**
-     * 解码：ByteBuf → ByteArray
-     *
-     * 将 Netty 的 ByteBuf 转换为 Kotlin 的 ByteArray
-     *
-     * @param inData 输入的 ByteBuf
-     * @param channelHandlerContext 上下文
-     * @param outList 输出列表（未使用）
-     * @return 转换后的 ByteArray
-     */
-    override fun decode(
-        inData: ByteBuf,
-        channelHandlerContext: ChannelHandlerContext,
-        outList: MutableList<Any>,
-    ): ByteArray {
-        return inData.toByteArray()
-    }
+	/**
+	 * 解码：ByteBuf → ByteArray
+	 *
+	 * 将 Netty 的 ByteBuf 转换为 Kotlin 的 ByteArray
+	 *
+	 * @param inData 输入的 ByteBuf
+	 * @param channelHandlerContext 上下文
+	 * @param outList 输出列表（未使用）
+	 * @return 转换后的 ByteArray
+	 */
+	override fun decode(
+		inData: ByteBuf,
+		channelHandlerContext: ChannelHandlerContext,
+		outList: MutableList<Any>,
+	): ByteArray {
+		return inData.toByteArray()
+	}
 
-    /**
-     * 编码：ByteArray → ByteBuf
-     *
-     * 将 Kotlin 的 ByteArray 转换为 Netty 的 ByteBuf
-     *
-     * @param inData 输入的 ByteArray
-     * @param channelHandlerContext 上下文
-     * @param outList 输出列表（未使用）
-     * @return 转换后的 ByteBuf
-     *
-     */
-    override fun encode(
-        inData: ByteArray,
-        channelHandlerContext: ChannelHandlerContext,
-        outList: MutableList<Any>,
-    ): ByteBuf {
-        return inData.toByteBuf()
-    }
+	/**
+	 * 编码：ByteArray → ByteBuf
+	 *
+	 * 将 Kotlin 的 ByteArray 转换为 Netty 的 ByteBuf
+	 *
+	 * @param inData 输入的 ByteArray
+	 * @param channelHandlerContext 上下文
+	 * @param outList 输出列表（未使用）
+	 * @return 转换后的 ByteBuf
+	 *
+	 */
+	override fun encode(
+		inData: ByteArray,
+		channelHandlerContext: ChannelHandlerContext,
+		outList: MutableList<Any>,
+	): ByteBuf {
+		return inData.toByteBuf()
+	}
 }

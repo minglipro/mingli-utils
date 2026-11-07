@@ -24,15 +24,15 @@ package com.mingliqiye.utils.base
 
 enum class BaseType(val baseCodec: BaseCodec) : BaseCodec {
 
-    BASE2(com.mingliqiye.utils.base.code.BASE2),
-    BASE10(com.mingliqiye.utils.base.code.BASE10),
-    BASE16(com.mingliqiye.utils.base.code.BASE16),
-    BASE64(com.mingliqiye.utils.base.code.BASE64),
-    BASE64URL(com.mingliqiye.utils.base.code.BASE64URL),
-    BASE91(com.mingliqiye.utils.base.code.BASE91),
-    BASE256(com.mingliqiye.utils.base.code.BASE256);
+	BASE2(com.mingliqiye.utils.base.code.BASE2),
+	BASE10(com.mingliqiye.utils.base.code.BASE10),
+	BASE16(com.mingliqiye.utils.base.code.BASE16),
+	BASE64(com.mingliqiye.utils.base.code.BASE64),
+	BASE64URL(com.mingliqiye.utils.base.code.BASE64URL),
+	BASE91(com.mingliqiye.utils.base.code.BASE91),
+	BASE256(com.mingliqiye.utils.base.code.BASE256);
 
-    override fun encode(bytes: ByteArray) = baseCodec.encode(bytes)
-    override fun decode(string: String) = baseCodec.decode(string)
+	override fun encode(bytes: ByteArray) = baseCodec.encode(bytes)
+	override fun decode(string: String) = baseCodec.decode(string)
 
 }

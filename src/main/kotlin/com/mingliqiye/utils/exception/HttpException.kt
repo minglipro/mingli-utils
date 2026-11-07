@@ -23,8 +23,8 @@
 package com.mingliqiye.utils.exception
 
 open class HttpException @JvmOverloads constructor(
-    message: String? = null,
-    throwable: Throwable? = null,
-    enableSuppression: Boolean = false,
-    writableStackTrace: Boolean = true,
+	message: String? = null,
+	throwable: Throwable? = null,
+	enableSuppression: Boolean = false,
+	writableStackTrace: Boolean = true,
 ) : MingLiUtilsBaseException(message, throwable, enableSuppression, writableStackTrace)

@@ -33,6 +33,6 @@ import com.mingliqiye.utils.uuid.UUIDFormatType
  */
 @Target(AnnotationTarget.FIELD)
 annotation class UUIDJsonFormat(
-    val value: UUIDFormatType = UUIDFormatType.NO_UPPER_SPACE,
-    val base: BaseType = BaseType.BASE16
+	val value: UUIDFormatType = UUIDFormatType.NO_UPPER_SPACE,
+	val base: BaseType = BaseType.BASE16,
 )

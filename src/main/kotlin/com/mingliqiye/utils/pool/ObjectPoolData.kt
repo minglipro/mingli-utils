@@ -31,11 +31,11 @@ package com.mingliqiye.utils.pool
  * @property name 可选的名称，用于日志/调试
  */
 data class ObjectPoolData<T>(
-    val obj: T,
-    val objectPool: ObjectPool<T>,
-    val id: Int = obj.hashCode(),
-    val name: String = "",
+	val obj: T,
+	val objectPool: ObjectPool<T>,
+	val id: Int = obj.hashCode(),
+	val name: String = "",
 ) {
-    /** 语法糖：归还到所属池 */
-    fun release() = objectPool.returnObject(this)
+	/** 语法糖：归还到所属池 */
+	fun release() = objectPool.returnObject(this)
 }

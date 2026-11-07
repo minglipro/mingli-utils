@@ -32,32 +32,32 @@ import java.sql.PreparedStatement
 
 @MappedTypes(UUID::class)
 class PgsqlUUIDTypeHandler : QuickBaseTypeHandler<UUID>() {
-    override fun getValue(
-        vg: QuickBaseTypeHandlerValueGetter, ct: CallType, ci: Int?, cn: String?
-    ): UUID? {
-        val data: String? = when (ct) {
-            CallType.RESULTSET_INDEX ->
-                vg.resultSet!!.getString(ci!!)
+	override fun getValue(
+		vg: QuickBaseTypeHandlerValueGetter, ct: CallType, ci: Int?, cn: String?,
+	): UUID? {
+		val data: String? = when (ct) {
+			CallType.RESULTSET_INDEX ->
+				vg.resultSet!!.getString(ci!!)
 
-            CallType.RESULTSET_NAME ->
-                vg.resultSet!!.getString(cn)
+			CallType.RESULTSET_NAME ->
+				vg.resultSet!!.getString(cn)
 
-            CallType.CALLABLE_STATEMENT_INDEX ->
-                vg.callableStatement!!.getString(cn)
-        }
-        if (data == null) {
-            return null
-        }
-        return UUID.of(data)
-    }
+			CallType.CALLABLE_STATEMENT_INDEX ->
+				vg.callableStatement!!.getString(cn)
+		}
+		if (data == null) {
+			return null
+		}
+		return UUID.of(data)
+	}
 
-    override fun setValue(
-        ps: PreparedStatement, index: Int, parameter: UUID?, jdbcType: JdbcType?
-    ) {
-        if (parameter == null) {
-            ps.setNull(index, jdbcType?.TYPE_CODE ?: JdbcType.JAVA_OBJECT.TYPE_CODE)
-            return
-        }
-        ps.setObject(index, parameter.getUuid())
-    }
+	override fun setValue(
+		ps: PreparedStatement, index: Int, parameter: UUID?, jdbcType: JdbcType?,
+	) {
+		if (parameter == null) {
+			ps.setNull(index, jdbcType?.TYPE_CODE ?: JdbcType.JAVA_OBJECT.TYPE_CODE)
+			return
+		}
+		ps.setObject(index, parameter.getUuid())
+	}
 }

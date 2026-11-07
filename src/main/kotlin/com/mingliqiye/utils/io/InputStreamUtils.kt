@@ -31,8 +31,8 @@ import java.nio.charset.Charset
 fun InputStream.readAllText(charset: Charset = Charsets.UTF_8) = this.readAllBytes().toString(charset)
 
 fun InputStream.exportBytes(out: OutputStream) {
-    out.write(this.readAllBytes())
-    out.flush()
+	out.write(this.readAllBytes())
+	out.flush()
 }
 
 fun InputStream.readToList(): List<Byte> = this.readBytes().toList()

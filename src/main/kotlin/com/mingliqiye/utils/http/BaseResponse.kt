@@ -23,20 +23,20 @@
 package com.mingliqiye.utils.http
 
 open class BaseResponse<T>(
-    open val time: String,
-    open var message: String,
-    open var data: T,
-    open var statusCode: Int,
+	open val time: String,
+	open var message: String,
+	open var data: T,
+	open var statusCode: Int,
 
-    ) {
-    /**
-     * 返回响应对象的字符串表示
-     *
-     * 重写toString方法以提供更有意义的对象表示，便于日志记录和调试。
-     * 显示时间、消息、数据类型和值以及状态码。
-     *
-     * @return 格式化的字符串表示
-     */
-    override fun toString(): String =
-        "${javaClass.simpleName}(time=${time}, message=${message}, data=${data}, statusCode=${statusCode})"
+	) {
+	/**
+	 * 返回响应对象的字符串表示
+	 *
+	 * 重写toString方法以提供更有意义的对象表示，便于日志记录和调试。
+	 * 显示时间、消息、数据类型和值以及状态码。
+	 *
+	 * @return 格式化的字符串表示
+	 */
+	override fun toString(): String =
+		"${javaClass.simpleName}(time=${time}, message=${message}, data=${data}, statusCode=${statusCode})"
 }

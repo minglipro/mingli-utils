@@ -23,8 +23,8 @@
 package com.mingliqiye.utils.exception
 
 open class MingLiUtilsBaseException @JvmOverloads constructor(
-    message: String? = null,
-    cause: Throwable? = null,
-    enableSuppression: Boolean = false,
-    writableStackTrace: Boolean = true,
+	message: String? = null,
+	cause: Throwable? = null,
+	enableSuppression: Boolean = false,
+	writableStackTrace: Boolean = true,
 ) : RuntimeException(message, cause, enableSuppression, writableStackTrace)
