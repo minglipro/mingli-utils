@@ -16,23 +16,19 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonApiAutoConfiguration.kt
- * LastUpdate 2026-11-07 13:59:41
+ * LastUpdate 2026-11-09 13:45:41
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.mingliqiye.utils.json.api.JSONA
 import com.mingliqiye.utils.json.api.JacksonJsonApi
 import com.mingliqiye.utils.json.api.base.JsonApi
-import com.mingliqiye.utils.logger.MingLiLoggerFactory
-import org.slf4j.Logger
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Primary
 
 /*
  * JacksonAutoConfiguration 是一个 Spring Boot 自动配置类，用于配置 Jackson 相关的序列化和反序列化功能。
@@ -44,34 +40,9 @@ import org.springframework.context.annotation.Primary
 @ConditionalOnClass(name = ["com.fasterxml.jackson.databind.ObjectMapper", "org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration"])
 @AutoConfigureAfter(name = ["com.mingliqiye.utils.springboot.autoconfigure.JacksonJsonAutoConfiguration"])
 open class JacksonJsonApiAutoConfiguration {
-
-
-	companion object {
-		private val log: Logger = MingLiLoggerFactory.getLogger("MingliUtils-JacksonAutoConfiguration")
-	}
-
-
-	/*
-	 * 创建并返回一个 JsonApi Bean 实例。
-	 * 该方法会在没有其他 JsonApi Bean 存在时被调用，并将创建的 JacksonJsonApi 实例设置为全局默认的 JSON API。
-	 *
-	 * @param objectMapper 用于 JSON 操作的 ObjectMapper 实例。
-	 * @return 返回配置好的 JsonApi 实例。
-	 */
-	@Bean
-	@Primary
+	@Bean("jacksonJsonApi")
 	@ConditionalOnMissingBean(JsonApi::class)
 	open fun jsonApi(objectMapper: ObjectMapper): JsonApi {
-		return JacksonJsonApi(objectMapper).also {
-			log.info("JsonApi Bean Auto Configuration Success")
-			try {
-				JSONA.jsonApi
-			} catch (_: NullPointerException) {
-				JSONA.setJsonApi(it)
-				log.info(
-					"JSONA Using {}", it.javaClass.name
-				)
-			}
-		}
+		return JacksonJsonApi(objectMapper)
 	}
 }

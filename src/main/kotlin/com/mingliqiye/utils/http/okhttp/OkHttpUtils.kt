@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile OkHttpUtils.kt
- * LastUpdate 2026-11-07 13:44:21
+ * LastUpdate 2026-11-09 19:18:03
  * UpdateUser MingLiPro
  */
 @file:JvmName("OkHttpUtils")
@@ -298,3 +298,8 @@ enum class Method {
 	/** QUERY 方法（HTTP 扩展方法，需服务端支持）。 */
 	QUERY,
 }
+
+
+fun Request.Builder.post() = post(RequestBody.EMPTY)
+fun Request.Builder.put() = put(RequestBody.EMPTY)
+fun Request.Builder.patch() = patch(RequestBody.EMPTY)

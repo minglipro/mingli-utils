@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3JsonApiAutoConfiguration.kt
- * LastUpdate 2026-11-07 13:59:11
+ * LastUpdate 2026-11-09 13:45:29
  * UpdateUser MingLiPro
  */
 
@@ -26,11 +26,11 @@ import com.mingliqiye.utils.exception.JsonException
 import com.mingliqiye.utils.json.api.JSONA
 import com.mingliqiye.utils.json.api.Jackson3JsonApi
 import com.mingliqiye.utils.json.api.base.JsonApi
-import com.mingliqiye.utils.logger.MingLiLoggerFactory
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 import tools.jackson.databind.json.JsonMapper
 
 /**
@@ -65,43 +65,12 @@ import tools.jackson.databind.json.JsonMapper
 @ConditionalOnClass(name = ["tools.jackson.databind.json.JsonMapper", "org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration"])
 @AutoConfigureAfter(name = ["com.mingliqiye.utils.springboot.autoconfigure.Jackson3AutoConfiguration"])
 open class Jackson3JsonApiAutoConfiguration {
-
-	companion object {
-		private val logger = MingLiLoggerFactory.getLogger<Jackson3JsonApiAutoConfiguration>()
-	}
-
-	/**
-	 * 创建并注册默认的 [JsonApi] Bean。
-	 *
-	 * 使用容器中的 [JsonMapper] 构造 [Jackson3JsonApi]。读取器直接返回该 [JsonMapper]；
-	 * 写入器被设计为抛出 [JsonException]，即本实现不允许通过 [JsonApi] 替换底层
-	 * `JsonMapper`，底层实例由 Spring 容器统一管理。
-	 *
-	 * 创建完成后会尝试初始化全局 [JSONA]：
-	 * - 若 [JSONA] 尚未设置，则设置为本实例；
-	 * - 若已设置，则保留既有实现。
-	 *
-	 * 该 Bean 仅在容器中不存在其他 [JsonApi] 时创建。
-	 *
-	 * @param jsonMapper 容器中的 Jackson 3 映射器
-	 * @return 基于 Jackson 3 的 JSON 访问门面
-	 */
-	@Bean
+	@Bean("jackson3JsonApi")
+	@Primary
 	@ConditionalOnMissingBean(JsonApi::class)
 	open fun jsonApi(jsonMapper: JsonMapper): JsonApi {
 		return Jackson3JsonApi(
 			get = { jsonMapper },
 			set = { throw JsonException("JSON API set method is not allowed.") })
-			.also {
-				logger.info("JsonApi Bean Auto Configuration Success")
-				try {
-					JSONA.jsonApi
-				} catch (_: NullPointerException) {
-					JSONA.setJsonApi(it)
-					logger.info(
-						"JSONA Using {}", it.javaClass.name
-					)
-				}
-			}
 	}
 }

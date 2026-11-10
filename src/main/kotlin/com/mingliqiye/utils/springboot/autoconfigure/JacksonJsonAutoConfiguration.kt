@@ -16,19 +16,19 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonAutoConfiguration.kt
- * LastUpdate 2026-10-28 23:30:03
+ * LastUpdate 2026-11-09 14:19:05
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure
 
-import com.mingliqiye.utils.json.converters.DateTimeJsonConverter
-import com.mingliqiye.utils.json.converters.UUIDJsonConverter
 import com.mingliqiye.utils.json.converters.base.getJacksonModule
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
+import com.mingliqiye.utils.springboot.autoconfigure.builder.JacksonBuilder
+import com.mingliqiye.utils.springboot.autoconfigure.builder.JacksonJsonBuilderImpl
+import org.springframework.beans.factory.ObjectProvider
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.context.annotation.Bean
 
@@ -67,26 +67,23 @@ open class JacksonJsonAutoConfiguration {
 		private val log = MingLiLoggerFactory.getLogger<JacksonJsonAutoConfiguration>()
 	}
 
-	@Bean("DateTimeJsonConverterJackson2ObjectMapperBuilderCustomizer")
-	@ConditionalOnMissingBean(name = ["DateTimeJsonConverterJackson2ObjectMapperBuilderCustomizer"])
-	fun getDateTimeJsonConverterJackson2ObjectMapperBuilderCustomizer() = Jackson2ObjectMapperBuilderCustomizer {
-		log.info(
-			"MingliUtils Jackson2 DateTime Serializers created"
-		)
-		it.modulesToInstall { modules ->
-			modules.add(DateTimeJsonConverter.getJsonConverter().getJacksonModule())
+	@Bean("mingliUtilsJacksonObjectMapperBuilderCustomizer")
+	fun jackson2ObjectMapperBuilderCustomizer(builders: ObjectProvider<JacksonBuilder>): Jackson2ObjectMapperBuilderCustomizer {
+		val builderList = builders.orderedStream().toList()
+		var jacksonJsonBuilderImpl = JacksonJsonBuilderImpl()
+		builderList.forEach {
+			jacksonJsonBuilderImpl = it.customize(jacksonJsonBuilderImpl) as JacksonJsonBuilderImpl
 		}
-	}
+		return Jackson2ObjectMapperBuilderCustomizer { builder ->
+			builder.modulesToInstall(
+				*jacksonJsonBuilderImpl.getData().map { converter ->
+					converter.getJacksonModule().also { module ->
+						log.info("Jackson Module Install ${module.moduleName}")
+					}
+				}.toTypedArray()
+			)
+		}
 
-	@Bean("UUIDJsonConverterJackson2ObjectMapperBuilderCustomizer")
-	@ConditionalOnMissingBean(name = ["UUIDJsonConverterJackson2ObjectMapperBuilderCustomizer"])
-	fun getUUIDJsonConverterJackson2ObjectMapperBuilderCustomizer() = Jackson2ObjectMapperBuilderCustomizer {
-		log.info(
-			"MingliUtils Jackson2 UUID Serializers created"
-		)
-		it.modulesToInstall { modules ->
-			modules.add(UUIDJsonConverter.getJsonConverter().getJacksonModule())
-		}
 	}
 
 }

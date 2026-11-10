@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * ProjectName FastBaseMapper.kt
+ * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3AutoConfiguration.kt
- * LastUpdate 2026-10-26 23:22:18
+ * LastUpdate 2026-11-09 14:18:45
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure;
 
-import com.mingliqiye.utils.json.converters.DateTimeJsonConverter
-import com.mingliqiye.utils.json.converters.UUIDJsonConverter
 import com.mingliqiye.utils.json.converters.base.getJackson3Module
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
+import com.mingliqiye.utils.springboot.autoconfigure.builder.JacksonBuilder
+import com.mingliqiye.utils.springboot.autoconfigure.builder.JacksonJsonBuilderImpl
+import org.springframework.beans.factory.ObjectProvider
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -36,37 +37,27 @@ import org.springframework.context.annotation.Bean
 @AutoConfigureAfter(name = ["org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration"])
 open class Jackson3AutoConfiguration {
 
-	private val logger = MingLiLoggerFactory.getLogger<Jackson3AutoConfiguration>()
+	private val log = MingLiLoggerFactory.getLogger<Jackson3AutoConfiguration>()
 
-	/**
-	 * 注册 UUID 的 Jackson 3 序列化/反序列化模块。
-	 *
-	 * 如需替换 UUID 处理逻辑，注册名为 [UUIDJsonConverterJsonMapperCustomizer]
-	 * 的 [JsonMapperBuilderCustomizer] Bean 即可，本 Bean 将自动跳过。
-	 */
 	@Bean("UUIDJsonConverterJsonMapperCustomizer")
 	@ConditionalOnMissingBean(name = ["UUIDJsonConverterJsonMapperCustomizer"])
-	open fun getUUIDJsonConverterJsonMapperCustomizer(): JsonMapperBuilderCustomizer {
-		return JsonMapperBuilderCustomizer { builder ->
-			builder.addModule(UUIDJsonConverter.getJsonConverter().getJackson3Module())
-		}.also {
-			logger.info("MingliUtils Jackson3 UUID Serializers created")
+	fun jsonMapperBuilderCustomizer(builders: ObjectProvider<JacksonBuilder>): JsonMapperBuilderCustomizer {
+		val builderList = builders.orderedStream().toList()
+		var jacksonJsonBuilderImpl = JacksonJsonBuilderImpl()
+		log.info("scan ${builderList.size} JacksonBuilders")
+		builderList.forEach {
+			jacksonJsonBuilderImpl = it.customize(jacksonJsonBuilderImpl) as JacksonJsonBuilderImpl
 		}
+		return JsonMapperBuilderCustomizer {
+			it.addModules(
+				*jacksonJsonBuilderImpl.getData().map { converter ->
+					converter.getJackson3Module().also { module ->
+						log.info("Jackson3 Module Install ${module.moduleName}")
+					}
+				}.toTypedArray()
+			)
+		}
+
 	}
 
-	/**
-	 * 注册日期时间的 Jackson 3 序列化/反序列化模块。
-	 *
-	 * 如需替换日期时间处理逻辑，注册名为 [DateTimeJsonConverterJsonMapperCustomizer]
-	 * 的 [JsonMapperBuilderCustomizer] Bean 即可，本 Bean 将自动跳过。
-	 */
-	@Bean("DateTimeJsonConverterJsonMapperCustomizer")
-	@ConditionalOnMissingBean(name = ["DateTimeJsonConverterJsonMapperCustomizer"])
-	open fun getDateTimeJsonConverterJsonMapperCustomizer(): JsonMapperBuilderCustomizer {
-		return JsonMapperBuilderCustomizer { builder ->
-			builder.addModule(DateTimeJsonConverter.getJsonConverter().getJackson3Module())
-		}.also {
-			logger.info("MingliUtils Jackson3 DateTime Serializers created")
-		}
-	}
 }
