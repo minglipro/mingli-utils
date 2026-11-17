@@ -16,19 +16,33 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseJsonConverter.kt
- * LastUpdate 2026-02-26 15:59:35
+ * LastUpdate 2026-11-17 20:10:50
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.converters.base
 
+import com.mingliqiye.utils.json.api.type.JsonTypeReference
+import com.mingliqiye.utils.json.reader.base.BaseJsonReader
+import com.mingliqiye.utils.json.witer.base.BaseJsonWriter
+
 /**
- * BaseJsonConverter 是一个泛型接口，用于定义 JSON 转换器的基本行为。
+ * BaseJsonConverter 是一个通用的 JSON 转换器接口，用于定义对象之间的双向转换逻辑。
  *
- * 该接口继承自 JackSonJsonConverter，并通过泛型参数 F 和 T 定义了转换的源类型和目标类型。
- * 实现该接口的类需要提供具体的 JSON 转换逻辑。
- *
- * @param F 源类型，表示需要被转换的数据类型。
- * @param T 目标类型，表示转换后的数据类型。
+ * @param F 源类型，表示需要被转换的对象类型。
+ * @param T 目标类型，表示转换后的对象类型。
  */
-interface BaseJsonConverter<F, T> : JsonConverter<F, T>
+interface BaseJsonConverter<T> {
+
+	@Throws(Exception::class)
+	fun convert(obj: T?, jsonWriter: BaseJsonWriter, annotationGetter: AnnotationGetter)
+
+	@Throws(Exception::class)
+	fun deConvert(jsonReader: BaseJsonReader, annotationGetter: AnnotationGetter): T?
+
+	@Throws(Exception::class)
+	fun getType(): JsonTypeReference<T>
+
+	@Throws(Exception::class)
+	fun getClazz() = getType().getRawType()
+}

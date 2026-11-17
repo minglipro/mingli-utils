@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonApi.kt
- * LastUpdate 2026-10-12 10:48:31
+ * LastUpdate 2026-11-17 19:59:59
  * UpdateUser MingLiPro
  */
 
@@ -33,8 +33,6 @@ import com.mingliqiye.utils.exception.JsonException
 import com.mingliqiye.utils.json.api.JackSonJsonItem.Companion.getJsonItem
 import com.mingliqiye.utils.json.api.base.JsonApi
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
-import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
-import com.mingliqiye.utils.json.converters.base.getJacksonModule
 import com.mingliqiye.utils.json.objects.base.*
 
 /**
@@ -284,14 +282,6 @@ class JacksonJsonApi : JsonApi {
 			return objectMapper.convertValue(
 				source, objectMapper.constructType(destinationType.type)
 			)
-		} catch (e: Exception) {
-			throw JsonException("Failed to update node value", e)
-		}
-	}
-
-	override fun addJsonConverter(c: BaseJsonConverter<*, *>) {
-		try {
-			objectMapper.registerModule(c.getJacksonModule())
 		} catch (e: Exception) {
 			throw JsonException("Failed to update node value", e)
 		}

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.kt
- * LastUpdate 2026-11-17 10:16:38
+ * LastUpdate 2026-11-17 20:22:01
  * UpdateUser MingLiPro
  */
 
@@ -65,8 +65,8 @@ class DateTime private constructor(
 		 * @return 返回当前时间的 DateTime 实例
 		 */
 		@JvmStatic
-		fun now(): DateTime {
-			return DateTime(LocalDateTime.now())
+		fun now(zone: ZoneId = ZoneId.systemDefault()): DateTime {
+			return DateTime(LocalDateTime.now(zone))
 		}
 
 		/**
@@ -346,6 +346,10 @@ class DateTime private constructor(
 		return localDateTime
 	}
 
+	fun atZone(zoneId: ZoneId = ZoneId.systemDefault()): DateTime {
+		return DateTime(localDateTime, zoneId)
+	}
+
 	/**
 	 * 在当前时间基础上增加指定的时间偏移量。
 	 *
@@ -444,7 +448,7 @@ class DateTime private constructor(
 	 * @return 返回标准格式的时间字符串
 	 */
 	override fun toString(): String {
-		return "DateTime(${format()})"
+		return "DateTime(${format()},zoneId=${zoneId})"
 	}
 
 	/**

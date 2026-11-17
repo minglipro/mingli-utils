@@ -16,16 +16,18 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NetworkEndpointJsonConverter.kt
- * LastUpdate 2026-11-09 14:36:36
+ * LastUpdate 2026-11-17 20:01:08
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.converters
 
+import com.google.gson.JsonParseException
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
-import com.mingliqiye.utils.json.converters.NetworkEndpointJsonConverter.Companion.getJsonConverter
 import com.mingliqiye.utils.json.converters.base.AnnotationGetter
-import com.mingliqiye.utils.json.converters.base.BaseJsonStringConverter
+import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
+import com.mingliqiye.utils.json.reader.base.BaseJsonReader
+import com.mingliqiye.utils.json.witer.base.BaseJsonWriter
 import com.mingliqiye.utils.network.NetworkEndpoint
 
 /**
@@ -41,60 +43,24 @@ import com.mingliqiye.utils.network.NetworkEndpoint
  * @see BaseJsonStringConverter
  * @see NetworkEndpoint
  */
-class NetworkEndpointJsonConverter private constructor() : BaseJsonStringConverter<NetworkEndpoint> {
-
-	companion object {
-		private val networkEndpointJsonConverter by lazy {
-			NetworkEndpointJsonConverter()
-		}
-
-		/**
-		 * 获取 [NetworkEndpointJsonConverter] 的全局单例。
-		 *
-		 * @return 共享的转换器实例。
-		 */
-		@JvmStatic
-		fun getJsonConverter(): NetworkEndpointJsonConverter = networkEndpointJsonConverter
+class NetworkEndpointJsonConverter : BaseJsonConverter<NetworkEndpoint> {
+	override fun convert(
+		obj: NetworkEndpoint?,
+		jsonWriter: BaseJsonWriter,
+		annotationGetter: AnnotationGetter,
+	) {
+		if (obj == null) jsonWriter.setNull() else jsonWriter.setString(obj.toHostPortString())
 	}
 
-	/**
-	 * 将 [NetworkEndpoint] 序列化为 JSON 字符串。
-	 *
-	 * 输出格式为 `host:port`，由 [NetworkEndpoint.toHostPortString] 生成。
-	 *
-	 * @param obj 待序列化的网络端点，可能为 `null`。
-	 * @param annotationGetter 注解信息提供者，用于在需要时读取格式化相关注解；
-	 *   当前实现不依赖注解，保留该参数以符合转换器契约。
-	 * @return 序列化后的 `host:port` 字符串；当 [obj] 为 `null` 时返回 `null`。
-	 * @throws Exception 若序列化过程中发生异常。
-	 */
-	@Throws(Exception::class)
-	override fun convert(obj: NetworkEndpoint?, annotationGetter: AnnotationGetter): String? {
-		return obj?.let(NetworkEndpoint::toHostPortString)
+	override fun deConvert(
+		jsonReader: BaseJsonReader,
+		annotationGetter: AnnotationGetter,
+	): NetworkEndpoint? {
+		return if (jsonReader.isNotNull) {
+			if (!jsonReader.isString) throw JsonParseException("type item not string")
+			NetworkEndpoint.of(jsonReader.getString())
+		} else null
 	}
 
-	/**
-	 * 将 JSON 字符串反序列化为 [NetworkEndpoint]。
-	 *
-	 * 期望输入为 `host:port` 形式的字符串，由 [NetworkEndpoint.Companion.of] 解析。
-	 *
-	 * @param obj 待反序列化的字符串，可能为 `null`。
-	 * @param annotationGetter 注解信息提供者，用于在需要时读取解析相关注解；
-	 *   当前实现不依赖注解，保留该参数以符合转换器契约。
-	 * @return 解析得到的 [NetworkEndpoint]；当 [obj] 为 `null` 时返回 `null`。
-	 * @throws Exception 若字符串格式非法或解析过程中发生异常。
-	 */
-	@Throws(Exception::class)
-	override fun deConvert(obj: String?, annotationGetter: AnnotationGetter): NetworkEndpoint? {
-		return obj?.let(NetworkEndpoint.Companion::of)
-	}
-
-	/**
-	 * 获取本转换器支持的目标类型引用。
-	 *
-	 * @return 指向 [NetworkEndpoint] 的 [JsonTypeReference]。
-	 * @throws Exception 若获取类型引用时发生异常。
-	 */
-	@Throws(Exception::class)
-	override fun getFromType(): JsonTypeReference<NetworkEndpoint> = JsonTypeReference.Companion.of()
+	override fun getType(): JsonTypeReference<NetworkEndpoint> = JsonTypeReference.of()
 }

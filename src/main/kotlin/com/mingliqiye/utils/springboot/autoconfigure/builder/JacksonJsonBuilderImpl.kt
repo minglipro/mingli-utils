@@ -16,28 +16,28 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonBuilderImpl.kt
- * LastUpdate 2026-11-16 11:36:46
+ * LastUpdate 2026-11-17 20:09:59
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure.builder
 
-import com.mingliqiye.utils.json.converters.base.JsonConverter
+import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
 
 open class JacksonJsonBuilderImpl : JacksonJsonBuilder() {
-	override fun addJsonConverter(jsonConverter: JsonConverter<*, *>): JacksonJsonBuilderImpl {
+	override fun addJsonConverter(jsonConverter: BaseJsonConverter<*>): JacksonJsonBuilderImpl {
 		data.add(jsonConverter)
 		return this
 	}
 
-	override fun addJsonConverters(vararg jsonConverters: JsonConverter<*, *>): JacksonJsonBuilder {
+	override fun addJsonConverters(vararg jsonConverters: BaseJsonConverter<*>): JacksonJsonBuilder {
 		data.addAll(jsonConverters)
 		return this
 	}
 
-	private val data = mutableListOf<JsonConverter<*, *>>()
+	private val data = mutableListOf<BaseJsonConverter<*>>()
 
-	fun getData(): List<JsonConverter<*, *>> {
+	fun getData(): List<BaseJsonConverter<*>> {
 		return data.toList()
 	}
 

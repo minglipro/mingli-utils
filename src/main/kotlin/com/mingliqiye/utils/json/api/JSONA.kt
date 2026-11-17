@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JSONA.kt
- * LastUpdate 2026-11-07 13:29:54
+ * LastUpdate 2026-11-17 19:59:21
  * UpdateUser MingLiPro
  */
 
@@ -29,8 +29,6 @@ import com.mingliqiye.utils.json.api.JSONA.setJsonApi
 import com.mingliqiye.utils.json.api.base.JsonApi
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.api.type.listType
-import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
-import com.mingliqiye.utils.json.converters.base.getJsonConverter
 import com.mingliqiye.utils.json.objects.base.JsonItem
 import java.io.File
 import java.io.IOException
@@ -521,21 +519,6 @@ object JSONA {
 	@JvmStatic
 	fun <D> convert(source: Any, destinationType: JsonTypeReference<D>): D =
 		jsonApi.convert(source, destinationType)
-
-	/**
-	 * 添加 JSON 转换器到 API 中。
-	 *
-	 * @param c 需要添加的 [BaseJsonConverter] 实例
-	 */
-	@JvmStatic
-	fun addJsonConverter(c: BaseJsonConverter<*, *>) = jsonApi.addJsonConverter(c)
-
-	/**
-	 * 使用反射创建并添加指定类型的 JSON 转换器到 API 中。
-	 *
-	 * @param T 继承自 [BaseJsonConverter] 的具体实现类
-	 */
-	inline fun <reified T : BaseJsonConverter<*, *>> addJsonConverter() = addJsonConverter(getJsonConverter<T>())
 
 	/**
 	 * 将当前字符串解析为指定泛型类型的对象。

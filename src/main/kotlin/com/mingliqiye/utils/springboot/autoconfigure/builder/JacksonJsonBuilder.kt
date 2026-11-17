@@ -16,15 +16,15 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonBuilder.kt
- * LastUpdate 2026-11-16 11:36:46
+ * LastUpdate 2026-11-17 20:09:28
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure.builder
 
-import com.mingliqiye.utils.json.converters.base.JsonConverter
+import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
 
 sealed class JacksonJsonBuilder {
-	abstract fun addJsonConverter(jsonConverter: JsonConverter<*, *>): JacksonJsonBuilder
-	abstract fun addJsonConverters(vararg jsonConverters: JsonConverter<*, *>): JacksonJsonBuilder
+	abstract fun addJsonConverter(jsonConverter: BaseJsonConverter<*>): JacksonJsonBuilder
+	abstract fun addJsonConverters(vararg jsonConverters: BaseJsonConverter<*>): JacksonJsonBuilder
 }

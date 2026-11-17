@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3JsonApi.kt
- * LastUpdate 2026-10-12 13:59:59
+ * LastUpdate 2026-11-17 19:59:59
  * UpdateUser MingLiPro
  */
 
@@ -26,8 +26,6 @@ import com.mingliqiye.utils.exception.JsonException
 import com.mingliqiye.utils.json.api.JackSon3JsonItem.Companion.getJsonItem
 import com.mingliqiye.utils.json.api.base.JsonApi
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
-import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
-import com.mingliqiye.utils.json.converters.base.getJackson3Module
 import com.mingliqiye.utils.json.objects.base.*
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.JsonNode
@@ -213,11 +211,6 @@ class Jackson3JsonApi : JsonApi {
 		return current
 	}
 
-	override fun addJsonConverter(c: BaseJsonConverter<*, *>) {
-		val mapperBuilder = Jackson3ApiJavaHelper.rebuild(objectMapper)
-		mapperBuilder.addModule(c.getJackson3Module())
-		this.objectMapper = mapperBuilder.build()
-	}
 
 	override fun parseJsonItem(json: String): JsonItem {
 		try {

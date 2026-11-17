@@ -16,84 +16,60 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUIDJsonConverter.kt
- * LastUpdate 2026-02-08 01:37:00
+ * LastUpdate 2026-11-17 20:01:08
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.converters
 
+import com.google.gson.JsonParseException
 import com.mingliqiye.utils.annotation.UUIDJsonFormat
 import com.mingliqiye.utils.base.BaseType
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.converters.base.AnnotationGetter
-import com.mingliqiye.utils.json.converters.base.AnnotationGetter.Companion.get
-import com.mingliqiye.utils.json.converters.base.BaseJsonStringConverter
-import com.mingliqiye.utils.objects.isNull
-import com.mingliqiye.utils.string.isNullish
+import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
+import com.mingliqiye.utils.json.converters.base.getAnnotation
+import com.mingliqiye.utils.json.reader.base.BaseJsonReader
+import com.mingliqiye.utils.json.witer.base.BaseJsonWriter
 import com.mingliqiye.utils.uuid.UUID
 import com.mingliqiye.utils.uuid.UUIDFormatType
 
-/**
- * UUIDJsonConverter 是一个用于处理 UUID 类型与 JSON 字符串之间转换的类。
- * 它继承自 BaseJsonStringConverter，并实现了 convert 和 deConvert 方法，
- * 分别用于将 UUID 对象序列化为字符串以及反序列化字符串为 UUID 对象。
- */
-class UUIDJsonConverter private constructor() : BaseJsonStringConverter<UUID> {
+class UUIDJsonConverter : BaseJsonConverter<UUID> {
 
-	companion object {
-		private val uuidJsonConverter by lazy {
-			UUIDJsonConverter()
-		}
-
-		@JvmStatic
-		fun getJsonConverter(): UUIDJsonConverter = uuidJsonConverter
-	}
-
-	/**
-	 * 将 UUID 对象转换为字符串形式。
-	 *
-	 * @param obj 需要转换的 UUID 对象，可能为 null。
-	 * @param annotationGetter 用于获取注解信息的对象。
-	 * @return 转换后的字符串，如果输入为 null 则返回 null。
-	 */
 	override fun convert(
 		obj: UUID?,
+		jsonWriter: BaseJsonWriter,
 		annotationGetter: AnnotationGetter,
-	): String? {
-		// 如果输入对象为 null，直接返回 null
-		if (obj.isNull()) return null
-
-		// 获取 UUIDJsonFormat 注解信息，若未找到则使用默认格式
-		val dateTimeJsonFormat: UUIDJsonFormat = annotationGetter.get<UUIDJsonFormat>() ?: return obj.getString()
-
-		// 根据注解中的 base 和 value 属性选择合适的字符串表示方式
-		return if (BaseType.BASE16 != dateTimeJsonFormat.base) {
-			obj.getString(dateTimeJsonFormat.base)
-		} else if (UUIDFormatType.NO_UPPER_SPACE != dateTimeJsonFormat.value) {
-			obj.getString(dateTimeJsonFormat.value)
-		} else {
-			obj.getString()
+	) {
+		if (obj == null) {
+			jsonWriter.setNull()
+			return
 		}
+		val dateTimeJsonFormat: UUIDJsonFormat? = annotationGetter.getAnnotation<UUIDJsonFormat>()
+
+
+		val uuid =
+			if (dateTimeJsonFormat == null) obj.getString() else if (BaseType.BASE16 != dateTimeJsonFormat.base) {
+				obj.getString(dateTimeJsonFormat.base)
+			} else if (UUIDFormatType.NO_UPPER_SPACE != dateTimeJsonFormat.value) {
+				obj.getString(dateTimeJsonFormat.value)
+			} else {
+				obj.getString()
+			}
+
+		jsonWriter.setString(uuid)
 	}
 
-	/**
-	 * 将字符串反序列化为 UUID 对象。
-	 *
-	 * @param obj 需要反序列化的字符串，可能为 null 或空。
-	 * @param annotationGetter 用于获取注解信息的对象。
-	 * @return 反序列化后的 UUID 对象，如果输入无效则返回 null。
-	 */
 	override fun deConvert(
-		obj: String?,
+		jsonReader: BaseJsonReader,
 		annotationGetter: AnnotationGetter,
 	): UUID? {
-		// 如果输入字符串为 null 或空，直接返回 null
-		if (obj.isNullish()) return null
+		if (jsonReader.isNull) return null
+		if (!jsonReader.isString) throw JsonParseException("type item not string")
 
-		// 获取 UUIDJsonFormat 注解信息，若未找到则使用默认解析方式
-		val dateTimeJsonFormat: UUIDJsonFormat = annotationGetter.get<UUIDJsonFormat>() ?: return UUID.of(obj)
+		val obj = jsonReader.getString()
 
-		// 根据注解中的 base 属性选择合适的解析方式
+		val dateTimeJsonFormat: UUIDJsonFormat = annotationGetter.getAnnotation<UUIDJsonFormat>() ?: return UUID.of(obj)
 		return if (BaseType.BASE16 != dateTimeJsonFormat.base) {
 			UUID.of(obj, dateTimeJsonFormat.base)
 		} else {
@@ -101,10 +77,5 @@ class UUIDJsonConverter private constructor() : BaseJsonStringConverter<UUID> {
 		}
 	}
 
-	/**
-	 * 返回当前转换器支持的目标类型引用。
-	 *
-	 * @return 表示 UUID 类型的 JsonTypeReference 对象。
-	 */
-	override fun getFromType() = JsonTypeReference.of<UUID>()
+	override fun getType(): JsonTypeReference<UUID> = JsonTypeReference.of()
 }

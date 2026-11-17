@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JackJsonSerializer.kt
- * LastUpdate 2026-02-26 12:55:57
+ * LastUpdate 2026-11-17 19:54:12
  * UpdateUser MingLiPro
  */
 
@@ -27,13 +27,16 @@ import com.fasterxml.jackson.databind.BeanProperty
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.ContextualSerializer
-import java.math.BigDecimal
-import java.math.BigInteger
+import com.mingliqiye.utils.json.witer.JackSonJsonWriter
 
-class JackJsonSerializer<F, T>(
+class JackJsonSerializer<T>(
 	val property: BeanProperty?,
-	val jsonConverter: JsonConverter<F, T>,
-) : JsonSerializer<F>(), ContextualSerializer {
+	val jsonConverter: BaseJsonConverter<T>,
+) : JsonSerializer<T>(), ContextualSerializer {
+
+	val annotationGetter = object : AnnotationGetter {
+		override fun <T : Annotation> getAnnotation(clazz: Class<T>): T? = property?.getAnnotation(clazz)
+	}
 
 	/**
 	 * 序列化方法：将源对象转换为目标对象，并根据目标对象的类型写入 JSON。
@@ -43,30 +46,11 @@ class JackJsonSerializer<F, T>(
 	 * @param provider 序列化提供者，可选参数。
 	 */
 	override fun serialize(
-		value: F?,
+		value: T?,
 		gen: JsonGenerator,
 		provider: SerializerProvider?,
 	) {
-		// 执行转换逻辑
-		val data: T? = jsonConverter.convert(value, object : AnnotationGetter {
-			override fun <T : Annotation> get(clazz: Class<T>): T? = property?.getAnnotation(clazz)
-		})
-
-		// 根据目标对象的类型写入对应的 JSON 值
-		when (data) {
-			null -> gen.writeNull()
-			is String -> gen.writeString(data)
-			is Long -> gen.writeNumber(data)
-			is Short -> gen.writeNumber(data)
-			is Byte -> gen.writeNumber(data.toShort())
-			is Int -> gen.writeNumber(data)
-			is BigDecimal -> gen.writeNumber(data)
-			is BigInteger -> gen.writeNumber(data)
-			is Float -> gen.writeNumber(data)
-			is Double -> gen.writeNumber(data)
-			is Boolean -> gen.writeBoolean(data)
-			else -> throw IllegalArgumentException("not sport data type ${data.javaClass} $data")
-		}
+		jsonConverter.convert(value, JackSonJsonWriter(gen, provider), annotationGetter)
 	}
 
 	/**
@@ -79,7 +63,7 @@ class JackJsonSerializer<F, T>(
 	override fun createContextual(
 		prov: SerializerProvider?,
 		property: BeanProperty?,
-	): JsonSerializer<F> {
-		return JackJsonSerializer(property, jsonConverter)
+	): JsonSerializer<T> {
+		return JackJsonSerializer(property, this.jsonConverter)
 	}
 }

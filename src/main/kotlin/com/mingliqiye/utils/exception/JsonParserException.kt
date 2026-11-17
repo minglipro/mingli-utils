@@ -16,13 +16,21 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonParserException.kt
- * LastUpdate 2026-10-11 16:53:41
+ * LastUpdate 2026-11-17 16:22:52
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.exception
 
 class JsonParserException @JvmOverloads constructor(
+	message: String? = null,
+	throwable: Throwable? = null,
+	enableSuppression: Boolean = false,
+	writableStackTrace: Boolean = true,
+) : JsonException(message, throwable, enableSuppression, writableStackTrace)
+
+
+class JsonFormatException @JvmOverloads constructor(
 	message: String? = null,
 	throwable: Throwable? = null,
 	enableSuppression: Boolean = false,

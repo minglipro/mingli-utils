@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonApi.kt
- * LastUpdate 2026-03-27 14:19:31
+ * LastUpdate 2026-11-17 19:59:21
  * UpdateUser MingLiPro
  */
 
@@ -25,8 +25,6 @@ package com.mingliqiye.utils.json.api.base
 import com.mingliqiye.utils.exception.JsonParserException
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.api.type.listType
-import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
-import com.mingliqiye.utils.json.converters.base.getJsonConverter
 import com.mingliqiye.utils.json.objects.base.JsonItem
 import okio.IOException
 import java.io.*
@@ -131,17 +129,6 @@ interface JsonApi {
 		 */
 		@JvmStatic
 		inline fun <reified D> JsonApi.convert(source: Any): D = convert(source, object : JsonTypeReference<D>() {})
-
-		/**
-		 * 添加JSON转换器到API中
-		 *
-		 * @param T 需要添加的JSON转换器类
-		 */
-		@JvmStatic
-		inline fun <reified T : BaseJsonConverter<*, *>> JsonApi.addJsonConverter() {
-			addJsonConverter(getJsonConverter<T>())
-		}
-
 	}
 
 	/**
@@ -512,20 +499,6 @@ interface JsonApi {
 	 * ```
 	 */
 	fun <D> convert(source: Any, destinationType: JsonTypeReference<D>): D
-
-	/**
-	 * 注册自定义的 JSON 转换器
-	 * 用于处理特定类型的自定义序列化和反序列化逻辑
-	 *
-	 * @param c 自定义的 JSON 转换器实例
-	 *
-	 * 使用示例：
-	 * ```
-	 * converter.addJsonConverter(DateJsonConverter())
-	 * converter.addJsonConverter(LocalDateTimeJsonConverter())
-	 * ```
-	 */
-	fun addJsonConverter(c: BaseJsonConverter<*, *>)
 
 	/**
 	 * 将 JSON 字符串解析为 JsonItem 对象

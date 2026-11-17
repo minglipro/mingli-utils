@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonAutoConfiguration.kt
- * LastUpdate 2026-11-09 14:44:55
+ * LastUpdate 2026-11-17 20:10:26
  * UpdateUser MingLiPro
  */
 
@@ -36,9 +36,9 @@ open class JsonAutoConfiguration {
 	fun jacksonBuilder(): JacksonBuilder = JacksonBuilder {
 		it.apply {
 			addJsonConverters(
-				UUIDJsonConverter.getJsonConverter(),
-				DateTimeJsonConverter.getJsonConverter(),
-				NetworkEndpointJsonConverter.getJsonConverter(),
+				UUIDJsonConverter(),
+				DateTimeJsonConverter(),
+				NetworkEndpointJsonConverter(),
 			)
 		}
 	}

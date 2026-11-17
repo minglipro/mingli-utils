@@ -16,18 +16,41 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.test
  * CurrentFile TestJson.kt
- * LastUpdate 2026-06-20 22:05:31
+ * LastUpdate 2026-11-17 20:17:51
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils
 
+import com.mingliqiye.logger.Loggers
+import com.mingliqiye.utils.io.SIO.println
+import com.mingliqiye.utils.json.api.JSONA
+import com.mingliqiye.utils.json.api.Jackson3JsonApi
+import com.mingliqiye.utils.json.converters.DateTimeJsonConverter
+import com.mingliqiye.utils.json.converters.base.getJackson3Module
+import com.mingliqiye.utils.time.DateTime
 import org.junit.jupiter.api.Test
+import tools.jackson.module.kotlin.jsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 
 
 class TestJson {
 
-    @Test
-    fun test() {
-    }
+
+	private val log = Loggers.getLogger<TestJson>()
+
+	@Test
+	fun test() {
+		JSONA.setJsonApi(
+			Jackson3JsonApi(
+				jsonMapper {
+					addModule(kotlinModule {})
+					addModules(
+						DateTimeJsonConverter().getJackson3Module()
+					)
+				}
+			))
+
+		JSONA.parse<DateTime>(JSONA.format(DateTime.now())).println()
+	}
 }

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Tuples.kt
- * LastUpdate 2026-06-21 10:40:58
+ * LastUpdate 2026-11-17 20:29:54
  * UpdateUser MingLiPro
  */
 
@@ -25,18 +25,10 @@ package com.mingliqiye.utils.tuple
 
 import java.io.Serializable
 
-abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any> {
+abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparable<Tuple> {
 
 	override fun iterator(): Iterator<Any> {
-		return object : Iterator<Any> {
-			private var index: Int = 0
-			override fun next(): Any {
-				if (!hasNext()) throw NoSuchElementException("element next is None")
-				return get(index++)
-			}
-
-			override fun hasNext(): Boolean = index < size
-		}
+		return toMutableList().iterator()
 	}
 
 	open fun toList(): List<Any> {

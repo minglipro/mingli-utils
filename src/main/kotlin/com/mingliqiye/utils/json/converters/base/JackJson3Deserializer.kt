@@ -16,32 +16,34 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JackJson3Deserializer.kt
- * LastUpdate 2026-02-26 13:02:52
+ * LastUpdate 2026-11-17 19:51:20
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.converters.base
 
+import com.mingliqiye.utils.json.reader.JackSon3JsonReader
 import tools.jackson.core.JsonParser
-import tools.jackson.core.JsonToken
 import tools.jackson.databind.BeanProperty
 import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.ValueDeserializer
 
 
-class JackJson3Deserializer<F, T>(
+class JackJson3Deserializer<T>(
 	val property: BeanProperty? = null,
-	val jsonConverter: JsonConverter<F, T>,
-) : ValueDeserializer<F>() {
+	val jsonConverter: BaseJsonConverter<T>,
+) : ValueDeserializer<T>() {
+
+	val annotationGetter =
+		object : AnnotationGetter {
+			override fun <T : Annotation> getAnnotation(clazz: Class<T>): T? = property?.getAnnotation(clazz)
+		}
 
 	override fun deserialize(
 		p: JsonParser,
 		ctxt: DeserializationContext?,
-	): F? {
-		if (p.currentToken() == JsonToken.VALUE_NULL) return null
-		return jsonConverter.deConvert(p.readValueAs(jsonConverter.getToClass()), object : AnnotationGetter {
-			override fun <T : Annotation> get(clazz: Class<T>): T? = property?.getAnnotation(clazz)
-		})
+	): T? {
+		return jsonConverter.deConvert(JackSon3JsonReader(p.readValueAsTree()), annotationGetter)
 	}
 
 	/**
@@ -54,7 +56,7 @@ class JackJson3Deserializer<F, T>(
 	override fun createContextual(
 		ctxt: DeserializationContext?,
 		property: BeanProperty?,
-	): JackJson3Deserializer<F, T> {
+	): JackJson3Deserializer<T> {
 		return JackJson3Deserializer(property, jsonConverter)
 	}
 

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * ProjectName FastBaseMapper.kt
+ * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonConverterUtils.kt
- * LastUpdate 2026-10-26 23:22:18
+ * LastUpdate 2026-11-17 20:11:04
  * UpdateUser MingLiPro
  */
 @file:JvmName("JsonConverterUtils")
@@ -24,61 +24,53 @@
 package com.mingliqiye.utils.json.converters.base
 
 
-import com.mingliqiye.utils.logger.MingLiLoggerFactory
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
+import java.math.BigDecimal
+import java.math.BigInteger
+import com.fasterxml.jackson.core.JsonGenerator as JackSon2JsonGenerator
+import com.fasterxml.jackson.databind.module.SimpleModule as JackSon2SimpleModule
+import tools.jackson.core.JsonGenerator as JackSon3JsonGenerator
+import tools.jackson.databind.module.SimpleModule as JackSon3SimpleModule
 
-val log = MingLiLoggerFactory.getLogger("com.mingliqiye.utils.json.converters.base.JsonConverterUtils")
 
-/**
- * 获取给定类型的实际类对象。
- *
- * @param type 类型对象，可以是Class、ParameterizedType或其他Type的实现。
- * @return 返回与给定类型对应的Class对象；如果无法解析，则返回null。
- */
-fun getClass(type: Type?): Class<*>? {
-	// 尝试将type直接转换为Class类型，如果失败则检查是否为ParameterizedType
-	val clazz: Class<*>? = type as? Class<*> ?: if (type is ParameterizedType) {
-		// 如果是ParameterizedType，则递归获取其原始类型
-		getClass(type.rawType)
-	} else {
-		null
+fun <T> BaseJsonConverter<T>.getJacksonModule(): JackSon2SimpleModule =
+	JackSon2SimpleModule("${getClazz().simpleName}Module")
+		.addSerializer(getClazz(), JackJsonSerializer(null, this))
+		.addDeserializer(getClazz(), JackJsonDeserializer(null, this))
+
+fun <T> BaseJsonConverter<T>.getJackson3Module(): JackSon3SimpleModule =
+	JackSon3SimpleModule("${getClazz().simpleName}Module")
+		.addSerializer(getClazz(), JackJson3Serializer(null, this))
+		.addDeserializer(getClazz(), JackJson3Deserializer(null, this))
+
+
+inline fun <reified T : Annotation> AnnotationGetter.getAnnotation(): T? =
+	getAnnotation(T::class.java)
+
+
+fun JackSon3JsonGenerator.writeNumber(value: Number): JackSon3JsonGenerator {
+	when (value) {
+		is Long -> this.writeNumber(value)
+		is Short -> this.writeNumber(value)
+		is Byte -> this.writeNumber(value.toShort())
+		is Int -> this.writeNumber(value)
+		is BigDecimal -> this.writeNumber(value)
+		is BigInteger -> this.writeNumber(value)
+		is Float -> this.writeNumber(value)
+		is Double -> this.writeNumber(value)
 	}
-	return clazz
+	return this
 }
 
-inline fun <reified T : JsonConverter<*, *>> getJsonConverter(): T = getJsonConverter(T::class.java)
-
-@Suppress("UNCHECKED_CAST")
-fun <T : JsonConverter<*, *>> getJsonConverter(clazz: Class<T>): T {
-	try {
-		return clazz.getDeclaredMethod(
-			"getJsonConverter"
-		).invoke(null) as T
-	} catch (e: Exception) {
-		log.error("实现于 JsonConverter<*, *> 的类 必须实现静态方法 JsonConverter<*, *> getJsonConverter()", e)
-		throw e
+fun JackSon2JsonGenerator.writeNumber(value: Number): JackSon2JsonGenerator {
+	when (value) {
+		is Long -> this.writeNumber(value)
+		is Short -> this.writeNumber(value)
+		is Byte -> this.writeNumber(value.toShort())
+		is Int -> this.writeNumber(value)
+		is BigDecimal -> this.writeNumber(value)
+		is BigInteger -> this.writeNumber(value)
+		is Float -> this.writeNumber(value)
+		is Double -> this.writeNumber(value)
 	}
+	return this
 }
-
-fun <T : BaseJsonConverter<*, *>> com.fasterxml.jackson.databind.ObjectMapper.addJsonConverter(clazz: Class<T>): com.fasterxml.jackson.databind.ObjectMapper =
-	this.registerModule(getJsonConverter(clazz).getJacksonModule())
-
-@JvmName("inline_addJsonConverter")
-inline fun <reified T : BaseJsonConverter<*, *>> com.fasterxml.jackson.databind.ObjectMapper.addJsonConverter(): com.fasterxml.jackson.databind.ObjectMapper =
-	this.registerModule(getJsonConverter(T::class.java).getJacksonModule())
-
-/**
- * 创建并返回一个 Jackson 模块，该模块包含自定义的序列化器和反序列化器。
- *
- * @return 配置了自定义序列化器和反序列化器的 SimpleModule 对象。
- */
-fun <F, T> JsonConverter<F, T>.getJacksonModule(): com.fasterxml.jackson.databind.module.SimpleModule =
-	com.fasterxml.jackson.databind.module.SimpleModule("(${getFromClass().name})-(${getToClass().name})")
-		.addSerializer(getFromClass(), JackJsonSerializer(null, this))
-		.addDeserializer(getFromClass(), JackJsonDeserializer(null, this))
-
-fun <F, T> JsonConverter<F, T>.getJackson3Module(): tools.jackson.databind.module.SimpleModule =
-	tools.jackson.databind.module.SimpleModule("(${getFromClass().name})-(${getToClass().name})")
-		.addSerializer(getFromClass(), JackJson3Serializer(null, this))
-		.addDeserializer(getFromClass(), JackJson3Deserializer(null, this))
