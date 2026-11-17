@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Tuples.kt
- * LastUpdate 2026-11-17 20:29:54
+ * LastUpdate 2026-11-17 21:11:31
  * UpdateUser MingLiPro
  */
 
@@ -33,6 +33,32 @@ import java.io.Serializable
  * @param size 元组包含的元素个数
  */
 abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparable<Tuple> {
+
+	/**
+	 * 按字典序比较当前元组与另一个元组。
+	 *
+	 * 从第 1 个元素开始逐位比较：两个元素类型相同且都实现 [Comparable] 时按自然顺序比较，
+	 * 否则按元素的字符串形式（[toString]）比较。
+	 * 公共位置元素全部相等时，元素个数较少的元组视为较小。
+	 *
+	 * @param other 要比较的目标元组
+	 * @return 负数、零或正数，分别表示当前元组小于、等于或大于 [other]
+	 */
+	override fun compareTo(other: Tuple): Int {
+		val minSize = minOf(size, other.size)
+		for (i in 0..<minSize) {
+			val a = get(i)
+			val b = other.get(i)
+			val result = if (a is Comparable<*> && b is Comparable<*> && a.javaClass == b.javaClass) {
+				@Suppress("UNCHECKED_CAST")
+				(a as Comparable<Any>).compareTo(b)
+			} else {
+				a.toString().compareTo(b.toString())
+			}
+			if (result != 0) return result
+		}
+		return size.compareTo(other.size)
+	}
 
 	override fun iterator(): Iterator<Any> {
 		return toMutableList().iterator()

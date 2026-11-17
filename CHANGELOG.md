@@ -2,6 +2,13 @@
 
 本文件记录 mingli-utils 各版本的主要变更。
 
+## [5.5.2] - 2026-11-17
+
+### 新增
+- **tuple**：实现 `Tuple.compareTo` 字典序比较——同类型可比较元素按自然顺序，
+  其余按字符串形式比较；公共前缀相等时元素个数较少的元组在前。
+  新增 `TestTuple` 测试覆盖 6 种比较场景。
+
 ## [5.5.1] - 2026-11-17
 
 ### 新增
@@ -17,7 +24,7 @@
   等 10 个转换器及 `JsonConverter` 接口，统一由 `BaseJsonConverter` 与 `JsonConverterUtils` 处理；
   简化 `DateTimeJsonConverter`、`UUIDJsonConverter`、`NetworkEndpointJsonConverter` 与
   Jackson2/Jackson3 序列化/反序列化桥接实现；精简 `JSONA` 与 `JsonApi` 门面。
-- **tuple**：`Tuple` 实现 `Comparable<Tuple>`，迭代器改为基于 `toMutableList()` 的简化实现。
+- **tuple**：`Tuple` 声明实现 `Comparable<Tuple>`；迭代器改为基于 `toMutableList()` 的简化实现。
 - **springboot**：`JsonAutoConfiguration` 与 `JacksonJsonBuilder` / `JacksonJsonBuilderImpl`
   同步适配新的 JSON 转换器体系。
 
