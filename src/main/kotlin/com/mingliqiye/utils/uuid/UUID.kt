@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUID.kt
- * LastUpdate 2026-06-21 10:40:58
+ * LastUpdate 2026-11-16 14:29:35
  * UpdateUser MingLiPro
  */
 
@@ -422,7 +422,7 @@ class UUID : Serializable {
 		}
 
 		fun of(str: String, base: BaseType): UUID {
-			return UUID(base.baseCodec.decode(str))
+			return UUID(base.codec.decode(str))
 		}
 
 	}
@@ -552,7 +552,7 @@ class UUID : Serializable {
 	}
 
 	fun getString(baseType: BaseType): String {
-		return getString(baseType.baseCodec)
+		return getString(baseType.codec)
 	}
 
 	fun getString(baseCodec: BaseCodec): String {

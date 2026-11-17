@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Jackson3AutoConfiguration.kt
- * LastUpdate 2026-11-09 14:18:45
+ * LastUpdate 2026-11-17 10:16:38
  * UpdateUser MingLiPro
  */
 
@@ -39,8 +39,8 @@ open class Jackson3AutoConfiguration {
 
 	private val log = MingLiLoggerFactory.getLogger<Jackson3AutoConfiguration>()
 
-	@Bean("UUIDJsonConverterJsonMapperCustomizer")
-	@ConditionalOnMissingBean(name = ["UUIDJsonConverterJsonMapperCustomizer"])
+	@Bean("jackson3MapperBuilderCustomizer")
+	@ConditionalOnMissingBean(name = ["jackson3MapperBuilderCustomizer"])
 	fun jsonMapperBuilderCustomizer(builders: ObjectProvider<JacksonBuilder>): JsonMapperBuilderCustomizer {
 		val builderList = builders.orderedStream().toList()
 		var jacksonJsonBuilderImpl = JacksonJsonBuilderImpl()
@@ -52,7 +52,7 @@ open class Jackson3AutoConfiguration {
 			it.addModules(
 				*jacksonJsonBuilderImpl.getData().map { converter ->
 					converter.getJackson3Module().also { module ->
-						log.info("Jackson3 Module Install ${module.moduleName}")
+						log.debug("Jackson3 Module Install {}", module.moduleName)
 					}
 				}.toTypedArray()
 			)

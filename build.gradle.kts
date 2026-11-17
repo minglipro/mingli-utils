@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-10-28 21:50:32
+ * LastUpdate 2026-11-17 09:21:51
  * UpdateUser MingLiPro
  */
 
@@ -24,16 +24,16 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 plugins {
-    idea
-    java
-    signing
-    `java-library`
-    `maven-publish`
-    kotlin("jvm") version "2.2.20"
-    kotlin("kapt") version "2.2.20"
-    id("org.jetbrains.dokka") version "2.1.0"
-    id("org.jetbrains.dokka-javadoc") version "2.1.0"
-    kotlin("plugin.spring") version "2.1.0"
+	idea
+	java
+	signing
+	`java-library`
+	`maven-publish`
+	kotlin("jvm") version "2.2.20"
+	kotlin("kapt") version "2.2.20"
+	id("org.jetbrains.dokka") version "2.1.0"
+	id("org.jetbrains.dokka-javadoc") version "2.1.0"
+	kotlin("plugin.spring") version "2.1.0"
 }
 val GROUPSID = project.properties["GROUPSID"] as String
 val VERSIONS = project.properties["VERSIONS"] as String
@@ -45,205 +45,204 @@ group = GROUPSID
 version = VERSIONS
 
 base {
-    archivesName.set(ARTIFACTID)
+	archivesName.set(ARTIFACTID)
 }
 
 val buildDir: java.nio.file.Path = File("build").toPath()
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(JDKVERSIONS))
-    withSourcesJar()
+	toolchain.languageVersion.set(JavaLanguageVersion.of(JDKVERSIONS))
+	withSourcesJar()
 }
 kotlin {
-    jvmToolchain(JDKVERSIONS)
+	jvmToolchain(JDKVERSIONS)
 }
 
 repositories {
-    mavenLocal()
-    maven {
-        url = uri("https://maven.mingliqiye.com/")
-    }
-    mavenCentral()
+	mavenLocal()
+	maven {
+		url = uri("https://maven.mingliqiye.com/")
+	}
+	mavenCentral()
 }
 dependencies {
-    implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation(kotlin("reflect"))
-    api("com.mingliqiye.utils.aliasfor:alias-for:1.0.1")
-    compileOnly("org.mindrot:jbcrypt:0.4")
-    compileOnly("com.squareup.okhttp3:okhttp:5.3.2")
-    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.21.0")
-    compileOnly("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
-    compileOnly("org.springframework:spring-context:5.3.0")
-    compileOnly("org.springframework.boot:spring-boot-autoconfigure:2.7.16")
-    compileOnly("tools.jackson.core:jackson-databind:3.1.0")
-    compileOnly(fileTree("libs"))
-    compileOnly("com.google.code.gson:gson:2.13.2")
-    compileOnly("org.mybatis:mybatis:3.5.19")
-    compileOnly("io.netty:netty-all:4.2.15.Final")
-    compileOnly("com.baomidou:mybatis-plus-core:3.5.15")
-    compileOnly("net.java.dev.jna:jna:5.17.0")
-    compileOnly("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
-    compileOnly("com.baomidou:mybatis-plus-extension:3.5.15")
-    compileOnly("com.baomidou:mybatis-plus-jsqlparser:3.5.15")
-    compileOnly("com.baomidou:mybatis-plus-spring:3.5.9")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("com.mingliqiye.logger:logger-log4j2:1.0.9")
-    testImplementation("com.google.code.gson:gson:2.13.2")
+	implementation("org.slf4j:slf4j-api:2.0.17")
+	implementation(kotlin("reflect"))
+	api("com.mingliqiye.utils.aliasfor:alias-for:1.0.1")
+	compileOnly("org.mindrot:jbcrypt:0.4")
+	compileOnly("com.squareup.okhttp3:okhttp:5.3.2")
+	compileOnly("com.fasterxml.jackson.core:jackson-databind:2.21.0")
+	compileOnly("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
+	compileOnly("org.springframework:spring-context:5.3.0")
+	compileOnly("org.springframework.boot:spring-boot-autoconfigure:2.7.16")
+	compileOnly("tools.jackson.core:jackson-databind:3.1.0")
+	compileOnly(fileTree("libs"))
+	compileOnly("com.google.code.gson:gson:2.13.2")
+	compileOnly("org.mybatis:mybatis:3.5.19")
+	compileOnly("io.netty:netty-all:4.2.15.Final")
+	compileOnly("com.baomidou:mybatis-plus-core:3.5.15")
+	compileOnly("net.java.dev.jna:jna:5.17.0")
+	compileOnly("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
+	compileOnly("com.baomidou:mybatis-plus-extension:3.5.15")
+	compileOnly("com.baomidou:mybatis-plus-jsqlparser:3.5.15")
+	compileOnly("com.baomidou:mybatis-plus-spring:3.5.9")
+	testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("com.mingliqiye.logger:logger-log4j2:1.0.9")
+	testImplementation("com.google.code.gson:gson:2.13.2")
 
-    testImplementation("com.fasterxml.jackson.core:jackson-databind:2.21.0")
-    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
+	testImplementation("com.fasterxml.jackson.core:jackson-databind:2.21.0")
+	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
 
-    testImplementation("tools.jackson.module:jackson-module-kotlin:3.1.0")
-    testImplementation("tools.jackson.core:jackson-databind:3.1.0")
-    testImplementation(kotlin("test"))
+	testImplementation("tools.jackson.module:jackson-module-kotlin:3.1.0")
+	testImplementation("tools.jackson.core:jackson-databind:3.1.0")
+	testImplementation(kotlin("test"))
 }
 
 repositories {
-    mavenLocal()
+	mavenLocal()
 }
 
 
 tasks.withType<JavaCompile>().configureEach {
-    options.encoding = "UTF-8"
+	options.encoding = "UTF-8"
 }
 
 tasks.named<Test>("test") {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
 
 
 tasks.withType<JavaExec> {
-    jvmArgs(
-        "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8"
-    )
+	jvmArgs(
+		"-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8"
+	)
 }
 
 kapt {
-    arguments {
-        arg(
-            "kapt.kotlin.generated",
-            project.layout.buildDirectory.dir("generated/source/kapt/main").get().asFile.absolutePath
-        )
-    }
+	arguments {
+		arg(
+			"kapt.kotlin.generated",
+			project.layout.buildDirectory.dir("generated/source/kapt/main").get().asFile.absolutePath
+		)
+	}
 }
 
 tasks.withType<org.gradle.jvm.tasks.Jar> {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from("LICENSE") { into("META-INF") }
-    from("NOTICE") { into("META-INF") }
-    manifest {
-        attributes(
-            mapOf(
-                "Main-Class" to "com.mingliqiye.utils.main.Main",
-                "Specification-Title" to ARTIFACTID,
-                "Specification-Version" to VERSIONS,
-                "Specification-Vendor" to "minglipro",
-                "Specification-Build-Time" to LocalDateTime.now()
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSS")),
-                "Specification-Package" to GROUPSID,
-                "Specification-Build-Number" to "1",
-                "Specification-Build-OS" to System.getProperty("os.name"),
-                "Specification-Build-Java" to System.getProperty("java.version"),
-                "Specification-Build-Java-Vendor" to System.getProperty("java.vendor"),
-                "Specification-Build-Java-Vendor-URL" to System.getProperty("java.vendor.url"),
-                "Implementation-Title" to ARTIFACTID,
-                "Implementation-Version" to VERSIONS,
-                "Implementation-Package" to GROUPSID,
-                "Implementation-Vendor" to "minglipro",
-                "Implementation-Build-Time" to LocalDateTime.now()
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSS"))
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	from("LICENSE") { into("META-INF") }
+	from("NOTICE") { into("META-INF") }
+	manifest {
+		attributes(
+			mapOf(
+				"Main-Class" to "com.mingliqiye.utils.main.Main",
+				"Specification-Title" to ARTIFACTID,
+				"Specification-Version" to VERSIONS,
+				"Specification-Vendor" to "minglipro",
+				"Specification-Build-Time" to LocalDateTime.now()
+					.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSS")),
+				"Specification-Package" to GROUPSID,
+				"Specification-Build-Number" to "1",
+				"Specification-Build-OS" to System.getProperty("os.name"),
+				"Specification-Build-Java" to System.getProperty("java.version"),
+				"Specification-Build-Java-Vendor" to System.getProperty("java.vendor"),
+				"Specification-Build-Java-Vendor-URL" to System.getProperty("java.vendor.url"),
+				"Implementation-Title" to ARTIFACTID,
+				"Implementation-Version" to VERSIONS,
+				"Implementation-Package" to GROUPSID,
+				"Implementation-Vendor" to "minglipro",
+				"Implementation-Build-Time" to LocalDateTime.now()
+					.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSS"))
 
-            )
-        )
-    }
+			)
+		)
+	}
 }
 val isJdk8Build = project.findProperty("buildForJdk8") == "true"
 
-tasks.register<Jar>("javaDocJar") {
-    group = "build"
-    archiveClassifier.set("javadoc-dec")
-    dependsOn("dokkaGeneratePublicationJavadoc")
-    from(buildDir.resolve("dokka/javadoc"))
+
+dokka {
+	pluginsConfiguration.html {
+		customAssets.from("logo.png")
+	}
 }
+
+tasks.register<Jar>("javaDocJar") {
+	group = "build"
+	archiveClassifier.set("javadoc")
+	dependsOn("dokkaGenerateJavadoc")
+	from(buildDir.resolve("dokka/javadoc"))
+}
+
 tasks.register<Jar>("kotlinDocJar") {
-    group = "build"
-    archiveClassifier.set("javadoc")
-    dependsOn("dokkaGeneratePublicationHtml")
-    from(buildDir.resolve("dokka/html"))
+	group = "build"
+	archiveClassifier.set("kotlindoc")
+	dependsOn("dokkaGeneratePublicationHtml")
+	from(buildDir.resolve("dokka/html"))
 }
 publishing {
-    repositories {
-        maven {
-            name = "mingliqiye"
-            url = uri("https://repository.mingliqiye.com/repository/maven")
-            credentials {
-                username = System.getenv("mingliqiye.username")
-                password = System.getenv("mingliqiye.password")
-            }
-        }
-    }
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifact(tasks.named("kotlinDocJar"))
-            artifactId = ARTIFACTID
-            pom {
-                name = "mingli-utils"
-                url = "https://mingli-utils.mingliqiye.com"
-                description = "A Java/kotlin Utils"
-                licenses {
-                    license {
-                        name = "The Apache License, Version 2.0"
-                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                    }
-                }
-                developers {
-                    developer {
-                        id = "minglipro"
-                        name = "mingli"
-                        email = "minglipro@163.com"
-                    }
-                }
-                scm {
-                    connection = "scm:git:https://git.mingliqiye.com/minglipro/mingli-utils.git"
-                    developerConnection = "scm:git:https://git.mingliqiye.com:minglipro/mingli-utils.git"
-                    url = "https://git.mingliqiye.com/minglipro/mingli-utils"
-                }
-            }
-        }
-    }
-    signing {
-        sign(publishing.publications)
-    }
+	publications {
+		create<MavenPublication>("mavenJava") {
+			from(components["java"])
+			artifact(tasks.named("javaDocJar"))
+			artifact(tasks.named("kotlinDocJar"))
+			artifactId = ARTIFACTID
+			pom {
+				name = "mingli-utils"
+				url = "https://mingli-utils.mingliqiye.com"
+				description = "A Java/kotlin Utils"
+				licenses {
+					license {
+						name = "The Apache License, Version 2.0"
+						url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+					}
+				}
+				developers {
+					developer {
+						id = "minglipro"
+						name = "mingli"
+						email = "minglipro@163.com"
+					}
+				}
+				scm {
+					connection = "scm:git:https://git.mingliqiye.com/minglipro/mingli-utils.git"
+					developerConnection = "scm:git:https://git.mingliqiye.com:minglipro/mingli-utils.git"
+					url = "https://git.mingliqiye.com/minglipro/mingli-utils"
+				}
+			}
+		}
+	}
+	signing {
+		sign(publishing.publications)
+	}
 }
 
 tasks.build {
-    dependsOn("javaDocJar", "kotlinDocJar")
+	dependsOn("javaDocJar", "kotlinDocJar")
 }
 
 
 tasks.processResources {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    outputs.upToDateWhen { false }
-    filesMatching(listOf("META-INF/meta-data", "fabric.mod.json")) {
-        expand(
-            project.properties + mapOf(
-                "buildTime" to LocalDateTime.now().format(
-                    DateTimeFormatter.ofPattern(
-                        "yyyy-MM-dd HH:mm:ss.SSSSSSS"
-                    )
-                )
-            )
-        )
-    }
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	outputs.upToDateWhen { false }
+	filesMatching(listOf("META-INF/meta-data", "fabric.mod.json")) {
+		expand(
+			project.properties + mapOf(
+				"buildTime" to LocalDateTime.now().format(
+					DateTimeFormatter.ofPattern(
+						"yyyy-MM-dd HH:mm:ss.SSSSSSS"
+					)
+				)
+			)
+		)
+	}
 }
 
 signing {
-    val secretKeyRingFile = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
-    val keyId = System.getenv("SIGNING_KEY_ID")
-    useGpgCmd()
-    project.ext.set("signing.secretKeyRingFile", secretKeyRingFile)
-    project.ext.set("signing.keyId", keyId)
-    project.ext.set("signing.password", "")
+	val secretKeyRingFile = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
+	val keyId = System.getenv("SIGNING_KEY_ID")
+	useGpgCmd()
+	project.ext.set("signing.secretKeyRingFile", secretKeyRingFile)
+	project.ext.set("signing.keyId", keyId)
+	project.ext.set("signing.password", "")
 }

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BaseCodes.kt
- * LastUpdate 2026-03-12 10:03:32
+ * LastUpdate 2026-11-16 14:10:57
  * UpdateUser MingLiPro
  */
 
@@ -63,9 +63,15 @@ val BASE64: BaseCodec by lazy {
 }
 
 @get:JvmName("base64Url")
-val BASE64URL: BaseCodec by lazy {
+val BASE64_URL: BaseCodec by lazy {
 	Base64UrlCodec()
 }
+
+@get:JvmName("base64NoPadding")
+val BASE64_NO_PADDING: BaseCodec by lazy {
+	Base64NoPaddingCodec()
+}
+
 
 /**
  * 提供Base91编码器的懒加载实例。

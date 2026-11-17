@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * ProjectName FastBaseMapper.kt
+ * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Okhttp3AutoConfiguration.kt
- * LastUpdate 2026-10-26 23:22:18
+ * LastUpdate 2026-11-16 11:29:35
  * UpdateUser MingLiPro
  */
 
@@ -98,7 +98,7 @@ open class Okhttp3AutoConfiguration {
 			b.build()
 		}.also {
 			okhttp = it
-			log.info("load $connt OkhttpBuilder initialized OkHttpClient successfully")
+			log.info("load {} OkhttpBuilder initialized OkHttpClient successfully", connt)
 		}
 	}
 

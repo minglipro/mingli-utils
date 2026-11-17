@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTime.kt
- * LastUpdate 2026-03-14 16:12:08
+ * LastUpdate 2026-11-17 10:16:38
  * UpdateUser MingLiPro
  */
 
@@ -543,4 +543,9 @@ class DateTime private constructor(
 			(it.epochSecond * 1000L) + (it.nano / 1_000_000L)
 		}
 	}
+
+	val epochSecond: Long
+		get() {
+			return toInstant().epochSecond
+		}
 }

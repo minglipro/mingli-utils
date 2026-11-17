@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MingLiLogger.kt
- * LastUpdate 2026-02-06 08:27:44
+ * LastUpdate 2026-11-16 11:35:40
  * UpdateUser MingLiPro
  */
 
@@ -24,6 +24,7 @@ package com.mingliqiye.utils.logger
 
 import org.slf4j.Logger
 import org.slf4j.Marker
+import org.slf4j.helpers.MessageFormatter
 
 class MingLiLogger(private val name: String) : Logger {
 	override fun getName(): String {
@@ -40,14 +41,14 @@ class MingLiLogger(private val name: String) : Logger {
 
 	override fun trace(format: String?, arg: Any?) {
 		format?.let {
-			val message = format1(it, arg)
+			val message = format(it, arg)
 			toPrintln(message, MingLiLoggerLevel.TRACE)
 		}
 	}
 
 	override fun trace(format: String?, arg1: Any?, arg2: Any?) {
 		format?.let {
-			val message = format2(it, arg1, arg2)
+			val message = format(it, arg1, arg2)
 			toPrintln(message, MingLiLoggerLevel.TRACE)
 		}
 	}
@@ -100,14 +101,14 @@ class MingLiLogger(private val name: String) : Logger {
 
 	override fun debug(format: String?, arg: Any?) {
 		format?.let {
-			val message = format1(it, arg)
+			val message = format(it, arg)
 			toPrintln(message, MingLiLoggerLevel.DEBUG)
 		}
 	}
 
 	override fun debug(format: String?, arg1: Any?, arg2: Any?) {
 		format?.let {
-			val message = format2(it, arg1, arg2)
+			val message = format(it, arg1, arg2)
 			toPrintln(message, MingLiLoggerLevel.DEBUG)
 		}
 	}
@@ -160,14 +161,14 @@ class MingLiLogger(private val name: String) : Logger {
 
 	override fun info(format: String?, arg: Any?) {
 		format?.let {
-			val message = format1(it, arg)
+			val message = format(it, arg)
 			toPrintln(message, MingLiLoggerLevel.INFO)
 		}
 	}
 
 	override fun info(format: String?, arg1: Any?, arg2: Any?) {
 		format?.let {
-			val message = format2(it, arg1, arg2)
+			val message = format(it, arg1, arg2)
 			toPrintln(message, MingLiLoggerLevel.INFO)
 		}
 	}
@@ -220,7 +221,7 @@ class MingLiLogger(private val name: String) : Logger {
 
 	override fun warn(format: String?, arg: Any?) {
 		format?.let {
-			val message = format1(it, arg)
+			val message = format(it, arg)
 			toPrintln(message, MingLiLoggerLevel.WARN)
 		}
 	}
@@ -234,7 +235,7 @@ class MingLiLogger(private val name: String) : Logger {
 
 	override fun warn(format: String?, arg1: Any?, arg2: Any?) {
 		format?.let {
-			val message = format2(it, arg1, arg2)
+			val message = format(it, arg1, arg2)
 			toPrintln(message, MingLiLoggerLevel.WARN)
 		}
 	}
@@ -280,14 +281,14 @@ class MingLiLogger(private val name: String) : Logger {
 
 	override fun error(format: String?, arg: Any?) {
 		format?.let {
-			val message = format1(it, arg)
+			val message = format(it, arg)
 			toPrintln(message, MingLiLoggerLevel.ERROR)
 		}
 	}
 
 	override fun error(format: String?, arg1: Any?, arg2: Any?) {
 		format?.let {
-			val message = format2(it, arg1, arg2)
+			val message = format(it, arg1, arg2)
 			toPrintln(message, MingLiLoggerLevel.ERROR)
 		}
 	}
@@ -343,24 +344,14 @@ class MingLiLogger(private val name: String) : Logger {
 		System.out.write(string.toByteArray())
 	}
 
-	private fun format1(format: String, arg: Any?): String {
-		return if (format.contains("{}")) {
-			format.replaceFirst("{}", arg?.toString() ?: "null")
-		} else {
-			"$format $arg"
-		}
-	}
-
-	private fun format2(format: String, arg1: Any?, arg2: Any?): String {
-		return format.replaceFirst("{}", arg1?.toString() ?: "null")
-			.replaceFirst("{}", arg2?.toString() ?: "null")
+	private fun format(format: String, vararg args: Any?): String {
+		return formatArray(format, args)
 	}
 
 	private fun formatArray(format: String, arguments: Array<out Any?>): String {
-		var result = format
-		for (arg in arguments) {
-			result = result.replaceFirst("{}", arg?.toString() ?: "null")
-		}
-		return result
+		return MessageFormatter.arrayFormat(
+			format,
+			arguments
+		).message
 	}
 }

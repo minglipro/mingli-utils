@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ByteFlags.kt
- * LastUpdate 2026-06-21 10:40:58
+ * LastUpdate 2026-11-16 21:35:04
  * UpdateUser MingLiPro
  */
 
@@ -64,7 +64,7 @@ data class ByteFlags(
 	 *
 	 * @param byte 要解析的字节
 	 */
-	fun fromByte(byte: Byte) {
+	fun fromByte(byte: Byte): ByteFlags {
 		val value = byte.toInt() and 0xFF
 		b0 = (value and 0x01) != 0
 		b1 = (value and 0x02) != 0
@@ -74,6 +74,7 @@ data class ByteFlags(
 		b5 = (value and 0x20) != 0
 		b6 = (value and 0x40) != 0
 		b7 = (value and 0x80) != 0
+		return this
 	}
 
 	/**
@@ -122,7 +123,7 @@ data class ByteFlags(
 	 * @param value 要设置的布尔值
 	 * @throws IndexOutOfBoundsException 如果索引不在 0~7 范围内
 	 */
-	operator fun set(index: Int, value: Boolean) {
+	operator fun set(index: Int, value: Boolean): ByteFlags {
 		when (index) {
 			0 -> b0 = value
 			1 -> b1 = value
@@ -134,12 +135,13 @@ data class ByteFlags(
 			7 -> b7 = value
 			else -> throw IndexOutOfBoundsException("索引必须在0-7之间")
 		}
+		return this
 	}
 
 	/**
 	 * 将所有 8 个位设置为 `true`。
 	 */
-	fun setAll() {
+	fun setAll(): ByteFlags {
 		b0 = true
 		b1 = true
 		b2 = true
@@ -148,12 +150,14 @@ data class ByteFlags(
 		b5 = true
 		b6 = true
 		b7 = true
+
+		return this
 	}
 
 	/**
 	 * 将所有 8 个位设置为 `false`。
 	 */
-	fun clearAll() {
+	fun clearAll(): ByteFlags {
 		b0 = false
 		b1 = false
 		b2 = false
@@ -162,12 +166,14 @@ data class ByteFlags(
 		b5 = false
 		b6 = false
 		b7 = false
+
+		return this
 	}
 
 	/**
 	 * 对所有位执行逻辑取反（true ↔ false）。
 	 */
-	fun toggleAll() {
+	fun toggleAll(): ByteFlags {
 		b0 = !b0
 		b1 = !b1
 		b2 = !b2
@@ -176,6 +182,8 @@ data class ByteFlags(
 		b5 = !b5
 		b6 = !b6
 		b7 = !b7
+
+		return this
 	}
 
 	/**
@@ -184,8 +192,9 @@ data class ByteFlags(
 	 * @param index 要切换的位索引（0~7）
 	 * @throws IndexOutOfBoundsException 如果索引无效
 	 */
-	fun toggle(index: Int) {
+	fun toggle(index: Int): ByteFlags {
 		this[index] = !this[index]
+		return this
 	}
 
 	/**
@@ -304,7 +313,7 @@ data class ByteFlags(
 	 * @param array 布尔数组（长度至少为 8）
 	 * @throws IllegalArgumentException 如果数组长度不足 8
 	 */
-	fun fromBooleanArray(array: BooleanArray) {
+	fun fromBooleanArray(array: BooleanArray): ByteFlags {
 		require(array.size >= 8) { "数组长度至少为8" }
 		b0 = array[0]
 		b1 = array[1]
@@ -314,6 +323,7 @@ data class ByteFlags(
 		b5 = array[5]
 		b6 = array[6]
 		b7 = array[7]
+		return this
 	}
 
 	/**
@@ -434,7 +444,6 @@ data class ByteFlags(
 		fun fromBinaryString(binary: String): ByteFlags {
 			require(binary.length == 8) { "二进制字符串长度必须为8" }
 			require(binary.all { it == '0' || it == '1' }) { "二进制字符串只能包含0和1" }
-
 			return ByteFlags(
 				binary[7] == '1',  // b0 是最低位（对应字符串最后一位）
 				binary[6] == '1',
@@ -445,6 +454,10 @@ data class ByteFlags(
 				binary[1] == '1',
 				binary[0] == '1'   // b7 是最高位（对应字符串第一位）
 			)
+		}
+
+		fun fromBooleanArray(booleanArray: BooleanArray): ByteFlags {
+			return ByteFlags().fromBooleanArray(booleanArray)
 		}
 
 		/**

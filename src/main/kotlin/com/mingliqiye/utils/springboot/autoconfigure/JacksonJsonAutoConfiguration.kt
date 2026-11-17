@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JacksonJsonAutoConfiguration.kt
- * LastUpdate 2026-11-09 14:19:05
+ * LastUpdate 2026-11-16 23:32:09
  * UpdateUser MingLiPro
  */
 
@@ -29,6 +29,7 @@ import com.mingliqiye.utils.springboot.autoconfigure.builder.JacksonJsonBuilderI
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.context.annotation.Bean
 
@@ -67,7 +68,8 @@ open class JacksonJsonAutoConfiguration {
 		private val log = MingLiLoggerFactory.getLogger<JacksonJsonAutoConfiguration>()
 	}
 
-	@Bean("mingliUtilsJacksonObjectMapperBuilderCustomizer")
+	@Bean("jacksonMapperBuilderCustomizer")
+	@ConditionalOnMissingBean(name = ["jacksonMapperBuilderCustomizer"])
 	fun jackson2ObjectMapperBuilderCustomizer(builders: ObjectProvider<JacksonBuilder>): Jackson2ObjectMapperBuilderCustomizer {
 		val builderList = builders.orderedStream().toList()
 		var jacksonJsonBuilderImpl = JacksonJsonBuilderImpl()
@@ -78,7 +80,7 @@ open class JacksonJsonAutoConfiguration {
 			builder.modulesToInstall(
 				*jacksonJsonBuilderImpl.getData().map { converter ->
 					converter.getJacksonModule().also { module ->
-						log.info("Jackson Module Install ${module.moduleName}")
+						log.debug("Jackson Module Install {}", module.moduleName)
 					}
 				}.toTypedArray()
 			)

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JSONAAutoConfiguration.kt
- * LastUpdate 2026-11-09 14:59:49
+ * LastUpdate 2026-11-16 11:28:52
  * UpdateUser MingLiPro
  */
 
@@ -41,9 +41,7 @@ open class JSONAAutoConfiguration(
 	init {
 		JSONA.setJsonApi(jsonApi)
 		log.info(
-			"JSONA use ${
-				jsonApi.javaClass
-			}"
+			"JSONA use {}", jsonApi.javaClass
 		)
 	}
 }
