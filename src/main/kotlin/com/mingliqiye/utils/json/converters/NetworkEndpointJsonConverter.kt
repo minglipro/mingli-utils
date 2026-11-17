@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NetworkEndpointJsonConverter.kt
- * LastUpdate 2026-11-18 00:01:29
+ * LastUpdate 2026-11-18 00:03:17
  * UpdateUser MingLiPro
  */
 
@@ -58,7 +58,7 @@ class NetworkEndpointJsonConverter : BaseJsonConverter<NetworkEndpoint> {
 	/**
 	 * 从 `host:port` 形式的 JSON 字符串还原网络端点
 	 *
-	 * @throws JsonParseException 当节点不是字符串类型时抛出
+	 * @throws JsonParserException 当节点不是字符串类型时抛出
 	 */
 	override fun deConvert(
 		jsonReader: BaseJsonReader,

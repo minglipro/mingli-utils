@@ -16,14 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile DateTimeJsonConverter.kt
- * LastUpdate 2026-11-17 20:17:32
+ * LastUpdate 2026-11-18 00:03:07
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.converters
 
-import com.google.gson.JsonParseException
 import com.mingliqiye.utils.annotation.DateTimeJsonFormat
+import com.mingliqiye.utils.exception.JsonParserException
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.converters.base.AnnotationGetter
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
@@ -68,12 +68,12 @@ class DateTimeJsonConverter : BaseJsonConverter<DateTime> {
 	/**
 	 * 按 [DateTimeJsonFormat] 注解指定的格式从 JSON 字符串解析日期时间
 	 *
-	 * @throws JsonParseException 当节点不是字符串类型时抛出
+	 * @throws JsonParserException 当节点不是字符串类型时抛出
 	 */
 	override fun deConvert(jsonReader: BaseJsonReader, annotationGetter: AnnotationGetter): DateTime? {
 		val dateTimeJsonFormat: DateTimeJsonFormat? = annotationGetter.getAnnotation<DateTimeJsonFormat>()
 		if (jsonReader.isNull) return null
-		if (!jsonReader.isString) throw JsonParseException("type item not string")
+		if (!jsonReader.isString) throw JsonParserException("type item not string")
 		val obj = jsonReader.getString()
 		return if (Formatter.NONE != dateTimeJsonFormat?.value && dateTimeJsonFormat != null) {
 			DateTime.parse(obj, dateTimeJsonFormat.value, dateTimeJsonFormat.repcZero)

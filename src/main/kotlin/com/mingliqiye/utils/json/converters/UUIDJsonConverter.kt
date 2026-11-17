@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUIDJsonConverter.kt
- * LastUpdate 2026-11-18 00:02:04
+ * LastUpdate 2026-11-18 00:03:17
  * UpdateUser MingLiPro
  */
 
@@ -72,7 +72,7 @@ class UUIDJsonConverter : BaseJsonConverter<UUID> {
 	/**
 	 * 按 [UUIDJsonFormat] 注解指定的进制从 JSON 字符串解析 UUID
 	 *
-	 * @throws JsonParseException 当节点不是字符串类型时抛出
+	 * @throws JsonParserException 当节点不是字符串类型时抛出
 	 */
 	override fun deConvert(
 		jsonReader: BaseJsonReader,
