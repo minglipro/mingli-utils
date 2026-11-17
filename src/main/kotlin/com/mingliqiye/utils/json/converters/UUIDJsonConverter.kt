@@ -16,15 +16,15 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile UUIDJsonConverter.kt
- * LastUpdate 2026-11-17 20:01:08
+ * LastUpdate 2026-11-18 00:02:04
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.converters
 
-import com.google.gson.JsonParseException
 import com.mingliqiye.utils.annotation.UUIDJsonFormat
 import com.mingliqiye.utils.base.BaseType
+import com.mingliqiye.utils.exception.JsonParserException
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.converters.base.AnnotationGetter
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
@@ -79,7 +79,7 @@ class UUIDJsonConverter : BaseJsonConverter<UUID> {
 		annotationGetter: AnnotationGetter,
 	): UUID? {
 		if (jsonReader.isNull) return null
-		if (!jsonReader.isString) throw JsonParseException("type item not string")
+		if (!jsonReader.isString) throw JsonParserException("type item not string")
 
 		val obj = jsonReader.getString()
 

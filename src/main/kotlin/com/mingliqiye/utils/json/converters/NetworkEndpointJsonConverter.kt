@@ -16,13 +16,13 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NetworkEndpointJsonConverter.kt
- * LastUpdate 2026-11-17 20:01:08
+ * LastUpdate 2026-11-18 00:01:29
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.json.converters
 
-import com.google.gson.JsonParseException
+import com.mingliqiye.utils.exception.JsonParserException
 import com.mingliqiye.utils.json.api.type.JsonTypeReference
 import com.mingliqiye.utils.json.converters.base.AnnotationGetter
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
@@ -65,7 +65,7 @@ class NetworkEndpointJsonConverter : BaseJsonConverter<NetworkEndpoint> {
 		annotationGetter: AnnotationGetter,
 	): NetworkEndpoint? {
 		return if (jsonReader.isNotNull) {
-			if (!jsonReader.isString) throw JsonParseException("type item not string")
+			if (!jsonReader.isString) throw JsonParserException("type item not string")
 			NetworkEndpoint.of(jsonReader.getString())
 		} else null
 	}
