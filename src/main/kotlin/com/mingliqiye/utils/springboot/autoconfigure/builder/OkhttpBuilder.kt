@@ -24,7 +24,18 @@ package com.mingliqiye.utils.springboot.autoconfigure.builder
 
 import okhttp3.OkHttpClient
 
+/**
+ * OkHttp 客户端构建定制器函数式接口。
+ * 实现类注册为 Spring Bean 后，会被 [com.mingliqiye.utils.springboot.autoconfigure.Okhttp3AutoConfiguration]
+ * 按 `@Order` 顺序收集并依次应用，用于追加拦截器、超时、代理、连接池等配置。
+ */
 @FunctionalInterface
 fun interface OkhttpBuilder {
+	/**
+	 * 对给定的 OkHttp 客户端构建器应用自定义配置。
+	 *
+	 * @param builder 待定制的 OkHttp 客户端构建器
+	 * @return 定制后的构建器（通常为同一实例）
+	 */
 	fun customize(builder: OkHttpClient.Builder): OkHttpClient.Builder
 }

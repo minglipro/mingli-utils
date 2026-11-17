@@ -40,15 +40,43 @@ abstract class ClientScheduleReconnect {
 	private var delay: Long = 10L
 	private var timeUnit: TimeUnit = TimeUnit.SECONDS
 
+	/**
+	 * 使用默认 Bootstrap 构造，重连延迟默认 10 秒
+	 */
 	constructor() : this(Bootstrap())
+
+	/**
+	 * 使用指定 Bootstrap 构造，重连延迟默认 10 秒
+	 *
+	 * @param bootstrap Netty 引导配置对象
+	 */
 	constructor(bootstrap: Bootstrap) : this(bootstrap, 10L)
+
+	/**
+	 * 使用指定 Bootstrap 与重连延迟构造，时间单位默认秒
+	 *
+	 * @param bootstrap Netty 引导配置对象
+	 * @param delay 重连延迟时间
+	 */
 	constructor(bootstrap: Bootstrap, delay: Long) : this(bootstrap, delay, TimeUnit.SECONDS)
+
+	/**
+	 * 使用指定 Bootstrap、重连延迟与时间单位构造
+	 *
+	 * @param bootstrap Netty 引导配置对象
+	 * @param delay 重连延迟时间
+	 * @param timeUnit 延迟时间单位
+	 */
 	constructor(bootstrap: Bootstrap, delay: Long, timeUnit: TimeUnit) {
 		this.bootstrap = bootstrap
 		this.delay = delay
 		this.timeUnit = timeUnit
 	}
 
+	/**
+	 * 启动客户端：初始化引导配置并发起首次连接。
+	 * 连接失败或通道断开后会自动调度重连，直到调用 [close] 停止。
+	 */
 	open fun start() {
 		initBootstrap(bootstrap)
 		connect()
@@ -120,6 +148,10 @@ abstract class ClientScheduleReconnect {
 	 */
 	abstract fun onStoppedLog()
 
+	/**
+	 * 连接通道关闭后的回调，由子类实现（如记录日志、清理资源）。
+	 * 在调度重连之后被调用。
+	 */
 	abstract fun onConnectClosed()
 
 	/**

@@ -36,6 +36,9 @@ class DateTimeOffset private constructor(
 	val offset: Long,
 ) {
 
+	/**
+	 * 伴生对象，提供创建 DateTimeOffset 实例的静态工厂方法和单位转换扩展。
+	 */
 	companion object {
 		/**
 		 * 将 [ChronoUnit] 扩展为创建 [DateTimeOffset] 实例的函数。
@@ -117,6 +120,11 @@ class DateTimeOffset private constructor(
 		@JvmStatic
 		fun of(offset: Int, offsetType: TimeUnit) = offsetType.toDateTimeOffset(offset)
 
+		/**
+		 * 将 [TimeUnit] 扩展为转换为对应 [ChronoUnit] 的函数。
+		 *
+		 * @return 与接收者时间单位对应的 [ChronoUnit]
+		 */
 		@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 		@JvmStatic
 		@JvmName("TimeUnitToChronoUnit")

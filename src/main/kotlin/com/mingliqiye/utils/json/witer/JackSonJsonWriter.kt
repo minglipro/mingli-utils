@@ -29,6 +29,12 @@ import com.mingliqiye.utils.json.witer.base.BaseJsonArrayWriter
 import com.mingliqiye.utils.json.witer.base.BaseJsonObjectWriter
 import com.mingliqiye.utils.json.witer.base.BaseJsonWriter
 
+/**
+ * 基于 Jackson2 JsonGenerator 的 JSON 写入器实现，对象/数组写入时自动补全起止标记
+ *
+ * @param jsonGenerator Jackson2 的 JSON 生成器
+ * @param serializationContext 序列化上下文，可为null
+ */
 class JackSonJsonWriter(
 	private val jsonGenerator: JsonGenerator,
 	private val serializationContext: SerializerProvider?,

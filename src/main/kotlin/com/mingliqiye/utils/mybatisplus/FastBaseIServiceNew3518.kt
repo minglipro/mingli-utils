@@ -456,6 +456,9 @@ open class FastBaseIServiceNew3518<T, D : FastBaseMapper<T>> : ServiceImpl<D, T>
 		wrapper: LambdaQueryWrapper<T>,
 	) = mapper.deleteByColumn(column, value, wrapper)
 
+	/**
+	 * 伴生对象，提供面向 [FastBaseIServiceNew3518] 的 Kotlin 包装器创建与链式查询、更新、删除扩展函数。
+	 */
 	companion object {
 
 		/**

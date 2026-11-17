@@ -25,6 +25,11 @@ package com.mingliqiye.utils.json.judgment
 import com.mingliqiye.utils.json.judgment.base.BaseJsonJudgment
 import tools.jackson.databind.JsonNode
 
+/**
+ * 基于 Jackson3 JsonNode 的类型判断实现，各判定属性直接委托给节点自身
+ *
+ * @param treeNode 待判断的 Jackson3 JsonNode 节点
+ */
 open class JackSon3ReaderJudgment(
 	private val treeNode: JsonNode,
 ) : BaseJsonJudgment {

@@ -26,7 +26,16 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.cfg.MapperBuilder;
 
 
+/**
+ * Jackson 3 API 的 Java 辅助类，用于在 Java 侧调用 Kotlin 内联/受限 API。
+ */
 public class Jackson3ApiJavaHelper {
+    /**
+     * 基于现有 ObjectMapper 创建可重新配置的 MapperBuilder。
+     *
+     * @param objectMapper 需要重建的 ObjectMapper 实例
+     * @return 由该 ObjectMapper 派生的 MapperBuilder
+     */
     @SuppressWarnings("rawtypes")
     static MapperBuilder rebuild(ObjectMapper objectMapper) {
         return objectMapper.rebuild();

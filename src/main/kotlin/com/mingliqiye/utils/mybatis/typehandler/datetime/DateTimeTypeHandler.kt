@@ -38,6 +38,9 @@ import java.sql.Types.TIMESTAMP
 @MappedTypes(DateTime::class)
 class DateTimeTypeHandler : QuickBaseTypeHandler<DateTime>() {
 
+	/**
+	 * 从 JDBC 数据源读取 Timestamp 并转换为 [DateTime]，数据库值为 null 时返回 null。
+	 */
 	override fun getValue(
 		vg: QuickBaseTypeHandlerValueGetter,
 		ct: CallType,
@@ -57,6 +60,9 @@ class DateTimeTypeHandler : QuickBaseTypeHandler<DateTime>() {
 		)
 	}
 
+	/**
+	 * 将 [DateTime] 以 Timestamp 形式写入 PreparedStatement，参数为 null 时写入 TIMESTAMP 类型的 NULL。
+	 */
 	override fun setValue(
 		ps: PreparedStatement,
 		index: Int,

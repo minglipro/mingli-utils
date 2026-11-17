@@ -63,6 +63,9 @@ private fun getGetterName(fieldName: String): String {
  */
 open class ConfigurationProps {
 
+	/**
+	 * 伴生对象，提供根据命令行参数初始化配置类实例的静态方法。
+	 */
 	companion object {
 		/**
 		 * 初始化配置类实例，并根据命令行参数填充其字段。
@@ -241,6 +244,9 @@ open class ConfigurationProps {
 		}
 	}
 
+	/**
+	 * 打印配置项帮助信息，列出所有标注了 ConfigurationProp 且允许显示帮助的字段名称、类型和描述。
+	 */
 	fun printHelp() {
 		val fields = this::class.java.declaredFields
 		val help = StringBuilder()
@@ -258,6 +264,9 @@ open class ConfigurationProps {
 		println(help)
 	}
 
+	/**
+	 * 当前配置对象所有声明字段的名称与值的映射。
+	 */
 	val fields: Map<String, Any?>
 		get() {
 			val fields = this::class.java.declaredFields

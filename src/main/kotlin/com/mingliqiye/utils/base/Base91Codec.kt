@@ -29,6 +29,9 @@ package com.mingliqiye.utils.base
  */
 internal class Base91Codec : BaseCodec {
 
+	/**
+	 * 伴生对象，持有 Base91 的编码表与解码表。
+	 */
 	companion object {
 		/**
 		 * Base91 编码表，共 91 个可打印 ASCII 字符。

@@ -57,6 +57,9 @@ class DateTime private constructor(
 	private var localDateTime: LocalDateTime, private val zoneId: ZoneId = ZoneId.systemDefault(),
 ) : Serializable {
 
+	/**
+	 * 伴生对象，提供创建和解析 DateTime 实例的静态工厂方法。
+	 */
 	companion object {
 		/**
 		 * 获取当前时间的 DateTime 实例。
@@ -137,6 +140,12 @@ class DateTime private constructor(
 			)
 		}
 
+		/**
+		 * 使用标准 9 位小数秒格式解析时间字符串并生成 DateTime 实例，自动补零到模板长度。
+		 *
+		 * @param timestr 时间字符串
+		 * @return 返回解析后的 DateTime 实例
+		 */
 		@JvmStatic
 		fun parse(
 			timestr: String,
@@ -303,6 +312,13 @@ class DateTime private constructor(
 			)
 		}
 
+		/**
+		 * 根据秒级时间戳和纳秒偏移量创建 DateTime 实例，使用系统默认时区。
+		 *
+		 * @param seconds 秒级时间戳
+		 * @param nanos 纳秒偏移量
+		 * @return 返回对应时间的 DateTime 实例
+		 */
 		@JvmStatic
 		fun of(seconds: Long, nanos: Long): DateTime {
 			return DateTime(
@@ -324,7 +340,18 @@ class DateTime private constructor(
 			)
 		}
 
+		/**
+		 * LocalDateTime 扩展函数，将接收者转换为 DateTime 实例。
+		 *
+		 * @return 对应的 DateTime 实例
+		 */
 		fun LocalDateTime.toDateTime(): DateTime = of(this)
+
+		/**
+		 * Date 扩展函数，将接收者转换为 DateTime 实例。
+		 *
+		 * @return 对应的 DateTime 实例
+		 */
 		fun Date.toDateTime(): DateTime = of(this)
 	}
 
@@ -346,6 +373,12 @@ class DateTime private constructor(
 		return localDateTime
 	}
 
+	/**
+	 * 将当前时间关联到指定时区，返回新的 DateTime 实例。
+	 *
+	 * @param zoneId 时区信息，默认为系统默认时区
+	 * @return 返回关联指定时区后的 DateTime 实例
+	 */
 	fun atZone(zoneId: ZoneId = ZoneId.systemDefault()): DateTime {
 		return DateTime(localDateTime, zoneId)
 	}
@@ -408,6 +441,11 @@ class DateTime private constructor(
 		return format(formatter.value)
 	}
 
+	/**
+	 * 使用标准 9 位小数秒格式将当前时间格式化为字符串，并去除末尾多余的零。
+	 *
+	 * @return 返回格式化后的时间字符串
+	 */
 	fun format(): String {
 		return format(Formatter.STANDARD_DATETIME_MILLISECOUND9.value, true)
 	}
@@ -536,18 +574,31 @@ class DateTime private constructor(
 		}
 	}
 
+	/**
+	 * 将当前时间转换为以 100 纳秒为单位的计时值（自 Unix 纪元起）。
+	 *
+	 * @return 100 纳秒单位的时间戳
+	 */
 	fun to100NanoTime(): Long {
 		return toInstant().let {
 			(it.epochSecond * 10_000_000L) + (it.nano / 100L)
 		}
 	}
 
+	/**
+	 * 将当前时间转换为毫秒时间戳（自 Unix 纪元起）。
+	 *
+	 * @return 毫秒时间戳
+	 */
 	fun toMillisecondTime(): Long {
 		return toInstant().let {
 			(it.epochSecond * 1000L) + (it.nano / 1_000_000L)
 		}
 	}
 
+	/**
+	 * 当前时间对应的秒级时间戳（自 Unix 纪元起）。
+	 */
 	val epochSecond: Long
 		get() {
 			return toInstant().epochSecond

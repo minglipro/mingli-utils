@@ -39,6 +39,9 @@ class IsChanged<T> {
 	 */
 	private val atomicReferenceData: AtomicReference<T> = AtomicReference()
 
+	/**
+	 * 无参构造函数，初始数据为 null
+	 */
 	constructor()
 
 	/**

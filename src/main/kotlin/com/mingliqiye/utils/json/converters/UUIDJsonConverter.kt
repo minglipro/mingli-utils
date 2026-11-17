@@ -34,8 +34,17 @@ import com.mingliqiye.utils.json.witer.base.BaseJsonWriter
 import com.mingliqiye.utils.uuid.UUID
 import com.mingliqiye.utils.uuid.UUIDFormatType
 
+/**
+ * [UUID] 的 JSON 字符串转换器。
+ *
+ * 根据字段上的 [UUIDJsonFormat] 注解选择进制与格式，
+ * 在 UUID 对象与 JSON 字符串之间进行双向转换。
+ */
 class UUIDJsonConverter : BaseJsonConverter<UUID> {
 
+	/**
+	 * 按 [UUIDJsonFormat] 注解指定的进制与格式将 UUID 写为 JSON 字符串，null 时写入 null
+	 */
 	override fun convert(
 		obj: UUID?,
 		jsonWriter: BaseJsonWriter,
@@ -60,6 +69,11 @@ class UUIDJsonConverter : BaseJsonConverter<UUID> {
 		jsonWriter.setString(uuid)
 	}
 
+	/**
+	 * 按 [UUIDJsonFormat] 注解指定的进制从 JSON 字符串解析 UUID
+	 *
+	 * @throws JsonParseException 当节点不是字符串类型时抛出
+	 */
 	override fun deConvert(
 		jsonReader: BaseJsonReader,
 		annotationGetter: AnnotationGetter,

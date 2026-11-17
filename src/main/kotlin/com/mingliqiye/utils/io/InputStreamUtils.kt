@@ -28,16 +28,37 @@ import java.io.OutputStream
 import java.nio.charset.Charset
 
 
+/**
+ * 读取输入流中的全部字节并按指定字符集解码为字符串。
+ *
+ * @param charset 字符编码，默认为 [Charsets.UTF_8]
+ * @return 解码后的字符串
+ */
 fun InputStream.readAllText(charset: Charset = Charsets.UTF_8) = this.readAllBytes().toString(charset)
 
+/**
+ * 将输入流中的全部字节导出到指定输出流，并刷新输出流。
+ *
+ * @param out 目标输出流
+ */
 fun InputStream.exportBytes(out: OutputStream) {
 	out.write(this.readAllBytes())
 	out.flush()
 }
 
+/**
+ * 读取输入流中的全部字节并转换为字节列表。
+ *
+ * @return 包含全部字节的列表
+ */
 fun InputStream.readToList(): List<Byte> = this.readBytes().toList()
 
 
+/**
+ * 读取输入流中的全部字节。
+ *
+ * @return 包含全部字节的字节数组
+ */
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 @JvmName("readInputStreamAllBytes")
 fun InputStream.readAllBytes(): ByteArray = this.readBytes()

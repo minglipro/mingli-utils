@@ -35,8 +35,17 @@ import org.springframework.stereotype.Component
 @Component
 class SpringBeanUtils : ApplicationContextAware {
 
+	/**
+	 * 伴生对象，持有应用上下文并提供静态的 Bean 获取方法。
+	 */
 	companion object {
 
+		/**
+		 * 当前 Spring 应用上下文。
+		 *
+		 * @return 已初始化的应用上下文
+		 * @throws ApplicationContextException 如果应用上下文尚未初始化
+		 */
 		@JvmStatic
 		val applicationContext: ApplicationContext
 			get() = applicationContextBase
@@ -44,13 +53,33 @@ class SpringBeanUtils : ApplicationContextAware {
 
 		private var applicationContextBase: ApplicationContext? = null
 
+		/**
+		 * 按类型创建 Bean 的懒加载委托，首次访问时才从容器中获取。
+		 *
+		 * @param T Bean 类型，通过 reified 获取实际类型
+		 * @return 懒加载委托，访问 value 时返回对应类型的 Bean 实例
+		 */
 		inline fun <reified T : Any> lazyBean(): Lazy<T> = lazy(::getBean)
 
+		/**
+		 * 按名称和类型创建 Bean 的懒加载委托，首次访问时才从容器中获取。
+		 *
+		 * @param T Bean 类型，通过 reified 获取实际类型
+		 * @param name Bean 的名称
+		 * @return 懒加载委托，访问 value 时返回对应名称和类型的 Bean 实例
+		 */
 		inline fun <reified T : Any> lazyBean(name: String): Lazy<T> = lazy {
 			getBean(name, T::class.java)
 		}
 
 
+		/**
+		 * 根据 reified 类型获取 Bean 实例。
+		 *
+		 * @param T Bean 类型，通过 reified 获取实际类型
+		 * @return 指定类型的 Bean 实例
+		 * @throws BeansException 当获取 Bean 失败时抛出
+		 */
 		@Throws(BeansException::class)
 		inline fun <reified T : Any> getBean() = getBean(T::class.java)
 

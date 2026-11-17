@@ -34,10 +34,15 @@ import javax.crypto.Cipher
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
+/** 加密算法名称：AES。 */
 const val ALGORITHM = "AES"
+/** AES 加密变换模式：GCM 模式，无填充。 */
 const val TRANSFORMATION = "AES/GCM/NoPadding"
+/** GCM 模式初始化向量（IV）长度，单位字节。 */
 const val GCM_IV_LENGTH = 12
+/** GCM 模式认证标签（Tag）长度，单位字节。 */
 const val GCM_TAG_LENGTH = 16
+/** 全局安全随机数生成器，用于生成加密安全的随机 IV。 */
 val SECURE_RANDOM = SecureRandom()
 
 

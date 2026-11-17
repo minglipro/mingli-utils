@@ -34,6 +34,9 @@ import java.util.*
  */
 abstract class JsonTypeReference<T> : Comparable<JsonTypeReference<T>> {
 
+	/**
+	 * 当前引用的类型信息，子类可覆写以自定义类型
+	 */
 	open var type: Type = Any::class.java
 
 	/**
@@ -68,6 +71,12 @@ abstract class JsonTypeReference<T> : Comparable<JsonTypeReference<T>> {
 	 * @return 类型引用实例
 	 */
 	companion object {
+		/**
+		 * 根据 reified 泛型参数创建类型引用
+		 *
+		 * @param <T> 目标类型
+		 * @return 类型引用实例
+		 */
 		inline fun <reified T> of(): JsonTypeReference<T> {
 			return object : JsonTypeReference<T>() {}
 		}

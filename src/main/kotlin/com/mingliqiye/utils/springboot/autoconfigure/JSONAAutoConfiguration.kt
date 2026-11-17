@@ -30,12 +30,24 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 
 
+/**
+ * 全局 JSON 入口 [JSONA] 的自动配置。
+ *
+ * 在容器中存在 [JsonApi] Bean 时生效（由 JacksonJsonApiAutoConfiguration
+ * 或 Jackson3JsonApiAutoConfiguration 注册），并在两者之后处理，
+ * 将容器中的 [JsonApi] 实现设置为 [JSONA] 的全局实例，供非 Spring 管理的代码使用。
+ *
+ * @param jsonApi 容器中已注册的 JSON API 实现
+ */
 @AutoConfiguration
 @AutoConfigureAfter(name = ["com.mingliqiye.utils.springboot.autoconfigure.JacksonJsonApiAutoConfiguration", "com.mingliqiye.utils.springboot.autoconfigure.Jackson3JsonApiAutoConfiguration"])
 @ConditionalOnBean(JsonApi::class)
 open class JSONAAutoConfiguration(
 	jsonApi: JsonApi,
 ) {
+	/**
+	 * 本配置类的日志记录器。
+	 */
 	val log = MingLiLoggerFactory.getLogger<JSONAAutoConfiguration>()
 
 	init {

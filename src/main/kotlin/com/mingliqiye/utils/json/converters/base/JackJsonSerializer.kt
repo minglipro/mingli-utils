@@ -29,11 +29,20 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.ContextualSerializer
 import com.mingliqiye.utils.json.witer.JackSonJsonWriter
 
+/**
+ * Jackson2 序列化适配器，将 [BaseJsonConverter] 包装为 Jackson2 的 [JsonSerializer]。
+ *
+ * @property property 当前属性信息，用于读取字段注解，可为null
+ * @property jsonConverter 实际执行序列化逻辑的转换器
+ */
 class JackJsonSerializer<T>(
 	val property: BeanProperty?,
 	val jsonConverter: BaseJsonConverter<T>,
 ) : JsonSerializer<T>(), ContextualSerializer {
 
+	/**
+	 * 注解获取器，从当前属性信息中读取字段注解
+	 */
 	val annotationGetter = object : AnnotationGetter {
 		override fun <T : Annotation> getAnnotation(clazz: Class<T>): T? = property?.getAnnotation(clazz)
 	}

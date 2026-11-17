@@ -34,6 +34,10 @@ import java.util.concurrent.Future
  */
 object ThreadRunner {
 
+	/**
+	 * 当前持有的线程池执行器，由 [init] 初始化、[close] 关闭。
+	 * 未初始化时为 null，此时调用任务提交方法会抛出空指针异常。
+	 */
 	var executorService: ExecutorService? = null
 
 	/**

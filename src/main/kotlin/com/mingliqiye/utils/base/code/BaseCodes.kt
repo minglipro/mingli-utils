@@ -62,11 +62,19 @@ val BASE64: BaseCodec by lazy {
 	Base64Codec()
 }
 
+/**
+ * 提供Base64 URL编码器的懒加载实例。
+ * 该编码器用于将数据编码为URL安全的Base64格式。
+ */
 @get:JvmName("base64Url")
 val BASE64_URL: BaseCodec by lazy {
 	Base64UrlCodec()
 }
 
+/**
+ * 提供无填充Base64 URL编码器的懒加载实例。
+ * 该编码器用于将数据编码为URL安全的Base64格式，且结果不带末尾的'='填充字符。
+ */
 @get:JvmName("base64NoPadding")
 val BASE64_NO_PADDING: BaseCodec by lazy {
 	Base64NoPaddingCodec()

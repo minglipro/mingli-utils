@@ -34,11 +34,15 @@ import tools.jackson.module.kotlin.jsonMapper
 import tools.jackson.module.kotlin.kotlinModule
 
 
+/**
+ * JSON API 集成测试，覆盖 Jackson3 与 DateTime 转换器的序列化/反序列化
+ */
 class TestJson {
 
 
 	private val log = Loggers.getLogger<TestJson>()
 
+	/** 测试配置 Jackson3 API 后 DateTime 的格式化与解析往返 */
 	@Test
 	fun test() {
 		JSONA.setJsonApi(

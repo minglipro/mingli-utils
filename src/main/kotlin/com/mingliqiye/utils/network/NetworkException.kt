@@ -22,6 +22,9 @@
 
 package com.mingliqiye.utils.network
 
+/**
+ * 网络异常，用于表示 IP 地址、端口号或域名解析等网络相关错误。
+ */
 class NetworkException : RuntimeException {
 	/**
 	 * 构造一个带有指定详细消息的网络异常

@@ -26,23 +26,56 @@ import java.io.OutputStream
 import java.io.Serializable
 import java.nio.ByteBuffer
 
+/**
+ * 可转换为字节数组的对象接口。
+ *
+ * 实现该接口的对象可以将自身序列化为字节数组，并支持写入输出流或 [ByteBuffer]。
+ */
 interface ByteConvertible : Serializable {
 
+	/**
+	 * 将当前对象转换为字节数组。
+	 *
+	 * @return 表示当前对象的字节数组
+	 */
 	fun toBytes(): ByteArray
 
+	/**
+	 * 将当前对象转换后的字节数组写入指定的输出流。
+	 *
+	 * @param outputStream 目标输出流
+	 */
 	fun writeToStream(outputStream: OutputStream) {
 		outputStream.write(toBytes())
 	}
 
+	/**
+	 * 将当前对象转换后的字节数组写入指定的 [ByteBuffer]。
+	 *
+	 * @param byteBuffer 目标缓冲区
+	 */
 	fun putToByteBuffer(byteBuffer: ByteBuffer) {
 		byteBuffer.put(toBytes())
 	}
 
+	/**
+	 * 伴生对象，提供面向输出流和缓冲区的便捷扩展函数。
+	 */
 	companion object {
+		/**
+		 * 将 [ByteConvertible] 对象写入当前输出流。
+		 *
+		 * @param byteConvertible 要写入的可转换对象
+		 */
 		fun OutputStream.write(byteConvertible: ByteConvertible) {
 			byteConvertible.writeToStream(this)
 		}
 
+		/**
+		 * 将 [ByteConvertible] 对象写入当前 [ByteBuffer]。
+		 *
+		 * @param byteConvertible 要写入的可转换对象
+		 */
 		fun ByteBuffer.put(byteConvertible: ByteConvertible) {
 			byteConvertible.putToByteBuffer(this)
 		}

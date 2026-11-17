@@ -34,15 +34,42 @@ import com.mingliqiye.utils.json.witer.base.BaseJsonWriter
  */
 interface BaseJsonConverter<T> {
 
+	/**
+	 * 序列化：将对象转换并写入 JSON
+	 *
+	 * @param obj 待写入的对象，可能为null
+	 * @param jsonWriter JSON写入器
+	 * @param annotationGetter 注解获取器，用于读取字段上的格式注解
+	 * @throws Exception 当写入失败时抛出
+	 */
 	@Throws(Exception::class)
 	fun convert(obj: T?, jsonWriter: BaseJsonWriter, annotationGetter: AnnotationGetter)
 
+	/**
+	 * 反序列化：从 JSON 读取并还原对象
+	 *
+	 * @param jsonReader JSON读取器
+	 * @param annotationGetter 注解获取器，用于读取字段上的格式注解
+	 * @return 还原后的对象，JSON为null时返回null
+	 * @throws Exception 当读取失败时抛出
+	 */
 	@Throws(Exception::class)
 	fun deConvert(jsonReader: BaseJsonReader, annotationGetter: AnnotationGetter): T?
 
+	/**
+	 * 获取本转换器处理的目标类型引用
+	 *
+	 * @return 目标类型的JsonTypeReference
+	 * @throws Exception 当获取类型失败时抛出
+	 */
 	@Throws(Exception::class)
 	fun getType(): JsonTypeReference<T>
 
+	/**
+	 * 获取本转换器处理的目标类型的原始Class
+	 *
+	 * @return 目标类型的Class对象
+	 */
 	@Throws(Exception::class)
 	fun getClazz() = getType().getRawType()
 }

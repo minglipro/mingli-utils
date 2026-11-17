@@ -198,6 +198,9 @@ class ByteBufferWrapper private constructor(private val buffer: ByteBuffer) {
 		return "ByteBufferWrapper(capacity=$capacity, position=$position, limit=$limit, remaining=$remaining)#${hashCode()}"
 	}
 
+	/**
+	 * 伴生对象，提供工厂方法以及类型转换器的注册与查询功能。
+	 */
 	companion object {
 		/**
 		 * 包装现有的 ByteBuffer
@@ -279,6 +282,11 @@ class ByteBufferWrapper private constructor(private val buffer: ByteBuffer) {
 				byteBufferWrapperConvertor
 		}
 
+		/**
+		 * 添加转换器到映射表，通过具体化类型参数自动创建转换器实例
+		 *
+		 * @param T 转换器类型，必须提供无参构造函数
+		 */
 		@JvmName("inline_addConvertor")
 		inline fun <reified T : ByteBufferWrapperConvertor<*>> addConvertor() {
 			addConvertor(ByteBufferWrapperConvertor.getInstantiation<T>())
@@ -537,24 +545,64 @@ class ByteBufferWrapper private constructor(private val buffer: ByteBuffer) {
 		return convertor.read(this, parameters)
 	}
 
+	/**
+	 * 从缓冲区中读取指定类型的对象（不带额外参数）
+	 *
+	 * @param clazz 要读取的对象类型对应的 Class 对象
+	 * @param T 要读取的对象类型
+	 * @return 读取并转换后的 T 类型对象
+	 * @throws IllegalArgumentException 如果该类型没有注册对应的转换器
+	 */
 	fun <T : Any> getObject(clazz: Class<T>): T {
 		return getObject(clazz, emptyArray())
 	}
 
+	/**
+	 * 从缓冲区中读取指定类型的对象，并传入长度参数
+	 *
+	 * @param clazz 要读取的对象类型对应的 Class 对象
+	 * @param size 读取长度（如数组元素个数），作为转换器的第一个参数
+	 * @param T 要读取的对象类型
+	 * @return 读取并转换后的 T 类型对象
+	 * @throws IllegalArgumentException 如果该类型没有注册对应的转换器
+	 */
 	fun <T : Any> getObject(clazz: Class<T>, size: Int): T {
 		return getObject(clazz, arrayOf(size))
 	}
 
+	/**
+	 * 从缓冲区中读取具体化类型 T 的对象，并传入额外参数
+	 *
+	 * @param parameters 传递给转换器的参数数组
+	 * @param T 要读取的对象类型
+	 * @return 读取并转换后的 T 类型对象
+	 * @throws IllegalArgumentException 如果该类型没有注册对应的转换器
+	 */
 	@JvmName("inline_getObject")
 	inline fun <reified T : Any> getObject(parameters: Array<Any>): T {
 		return getObject(T::class.java, parameters)
 	}
 
+	/**
+	 * 从缓冲区中读取具体化类型 T 的对象，并传入长度参数
+	 *
+	 * @param size 读取长度（如数组元素个数），作为转换器的第一个参数
+	 * @param T 要读取的对象类型
+	 * @return 读取并转换后的 T 类型对象
+	 * @throws IllegalArgumentException 如果该类型没有注册对应的转换器
+	 */
 	@JvmName("inline_getObject")
 	inline fun <reified T : Any> getObject(size: Int): T {
 		return getObject(T::class.java, size)
 	}
 
+	/**
+	 * 从缓冲区中读取具体化类型 T 的对象（不带额外参数）
+	 *
+	 * @param T 要读取的对象类型
+	 * @return 读取并转换后的 T 类型对象
+	 * @throws IllegalArgumentException 如果该类型没有注册对应的转换器
+	 */
 	@JvmName("inline_getObject")
 	inline fun <reified T : Any> getObject(): T {
 		return getObject(T::class.java)
@@ -574,11 +622,24 @@ class ByteBufferWrapper private constructor(private val buffer: ByteBuffer) {
 		return this
 	}
 
+	/**
+	 * 按初始化函数生成指定长度的字节数组并写入缓冲区
+	 *
+	 * @param size 要生成并写入的字节数
+	 * @param init 初始化函数，根据索引生成每个字节的值
+	 * @return 当前对象（支持链式调用）
+	 */
 	fun putByteArray(size: Int, init: (Int) -> Byte): ByteBufferWrapper {
 		buffer.put(ByteArray(size, init))
 		return this
 	}
 
+	/**
+	 * 将字符数组完整写入缓冲区（每个字符取低 8 位，1字节）
+	 *
+	 * @param charArray 要写入的字符数组
+	 * @return 当前对象（支持链式调用）
+	 */
 	fun putCharArray(charArray: CharArray): ByteBufferWrapper {
 		putByteArray(charArray.size) {
 			charArray[it].code.toByte()
@@ -586,6 +647,12 @@ class ByteBufferWrapper private constructor(private val buffer: ByteBuffer) {
 		return this
 	}
 
+	/**
+	 * 读取指定长度的字符数组（每个字节转换为一个字符）
+	 *
+	 * @param size 要读取的字符数
+	 * @return 读取的字符数组
+	 */
 	fun getCharArray(size: Int): CharArray {
 		return getByteArray(size).let {
 			CharArray(it.size) { s ->
@@ -594,52 +661,118 @@ class ByteBufferWrapper private constructor(private val buffer: ByteBuffer) {
 		}
 	}
 
+	/**
+	 * 将整数数组完整写入缓冲区（每个整数4字节）
+	 *
+	 * @param intArray 要写入的整数数组
+	 * @return 当前对象（支持链式调用）
+	 */
 	fun putIntArray(intArray: IntArray): ByteBufferWrapper {
 		intArray.forEach(::putInt)
 		return this
 	}
 
+	/**
+	 * 读取指定长度的整数数组
+	 *
+	 * @param size 要读取的整数个数
+	 * @return 读取的整数数组
+	 */
 	fun getIntArray(size: Int): IntArray {
 		return IntArray(size) { getInt() }
 	}
 
+	/**
+	 * 将短整数数组完整写入缓冲区（每个短整数2字节）
+	 *
+	 * @param shortArray 要写入的短整数数组
+	 * @return 当前对象（支持链式调用）
+	 */
 	fun putShortArray(shortArray: ShortArray): ByteBufferWrapper {
 		shortArray.forEach(::putShort)
 		return this
 	}
 
+	/**
+	 * 读取指定长度的短整数数组
+	 *
+	 * @param size 要读取的短整数个数
+	 * @return 读取的短整数数组
+	 */
 	fun getShortArray(size: Int): ShortArray {
 		return ShortArray(size) { getShort() }
 	}
 
+	/**
+	 * 将长整数数组完整写入缓冲区（每个长整数8字节）
+	 *
+	 * @param longArray 要写入的长整数数组
+	 * @return 当前对象（支持链式调用）
+	 */
 	fun putLongArray(longArray: LongArray): ByteBufferWrapper {
 		longArray.forEach(::putLong)
 		return this
 	}
 
+	/**
+	 * 读取指定长度的长整数数组
+	 *
+	 * @param size 要读取的长整数个数
+	 * @return 读取的长整数数组
+	 */
 	fun getLongArray(size: Int): LongArray {
 		return LongArray(size) { getLong() }
 	}
 
 
+	/**
+	 * 将双精度浮点数数组完整写入缓冲区（每个浮点数8字节）
+	 *
+	 * @param doubleArray 要写入的双精度浮点数数组
+	 * @return 当前对象（支持链式调用）
+	 */
 	fun putDoubleArray(doubleArray: DoubleArray): ByteBufferWrapper {
 		doubleArray.forEach(::putDouble)
 		return this
 	}
 
+	/**
+	 * 读取指定长度的双精度浮点数数组
+	 *
+	 * @param size 要读取的双精度浮点数个数
+	 * @return 读取的双精度浮点数数组
+	 */
 	fun getDoubleArray(size: Int): DoubleArray {
 		return DoubleArray(size) { getDouble() }
 	}
 
+	/**
+	 * 将单精度浮点数数组完整写入缓冲区（每个浮点数4字节）
+	 *
+	 * @param floatArray 要写入的单精度浮点数数组
+	 * @return 当前对象（支持链式调用）
+	 */
 	fun putFloatArray(floatArray: FloatArray): ByteBufferWrapper {
 		floatArray.forEach(::putFloat)
 		return this
 	}
 
+	/**
+	 * 读取指定长度的单精度浮点数数组
+	 *
+	 * @param size 要读取的单精度浮点数个数
+	 * @return 读取的单精度浮点数数组
+	 */
 	fun getFloatArray(size: Int): FloatArray {
 		return FloatArray(size) { getFloat() }
 	}
 
+	/**
+	 * 将布尔数组完整写入缓冲区（每个布尔值1字节，true = 0x01，false = 0x00）
+	 *
+	 * @param booleanArray 要写入的布尔数组
+	 * @return 当前对象（支持链式调用）
+	 */
 	fun putBooleanArray(booleanArray: BooleanArray): ByteBufferWrapper {
 		putByteArray(booleanArray.size) {
 			if (booleanArray[it]) 0x01 else 0x00
@@ -647,6 +780,13 @@ class ByteBufferWrapper private constructor(private val buffer: ByteBuffer) {
 		return this
 	}
 
+	/**
+	 * 读取指定长度的布尔数组
+	 *
+	 * @param size 要读取的布尔值个数
+	 * @return 读取的布尔数组
+	 * @throws IllegalArgumentException 如果读取到的字节值不是 0x00 或 0x01
+	 */
 	fun getBooleanArray(size: Int): BooleanArray {
 		return getByteArray(size).let {
 			BooleanArray(it.size) { index ->

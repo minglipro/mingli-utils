@@ -295,4 +295,12 @@ fun ByteBuffer.putVarInt(value: Int): ByteBuffer = this.putVarLong(value.toLong(
 fun ByteBuffer.putVarShort(value: Short): ByteBuffer = this.putVarLong(value.toLong())
 
 
+/**
+ * 将 [ByteBuffer] 中剩余的全部字节写入指定的输出流。
+ *
+ * 此操作会读取从当前位置到 limit 之间的所有字节，并推进 position。
+ *
+ * @param outputStream 目标输出流
+ * @throws IOException 如果写入过程中发生 I/O 错误
+ */
 fun ByteBuffer.writeStream(outputStream: OutputStream) = outputStream.write(this.toByteArray())

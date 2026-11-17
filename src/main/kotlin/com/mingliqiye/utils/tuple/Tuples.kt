@@ -25,28 +25,62 @@ package com.mingliqiye.utils.tuple
 
 import java.io.Serializable
 
+/**
+ * 元组抽象基类。
+ *
+ * 提供按索引访问元素以及转换为列表、集合的能力，子类通过 componentN 函数暴露各元素。
+ *
+ * @param size 元组包含的元素个数
+ */
 abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparable<Tuple> {
 
 	override fun iterator(): Iterator<Any> {
 		return toMutableList().iterator()
 	}
 
+	/**
+	 * 将元组的所有元素转换为列表。
+	 *
+	 * @return 包含全部元素的列表
+	 */
 	open fun toList(): List<Any> {
 		return (0..<size).map { get(it) }
 	}
 
+	/**
+	 * 将元组的所有元素转换为可变列表。
+	 *
+	 * @return 包含全部元素的可变列表
+	 */
 	open fun toMutableList(): MutableList<Any> {
 		return toList().toMutableList()
 	}
 
+	/**
+	 * 将元组的所有元素转换为集合（去重）。
+	 *
+	 * @return 包含全部元素的集合
+	 */
 	open fun toSet(): Set<Any> {
 		return toList().toSet()
 	}
 
+	/**
+	 * 将元组的所有元素转换为可变集合（去重）。
+	 *
+	 * @return 包含全部元素的可变集合
+	 */
 	open fun toMutableSet(): MutableSet<Any> {
 		return toList().toMutableSet()
 	}
 
+	/**
+	 * 按索引获取元组中的元素。
+	 *
+	 * @param index 元素索引（从 0 开始）
+	 * @return 对应位置的元素
+	 * @throws IndexOutOfBoundsException 如果索引超出元素个数
+	 */
 	operator fun get(index: Int): Any {
 		if (index >= size) {
 			throw IndexOutOfBoundsException("index $index is out size $size")
@@ -54,33 +88,81 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 		return this.javaClass.getDeclaredMethod("component${index + 1}").invoke(this)
 	}
 
+	/**
+	 * 伴生对象，提供创建各元数元组的工厂方法。
+	 */
 	companion object {
+		/**
+		 * 创建包含 1 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple1] 实例
+		 */
 		@JvmStatic
 		fun <T1> of(t1: T1) = Tuple1(t1)
 
+		/**
+		 * 创建包含 2 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple2] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2> of(t1: T1, t2: T2) = Tuple2(t1, t2)
 
+		/**
+		 * 创建包含 3 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple3] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3> of(t1: T1, t2: T2, t3: T3) = Tuple3(t1, t2, t3)
 
+		/**
+		 * 创建包含 4 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple4] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4> of(t1: T1, t2: T2, t3: T3, t4: T4) = Tuple4(t1, t2, t3, t4)
 
+		/**
+		 * 创建包含 5 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple5] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5> of(t1: T1, t2: T2, t3: T3, t4: T4, t5: T5) = Tuple5(t1, t2, t3, t4, t5)
 
+		/**
+		 * 创建包含 6 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple6] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6> of(t1: T1, t2: T2, t3: T3, t4: T4, t5: T5, t6: T6) = Tuple6(t1, t2, t3, t4, t5, t6)
 
+		/**
+		 * 创建包含 7 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple7] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7> of(t1: T1, t2: T2, t3: T3, t4: T4, t5: T5, t6: T6, t7: T7) =
 			Tuple7(t1, t2, t3, t4, t5, t6, t7)
 
+		/**
+		 * 创建包含 8 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple8] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8> of(t1: T1, t2: T2, t3: T3, t4: T4, t5: T5, t6: T6, t7: T7, t8: T8) =
 			Tuple8(t1, t2, t3, t4, t5, t6, t7, t8)
 
+		/**
+		 * 创建包含 9 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple9] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9> of(
 			t1: T1,
@@ -94,6 +176,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t9: T9,
 		) = Tuple9(t1, t2, t3, t4, t5, t6, t7, t8, t9)
 
+		/**
+		 * 创建包含 10 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple10] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> of(
 			t1: T1,
@@ -108,6 +195,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t10: T10,
 		) = Tuple10(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10)
 
+		/**
+		 * 创建包含 11 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple11] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> of(
 			t1: T1,
@@ -123,6 +215,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t11: T11,
 		) = Tuple11(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)
 
+		/**
+		 * 创建包含 12 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple12] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> of(
 			t1: T1,
@@ -139,6 +236,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t12: T12,
 		) = Tuple12(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12)
 
+		/**
+		 * 创建包含 13 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple13] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> of(
 			t1: T1,
@@ -156,6 +258,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t13: T13,
 		) = Tuple13(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13)
 
+		/**
+		 * 创建包含 14 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple14] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> of(
 			t1: T1,
@@ -174,6 +281,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t14: T14,
 		) = Tuple14(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14)
 
+		/**
+		 * 创建包含 15 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple15] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> of(
 			t1: T1,
@@ -193,6 +305,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t15: T15,
 		) = Tuple15(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15)
 
+		/**
+		 * 创建包含 16 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple16] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> of(
 			t1: T1,
@@ -213,6 +330,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t16: T16,
 		) = Tuple16(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16)
 
+		/**
+		 * 创建包含 17 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple17] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> of(
 			t1: T1,
@@ -234,6 +356,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t17: T17,
 		) = Tuple17(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17)
 
+		/**
+		 * 创建包含 18 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple18] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> of(
 			t1: T1,
@@ -256,6 +383,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t18: T18,
 		) = Tuple18(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18)
 
+		/**
+		 * 创建包含 19 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple19] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> of(
 			t1: T1,
@@ -279,6 +411,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t19: T19,
 		) = Tuple19(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19)
 
+		/**
+		 * 创建包含 20 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple20] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> of(
 			t1: T1,
@@ -303,6 +440,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t20: T20,
 		) = Tuple20(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20)
 
+		/**
+		 * 创建包含 21 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple21] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21> of(
 			t1: T1,
@@ -328,6 +470,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t21: T21,
 		) = Tuple21(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21)
 
+		/**
+		 * 创建包含 22 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple22] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22> of(
 			t1: T1,
@@ -354,6 +501,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t22: T22,
 		) = Tuple22(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22)
 
+		/**
+		 * 创建包含 23 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple23] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23> of(
 			t1: T1,
@@ -405,6 +557,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t23
 		)
 
+		/**
+		 * 创建包含 24 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple24] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24> of(
 			t1: T1,
@@ -458,6 +615,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t24
 		)
 
+		/**
+		 * 创建包含 25 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple25] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25> of(
 			t1: T1,
@@ -513,6 +675,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t25
 		)
 
+		/**
+		 * 创建包含 26 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple26] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26> of(
 			t1: T1,
@@ -570,6 +737,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t26
 		)
 
+		/**
+		 * 创建包含 27 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple27] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27> of(
 			t1: T1,
@@ -629,6 +801,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t27
 		)
 
+		/**
+		 * 创建包含 28 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple28] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28> of(
 			t1: T1,
@@ -690,6 +867,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t28
 		)
 
+		/**
+		 * 创建包含 29 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple29] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29> of(
 			t1: T1,
@@ -753,6 +935,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t29
 		)
 
+		/**
+		 * 创建包含 30 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple30] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30> of(
 			t1: T1,
@@ -818,6 +1005,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t30
 		)
 
+		/**
+		 * 创建包含 31 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple31] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31> of(
 			t1: T1,
@@ -885,6 +1077,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t31
 		)
 
+		/**
+		 * 创建包含 32 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple32] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32> of(
 			t1: T1,
@@ -954,6 +1151,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t32
 		)
 
+		/**
+		 * 创建包含 33 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple33] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33> of(
 			t1: T1,
@@ -1025,6 +1227,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t33
 		)
 
+		/**
+		 * 创建包含 34 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple34] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34> of(
 			t1: T1,
@@ -1098,6 +1305,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t34
 		)
 
+		/**
+		 * 创建包含 35 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple35] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> of(
 			t1: T1,
@@ -1173,6 +1385,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t35
 		)
 
+		/**
+		 * 创建包含 36 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple36] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> of(
 			t1: T1,
@@ -1250,6 +1467,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t36
 		)
 
+		/**
+		 * 创建包含 37 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple37] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37> of(
 			t1: T1,
@@ -1329,6 +1551,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t37
 		)
 
+		/**
+		 * 创建包含 38 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple38] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38> of(
 			t1: T1,
@@ -1410,6 +1637,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t38
 		)
 
+		/**
+		 * 创建包含 39 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple39] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39> of(
 			t1: T1,
@@ -1493,6 +1725,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t39
 		)
 
+		/**
+		 * 创建包含 40 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple40] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40> of(
 			t1: T1,
@@ -1578,6 +1815,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t40
 		)
 
+		/**
+		 * 创建包含 41 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple41] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41> of(
 			t1: T1,
@@ -1665,6 +1907,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t41
 		)
 
+		/**
+		 * 创建包含 42 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple42] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42> of(
 			t1: T1,
@@ -1754,6 +2001,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t42
 		)
 
+		/**
+		 * 创建包含 43 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple43] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43> of(
 			t1: T1,
@@ -1845,6 +2097,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t43
 		)
 
+		/**
+		 * 创建包含 44 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple44] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44> of(
 			t1: T1,
@@ -1938,6 +2195,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t44
 		)
 
+		/**
+		 * 创建包含 45 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple45] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45> of(
 			t1: T1,
@@ -2033,6 +2295,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t45
 		)
 
+		/**
+		 * 创建包含 46 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple46] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46> of(
 			t1: T1,
@@ -2130,6 +2397,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t46
 		)
 
+		/**
+		 * 创建包含 47 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple47] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47> of(
 			t1: T1,
@@ -2229,6 +2501,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t47
 		)
 
+		/**
+		 * 创建包含 48 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple48] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48> of(
 			t1: T1,
@@ -2330,6 +2607,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t48
 		)
 
+		/**
+		 * 创建包含 49 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple49] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49> of(
 			t1: T1,
@@ -2433,6 +2715,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t49
 		)
 
+		/**
+		 * 创建包含 50 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple50] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50> of(
 			t1: T1,
@@ -2538,6 +2825,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t50
 		)
 
+		/**
+		 * 创建包含 51 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple51] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51> of(
 			t1: T1,
@@ -2645,6 +2937,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t51
 		)
 
+		/**
+		 * 创建包含 52 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple52] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52> of(
 			t1: T1,
@@ -2754,6 +3051,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t52
 		)
 
+		/**
+		 * 创建包含 53 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple53] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53> of(
 			t1: T1,
@@ -2865,6 +3167,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t53
 		)
 
+		/**
+		 * 创建包含 54 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple54] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54> of(
 			t1: T1,
@@ -2978,6 +3285,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t54
 		)
 
+		/**
+		 * 创建包含 55 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple55] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55> of(
 			t1: T1,
@@ -3093,6 +3405,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t55
 		)
 
+		/**
+		 * 创建包含 56 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple56] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56> of(
 			t1: T1,
@@ -3210,6 +3527,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t56
 		)
 
+		/**
+		 * 创建包含 57 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple57] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57> of(
 			t1: T1,
@@ -3329,6 +3651,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t57
 		)
 
+		/**
+		 * 创建包含 58 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple58] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58> of(
 			t1: T1,
@@ -3450,6 +3777,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t58
 		)
 
+		/**
+		 * 创建包含 59 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple59] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59> of(
 			t1: T1,
@@ -3573,6 +3905,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t59
 		)
 
+		/**
+		 * 创建包含 60 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple60] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60> of(
 			t1: T1,
@@ -3698,6 +4035,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t60
 		)
 
+		/**
+		 * 创建包含 61 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple61] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61> of(
 			t1: T1,
@@ -3825,6 +4167,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t61
 		)
 
+		/**
+		 * 创建包含 62 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple62] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62> of(
 			t1: T1,
@@ -3954,6 +4301,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t62
 		)
 
+		/**
+		 * 创建包含 63 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple63] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63> of(
 			t1: T1,
@@ -4085,6 +4437,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t63
 		)
 
+		/**
+		 * 创建包含 64 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple64] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64> of(
 			t1: T1,
@@ -4218,6 +4575,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t64
 		)
 
+		/**
+		 * 创建包含 65 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple65] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65> of(
 			t1: T1,
@@ -4353,6 +4715,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t65
 		)
 
+		/**
+		 * 创建包含 66 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple66] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66> of(
 			t1: T1,
@@ -4490,6 +4857,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t66
 		)
 
+		/**
+		 * 创建包含 67 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple67] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67> of(
 			t1: T1,
@@ -4629,6 +5001,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t67
 		)
 
+		/**
+		 * 创建包含 68 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple68] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68> of(
 			t1: T1,
@@ -4770,6 +5147,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t68
 		)
 
+		/**
+		 * 创建包含 69 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple69] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69> of(
 			t1: T1,
@@ -4913,6 +5295,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t69
 		)
 
+		/**
+		 * 创建包含 70 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple70] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70> of(
 			t1: T1,
@@ -5058,6 +5445,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t70
 		)
 
+		/**
+		 * 创建包含 71 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple71] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71> of(
 			t1: T1,
@@ -5205,6 +5597,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t71
 		)
 
+		/**
+		 * 创建包含 72 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple72] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72> of(
 			t1: T1,
@@ -5354,6 +5751,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t72
 		)
 
+		/**
+		 * 创建包含 73 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple73] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73> of(
 			t1: T1,
@@ -5505,6 +5907,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t73
 		)
 
+		/**
+		 * 创建包含 74 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple74] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74> of(
 			t1: T1,
@@ -5658,6 +6065,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t74
 		)
 
+		/**
+		 * 创建包含 75 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple75] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75> of(
 			t1: T1,
@@ -5813,6 +6225,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t75
 		)
 
+		/**
+		 * 创建包含 76 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple76] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76> of(
 			t1: T1,
@@ -5970,6 +6387,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t76
 		)
 
+		/**
+		 * 创建包含 77 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple77] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77> of(
 			t1: T1,
@@ -6129,6 +6551,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t77
 		)
 
+		/**
+		 * 创建包含 78 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple78] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78> of(
 			t1: T1,
@@ -6290,6 +6717,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t78
 		)
 
+		/**
+		 * 创建包含 79 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple79] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79> of(
 			t1: T1,
@@ -6453,6 +6885,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t79
 		)
 
+		/**
+		 * 创建包含 80 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple80] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80> of(
 			t1: T1,
@@ -6618,6 +7055,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t80
 		)
 
+		/**
+		 * 创建包含 81 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple81] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81> of(
 			t1: T1,
@@ -6785,6 +7227,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t81
 		)
 
+		/**
+		 * 创建包含 82 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple82] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82> of(
 			t1: T1,
@@ -6954,6 +7401,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t82
 		)
 
+		/**
+		 * 创建包含 83 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple83] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83> of(
 			t1: T1,
@@ -7125,6 +7577,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t83
 		)
 
+		/**
+		 * 创建包含 84 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple84] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84> of(
 			t1: T1,
@@ -7298,6 +7755,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t84
 		)
 
+		/**
+		 * 创建包含 85 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple85] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85> of(
 			t1: T1,
@@ -7473,6 +7935,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t85
 		)
 
+		/**
+		 * 创建包含 86 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple86] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86> of(
 			t1: T1,
@@ -7650,6 +8117,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t86
 		)
 
+		/**
+		 * 创建包含 87 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple87] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87> of(
 			t1: T1,
@@ -7829,6 +8301,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t87
 		)
 
+		/**
+		 * 创建包含 88 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple88] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88> of(
 			t1: T1,
@@ -8010,6 +8487,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t88
 		)
 
+		/**
+		 * 创建包含 89 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple89] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89> of(
 			t1: T1,
@@ -8193,6 +8675,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t89
 		)
 
+		/**
+		 * 创建包含 90 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple90] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90> of(
 			t1: T1,
@@ -8378,6 +8865,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t90
 		)
 
+		/**
+		 * 创建包含 91 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple91] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90, T91> of(
 			t1: T1,
@@ -8565,6 +9057,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t91
 		)
 
+		/**
+		 * 创建包含 92 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple92] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90, T91, T92> of(
 			t1: T1,
@@ -8754,6 +9251,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t92
 		)
 
+		/**
+		 * 创建包含 93 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple93] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90, T91, T92, T93> of(
 			t1: T1,
@@ -8945,6 +9447,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t93
 		)
 
+		/**
+		 * 创建包含 94 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple94] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90, T91, T92, T93, T94> of(
 			t1: T1,
@@ -9138,6 +9645,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t94
 		)
 
+		/**
+		 * 创建包含 95 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple95] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90, T91, T92, T93, T94, T95> of(
 			t1: T1,
@@ -9333,6 +9845,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t95
 		)
 
+		/**
+		 * 创建包含 96 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple96] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90, T91, T92, T93, T94, T95, T96> of(
 			t1: T1,
@@ -9530,6 +10047,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t96
 		)
 
+		/**
+		 * 创建包含 97 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple97] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90, T91, T92, T93, T94, T95, T96, T97> of(
 			t1: T1,
@@ -9729,6 +10251,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t97
 		)
 
+		/**
+		 * 创建包含 98 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple98] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90, T91, T92, T93, T94, T95, T96, T97, T98> of(
 			t1: T1,
@@ -9930,6 +10457,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t98
 		)
 
+		/**
+		 * 创建包含 99 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple99] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90, T91, T92, T93, T94, T95, T96, T97, T98, T99> of(
 			t1: T1,
@@ -10133,6 +10665,11 @@ abstract class Tuple(val size: Int = 1) : Serializable, Iterable<Any>, Comparabl
 			t99
 		)
 
+		/**
+		 * 创建包含 100 个元素的元组。
+		 *
+		 * @return 对应的 [Tuple100] 实例
+		 */
 		@JvmStatic
 		fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50, T51, T52, T53, T54, T55, T56, T57, T58, T59, T60, T61, T62, T63, T64, T65, T66, T67, T68, T69, T70, T71, T72, T73, T74, T75, T76, T77, T78, T79, T80, T81, T82, T83, T84, T85, T86, T87, T88, T89, T90, T91, T92, T93, T94, T95, T96, T97, T98, T99, T100> of(
 			t1: T1,

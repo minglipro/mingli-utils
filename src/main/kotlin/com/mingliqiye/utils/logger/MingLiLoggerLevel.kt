@@ -22,10 +22,32 @@
 
 package com.mingliqiye.utils.logger
 
+/**
+ * 日志级别枚举，定义 MingLiLogger 支持的五个日志级别。
+ */
 enum class MingLiLoggerLevel {
+	/**
+	 * 跟踪级别，最详细的调试信息
+	 */
 	TRACE,
+
+	/**
+	 * 调试级别
+	 */
 	DEBUG,
+
+	/**
+	 * 信息级别
+	 */
 	INFO,
+
+	/**
+	 * 警告级别
+	 */
 	WARN,
+
+	/**
+	 * 错误级别
+	 */
 	ERROR
 }

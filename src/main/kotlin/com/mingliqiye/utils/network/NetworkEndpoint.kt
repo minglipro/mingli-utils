@@ -35,10 +35,12 @@ import java.nio.ByteBuffer
  * @see java.net.InetSocketAddress
  */
 class NetworkEndpoint private constructor(
-	val networkAddress: NetworkAddress, val networkPort: NetworkPort,
+	/** 网络地址（IP 或域名解析结果） */
+	val networkAddress: NetworkAddress, /** 网络端口 */ val networkPort: NetworkPort,
 ) : Serializable, InetSocketAddress(networkAddress.toInetAddress(), networkPort.port) {
 
 
+	/** 伴生对象，提供工厂方法与 SocketAddress 扩展属性 */
 	companion object {
 		/**
 		 * 根据给定的InetSocketAddress对象创建NetworkEndpoint实例。
@@ -122,8 +124,10 @@ class NetworkEndpoint private constructor(
 			)
 		}
 
+		/** 将 [SocketAddress] 转换为 [NetworkEndpoint]，仅支持 InetSocketAddress */
 		val SocketAddress.networkAddress: NetworkEndpoint
 			get() = of(this)
+		/** 获取 [SocketAddress] 的 "host:port" 格式字符串 */
 		val SocketAddress.hostPortString: String
 			get() = networkAddress.toHostPortString()
 	}

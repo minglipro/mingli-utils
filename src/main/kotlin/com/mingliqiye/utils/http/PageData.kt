@@ -53,7 +53,15 @@ data class PageData<T>(
 	 */
 	val pageIndex: Long = 0,
 ) {
+	/** 伴生对象，提供工厂方法 */
 	companion object {
+		/**
+		 * 从 MyBatis-Plus 的分页对象构建分页数据
+		 *
+		 * @param T 记录类型
+		 * @param page MyBatis-Plus 分页对象
+		 * @return 转换后的分页数据
+		 */
 		fun <T> of(page: Page<T>): PageData<T> = PageData(
 			records = page.records,
 			totalCount = page.total,

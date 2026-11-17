@@ -40,6 +40,7 @@ class ThreadPoolExtTest {
 
     // ---- shutdownGracefully ----
 
+    /** 测试 shutdownGracefully 等待任务完成后正常终止线程池 */
     @Test
     fun testShutdownGracefully() {
         val pool = fixedThreadPool(2, "shutdown-test")
@@ -48,6 +49,7 @@ class ThreadPoolExtTest {
         assertTrue(pool.isTerminated)
     }
 
+    /** 测试 shutdownAndAwait 关闭并等待线程池终止 */
     @Test
     fun testShutdownAndAwait() {
         val pool = fixedThreadPool(1, "shutdown-await-test")
@@ -56,6 +58,7 @@ class ThreadPoolExtTest {
         assertTrue(pool.isTerminated)
     }
 
+    /** 测试 shutdownAndAwait 超时未终止时抛出 IllegalStateException */
     @Test
     fun testShutdownAndAwaitTimeout() {
         val pool = singleThreadPool("shutdown-timeout-test")
@@ -74,6 +77,7 @@ class ThreadPoolExtTest {
 
     // ---- Future 扩展 ----
 
+    /** 测试 Future.await 阻塞获取结果 */
     @Test
     fun testFutureAwait() {
         val pool = singleThreadPool("await-test")
@@ -85,6 +89,7 @@ class ThreadPoolExtTest {
         }
     }
 
+    /** 测试 Future.await 解包 ExecutionException 抛出原始异常 */
     @Test
     fun testFutureAwaitUnwrapException() {
         val pool = singleThreadPool("unwrap-test")
@@ -98,6 +103,7 @@ class ThreadPoolExtTest {
         }
     }
 
+    /** 测试 Future.await 带超时版本超时抛出 TimeoutException 且任务仍可完成 */
     @Test
     fun testFutureAwaitWithTimeout() {
         val pool = singleThreadPool("await-timeout-test")
@@ -116,6 +122,7 @@ class ThreadPoolExtTest {
         }
     }
 
+    /** 测试 getOrNull 超时返回 null 且不影响任务最终完成 */
     @Test
     fun testGetOrNullTimeout() {
         val pool = singleThreadPool("getornull-test")
@@ -131,6 +138,7 @@ class ThreadPoolExtTest {
         }
     }
 
+    /** 测试 getOrNull 任务失败时返回 null */
     @Test
     fun testGetOrNullFailure() {
         val pool = singleThreadPool("getornull-fail-test")
@@ -142,6 +150,7 @@ class ThreadPoolExtTest {
         }
     }
 
+    /** 测试 getOrDefault 失败返回默认值、成功返回实际结果 */
     @Test
     fun testGetOrDefault() {
         val pool = singleThreadPool("getordefault-test")
@@ -157,6 +166,7 @@ class ThreadPoolExtTest {
         }
     }
 
+    /** 测试 cancelQuietly 静默取消任务并置为已取消状态 */
     @Test
     fun testCancelQuietly() {
         val pool = singleThreadPool("cancel-test")
@@ -174,12 +184,14 @@ class ThreadPoolExtTest {
 
     // ---- CompletableFuture ----
 
+    /** 测试 completableFuture 异步计算并返回结果 */
     @Test
     fun testCompletableFuture() {
         val future = completableFuture { 1 + 1 }
         assertEquals(2, future.get(3, TimeUnit.SECONDS))
     }
 
+    /** 测试 completableFuture 使用指定线程池执行 */
     @Test
     fun testCompletableFutureWithExecutor() {
         val pool = fixedThreadPool(2, "cf-test")
@@ -191,6 +203,7 @@ class ThreadPoolExtTest {
         }
     }
 
+    /** 测试 runCompletableFuture 异步执行无返回值任务 */
     @Test
     fun testRunCompletableFuture() {
         val latch = CountDownLatch(1)
@@ -201,6 +214,7 @@ class ThreadPoolExtTest {
 
     // ---- ThreadPoolMonitor ----
 
+    /** 测试 snapshot 采集线程池各项运行指标 */
     @Test
     fun testSnapshot() {
         val pool = fixedThreadPool(2, "snapshot-test")
@@ -221,6 +235,7 @@ class ThreadPoolExtTest {
         }
     }
 
+    /** 测试快照 toString 输出格式包含关键字段 */
     @Test
     fun testSnapshotToString() {
         val pool = fixedThreadPool(1, "snapshot-string-test")
@@ -234,6 +249,7 @@ class ThreadPoolExtTest {
         }
     }
 
+    /** 测试 report 生成线程池快照报告文本 */
     @Test
     fun testReport() {
         val pool = fixedThreadPool(1, "report-test")
@@ -245,6 +261,7 @@ class ThreadPoolExtTest {
         }
     }
 
+    /** 测试 monitor 周期性回调监控快照 */
     @Test
     fun testMonitorPeriodic() {
         val pool = fixedThreadPool(2, "monitor-test")

@@ -22,6 +22,11 @@
 
 package com.mingliqiye.utils.mybatis
 
+/**
+ * 类型处理器取值时的调用类型枚举。
+ * 标识当前是从 ResultSet 还是 CallableStatement、以及通过列索引还是列名获取数据，
+ * 供 [QuickBaseTypeHandler.getValue] 在取值时选择对应的 JDBC 访问方式。
+ */
 enum class CallType {
 	/**
 	 * 通过索引访问结果集

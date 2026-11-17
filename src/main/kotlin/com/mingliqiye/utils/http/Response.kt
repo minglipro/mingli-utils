@@ -49,6 +49,7 @@ data class Response<T>(
 	statusCode,
 ) {
 
+	/** 伴生对象，提供各类响应的工厂方法 */
 	companion object {
 		/**
 		 * 创建一个默认的成功响应对象

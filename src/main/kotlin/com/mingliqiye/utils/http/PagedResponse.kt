@@ -25,6 +25,18 @@ package com.mingliqiye.utils.http
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.mingliqiye.utils.time.DateTime
 
+/**
+ * 分页 HTTP 响应数据类，数据部分为 [PageData] 分页结构。
+ *
+ * 继承 [BaseResponse]，支持链式调用与 with* 不可变更新，
+ * 并提供多种工厂方法创建成功/错误响应。
+ *
+ * @param T 分页记录的类型
+ * @property time 响应时间（格式化的字符串）
+ * @property message 响应消息
+ * @property data 分页响应数据
+ * @property statusCode HTTP 状态码
+ */
 data class PagedResponse<T>(
 	override val time: String,      // 响应时间，一旦创建不可修改
 	override var message: String,   // 响应消息，可通过setter修改
@@ -36,6 +48,7 @@ data class PagedResponse<T>(
 	data,
 	statusCode
 ) {
+	/** 伴生对象，提供各类分页响应的工厂方法 */
 	companion object {
 		/**
 		 * 创建一个默认的成功响应对象

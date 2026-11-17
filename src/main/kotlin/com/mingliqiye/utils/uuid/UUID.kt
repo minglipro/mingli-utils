@@ -58,6 +58,9 @@ class UUID : Serializable {
 	private val leastSigBits: Long
 	private val version: Int
 
+	/**
+	 * 伴生对象，提供各版本 UUID 的生成方法和多种格式的工厂方法。
+	 */
 	companion object {
 
 
@@ -78,21 +81,48 @@ class UUID : Serializable {
 		val UUID_EPOCH_OFFSET = 141427L
 
 
+		/**
+		 * 根据 Base64 短字符串创建 UUID 实例。
+		 *
+		 * @param baseShortString Base64 编码的 UUID 短字符串
+		 * @return UUID 实例
+		 */
 		@JvmStatic
 		fun ofBase64ShortString(baseShortString: String): UUID {
 			return UUID(BaseType.BASE64.decode(baseShortString))
 		}
 
+		/**
+		 * 根据 Base256 短字符串创建 UUID 实例。
+		 *
+		 * @param baseShortString Base256 编码的 UUID 短字符串
+		 * @return UUID 实例
+		 */
 		@JvmStatic
 		fun ofBase256ShortString(baseShortString: String): UUID {
 			return UUID(BaseType.BASE256.decode(baseShortString))
 		}
 
+		/**
+		 * 根据 Base91 短字符串创建 UUID 实例。
+		 *
+		 * @param baseShortString Base91 编码的 UUID 短字符串
+		 * @return UUID 实例
+		 */
 		@JvmStatic
 		fun ofBase91ShortString(baseShortString: String): UUID {
 			return UUID(BaseType.BASE91.decode(baseShortString))
 		}
 
+		/**
+		 * 生成一个 UUID V8 版本，使用开发者自定义的三段字节数据，并自动设置版本号和变体位。
+		 *
+		 * @param customA 自定义数据 A，必须为 6 字节
+		 * @param customB 自定义数据 B，必须为 2 字节，高 4 位会被替换为版本号
+		 * @param customC 自定义数据 C，必须为 8 字节，高 2 位会被替换为变体标识
+		 * @return UUID V8 实例
+		 * @throws IllegalArgumentException 如果任一段字节数组长度不符合要求
+		 */
 		@JvmStatic
 		fun getV8(
 			customA: ByteArray, // 6字节
@@ -140,6 +170,11 @@ class UUID : Serializable {
 			return UUID(byteBuffer.array())
 		}
 
+		/**
+		 * 生成一个 UUID V1 版本，使用系统时钟和随机生成的节点信息（不使用真实 MAC 地址）。
+		 *
+		 * @return UUID V1 实例
+		 */
 		@JvmStatic
 		fun getV1RandomMac(): UUID {
 			val time = DateTime.now().add(DateTimeOffset.of(UUID_EPOCH_OFFSET, ChronoUnit.DAYS)).to100NanoTime()
@@ -421,6 +456,13 @@ class UUID : Serializable {
 			return result
 		}
 
+		/**
+		 * 根据指定编码类型的字符串创建 UUID 实例。
+		 *
+		 * @param str 按指定编码类型编码的 UUID 字符串
+		 * @param base 编码类型
+		 * @return UUID 实例
+		 */
 		fun of(str: String, base: BaseType): UUID {
 			return UUID(base.codec.decode(str))
 		}
@@ -496,6 +538,12 @@ class UUID : Serializable {
 		return data
 	}
 
+	/**
+	 * 将 UUID 的 16 字节数据写入指定的 ByteBuffer。
+	 *
+	 * @param byteBuffer 目标 ByteBuffer，需保证有足够的剩余空间
+	 * @return 写入后的 ByteBuffer 实例
+	 */
 	fun writeToByteBuffer(byteBuffer: ByteBuffer): ByteBuffer {
 		return byteBuffer.put(data)
 	}
@@ -547,14 +595,32 @@ class UUID : Serializable {
 		}
 	}
 
+	/**
+	 * 按指定的 UUID 格式类型返回 UUID 字符串。
+	 *
+	 * @param uuidFormatType UUID 格式类型，控制大小写和是否保留连字符
+	 * @return 格式化后的 UUID 字符串
+	 */
 	fun getString(uuidFormatType: UUIDFormatType): String {
 		return getString(isUpper = uuidFormatType.isUpper, isnotSpace = uuidFormatType.isnotSpace)
 	}
 
+	/**
+	 * 使用指定编码类型将 UUID 编码为字符串。
+	 *
+	 * @param baseType 编码类型
+	 * @return 编码后的 UUID 字符串
+	 */
 	fun getString(baseType: BaseType): String {
 		return getString(baseType.codec)
 	}
 
+	/**
+	 * 使用指定编码器将 UUID 字节数据编码为字符串。
+	 *
+	 * @param baseCodec 编码器
+	 * @return 编码后的 UUID 字符串
+	 */
 	fun getString(baseCodec: BaseCodec): String {
 		return baseCodec.encode(data)
 	}
@@ -743,14 +809,29 @@ class UUID : Serializable {
 		return getMac(":")
 	}
 
+	/**
+	 * 返回 UUID 的 Base64 短字符串表示（22 个字符，不含填充符）。
+	 *
+	 * @return Base64 短字符串
+	 */
 	fun getBase64ShortString(): String {
 		return BaseType.BASE64.encode(data).substring(0, 22)
 	}
 
+	/**
+	 * 返回 UUID 的 Base91 短字符串表示。
+	 *
+	 * @return Base91 短字符串
+	 */
 	fun getBase91ShortString(): String {
 		return BaseType.BASE91.encode(data)
 	}
 
+	/**
+	 * 返回 UUID 的 Base256 短字符串表示。
+	 *
+	 * @return Base256 短字符串
+	 */
 	fun getBase256ShortString(): String {
 		return BaseType.BASE256.encode(data)
 	}

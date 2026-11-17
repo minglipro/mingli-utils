@@ -25,6 +25,13 @@ package com.mingliqiye.utils.springboot.annotation
 import org.springframework.core.annotation.AliasFor
 import org.springframework.stereotype.Component
 
+/**
+ * 监听器组件注解，组合了 [Component] 的语义。
+ * 被标注的类会被组件扫描注册为 Spring Bean，
+ * [value] 通过 [AliasFor] 别名到 [Component.value]，用于指定 Bean 名称。
+ *
+ * @property value Bean 名称，默认为空字符串（由 Spring 按类名生成）
+ */
 @Component
 annotation class Listener(
 	@get:AliasFor(annotation = Component::class)

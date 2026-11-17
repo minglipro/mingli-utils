@@ -34,22 +34,48 @@ import tools.jackson.databind.node.JsonNodeType
 import tools.jackson.databind.node.ObjectNode
 import java.lang.reflect.Type
 
+/**
+ * 基于Jackson3的JSON处理实现类，提供JSON字符串解析、格式化、合并、节点操作等功能。
+ *
+ * 节点路径操作（[getNodeValue]、[updateNodeValue]）使用JSON Pointer风格路径（如"/user/name"）。
+ * ObjectMapper支持直接持有，也支持通过get/set回调间接访问外部实例。
+ */
 class Jackson3JsonApi : JsonApi {
 
+	/**
+	 * ObjectMapper的获取回调，默认返回内部持有的实例
+	 */
 	var get: () -> ObjectMapper = { _prObjectMapper!! }
+	/**
+	 * ObjectMapper的设置回调，默认写入内部持有的实例
+	 */
 	var set: (ObjectMapper) -> Unit = { _prObjectMapper = it }
 
 	private var _prObjectMapper: ObjectMapper? = null
 
 
+	/**
+	 * 当前使用的ObjectMapper实例，读写均通过[get]/[set]回调转发
+	 */
 	var objectMapper: ObjectMapper
 		get() = get()
 		private set(value) = set(value)
 
+	/**
+	 * 使用指定的ObjectMapper构造实例
+	 *
+	 * @param objectMapper 自定义的ObjectMapper实例
+	 */
 	constructor(objectMapper: ObjectMapper) {
 		_prObjectMapper = objectMapper
 	}
 
+	/**
+	 * 使用获取/设置回调构造实例，ObjectMapper由外部管理
+	 *
+	 * @param get ObjectMapper的获取回调
+	 * @param set ObjectMapper的设置回调
+	 */
 	constructor(
 		get: () -> ObjectMapper,
 		set: (ObjectMapper) -> Unit,
@@ -58,6 +84,9 @@ class Jackson3JsonApi : JsonApi {
 		this.set = set
 	}
 
+	/**
+	 * 使用默认的ObjectMapper构造实例
+	 */
 	constructor() {
 		_prObjectMapper = ObjectMapper()
 	}
@@ -105,6 +134,9 @@ class Jackson3JsonApi : JsonApi {
 		}
 	}
 
+	/**
+	 * 合并多个JSON对象字符串；无参数时返回"{}"，遇到非对象JSON时抛出JsonException
+	 */
 	override fun merge(vararg jsons: String): String {
 		try {
 			if (jsons.isEmpty()) return "{}"
@@ -126,6 +158,9 @@ class Jackson3JsonApi : JsonApi {
 		}
 	}
 
+	/**
+	 * 获取指定路径的节点值，路径为JSON Pointer风格（如"/user/name"），节点缺失或为null时返回null
+	 */
 	override fun getNodeValue(json: String, path: String): String? {
 		try {
 			val rootNode = objectMapper.readTree(json)
@@ -141,6 +176,9 @@ class Jackson3JsonApi : JsonApi {
 		}
 	}
 
+	/**
+	 * 更新指定路径的节点值，路径为JSON Pointer风格（如"/user/name"），空路径时替换整个根节点
+	 */
 	override fun updateNodeValue(json: String, path: String, newValue: Any): String {
 		try {
 			val rootNode = objectMapper.readTree(json)
@@ -212,6 +250,9 @@ class Jackson3JsonApi : JsonApi {
 	}
 
 
+	/**
+	 * 将JSON字符串解析为JsonItem对象，解析失败时包装为JsonException抛出
+	 */
 	override fun parseJsonItem(json: String): JsonItem {
 		try {
 			return getJsonItem(objectMapper.readTree(json))
@@ -222,8 +263,21 @@ class Jackson3JsonApi : JsonApi {
 }
 
 
+/**
+ * 基于Jackson3的JsonItem标记实现类，通过伴生对象工厂方法创建具体的JsonItem
+ */
 class JackSon3JsonItem : JsonItem {
+	/**
+	 * 伴生对象，提供JsonNode到JsonItem的工厂方法
+	 */
 	companion object {
+		/**
+		 * 根据JsonNode的节点类型创建对应的JsonItem实例
+		 *
+		 * @param node Jackson3的JsonNode节点
+		 * @return 与节点类型对应的JsonItem实例
+		 * @throws IllegalStateException 当节点类型未知时抛出
+		 */
 		fun getJsonItem(node: JsonNode): JsonItem {
 			return when (node.nodeType) {
 				JsonNodeType.OBJECT -> JackSon3JsonObject(node)
@@ -238,11 +292,31 @@ class JackSon3JsonItem : JsonItem {
 	}
 }
 
+/**
+ * 基于Jackson3节点的JSON数字类型
+ *
+ * @param node 数字类型的JsonNode节点
+ */
 class JackSon3JsonNumber(node: JsonNode) : JsonNumber(node.asString())
+/**
+ * 基于Jackson3节点的JSON布尔类型
+ *
+ * @param node 布尔类型的JsonNode节点
+ */
 class JackSon3JsonBoolean(node: JsonNode) : JsonBoolean(node.asBoolean())
+/**
+ * 基于Jackson3节点的JSON字符串类型
+ *
+ * @param node 字符串类型的JsonNode节点
+ */
 class JackSon3JsonString(node: JsonNode) : JsonString(node.asString())
 
 
+/**
+ * 基于Jackson3节点的JSON数组类型
+ *
+ * @property node 数组类型的JsonNode节点
+ */
 class JackSon3JsonArray(val node: JsonNode) : JsonArray() {
 	override fun getIndex(index: Int): JsonItem {
 		return JackSon3JsonItem.getJsonItem(node.get(index))
@@ -264,6 +338,11 @@ class JackSon3JsonArray(val node: JsonNode) : JsonArray() {
 	}
 }
 
+/**
+ * 基于Jackson3节点的JSON对象类型
+ *
+ * @property node 对象类型的JsonNode节点
+ */
 class JackSon3JsonObject(val node: JsonNode) : JsonObject() {
 	override fun getField(name: String): JsonItem {
 		return JackSon3JsonItem.getJsonItem(node.get(name))

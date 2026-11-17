@@ -22,6 +22,14 @@
 
 package com.mingliqiye.utils.exception
 
+/**
+ * 表示 HTTP 相关异常的基类，继承自 [MingLiUtilsBaseException]。
+ *
+ * @param message 异常信息，默认为 null
+ * @param throwable 异常原因，默认为 null
+ * @param enableSuppression 是否启用异常抑制，默认为 false
+ * @param writableStackTrace 是否可写入堆栈跟踪信息，默认为 true
+ */
 open class HttpException @JvmOverloads constructor(
 	message: String? = null,
 	throwable: Throwable? = null,

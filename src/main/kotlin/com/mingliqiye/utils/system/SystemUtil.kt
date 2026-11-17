@@ -261,13 +261,25 @@ val isJswarMode: Boolean get() = protocol == "jswar"
 /** 是否不为 JSWAR 模式 */
 val isNotJswarMode: Boolean get() = protocol != "jswar"
 
+/**
+ * 当前操作系统的行分隔符
+ */
 val lineSeparator
 	get() = System.lineSeparator()
 
+/**
+ * LF 行分隔符常量（`\n`）
+ */
 const val lineSeparatorLF = "\n"
 
+/**
+ * CR 行分隔符常量（`\r`）
+ */
 const val lineSeparatorCR = "\r"
 
+/**
+ * CRLF 行分隔符常量（`\r\n`）
+ */
 const val lineSeparatorCRLF = lineSeparatorCR + lineSeparatorLF
 
 private object ProtocolAnchor

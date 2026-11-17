@@ -300,6 +300,23 @@ enum class Method {
 }
 
 
+/**
+ * 在 [Request.Builder] 上设置 POST 方法，使用空请求体。
+ *
+ * @return 当前 [Request.Builder]，便于链式调用
+ */
 fun Request.Builder.post() = post(RequestBody.EMPTY)
+
+/**
+ * 在 [Request.Builder] 上设置 PUT 方法，使用空请求体。
+ *
+ * @return 当前 [Request.Builder]，便于链式调用
+ */
 fun Request.Builder.put() = put(RequestBody.EMPTY)
+
+/**
+ * 在 [Request.Builder] 上设置 PATCH 方法，使用空请求体。
+ *
+ * @return 当前 [Request.Builder]，便于链式调用
+ */
 fun Request.Builder.patch() = patch(RequestBody.EMPTY)

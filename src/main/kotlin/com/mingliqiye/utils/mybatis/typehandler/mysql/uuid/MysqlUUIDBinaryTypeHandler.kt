@@ -32,9 +32,17 @@ import org.apache.ibatis.type.JdbcType
 import org.apache.ibatis.type.MappedTypes
 import java.sql.PreparedStatement
 
+/**
+ * MySQL 的 UUID 二进制类型处理器。
+ * 将 [UUID] 与 MySQL BINARY(16) 列互转，写入前按 MySQL 的字节序重排（[uuidToMysql]），
+ * 读取后再还原为标准 UUID 字节序（[mysqlToUuid]），以便 UUID 在数据库中按时间有序存储。
+ */
 @MappedTypes(UUID::class)
 class MysqlUUIDBinaryTypeHandler : QuickBaseTypeHandler<UUID>() {
 
+	/**
+	 * 伴生对象，提供 UUID 与 MySQL 二进制字节数组之间的转换工具方法。
+	 */
 	companion object {
 		/**
 		 * 将字节数组转换为UUID对象
@@ -57,6 +65,9 @@ class MysqlUUIDBinaryTypeHandler : QuickBaseTypeHandler<UUID>() {
 		}
 	}
 
+	/**
+	 * 从 JDBC 数据源读取字节数组，按 MySQL 字节序还原为 [UUID]，数据库值为 null 时返回 null。
+	 */
 	override fun getValue(
 		vg: QuickBaseTypeHandlerValueGetter, ct: CallType, ci: Int?, cn: String?,
 	): UUID? {
@@ -75,6 +86,9 @@ class MysqlUUIDBinaryTypeHandler : QuickBaseTypeHandler<UUID>() {
 		)
 	}
 
+	/**
+	 * 将 [UUID] 转换为 MySQL 字节序的字节数组写入 PreparedStatement，参数为 null 时写入 BINARY 类型的 NULL。
+	 */
 	override fun setValue(
 		ps: PreparedStatement, index: Int, parameter: UUID?, jdbcType: JdbcType?,
 	) {

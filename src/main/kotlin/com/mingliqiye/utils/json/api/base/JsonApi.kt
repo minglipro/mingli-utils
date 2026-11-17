@@ -38,6 +38,9 @@ import kotlin.io.path.readBytes
  */
 interface JsonApi {
 
+	/**
+	 * 伴生对象，提供基于 reified 泛型参数的便捷解析与转换扩展函数
+	 */
 	companion object {
 		/**
 		 * 将JSON字符串解析为指定泛型类型对象
@@ -342,46 +345,106 @@ interface JsonApi {
 	 */
 	fun formatPretty(obj: Any): String
 
+	/**
+	 * 将对象格式化为美化格式的JSON字节数组
+	 *
+	 * @param obj 待格式化的对象
+	 * @return 格式化后的美化JSON字节数组
+	 */
 	fun formatPrettyBytes(obj: Any): ByteArray {
 		return formatPretty(obj)!!.toByteArray()
 	}
 
+	/**
+	 * 将对象格式化为美化JSON并写入指定路径的文件
+	 *
+	 * @param obj  待格式化的对象
+	 * @param file 目标文件路径
+	 */
 	fun formatPretty(obj: Any, file: String) {
 		formatPretty(obj, Paths.get(file))
 	}
 
+	/**
+	 * 将对象格式化为美化JSON并写入指定路径的文件
+	 *
+	 * @param obj  待格式化的对象
+	 * @param file 目标文件路径对象
+	 */
 	fun formatPretty(obj: Any, file: Path) {
 		formatPretty(obj, file.toFile())
 	}
 
+	/**
+	 * 将对象格式化为美化JSON并写入指定文件
+	 *
+	 * @param obj  待格式化的对象
+	 * @param file 目标文件对象
+	 */
 	fun formatPretty(obj: Any, file: File) {
 		FileOutputStream(file).use { fos ->
 			formatPretty(obj, fos)
 		}
 	}
 
+	/**
+	 * 将对象格式化为美化JSON并写入输出流
+	 *
+	 * @param obj    待格式化的对象
+	 * @param stream 目标输出流
+	 */
 	fun formatPretty(obj: Any, stream: OutputStream) {
 		stream.write(formatPrettyBytes(obj))
 	}
 
+	/**
+	 * 将对象格式化为JSON字节数组
+	 *
+	 * @param obj 待格式化的对象
+	 * @return 格式化后的JSON字节数组
+	 */
 	fun formatBytes(obj: Any): ByteArray {
 		return format(obj).toByteArray()
 	}
 
+	/**
+	 * 将对象格式化为JSON并写入指定路径的文件
+	 *
+	 * @param obj  待格式化的对象
+	 * @param file 目标文件路径
+	 */
 	fun format(obj: Any, file: String) {
 		format(obj, Paths.get(file))
 	}
 
+	/**
+	 * 将对象格式化为JSON并写入指定路径的文件
+	 *
+	 * @param obj  待格式化的对象
+	 * @param file 目标文件路径对象
+	 */
 	fun format(obj: Any, file: Path) {
 		format(obj, file.toFile())
 	}
 
+	/**
+	 * 将对象格式化为JSON并写入指定文件
+	 *
+	 * @param obj  待格式化的对象
+	 * @param file 目标文件对象
+	 */
 	fun format(obj: Any, file: File) {
 		FileOutputStream(file).use { fos ->
 			format(obj, fos)
 		}
 	}
 
+	/**
+	 * 将对象格式化为JSON并写入输出流
+	 *
+	 * @param obj    待格式化的对象
+	 * @param stream 目标输出流
+	 */
 	fun format(obj: Any, stream: OutputStream) {
 		stream.write(formatPrettyBytes(obj))
 	}

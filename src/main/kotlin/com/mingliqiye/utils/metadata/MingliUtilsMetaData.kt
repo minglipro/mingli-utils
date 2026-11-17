@@ -22,6 +22,17 @@
 
 package com.mingliqiye.utils.metadata
 
+/**
+ * mingli-utils 库的构建元数据数据类
+ *
+ * @property buildTime 构建时间
+ * @property groupId 构建产物的 GroupId
+ * @property artifactId 构建产物的 ArtifactId
+ * @property version 库版本号
+ * @property buildJdkVersion 构建所使用的 JDK 版本
+ * @property author 作者
+ * @property website 项目网站地址
+ */
 data class MingliUtilsMetaData(
 	var buildTime: String = "",
 	var groupId: String = "",

@@ -216,7 +216,16 @@ interface FastBaseMapper<T> : BaseMapper<T> {
 		val t1: String,
 		val t2: Any,
 	) : Tuple(2) {
+		/**
+		 * 解构分量1
+		 * @return String 列名（数据库字段名）
+		 */
 		operator fun component1() = t1
+
+		/**
+		 * 解构分量2
+		 * @return Any 列值
+		 */
 		operator fun component2() = t2
 	}
 
@@ -231,7 +240,16 @@ interface FastBaseMapper<T> : BaseMapper<T> {
 		val t1: SFunction<T, D>,
 		val t2: D,
 	) : Tuple(2) {
+		/**
+		 * 解构分量1
+		 * @return SFunction<T, D> 实体列的方法引用
+		 */
 		operator fun component1() = t1
+
+		/**
+		 * 解构分量2
+		 * @return D 列值
+		 */
 		operator fun component2() = t2
 	}
 
@@ -507,6 +525,9 @@ interface FastBaseMapper<T> : BaseMapper<T> {
 	}
 
 
+	/**
+	 * 伴生对象，提供面向 [BaseMapper] / [FastBaseMapper] 的 Kotlin 包装器创建与链式查询、更新、删除扩展函数。
+	 */
 	companion object {
 
 		/**

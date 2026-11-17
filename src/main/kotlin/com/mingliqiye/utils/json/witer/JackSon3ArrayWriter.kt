@@ -28,6 +28,12 @@ import com.mingliqiye.utils.json.witer.base.BaseJsonObjectWriter
 import tools.jackson.core.JsonGenerator
 import tools.jackson.databind.SerializationContext
 
+/**
+ * 基于 Jackson3 JsonGenerator 的 JSON 数组写入器实现，向数组追加各类型元素
+ *
+ * @param jsonGenerator Jackson3 的 JSON 生成器
+ * @param serializationContext 序列化上下文
+ */
 class JackSon3ArrayWriter(
 	private val jsonGenerator: JsonGenerator,
 	private val serializationContext: SerializationContext,

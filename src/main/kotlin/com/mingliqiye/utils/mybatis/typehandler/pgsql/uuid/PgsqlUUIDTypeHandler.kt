@@ -30,8 +30,16 @@ import org.apache.ibatis.type.JdbcType
 import org.apache.ibatis.type.MappedTypes
 import java.sql.PreparedStatement
 
+/**
+ * PostgreSQL 的 UUID 类型处理器。
+ * 将 [UUID] 与 PostgreSQL 原生 uuid 列互转：读取时以字符串形式取出并解析为 [UUID]，
+ * 写入时通过 setObject 传入 java.util.UUID，由驱动按 uuid 类型处理。
+ */
 @MappedTypes(UUID::class)
 class PgsqlUUIDTypeHandler : QuickBaseTypeHandler<UUID>() {
+	/**
+	 * 从 JDBC 数据源读取 UUID 字符串并解析为 [UUID]，数据库值为 null 时返回 null。
+	 */
 	override fun getValue(
 		vg: QuickBaseTypeHandlerValueGetter, ct: CallType, ci: Int?, cn: String?,
 	): UUID? {
@@ -51,6 +59,9 @@ class PgsqlUUIDTypeHandler : QuickBaseTypeHandler<UUID>() {
 		return UUID.of(data)
 	}
 
+	/**
+	 * 将 [UUID] 以 java.util.UUID 对象写入 PreparedStatement，参数为 null 时按指定 JDBC 类型（默认 JAVA_OBJECT）写入 NULL。
+	 */
 	override fun setValue(
 		ps: PreparedStatement, index: Int, parameter: UUID?, jdbcType: JdbcType?,
 	) {

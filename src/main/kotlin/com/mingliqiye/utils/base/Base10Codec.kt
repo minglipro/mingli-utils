@@ -24,6 +24,11 @@ package com.mingliqiye.utils.base
 
 import java.math.BigInteger
 
+/**
+ * Base10 编解码器实现类。
+ *
+ * 提供字节数组与十进制字符串之间的相互转换功能，基于 [BigInteger] 实现。
+ */
 internal class Base10Codec : BaseCodec {
 
 	/**

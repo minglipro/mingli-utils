@@ -26,8 +26,18 @@ package com.mingliqiye.utils.metadata
 import com.mingliqiye.utils.resource.ResourceUtils
 import java.util.stream.Collectors.toMap
 
+/**
+ * 元数据资源定位锚点类，仅用于定位 `/META-INF/meta-data` 资源所在的类加载器
+ */
 class MetaDataResource
 
+/**
+ * 读取并解析 `/META-INF/meta-data` 资源文件
+ *
+ * 文件内容按行解析为 `key=value` 形式的键值对，空行与格式不合法的行会被忽略。
+ *
+ * @return 元数据键值对映射
+ */
 fun getMetaData(): Map<String, String> {
 	return ResourceUtils.getResourceAsString<MetaDataResource>("/META-INF/meta-data").split("\n").stream().map {
 		if (it.isBlank()) {
@@ -42,6 +52,11 @@ fun getMetaData(): Map<String, String> {
 	}.filter { it != null }.collect(toMap({ it!!.first }, { it!!.second }))
 }
 
+/**
+ * mingli-utils 库的构建元数据，延迟初始化
+ *
+ * 从 `/META-INF/meta-data` 资源解析并填充 [MingliUtilsMetaData]，缺失的字段以空字符串代替。
+ */
 val mingliUtilsMetaData: MingliUtilsMetaData by lazy {
 	val metaData = getMetaData()
 	MingliUtilsMetaData().apply {

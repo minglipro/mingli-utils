@@ -27,8 +27,15 @@ import org.slf4j.LoggerFactory
 import java.lang.reflect.Method
 import java.util.*
 
+/**
+ * 日志器工厂，优先使用 SLF4J 实现（或 mingli-logger 的 Loggers）获取日志器，
+ * 在没有可用 SLF4J 实现时回退到内置的 MingLiLogger。
+ */
 class MingLiLoggerFactory {
 
+	/**
+	 * 伴生对象，提供获取日志器的静态方法。
+	 */
 	companion object {
 
 		private var nameMethod: Method? = null
@@ -48,6 +55,12 @@ class MingLiLoggerFactory {
 		}
 
 
+		/**
+		 * 根据名称获取日志器。
+		 *
+		 * @param name 日志器名称
+		 * @return 对应的 Logger 实例
+		 */
 		@JvmStatic
 		fun getLogger(name: String): Logger {
 
@@ -60,6 +73,12 @@ class MingLiLoggerFactory {
 			} else mingLiLoggerFactory.getLogger(name)
 		}
 
+		/**
+		 * 根据类对象获取日志器，日志器名称为类的全限定名。
+		 *
+		 * @param clazz 用于命名日志器的类对象
+		 * @return 对应的 Logger 实例
+		 */
 		@JvmStatic
 		fun getLogger(clazz: Class<*>): Logger {
 			return if (mingLiLoggerFactory.checkSLF4JImplementation()) {
@@ -71,6 +90,12 @@ class MingLiLoggerFactory {
 			} else mingLiLoggerFactory.getLogger(clazz)
 		}
 
+		/**
+		 * 通过 reified 类型参数获取日志器，日志器名称为类型 T 的全限定名。
+		 *
+		 * @param T 用于命名日志器的类型
+		 * @return 对应的 Logger 实例
+		 */
 		inline fun <reified T> getLogger() = getLogger(T::class.java)
 	}
 

@@ -37,9 +37,25 @@ import org.springframework.context.annotation.Bean
  *
  * @param objectMapper 用于 JSON 序列化和反序列化的 ObjectMapper 实例。
  */
+/**
+ * 基于 Jackson 2 的 [JsonApi] 自动配置（过渡兼容）。
+ *
+ * 在类路径存在 Jackson 2（`com.fasterxml.jackson.databind.ObjectMapper`）
+ * 及对应 Spring Boot 自动配置时生效，并在 [JacksonJsonAutoConfiguration] 之后处理，
+ * 将容器中的 [ObjectMapper] 包装为 [JacksonJsonApi] 并以 [JsonApi] 类型注册为 Bean。
+ * 若调用方已自行声明 [JsonApi] Bean，则跳过创建。
+ */
 @ConditionalOnClass(name = ["com.fasterxml.jackson.databind.ObjectMapper", "org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration"])
 @AutoConfigureAfter(name = ["com.mingliqiye.utils.springboot.autoconfigure.JacksonJsonAutoConfiguration"])
 open class JacksonJsonApiAutoConfiguration {
+	/**
+	 * 创建基于 Jackson 2 的 [JsonApi] Bean（名称 `jacksonJsonApi`）。
+	 *
+	 * 仅在容器中不存在其他 [JsonApi] Bean 时创建。
+	 *
+	 * @param objectMapper 容器中已完成自定义模块配置的 ObjectMapper
+	 * @return 包装 [objectMapper] 的 [JacksonJsonApi] 实例
+	 */
 	@Bean("jacksonJsonApi")
 	@ConditionalOnMissingBean(JsonApi::class)
 	open fun jsonApi(objectMapper: ObjectMapper): JsonApi {

@@ -24,6 +24,9 @@ package com.mingliqiye.utils.resource
 import com.mingliqiye.utils.exception.NotFoundResourceException
 import java.nio.charset.Charset
 
+/**
+ * 类路径资源读取工具对象，提供按相对路径或绝对路径读取资源文件为字节数组或字符串的方法。
+ */
 object ResourceUtils {
 
 

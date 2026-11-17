@@ -22,7 +22,15 @@
 
 package com.mingliqiye.utils.require
 
+/**
+ * 延迟消息构造器函数式接口，用于在校验失败时按需生成错误消息。
+ */
 @FunctionalInterface
 fun interface RequireLayzMessageConstructor {
+	/**
+	 * 构造并返回错误消息字符串。
+	 *
+	 * @return 错误消息字符串
+	 */
 	fun call(): String
 }

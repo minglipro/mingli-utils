@@ -40,6 +40,7 @@ class ThreadEventTest {
     private val event = ThreadEvent.of(0)
     private var value: Int by event
 
+    /** 测试 await 阻塞等待直到 set 触发并读取新值 */
     @Test
     fun testAwaitAndSet() {
         val event = ThreadEvent.of(0)
@@ -54,6 +55,7 @@ class ThreadEventTest {
         assertEquals(42, event.get())
     }
 
+    /** 测试 awaitAndGet 等待触发后返回新数据 */
     @Test
     fun testAwaitAndGet() {
         val event = ThreadEvent.of(0)
@@ -69,6 +71,7 @@ class ThreadEventTest {
         assertEquals(99, result.get())
     }
 
+    /** 测试 await 超时未触发时返回 false */
     @Test
     fun testAwaitTimeout() {
         val event = ThreadEvent.of(0)
@@ -77,6 +80,7 @@ class ThreadEventTest {
         assertTrue(System.nanoTime() - start >= 90_000_000L, "应至少等待 100ms")
     }
 
+    /** 测试 awaitAndGet 超时未触发时返回旧数据 */
     @Test
     fun testAwaitAndGetTimeout() {
         val event = ThreadEvent.of(10)
@@ -84,12 +88,14 @@ class ThreadEventTest {
         assertEquals(10, event.awaitAndGet(50, TimeUnit.MILLISECONDS))
     }
 
+    /** 测试 awaitAndGetOrNull 超时未触发时返回 null */
     @Test
     fun testAwaitAndGetOrNullTimeout() {
         val event = ThreadEvent.of(10)
         assertNull(event.awaitAndGetOrNull(50, TimeUnit.MILLISECONDS), "超时未触发应返回 null")
     }
 
+    /** 测试 awaitAndGetOrNull 在触发后返回新数据 */
     @Test
     fun testAwaitAndGetOrNullTriggered() {
         val event = ThreadEvent.of(0)
@@ -101,6 +107,7 @@ class ThreadEventTest {
         thread.joinQuietly(2000)
     }
 
+    /** 测试 isSet 在 set/reset 前后的状态变化 */
     @Test
     fun testIsSet() {
         val event = ThreadEvent.of(0)
@@ -111,6 +118,7 @@ class ThreadEventTest {
         assertFalse(event.isSet())
     }
 
+    /** 测试 setAndReset 设置数据后立即复位事件状态 */
     @Test
     fun testSetAndReset() {
         val event = ThreadEvent.of(0)
@@ -119,6 +127,7 @@ class ThreadEventTest {
         assertFalse(event.isSet(), "reset 后事件应处于未设置状态")
     }
 
+    /** 测试 invoke 操作符的读取与设置语义 */
     @Test
     fun testOperatorInvoke() {
         val event = ThreadEvent.of("a")
@@ -135,6 +144,7 @@ class ThreadEventTest {
         assertEquals("b", event())
     }
 
+    /** 测试 ThreadEvent 作为属性委托的读写行为 */
     @Test
     fun testPropertyDelegate() {
         assertEquals(0, value)
@@ -143,6 +153,7 @@ class ThreadEventTest {
         assertEquals(7, value)
     }
 
+    /** 测试 of 工厂方法以初始数据创建事件 */
     @Test
     fun testFactoryOf() {
         val event = ThreadEvent.of("data")

@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 open class NamedThreadFactory(private val getName: NamedThreadFactoryNameGetter) : ThreadFactory {
 
+	/** 伴生对象，提供线程名称生成器接口与工厂方法 */
 	companion object {
 
 		@JvmStatic

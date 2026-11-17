@@ -28,11 +28,24 @@ import com.mingliqiye.utils.json.api.JSONA
 import java.io.*
 
 
+/**
+ * 通过 Java 序列化机制对当前对象进行深克隆。
+ *
+ * @param T 对象类型，必须实现 [Serializable]
+ * @return 深克隆后的新对象
+ */
 @JvmName("_inline_deepClone")
 inline fun <reified T : Serializable> T.deepClone(): T {
 	return deepClone(this)
 }
 
+/**
+ * 通过 JSON 序列化与反序列化对当前对象进行深克隆。
+ *
+ * @param T 对象类型
+ * @return 深克隆后的新对象
+ * @throws JsonException 如果 JSON 转换过程中发生异常
+ */
 inline fun <reified T> T.deepJsonClone(): T {
 	try {
 		return JSONA.convert(this as Any, this!!.javaClass) as T
@@ -43,6 +56,16 @@ inline fun <reified T> T.deepJsonClone(): T {
 	}
 }
 
+/**
+ * 通过 Java 序列化机制对对象进行深克隆。
+ *
+ * 将对象序列化到内存后再反序列化，得到一个全新的对象副本。
+ *
+ * @param T 对象类型，必须实现 [Serializable]
+ * @param obj 要克隆的对象
+ * @return 深克隆后的新对象
+ * @throws RuntimeException 如果序列化或反序列化过程中发生 I/O 异常或类找不到
+ */
 @Suppress("UNCHECKED_CAST")
 fun <T : Serializable?> deepClone(obj: T): T {
 	try {

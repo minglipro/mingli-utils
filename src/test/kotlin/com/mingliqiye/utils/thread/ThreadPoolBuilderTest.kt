@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit
  */
 class ThreadPoolBuilderTest {
 
+    /** 测试 threadPool DSL 各项配置（核心/最大线程数、有界队列、超时回收）生效 */
     @Test
     fun testDslBuild() {
         val pool = threadPool("dsl-test") {
@@ -62,6 +63,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试默认队列为无界队列 */
     @Test
     fun testDefaultQueueIsUnbounded() {
         val pool = threadPool("unbounded-test")
@@ -72,6 +74,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试 fixedThreadPool 创建固定大小线程池 */
     @Test
     fun testFixedPool() {
         val pool = fixedThreadPool(4, "fixed-test")
@@ -83,6 +86,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试 singleThreadPool 创建单线程线程池 */
     @Test
     fun testSinglePool() {
         val pool = singleThreadPool("single-test")
@@ -94,6 +98,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试 cachedThreadPool 创建缓存线程池（SynchronousQueue、无上限） */
     @Test
     fun testCachedPool() {
         val pool = cachedThreadPool("cached-test")
@@ -106,6 +111,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试 ioThreadPool 按 CPU 核数配置 IO 型线程池参数 */
     @Test
     fun testIoPool() {
         val pool = ioThreadPool("io-test")
@@ -118,6 +124,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试 cpuThreadPool 按 CPU 核数配置计算型线程池参数 */
     @Test
     fun testCpuPool() {
         val pool = cpuThreadPool("cpu-test")
@@ -129,6 +136,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试 daemon=true 时工作线程为守护线程 */
     @Test
     fun testDaemonThread() {
         val pool = threadPool("daemon-test") {
@@ -144,6 +152,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试 daemon=false 时工作线程为用户线程 */
     @Test
     fun testNonDaemonThread() {
         val pool = threadPool("non-daemon-test") {
@@ -159,6 +168,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试线程命名包含指定前缀 */
     @Test
     fun testThreadNaming() {
         val pool = threadPool("naming-test") {
@@ -175,6 +185,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试线程与队列占满后按 AbortPolicy 抛出拒绝异常 */
     @Test
     fun testRejectedPolicy() {
         val pool = threadPool("reject-test") {
@@ -199,6 +210,7 @@ class ThreadPoolBuilderTest {
         }
     }
 
+    /** 测试 scheduledThreadPool 创建定时线程池并延迟执行任务 */
     @Test
     fun testScheduledPool() {
         val pool = scheduledThreadPool(2, "scheduled-test")

@@ -49,6 +49,11 @@ class JacksonJsonApi : JsonApi {
 		this.objectMapper = ObjectMapper()
 	}
 
+	/**
+	 * 获取内部使用的ObjectMapper实例
+	 *
+	 * @return 当前的ObjectMapper实例
+	 */
 	fun getObjectMapper() = objectMapper
 
 	/**
@@ -113,6 +118,13 @@ class JacksonJsonApi : JsonApi {
 		}
 	}
 
+	/**
+	 * 将对象格式化为JSON字符串，非ASCII字符以Unicode转义形式输出
+	 *
+	 * @param obj 待格式化的对象
+	 * @return 格式化后的JSON字符串
+	 * @throws JsonException 当格式化失败时抛出异常
+	 */
 	fun formatUnicode(obj: Any): String {
 		return try {
 			objectMapper.writer().with(JsonGenerator.Feature.ESCAPE_NON_ASCII).writeValueAsString(obj)
@@ -137,6 +149,13 @@ class JacksonJsonApi : JsonApi {
 		}
 	}
 
+	/**
+	 * 将对象格式化为美化（带缩进）的JSON字符串，非ASCII字符以Unicode转义形式输出
+	 *
+	 * @param obj 待格式化的对象
+	 * @return 美化后的JSON字符串
+	 * @throws JsonException 当格式化失败时抛出异常
+	 */
 	fun formatPrettyUnicode(obj: Any): String {
 		return try {
 			objectMapper.writerWithDefaultPrettyPrinter().with(JsonGenerator.Feature.ESCAPE_NON_ASCII)
@@ -287,6 +306,9 @@ class JacksonJsonApi : JsonApi {
 		}
 	}
 
+	/**
+	 * 将JSON字符串解析为JsonItem对象，解析失败时包装为JsonException抛出
+	 */
 	override fun parseJsonItem(json: String): JsonItem {
 		try {
 			return getJsonItem(objectMapper.readTree(json))
@@ -296,8 +318,21 @@ class JacksonJsonApi : JsonApi {
 	}
 }
 
+/**
+ * 基于Jackson2的JsonItem标记实现类，通过伴生对象工厂方法创建具体的JsonItem
+ */
 class JackSonJsonItem : JsonItem {
+	/**
+	 * 伴生对象，提供JsonNode到JsonItem的工厂方法
+	 */
 	companion object {
+		/**
+		 * 根据JsonNode的节点类型创建对应的JsonItem实例
+		 *
+		 * @param node Jackson2的JsonNode节点
+		 * @return 与节点类型对应的JsonItem实例
+		 * @throws IllegalStateException 当节点类型未知时抛出
+		 */
 		fun getJsonItem(node: JsonNode): JsonItem {
 			return when (node.nodeType) {
 				JsonNodeType.OBJECT -> JackSonJsonObject(node)
@@ -312,11 +347,31 @@ class JackSonJsonItem : JsonItem {
 	}
 }
 
+/**
+ * 基于Jackson2节点的JSON数字类型
+ *
+ * @param node 数字类型的JsonNode节点
+ */
 class JackSonJsonNumber(node: JsonNode) : JsonNumber(node.asText())
+/**
+ * 基于Jackson2节点的JSON布尔类型
+ *
+ * @param node 布尔类型的JsonNode节点
+ */
 class JackSonJsonBoolean(node: JsonNode) : JsonBoolean(node.asBoolean())
+/**
+ * 基于Jackson2节点的JSON字符串类型
+ *
+ * @param node 字符串类型的JsonNode节点
+ */
 class JackSonJsonString(node: JsonNode) : JsonString(node.asText())
 
 
+/**
+ * 基于Jackson2节点的JSON数组类型
+ *
+ * @property node 数组类型的JsonNode节点
+ */
 class JackSonJsonArray(val node: JsonNode) : JsonArray() {
 	override fun getIndex(index: Int): JsonItem {
 		return getJsonItem(node.get(index))
@@ -338,6 +393,11 @@ class JackSonJsonArray(val node: JsonNode) : JsonArray() {
 	}
 }
 
+/**
+ * 基于Jackson2节点的JSON对象类型
+ *
+ * @property node 对象类型的JsonNode节点
+ */
 class JackSonJsonObject(val node: JsonNode) : JsonObject() {
 	override fun getField(name: String): JsonItem {
 		return getJsonItem(node.get(name))

@@ -64,10 +64,23 @@ import org.springframework.context.annotation.Bean
 @AutoConfigureAfter(name = ["org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration"])
 open class JacksonJsonAutoConfiguration {
 
+	/**
+	 * 伴生对象，持有本配置类的日志记录器。
+	 */
 	companion object {
 		private val log = MingLiLoggerFactory.getLogger<JacksonJsonAutoConfiguration>()
 	}
 
+	/**
+	 * 创建 Jackson 2 的 ObjectMapper 构建定制器 Bean（名称 `jacksonMapperBuilderCustomizer`）。
+	 *
+	 * 按 `@Order` 顺序依次应用容器中所有 [JacksonBuilder] 定制器，
+	 * 将收集到的 JSON 转换器转换为 Jackson 2 模块并安装到 ObjectMapper 构建器。
+	 * 仅在容器中不存在同名 Bean 时创建。
+	 *
+	 * @param builders 容器中的 Jackson 构建定制器，按顺序依次应用
+	 * @return 安装自定义模块的 [Jackson2ObjectMapperBuilderCustomizer]
+	 */
 	@Bean("jacksonMapperBuilderCustomizer")
 	@ConditionalOnMissingBean(name = ["jacksonMapperBuilderCustomizer"])
 	fun jackson2ObjectMapperBuilderCustomizer(builders: ObjectProvider<JacksonBuilder>): Jackson2ObjectMapperBuilderCustomizer {

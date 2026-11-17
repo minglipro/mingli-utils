@@ -31,17 +31,36 @@ import com.mingliqiye.utils.base.code.BASE64_NO_PADDING as CODE_BASE64_NO_PADDIN
 import com.mingliqiye.utils.base.code.BASE64_URL as CODE_BASE64_URL
 import com.mingliqiye.utils.base.code.BASE91 as CODE_BASE91
 
+/**
+ * Base 编码类型枚举。
+ *
+ * 每个枚举项持有一个编解码器的工厂函数，枚举本身实现了 [BaseCodec]，
+ * 可直接作为编解码器使用，编码与解码操作委托给对应的编解码器实例。
+ *
+ * @param baseCodec 编解码器的工厂函数，每次访问 [codec] 时调用以创建实例
+ */
 enum class BaseType(private val baseCodec: () -> BaseCodec) : BaseCodec {
 
+	/** 二进制（Base2）编解码。 */
 	BASE2(::CODE_BASE2),
+	/** 十进制（Base10）编解码。 */
 	BASE10(::CODE_BASE10),
+	/** 十六进制（Base16）编解码。 */
 	BASE16(::CODE_BASE16),
+	/** 标准 Base64 编解码。 */
 	BASE64(::CODE_BASE64),
+	/** URL 安全的 Base64 编解码。 */
 	BASE64_URL(::CODE_BASE64_URL),
+	/** 无填充（不带末尾 '='）的 URL 安全 Base64 编解码。 */
 	BASE64_NO_PADDING(::CODE_BASE64_NO_PADDING),
+	/** Base91 编解码。 */
 	BASE91(::CODE_BASE91),
+	/** Base256 编解码。 */
 	BASE256(::CODE_BASE256);
 
+	/**
+	 * 获取当前类型对应的编解码器实例（每次访问都会通过工厂函数新建）。
+	 */
 	val codec
 		get() = baseCodec()
 

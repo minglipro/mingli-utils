@@ -22,6 +22,14 @@
 
 package com.mingliqiye.utils.exception
 
+/**
+ * 表示编码或解码过程中发生的异常。
+ *
+ * @param message 异常信息，默认为 null
+ * @param throwable 异常原因，默认为 null
+ * @param enableSuppression 是否启用异常抑制，默认为 false
+ * @param writableStackTrace 是否可写入堆栈跟踪信息，默认为 true
+ */
 class CodecException @JvmOverloads constructor(
 	message: String? = null,
 	throwable: Throwable? = null,

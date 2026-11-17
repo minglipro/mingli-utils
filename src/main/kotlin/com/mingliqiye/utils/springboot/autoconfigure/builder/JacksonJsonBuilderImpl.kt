@@ -24,6 +24,10 @@ package com.mingliqiye.utils.springboot.autoconfigure.builder
 
 import com.mingliqiye.utils.json.converters.base.BaseJsonConverter
 
+/**
+ * [JacksonJsonBuilder] 的默认实现，内部以列表收集追加的 JSON 转换器，
+ * 供 Jackson 2 / Jackson 3 自动配置读取并转换为序列化模块。
+ */
 open class JacksonJsonBuilderImpl : JacksonJsonBuilder() {
 	override fun addJsonConverter(jsonConverter: BaseJsonConverter<*>): JacksonJsonBuilderImpl {
 		data.add(jsonConverter)
@@ -37,6 +41,11 @@ open class JacksonJsonBuilderImpl : JacksonJsonBuilder() {
 
 	private val data = mutableListOf<BaseJsonConverter<*>>()
 
+	/**
+	 * 获取已收集的全部 JSON 转换器。
+	 *
+	 * @return 转换器列表的快照，修改返回值不影响内部数据
+	 */
 	fun getData(): List<BaseJsonConverter<*>> {
 		return data.toList()
 	}

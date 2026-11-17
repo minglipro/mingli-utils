@@ -26,6 +26,13 @@ package com.mingliqiye.utils.objects
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
+/**
+ * 判断当前对象是否不为 null。
+ *
+ * 通过 Kotlin 契约支持智能类型转换：返回 true 后编译器可将接收者视为非空。
+ *
+ * @return 不为 null 返回 true，否则返回 false
+ */
 @OptIn(ExperimentalContracts::class)
 fun Any?.isNotNull(): Boolean {
 	contract {
@@ -34,6 +41,13 @@ fun Any?.isNotNull(): Boolean {
 	return !isNull()
 }
 
+/**
+ * 判断当前对象是否为 null。
+ *
+ * 通过 Kotlin 契约支持智能类型转换：返回 false 后编译器可将接收者视为非空。
+ *
+ * @return 为 null 返回 true，否则返回 false
+ */
 @OptIn(ExperimentalContracts::class)
 fun Any?.isNull(): Boolean {
 	contract {
@@ -42,8 +56,24 @@ fun Any?.isNull(): Boolean {
 	return this == null
 }
 
+/**
+ * 判断两个对象是否相等，两者均为 null 时也视为相等。
+ *
+ * @param a 第一个对象
+ * @param b 第二个对象
+ * @return 相等（含均为 null）返回 true，否则返回 false
+ */
 fun areEquals(a: Any?, b: Any?) = (a == null && b == null) || (a == b)
 
+/**
+ * 判断两个非空对象是否相等，任一为 null 时返回 false。
+ *
+ * 通过 Kotlin 契约支持智能类型转换：返回 true 后编译器可将两个参数视为非空。
+ *
+ * @param a 第一个对象
+ * @param b 第二个对象
+ * @return 两者均非空且相等返回 true，否则返回 false
+ */
 @OptIn(ExperimentalContracts::class)
 fun areEqualsNoNull(a: Any?, b: Any?): Boolean {
 	contract {

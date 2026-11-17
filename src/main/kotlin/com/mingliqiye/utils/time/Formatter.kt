@@ -35,13 +35,25 @@ enum class Formatter(val value: String) {
 	 * 标准日期时间格式：yyyy-MM-dd HH:mm:ss
 	 */
 	STANDARD_DATETIME("yyyy-MM-dd HH:mm:ss"),
+
+	/**
+	 * 空格式：不定义任何格式化模式
+	 */
 	NONE(""),
 
 	/**
 	 * 标准日期时间格式(7位毫秒)：yyyy-MM-dd HH:mm:ss.SSSSSSS
 	 */
 	STANDARD_DATETIME_MILLISECOUND7("yyyy-MM-dd HH:mm:ss.SSSSSSS"),
+
+	/**
+	 * 标准日期时间格式(8位毫秒)：yyyy-MM-dd HH:mm:ss.SSSSSSSS
+	 */
 	STANDARD_DATETIME_MILLISECOUND8("yyyy-MM-dd HH:mm:ss.SSSSSSSS"),
+
+	/**
+	 * 标准日期时间格式(9位毫秒)：yyyy-MM-dd HH:mm:ss.SSSSSSSSS
+	 */
 	STANDARD_DATETIME_MILLISECOUND9("yyyy-MM-dd HH:mm:ss.SSSSSSSSS"),
 
 	/**
@@ -102,6 +114,11 @@ enum class Formatter(val value: String) {
 
 	private val len: Int = value.replace("'", "").length
 
+	/**
+	 * 获取格式化模板的长度（不含单引号转义字符）。
+	 *
+	 * @return 格式化模板的有效长度
+	 */
 	fun getLen(): Int {
 		return this.len
 	}

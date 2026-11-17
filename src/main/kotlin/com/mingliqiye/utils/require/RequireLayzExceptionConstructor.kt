@@ -22,7 +22,15 @@
 
 package com.mingliqiye.utils.require
 
+/**
+ * 延迟异常构造器函数式接口，用于在校验失败时按需创建异常实例。
+ */
 @FunctionalInterface
 fun interface RequireLayzExceptionConstructor {
+	/**
+	 * 构造并返回一个异常实例。
+	 *
+	 * @return 新创建的异常实例
+	 */
 	fun call(): Throwable
 }

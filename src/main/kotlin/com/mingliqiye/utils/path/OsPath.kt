@@ -30,6 +30,11 @@ import java.nio.file.*
 import java.util.*
 import java.util.function.Consumer
 
+/**
+ * 操作系统路径封装类，通过委托实现 Path 接口，并提供多种来源的静态工厂方法。
+ *
+ * @param path 被委托的底层 Path 实例
+ */
 class OsPath private constructor(private val path: Path) : Path by path {
 	override fun forEach(action: Consumer<in Path>?) {
 		path.forEach(action)
@@ -74,27 +79,59 @@ class OsPath private constructor(private val path: Path) : Path by path {
 		return path.iterator()
 	}
 
+	/**
+	 * 伴生对象，提供从字符串、Path、URI、File 等创建 OsPath 实例的静态工厂方法。
+	 */
 	companion object {
+		/**
+		 * 根据路径字符串创建 OsPath 实例。
+		 *
+		 * @param path 路径字符串
+		 * @return 对应的 OsPath 实例
+		 */
 		@JvmStatic
 		fun of(path: String): OsPath {
 			return of(Paths.get(path))
 		}
 
+		/**
+		 * 根据 Path 对象创建 OsPath 实例。
+		 *
+		 * @param path Path 对象
+		 * @return 对应的 OsPath 实例
+		 */
 		@JvmStatic
 		fun of(path: Path): OsPath {
 			return OsPath(path)
 		}
 
+		/**
+		 * 根据 URI 创建 OsPath 实例。
+		 *
+		 * @param uri 文件 URI
+		 * @return 对应的 OsPath 实例
+		 */
 		@JvmStatic
 		fun of(uri: URI): OsPath {
 			return OsPath(Paths.get(uri))
 		}
 
+		/**
+		 * 根据 File 对象创建 OsPath 实例。
+		 *
+		 * @param file File 对象
+		 * @return 对应的 OsPath 实例
+		 */
 		@JvmStatic
 		fun of(file: File): OsPath {
 			return OsPath(file.toPath())
 		}
 
+		/**
+		 * 获取表示当前工作目录的 OsPath 实例。
+		 *
+		 * @return 当前工作目录对应的 OsPath 实例
+		 */
 		@JvmStatic
 		fun getCwd(): OsPath {
 			return OsPath(Paths.get(""))

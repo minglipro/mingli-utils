@@ -22,6 +22,11 @@
 
 package com.mingliqiye.utils.base
 
+/**
+ * Base2 编解码器实现类。
+ *
+ * 提供字节数组与二进制字符串（每字节 8 位，高位在前）之间的相互转换功能。
+ */
 internal class Base2Codec : BaseCodec {
 	override fun encode(bytes: ByteArray): String {
 		if (bytes.isEmpty()) return ""
@@ -34,6 +39,13 @@ internal class Base2Codec : BaseCodec {
 		return result.toString()
 	}
 
+	/**
+	 * 将二进制字符串解码为字节数组。
+	 *
+	 * @param string 待解码的二进制字符串，长度必须为 8 的倍数且仅包含字符 '0' 和 '1'
+	 * @return 解码后的字节数组
+	 * @throws IllegalArgumentException 如果字符串长度不是 8 的倍数或包含非法字符
+	 */
 	override fun decode(string: String): ByteArray {
 		if (string.length % 8 != 0) {
 			throw IllegalArgumentException(

@@ -61,7 +61,13 @@ import org.springframework.context.event.EventListener
 @ConditionalOnClass(name = ["okhttp3.OkHttpClient"])
 open class Okhttp3AutoConfiguration {
 
+	/**
+	 * 伴生对象，持有本配置类的日志记录器。
+	 */
 	companion object {
+		/**
+		 * 本配置类的日志记录器。
+		 */
 		val log: Logger = MingLiLoggerFactory.getLogger<Okhttp3AutoConfiguration>()
 	}
 

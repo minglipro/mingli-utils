@@ -22,6 +22,14 @@
 
 package com.mingliqiye.utils.exception
 
+/**
+ * mingli-utils 工具库所有异常的基类，继承自 [RuntimeException]。
+ *
+ * @param message 异常信息，默认为 null
+ * @param cause 异常原因，默认为 null
+ * @param enableSuppression 是否启用异常抑制，默认为 false
+ * @param writableStackTrace 是否可写入堆栈跟踪信息，默认为 true
+ */
 open class MingLiUtilsBaseException @JvmOverloads constructor(
 	message: String? = null,
 	cause: Throwable? = null,

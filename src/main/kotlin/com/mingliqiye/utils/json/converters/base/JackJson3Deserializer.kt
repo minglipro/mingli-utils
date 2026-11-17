@@ -29,16 +29,32 @@ import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.ValueDeserializer
 
 
+/**
+ * Jackson3 反序列化适配器，将 [BaseJsonConverter] 包装为 Jackson3 的 [ValueDeserializer]。
+ *
+ * @property property 当前属性信息，用于读取字段注解，可为null
+ * @property jsonConverter 实际执行反序列化逻辑的转换器
+ */
 class JackJson3Deserializer<T>(
 	val property: BeanProperty? = null,
 	val jsonConverter: BaseJsonConverter<T>,
 ) : ValueDeserializer<T>() {
 
+	/**
+	 * 注解获取器，从当前属性信息中读取字段注解
+	 */
 	val annotationGetter =
 		object : AnnotationGetter {
 			override fun <T : Annotation> getAnnotation(clazz: Class<T>): T? = property?.getAnnotation(clazz)
 		}
 
+	/**
+	 * 反序列化方法：将 JSON 树交给转换器还原为目标对象。
+	 *
+	 * @param p JSON 解析器。
+	 * @param ctxt 反序列化上下文，可选参数。
+	 * @return 还原后的对象，可能为null。
+	 */
 	override fun deserialize(
 		p: JsonParser,
 		ctxt: DeserializationContext?,

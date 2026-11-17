@@ -26,4 +26,9 @@ package com.mingliqiye.utils.http
 import okhttp3.MediaType.Companion.toMediaType
 
 
+/**
+ * 将本枚举转换为 OkHttp 的 [okhttp3.MediaType]。
+ *
+ * @return 与 [MediaType.value] 对应的 OkHttp 媒体类型
+ */
 fun MediaType.okhttp(): okhttp3.MediaType = this.value.toMediaType()

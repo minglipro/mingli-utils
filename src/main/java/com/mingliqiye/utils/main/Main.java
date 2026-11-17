@@ -29,7 +29,13 @@ import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * 工具库入口类，提供启动 Banner 打印以及进程、主机、用户等基础信息的获取方法。
+ */
 public class Main {
+    /**
+     * 启动时打印的 ASCII 艺术 Banner 文本
+     */
     public final static String BANNER =
             "|  $$\\      $$\\ $$\\      $$\\   $$\\ $$$$$$$$\\  $$$$$$\\   \n" +
                     "|  $$$\\    $$$ |$$ |     $$ |  $$ |\\__$$  __|$$  __$$\\  \n" +
@@ -40,6 +46,11 @@ public class Main {
                     "|  $$ | \\_/ $$ |$$$$$$$$\\\\$$$$$$  |   $$ |   \\$$$$$$   \n" +
                     "|  \\__|     \\__|\\________|\\______/    \\__|    \\______/  \n|\n";
 
+    /**
+     * 程序入口，打印 Banner 与构建元数据信息，打印失败时静默忽略。
+     *
+     * @param args 命令行参数（未使用）
+     */
     public static void main(String[] args) {
         try {
             printb();
@@ -47,6 +58,11 @@ public class Main {
         }
     }
 
+    /**
+     * 获取当前进程 PID 字符串。
+     *
+     * @return 当前进程 PID；获取失败时返回 "-1"
+     */
     public static String getPid() {
         try {
             var name = ManagementFactory.getRuntimeMXBean().getName();
@@ -61,6 +77,11 @@ public class Main {
         }
     }
 
+    /**
+     * 获取计算机名，依次尝试环境变量 COMPUTERNAME、HOSTNAME 与本机主机名。
+     *
+     * @return 计算机名；获取失败时返回 "unknown"
+     */
     public static String getComputerName() {
         try {
             var name = System.getenv("COMPUTERNAME");
@@ -76,6 +97,11 @@ public class Main {
         }
     }
 
+    /**
+     * 获取当前用户名，依次尝试环境变量 USERNAME、USER 与 user.name。
+     *
+     * @return 当前用户名；获取失败时返回 "unknown"
+     */
     public static String getUserName() {
         try {
             String user = System.getenv("USERNAME");
@@ -96,6 +122,12 @@ public class Main {
     }
 
 
+    /**
+     * 打印 Banner 及构建元数据、JDK 版本、PID、计算机名、用户名与当前时间。
+     * 若元数据资源不存在则直接返回。
+     *
+     * @throws IOException 读取元数据资源失败时抛出
+     */
     public static void printb() throws IOException {
         InputStream inputStream = Main.class.getResourceAsStream("/META-INF/meta-data");
         if (inputStream == null) return;

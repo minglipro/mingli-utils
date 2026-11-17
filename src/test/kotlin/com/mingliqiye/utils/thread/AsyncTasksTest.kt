@@ -40,6 +40,7 @@ class AsyncTasksTest {
 
     // ---- runParallel ----
 
+    /** 测试 runParallel 可变参数形式并行执行并按序返回结果 */
     @Test
     fun testRunParallelVararg() {
         val results = runParallel(
@@ -50,12 +51,14 @@ class AsyncTasksTest {
         assertEquals(listOf(1, 2, 3), results)
     }
 
+    /** 测试 runParallel 集合形式并行执行任务 */
     @Test
     fun testRunParallelCollection() {
         val tasks = listOf<() -> String>({ "a" }, { "b" }, { "c" })
         assertEquals(listOf("a", "b", "c"), runParallel(tasks))
     }
 
+    /** 测试 runParallel 结果顺序与输入顺序一致（慢任务在前） */
     @Test
     fun testRunParallelKeepsOrder() {
         // 慢任务在前，结果仍按输入顺序返回
@@ -66,6 +69,7 @@ class AsyncTasksTest {
         assertEquals(listOf("slow", "fast"), results)
     }
 
+    /** 测试 runParallel 使用自定义线程池执行 */
     @Test
     fun testRunParallelCustomExecutor() {
         val pool = fixedThreadPool(2, "parallel-test")
@@ -77,6 +81,7 @@ class AsyncTasksTest {
         }
     }
 
+    /** 测试 runParallel 中任务失败时向外抛出异常 */
     @Test
     fun testRunParallelFailure() {
         assertThrows(RuntimeException::class.java) {
@@ -87,12 +92,14 @@ class AsyncTasksTest {
         }
     }
 
+    /** 测试 runParallelWithin 在超时时间内正常返回结果 */
     @Test
     fun testRunParallelWithin() {
         val tasks = listOf<() -> Int>({ 1 }, { 2 })
         assertEquals(listOf(1, 2), runParallelWithin(5, TimeUnit.SECONDS, tasks = tasks))
     }
 
+    /** 测试 runParallelWithin 超时抛出 TimeoutException */
     @Test
     fun testRunParallelWithinTimeout() {
         assertThrows(TimeoutException::class.java) {
@@ -106,6 +113,7 @@ class AsyncTasksTest {
 
     // ---- firstCompleted ----
 
+    /** 测试 firstCompleted 返回最先完成任务的结果 */
     @Test
     fun testFirstCompleted() {
         val result = firstCompleted(
@@ -117,6 +125,7 @@ class AsyncTasksTest {
 
     // ---- awaitAll / invokeAllAndGet ----
 
+    /** 测试 awaitAll 按序等待并收集所有 Future 结果 */
     @Test
     fun testAwaitAll() {
         val pool = fixedThreadPool(2, "await-all-test")
@@ -128,6 +137,7 @@ class AsyncTasksTest {
         }
     }
 
+    /** 测试 invokeAllAndGet 批量提交任务并获取结果 */
     @Test
     fun testInvokeAllAndGet() {
         val pool = fixedThreadPool(2, "invoke-all-test")
@@ -139,6 +149,7 @@ class AsyncTasksTest {
         }
     }
 
+    /** 测试 awaitAllOrNull 对失败任务返回 null 而不抛异常 */
     @Test
     fun testAwaitAllOrNull() {
         val pool = fixedThreadPool(2, "await-ornull-test")
@@ -157,6 +168,7 @@ class AsyncTasksTest {
 
     // ---- callWithRetry ----
 
+    /** 测试 callWithRetry 失败后重试直至成功 */
     @Test
     fun testCallWithRetrySuccess() {
         val attempts = AtomicInteger()
@@ -168,6 +180,7 @@ class AsyncTasksTest {
         assertEquals("ok", result)
     }
 
+    /** 测试 callWithRetry 重试次数耗尽后抛出最后一次异常 */
     @Test
     fun testCallWithRetryExhausted() {
         val attempts = AtomicInteger()
@@ -180,6 +193,7 @@ class AsyncTasksTest {
         assertEquals(2, attempts.get(), "应恰好尝试 2 次")
     }
 
+    /** 测试 callAsyncWithRetry 异步重试直至成功 */
     @Test
     fun testCallAsyncWithRetry() {
         val attempts = AtomicInteger()
@@ -193,6 +207,7 @@ class AsyncTasksTest {
 
     // ---- 定时任务 ----
 
+    /** 测试 delayRun 延迟指定时间后执行任务 */
     @Test
     fun testDelayRun() {
         val latch = CountDownLatch(1)
@@ -203,6 +218,7 @@ class AsyncTasksTest {
         future.cancelQuietly()
     }
 
+    /** 测试 scheduleWithFixedDelay 固定间隔重复执行任务 */
     @Test
     fun testScheduleWithFixedDelay() {
         val counter = AtomicInteger()
@@ -219,6 +235,7 @@ class AsyncTasksTest {
         }
     }
 
+    /** 测试 scheduleAtFixedRate 固定频率重复执行任务 */
     @Test
     fun testScheduleAtFixedRate() {
         val counter = AtomicInteger()
@@ -237,6 +254,7 @@ class AsyncTasksTest {
 
     // ---- GlobalThreadPool ----
 
+    /** 测试 GlobalThreadPool 的 io/cpu/scheduled 全局线程池已正确初始化 */
     @Test
     fun testGlobalPools() {
         assertTrue(GlobalThreadPool.io.corePoolSize > 0)
@@ -244,21 +262,25 @@ class AsyncTasksTest {
         assertTrue(GlobalThreadPool.scheduled.corePoolSize > 0)
     }
 
+    /** 测试 runAsync 异步执行无返回值任务 */
     @Test
     fun testRunAsync() {
         assertNull(runAsync { }.get(5, TimeUnit.SECONDS))
     }
 
+    /** 测试 callAsync 在 IO 线程池异步执行并返回结果 */
     @Test
     fun testCallAsync() {
         assertEquals("io", callAsync { "io" }.get(5, TimeUnit.SECONDS))
     }
 
+    /** 测试 computeAsync 在 CPU 线程池异步计算并返回结果 */
     @Test
     fun testComputeAsync() {
         assertEquals(4, computeAsync { 2 + 2 }.get(5, TimeUnit.SECONDS))
     }
 
+    /** 测试 runAsyncAwait 异步执行并阻塞等待完成 */
     @Test
     fun testRunAsyncAwait() {
         val counter = AtomicInteger()
@@ -266,11 +288,13 @@ class AsyncTasksTest {
         assertEquals(1, counter.get())
     }
 
+    /** 测试 callAsyncAwait 异步执行并阻塞等待返回结果 */
     @Test
     fun testCallAsyncAwait() {
         assertEquals("await", callAsyncAwait { "await" })
     }
 
+    /** 测试 GlobalThreadPool.execute 提交任务并被执行 */
     @Test
     fun testGlobalExecute() {
         val latch = CountDownLatch(1)

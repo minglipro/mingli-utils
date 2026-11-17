@@ -37,6 +37,9 @@ import kotlin.contracts.contract
 
 private val log = MingLiLoggerFactory.getLogger(Class.forName("com.mingliqiye.utils.string.StringUtils"))
 
+/**
+ * 被视为"空值"的字符串集合，isNullish 判断时除空白字符串外还匹配这些值。
+ */
 val NULLISH_STRINGS = setOf("null", "NaN", "undefined", "None", "none")
 
 /**
@@ -54,6 +57,12 @@ fun String?.isNullish(): Boolean {
 	return this.isNullOrBlank() || this in NULLISH_STRINGS
 }
 
+/**
+ * String 扩展函数，以接收者作为模板格式化字符串，将 {} 占位符替换为对应参数值。
+ *
+ * @param args 要替换占位符的参数列表
+ * @return 格式化后的字符串
+ */
 @JvmName("__Formatde")
 fun String.formatd(vararg args: Any) = com.mingliqiye.utils.string.format(this, *args)
 
@@ -241,6 +250,13 @@ fun <T> String.join(list: List<T>, getstring: (T) -> String = { it.toString() })
 	return sb.toString()
 }
 
+/**
+ * 使用当前字符串作为分隔符，将数组中的元素连接成字符串。
+ *
+ * @param array 需要连接的元素数组
+ * @param getstring 转换函数，将数组元素转换为字符串，默认使用toString()方法
+ * @return 连接后的字符串
+ */
 fun <T> String.join(array: Array<T>, getstring: (T) -> String = { it.toString() }): String {
 	// 使用StringBuilder构建结果字符串
 	val sb = StringBuilder()
@@ -254,6 +270,12 @@ fun <T> String.join(array: Array<T>, getstring: (T) -> String = { it.toString() 
 	return sb.toString()
 }
 
+/**
+ * 可空 String 扩展函数，按模板解析接收者字符串，模板中的 {} 作为通配占位符提取对应内容。
+ *
+ * @param template 解析模板，{} 表示要提取的部分，其余字符按字面匹配
+ * @return 提取出的各占位符内容列表；接收者为 null 或不匹配模板时返回 null
+ */
 fun String?.parserTemplate(template: String): List<String>? {
 	if (this == null) return null
 	val regex: Regex = Regex(
@@ -275,10 +297,27 @@ fun String?.parserTemplate(template: String): List<String>? {
 }
 
 
+/**
+ * String 扩展函数，使用 UTF-8 对接收者进行 URL 编码。
+ *
+ * @return URL 编码后的字符串
+ */
 fun String.urlEncode() = URLEncoder.encode(this, Charsets.UTF_8.name())
+
+/**
+ * String 扩展函数，使用 UTF-8 对接收者进行 URL 解码。
+ *
+ * @return URL 解码后的字符串
+ */
 fun String.urlDecode() = URLDecoder.decode(this, Charsets.UTF_8.name())
 
 
+/**
+ * String 扩展函数，使用指定密钥计算接收者的 HmacSHA256 摘要。
+ *
+ * @param keyS 密钥字符串
+ * @return 十六进制（Base16）编码的摘要字符串
+ */
 fun String.hmacSHA256String(keyS: String): String {
 	val instance = Mac.getInstance("HmacSHA256")
 	val key = keyS.toByteArray()
@@ -287,6 +326,11 @@ fun String.hmacSHA256String(keyS: String): String {
 	return BASE16.encode(bytes)
 }
 
+/**
+ * String 扩展函数，计算接收者的 MD5 摘要。
+ *
+ * @return 十六进制（Base16）编码的摘要字符串
+ */
 fun String.md5String(): String {
 	val instance = MessageDigest.getInstance("MD5")
 	instance.update(this.toByteArray())
@@ -294,6 +338,12 @@ fun String.md5String(): String {
 	return BASE16.encode(bytes)
 }
 
+/**
+ * String 扩展函数，使用指定密钥计算接收者的 HmacMD5 摘要。
+ *
+ * @param keyS 密钥字符串
+ * @return 十六进制（Base16）编码的摘要字符串
+ */
 fun String.hmacMd5String(keyS: String): String {
 	val instance = Mac.getInstance("HmacMD5")
 	val key = keyS.toByteArray()

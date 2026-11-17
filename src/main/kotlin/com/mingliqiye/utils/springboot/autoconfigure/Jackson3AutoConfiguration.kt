@@ -33,12 +33,30 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer
 import org.springframework.context.annotation.Bean
 
+/**
+ * Jackson 3 的序列化模块自动配置。
+ *
+ * 在类路径存在 Jackson 3（`tools.jackson.databind.json.JsonMapper`）
+ * 及 Spring Boot 的 Jackson 自动配置时生效，并在其之后处理，
+ * 向容器注册名为 `jackson3MapperBuilderCustomizer` 的 [JsonMapperBuilderCustomizer] Bean，
+ * 将容器中所有 [JacksonBuilder] 定制器收集的 JSON 转换器以 Jackson 3 模块形式安装到 JsonMapper。
+ */
 @ConditionalOnClass(name = ["tools.jackson.databind.json.JsonMapper", "org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration"])
 @AutoConfigureAfter(name = ["org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration"])
 open class Jackson3AutoConfiguration {
 
 	private val log = MingLiLoggerFactory.getLogger<Jackson3AutoConfiguration>()
 
+	/**
+	 * 创建 Jackson 3 的 JsonMapper 构建定制器 Bean。
+	 *
+	 * 按 `@Order` 顺序依次应用容器中所有 [JacksonBuilder] 定制器，
+	 * 将收集到的 JSON 转换器转换为 Jackson 3 模块并注册到 JsonMapper 构建器。
+	 * 仅在容器中不存在同名 Bean 时创建。
+	 *
+	 * @param builders 容器中的 Jackson 构建定制器，按顺序依次应用
+	 * @return 安装自定义模块的 [JsonMapperBuilderCustomizer]
+	 */
 	@Bean("jackson3MapperBuilderCustomizer")
 	@ConditionalOnMissingBean(name = ["jackson3MapperBuilderCustomizer"])
 	fun jsonMapperBuilderCustomizer(builders: ObjectProvider<JacksonBuilder>): JsonMapperBuilderCustomizer {

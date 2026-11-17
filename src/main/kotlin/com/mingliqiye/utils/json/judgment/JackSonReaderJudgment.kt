@@ -25,6 +25,11 @@ package com.mingliqiye.utils.json.judgment
 import com.fasterxml.jackson.databind.JsonNode
 import com.mingliqiye.utils.json.judgment.base.BaseJsonJudgment
 
+/**
+ * 基于 Jackson2 JsonNode 的类型判断实现，各判定属性直接委托给节点自身
+ *
+ * @param treeNode 待判断的 Jackson2 JsonNode 节点
+ */
 open class JackSonReaderJudgment(
 	private val treeNode: JsonNode,
 ) : BaseJsonJudgment {

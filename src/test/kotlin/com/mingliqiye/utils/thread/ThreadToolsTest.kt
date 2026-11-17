@@ -49,6 +49,7 @@ class ThreadToolsTest {
 
     // ---- ThreadUtils ----
 
+    /** 测试 sleepQuietly 毫秒重载的休眠时长 */
     @Test
     fun testSleepQuietlyMillis() {
         val start = System.nanoTime()
@@ -56,6 +57,7 @@ class ThreadToolsTest {
         assertTrue(System.nanoTime() - start >= 90_000_000L, "应至少休眠 100ms")
     }
 
+    /** 测试 sleepQuietly 时间单位重载的休眠时长 */
     @Test
     fun testSleepQuietlyTimeUnit() {
         val start = System.nanoTime()
@@ -63,6 +65,7 @@ class ThreadToolsTest {
         assertTrue(System.nanoTime() - start >= 40_000_000L, "应至少休眠 50ms")
     }
 
+    /** 测试 currentThreadName 属性的读写 */
     @Test
     fun testCurrentThreadNameProperty() {
         assertEquals(Thread.currentThread().name, ThreadUtils.currentThreadName)
@@ -75,6 +78,7 @@ class ThreadToolsTest {
         }
     }
 
+    /** 测试当前线程优先级、守护状态、主线程判断、堆栈与线程组等信息获取 */
     @Test
     fun testCurrentThreadInfo() {
         assertEquals(Thread.currentThread().priority, ThreadUtils.currentThreadPriority)
@@ -85,18 +89,21 @@ class ThreadToolsTest {
         assertTrue(ThreadUtils.activeThreadCount() >= 1)
     }
 
+    /** 测试 activeThreads 返回的活跃线程包含当前线程 */
     @Test
     fun testActiveThreads() {
         val threads = ThreadUtils.activeThreads()
         assertTrue(threads.any { it === Thread.currentThread() }, "活跃线程应包含当前线程")
     }
 
+    /** 测试 allThreadsDump 全线程转储包含当前线程名 */
     @Test
     fun testAllThreadsDump() {
         val dump = ThreadUtils.allThreadsDump()
         assertTrue(dump.contains(Thread.currentThread().name), "全线程转储应包含当前线程名")
     }
 
+    /** 测试 currentThreadDump 当前线程转储包含测试方法名 */
     @Test
     fun testCurrentThreadDump() {
         val dump = ThreadUtils.currentThreadDump()
@@ -105,6 +112,7 @@ class ThreadToolsTest {
 
     // ---- ThreadExt ----
 
+    /** 测试 Runnable.startThread 创建并启动指定名称的守护线程 */
     @Test
     fun testStartThread() {
         val latch = CountDownLatch(1)
@@ -115,6 +123,7 @@ class ThreadToolsTest {
         thread.joinQuietly(2000)
     }
 
+    /** 测试 asThread 仅创建线程而不启动 */
     @Test
     fun testAsThreadNotStarted() {
         val thread = Runnable { }.asThread("no-start")
@@ -123,6 +132,7 @@ class ThreadToolsTest {
         assertEquals("no-start", thread.name)
     }
 
+    /** 测试 daemonThread 与 userThread 的守护属性差异 */
     @Test
     fun testDaemonAndUserThread() {
         val latch = CountDownLatch(2)
@@ -135,6 +145,7 @@ class ThreadToolsTest {
         user.joinQuietly(2000)
     }
 
+    /** 测试 daemonThread start=false 时不启动线程 */
     @Test
     fun testDaemonThreadNotStarted() {
         val thread = daemonThread("no-start-daemon", start = false) { }
@@ -142,6 +153,7 @@ class ThreadToolsTest {
         assertTrue(thread.isDaemon)
     }
 
+    /** 测试 uncaughtExceptionHandler 捕获线程未处理异常 */
     @Test
     fun testOnUncaughtHandler() {
         val latch = CountDownLatch(1)
@@ -158,6 +170,7 @@ class ThreadToolsTest {
         assertEquals("boom", captured.get()!!.message)
     }
 
+    /** 测试 startIfNotStarted 幂等启动且对已终止线程不抛异常 */
     @Test
     fun testStartIfNotStarted() {
         val thread = Runnable { }.asThread("idempotent-start")
@@ -169,6 +182,7 @@ class ThreadToolsTest {
         assertSame(thread, thread.startIfNotStarted())
     }
 
+    /** 测试 Thread.sleepQuietly 扩展函数的休眠时长 */
     @Test
     fun testSleepQuietlyExt() {
         val start = System.nanoTime()
@@ -176,6 +190,7 @@ class ThreadToolsTest {
         assertTrue(System.nanoTime() - start >= 40_000_000L, "应至少休眠 50ms")
     }
 
+    /** 测试 Thread.dumpStackTrace 扩展输出包含线程名与方法名 */
     @Test
     fun testDumpStackTrace() {
         val dump = Thread.currentThread().dumpStackTrace()
@@ -183,6 +198,7 @@ class ThreadToolsTest {
         assertTrue(dump.contains("testDumpStackTrace"))
     }
 
+    /** 测试顶层 currentThread() 返回当前线程 */
     @Test
     fun testCurrentThreadTopLevel() {
         assertSame(Thread.currentThread(), currentThread())
@@ -190,6 +206,7 @@ class ThreadToolsTest {
 
     // ---- ThreadLocalDelegates ----
 
+    /** 测试 ThreadLocal 属性委托在同线程内的初始值与读写 */
     @Test
     fun testThreadLocalSameThread() {
         assertNull(nullableValue)
@@ -201,6 +218,7 @@ class ThreadToolsTest {
         assertEquals(42L, userValue)
     }
 
+    /** 测试 ThreadLocal 属性委托的线程间隔离性 */
     @Test
     fun testThreadLocalIsolation() {
         val latch = CountDownLatch(1)
@@ -219,6 +237,7 @@ class ThreadToolsTest {
         assertEquals(listOf(7L), threadValues.toList())
     }
 
+    /** 测试 asDelegate 将已有 ThreadLocal 包装为属性委托后的读写 */
     @Test
     fun testAsDelegateProperty() {
         assertNull(delegatedValue)

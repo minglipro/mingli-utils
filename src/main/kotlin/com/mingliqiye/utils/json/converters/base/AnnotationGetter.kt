@@ -22,6 +22,15 @@
 
 package com.mingliqiye.utils.json.converters.base
 
+/**
+ * 注解获取接口，用于在自定义序列化/反序列化时读取字段上的注解
+ */
 interface AnnotationGetter {
+	/**
+	 * 获取指定类型的注解
+	 *
+	 * @param clazz 注解的Class类型
+	 * @return 注解实例，不存在时返回null（默认实现始终返回null）
+	 */
 	fun <T : Annotation> getAnnotation(clazz: Class<T>): T? = null
 }

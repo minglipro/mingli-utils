@@ -26,8 +26,18 @@ import com.mingliqiye.utils.uuid.UUID
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 
+/**
+ * [UUID] 到字符串的 Spring 类型转换器。
+ * 注册为组件后参与 Spring 的类型转换体系（如请求参数绑定、@Value 注入等）。
+ */
 @Component
 class UUIDToStringConverter : Converter<UUID, String> {
+	/**
+	 * 将 [UUID] 对象转换为其标准字符串表示。
+	 *
+	 * @param source 待转换的 UUID 对象
+	 * @return UUID 的字符串形式
+	 */
 	override fun convert(source: UUID): String {
 		return source.getString()
 	}

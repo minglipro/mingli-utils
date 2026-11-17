@@ -22,20 +22,30 @@
 
 package com.mingliqiye.utils.json.judgment.base
 
+/**
+ * JSON 节点类型判断接口，提供当前节点的类型判定属性，默认实现均返回 false
+ */
 interface BaseJsonJudgment {
+	/** 当前节点是否为 JSON 对象 */
 	val isObject: Boolean
 		get() = false
+	/** 当前节点是否为 JSON 数组 */
 	val isArray: Boolean
 		get() = false
+	/** 当前节点是否为字符串 */
 	val isString: Boolean
 		get() = false
+	/** 当前节点是否为数字 */
 	val isNumber: Boolean
 		get() = false
+	/** 当前节点是否为布尔值 */
 	val isBoolean: Boolean
 		get() = false
 
+	/** 当前节点是否为 null */
 	val isNull: Boolean
 		get() = false
+	/** 当前节点是否不为 null */
 	val isNotNull: Boolean
 		get() = !isNull
 }

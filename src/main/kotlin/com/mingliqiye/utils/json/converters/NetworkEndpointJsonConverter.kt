@@ -44,6 +44,9 @@ import com.mingliqiye.utils.network.NetworkEndpoint
  * @see NetworkEndpoint
  */
 class NetworkEndpointJsonConverter : BaseJsonConverter<NetworkEndpoint> {
+	/**
+	 * 将网络端点写为 `host:port` 形式的 JSON 字符串，null 时写入 null
+	 */
 	override fun convert(
 		obj: NetworkEndpoint?,
 		jsonWriter: BaseJsonWriter,
@@ -52,6 +55,11 @@ class NetworkEndpointJsonConverter : BaseJsonConverter<NetworkEndpoint> {
 		if (obj == null) jsonWriter.setNull() else jsonWriter.setString(obj.toHostPortString())
 	}
 
+	/**
+	 * 从 `host:port` 形式的 JSON 字符串还原网络端点
+	 *
+	 * @throws JsonParseException 当节点不是字符串类型时抛出
+	 */
 	override fun deConvert(
 		jsonReader: BaseJsonReader,
 		annotationGetter: AnnotationGetter,

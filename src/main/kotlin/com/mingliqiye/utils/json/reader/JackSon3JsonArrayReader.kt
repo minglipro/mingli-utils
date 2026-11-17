@@ -29,6 +29,11 @@ import tools.jackson.databind.JsonNode
 import java.math.BigDecimal
 import java.math.BigInteger
 
+/**
+ * 基于 Jackson3 JsonNode 的 JSON 数组读取器实现，按索引读取各类型值
+ *
+ * @param treeNode 待读取的 Jackson3 JsonNode 数组节点
+ */
 class JackSon3JsonArrayReader(
 	private val treeNode: JsonNode,
 ) : BaseJsonArrayReader, JackSon3ReaderJudgment(treeNode) {

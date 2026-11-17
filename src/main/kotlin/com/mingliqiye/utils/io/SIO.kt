@@ -44,10 +44,24 @@ object SIO {
 		return this
 	}
 
+	/**
+	 * 扩展函数：条件不满足时对当前对象执行给定变换函数
+	 *
+	 * @param boolean 条件值，为 true 时直接返回原对象
+	 * @param pd 条件为 false 时执行的变换函数
+	 * @return 原对象或变换后的对象
+	 */
 	fun <T> T.ifOr(boolean: Boolean, pd: T.() -> T): T = if (boolean) {
 		this
 	} else pd(this)
 
+	/**
+	 * 扩展函数：条件满足时对当前对象执行给定变换函数
+	 *
+	 * @param boolean 条件值，为 false 时直接返回原对象
+	 * @param pd 条件为 true 时执行的变换函数
+	 * @return 原对象或变换后的对象
+	 */
 	fun <T> T.ifOrElse(boolean: Boolean, pd: T.() -> T): T = if (!boolean) {
 		this
 	} else pd(this)

@@ -24,9 +24,20 @@ package com.mingliqiye.utils.springboot.listener
 
 import java.lang.reflect.Method
 
+/**
+ * 生命周期回调的执行数据，记录一个待反射执行的方法及其宿主 Bean 与执行顺序。
+ *
+ * @property beanName Bean 在容器中的名称
+ * @property order 执行顺序，值越小越先执行
+ * @property bean 方法所属的 Bean 实例
+ * @property method 待执行的回调方法
+ */
 data class ApplicationRunnerData(
 	val beanName: String, val order: Int, val bean: Any, val method: Method,
 ) {
+	/**
+	 * 反射调用 [method]，以 [bean] 为宿主实例执行回调。
+	 */
 	fun run() {
 		method.invoke(bean)
 	}

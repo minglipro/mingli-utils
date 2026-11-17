@@ -41,6 +41,7 @@ class NetworkAddress private constructor(domip: String) : Serializable {
 	 * IPv6标识
 	 */
 	companion object {
+		/** IPv6 版本标识，值为 6 */
 		const val IPV6 = 6
 
 		/**
@@ -81,6 +82,12 @@ class NetworkAddress private constructor(domip: String) : Serializable {
 			return NetworkAddress(domip)
 		}
 
+		/**
+		 * 从 ByteBuffer 读取 4 字节构建 IPv4 地址实例。
+		 *
+		 * @param byteBuffer 包含 IPv4 地址数据的缓冲区（读取 4 字节）
+		 * @return 新建的 NetworkAddress 实例
+		 */
 		@JvmStatic
 		fun ofIpv4(byteBuffer: ByteBuffer): NetworkAddress {
 			val byteArray = ByteArray(4)
@@ -88,6 +95,12 @@ class NetworkAddress private constructor(domip: String) : Serializable {
 			return ofIpv4(byteArray)
 		}
 
+		/**
+		 * 从 4 字节数组构建 IPv4 地址实例。
+		 *
+		 * @param byteArray 表示 IPv4 地址的字节数组（长度为 4）
+		 * @return 新建的 NetworkAddress 实例
+		 */
 		@JvmStatic
 		fun ofIpv4(byteArray: ByteArray): NetworkAddress {
 			return of(".".join(byteArray.map {

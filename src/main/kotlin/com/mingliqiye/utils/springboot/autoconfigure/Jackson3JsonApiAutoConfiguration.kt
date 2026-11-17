@@ -65,6 +65,15 @@ import tools.jackson.databind.json.JsonMapper
 @ConditionalOnClass(name = ["tools.jackson.databind.json.JsonMapper", "org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration"])
 @AutoConfigureAfter(name = ["com.mingliqiye.utils.springboot.autoconfigure.Jackson3AutoConfiguration"])
 open class Jackson3JsonApiAutoConfiguration {
+	/**
+	 * 创建基于 Jackson 3 的 [JsonApi] Bean（名称 `jackson3JsonApi`，标记为 [Primary]）。
+	 *
+	 * 仅在容器中不存在其他 [JsonApi] Bean 时创建；
+	 * 返回的实现只允许读取底层 [JsonMapper]，调用 set 方法会抛出 [JsonException]。
+	 *
+	 * @param jsonMapper 容器中已完成自定义模块配置的 Jackson 3 JsonMapper
+	 * @return 包装 [jsonMapper] 的 [Jackson3JsonApi] 实例
+	 */
 	@Bean("jackson3JsonApi")
 	@Primary
 	@ConditionalOnMissingBean(JsonApi::class)

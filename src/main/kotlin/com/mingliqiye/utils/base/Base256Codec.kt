@@ -32,7 +32,13 @@ package com.mingliqiye.utils.base
  */
 internal class Base256Codec : BaseCodec {
 
+	/**
+	 * 伴生对象，持有 Base256 的编码字符集及其反向索引表。
+	 */
 	companion object {
+		/**
+		 * Base256 编码字符集，共 256 个字符，数组索引即对应的字节值（0~255）。
+		 */
 		val code = arrayOf(
 			'!',
 			'#',
@@ -291,6 +297,9 @@ internal class Base256Codec : BaseCodec {
 			'▘',
 			'▙'
 		)
+		/**
+		 * 字符到字节值的反向映射表，用于解码时快速查找字符对应的索引。
+		 */
 		val codeMap = code.mapIndexed { index, c -> c to index }.toMap()
 	}
 
@@ -303,6 +312,13 @@ internal class Base256Codec : BaseCodec {
 		return String(result)
 	}
 
+	/**
+	 * 将 Base256 字符串解码为字节数组。
+	 *
+	 * @param string 待解码的字符串，所有字符必须属于编码字符集
+	 * @return 解码后的字节数组
+	 * @throws NullPointerException 如果字符串中包含字符集之外的字符
+	 */
 	override fun decode(string: String): ByteArray {
 		val result = ByteArray(string.length)
 		for (i in string.indices) {

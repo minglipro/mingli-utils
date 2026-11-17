@@ -987,6 +987,14 @@ inline fun <reified T> toArray(list: List<T>): Array<T> {
 		.toArray(T::class.java)
 }
 
+/**
+ * 将任意类型的 List 转换为指定类型的数组。
+ *
+ * @param T 元素类型
+ * @param list 输入的 List
+ * @param clazz 数组元素类型对应的 Class 对象
+ * @return 转换后的数组
+ */
 fun <T> toArray(list: List<T>, clazz: Class<T>): Array<T> {
 	return SuperStream.of<T>(list)
 		.toArray(clazz)

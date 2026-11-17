@@ -26,11 +26,20 @@ import org.slf4j.Logger
 import org.slf4j.Marker
 import org.slf4j.helpers.MessageFormatter
 
+/**
+ * 简易 SLF4J Logger 实现，将各级别日志直接输出到标准输出流。
+ * 所有日志级别始终启用，消息格式遵循 SLF4J 的 {} 占位符风格。
+ *
+ * @param name 日志器名称，输出时作为标识显示
+ */
 class MingLiLogger(private val name: String) : Logger {
 	override fun getName(): String {
 		return name
 	}
 
+	/**
+	 * 始终返回 true，TRACE 级别日志始终启用。
+	 */
 	override fun isTraceEnabled(): Boolean {
 		return true
 	}
@@ -67,6 +76,9 @@ class MingLiLogger(private val name: String) : Logger {
 		}
 	}
 
+	/**
+	 * 始终返回 true，忽略 marker 参数。
+	 */
 	override fun isTraceEnabled(marker: Marker?): Boolean {
 		return true
 	}
@@ -91,6 +103,9 @@ class MingLiLogger(private val name: String) : Logger {
 		trace(msg, t)
 	}
 
+	/**
+	 * 始终返回 true，DEBUG 级别日志始终启用。
+	 */
 	override fun isDebugEnabled(): Boolean {
 		return true
 	}
@@ -127,6 +142,9 @@ class MingLiLogger(private val name: String) : Logger {
 		}
 	}
 
+	/**
+	 * 始终返回 true，忽略 marker 参数。
+	 */
 	override fun isDebugEnabled(marker: Marker?): Boolean {
 		return true
 	}
@@ -151,6 +169,9 @@ class MingLiLogger(private val name: String) : Logger {
 		debug(msg, t)
 	}
 
+	/**
+	 * 始终返回 true，INFO 级别日志始终启用。
+	 */
 	override fun isInfoEnabled(): Boolean {
 		return true
 	}
@@ -187,6 +208,9 @@ class MingLiLogger(private val name: String) : Logger {
 		}
 	}
 
+	/**
+	 * 始终返回 true，忽略 marker 参数。
+	 */
 	override fun isInfoEnabled(marker: Marker?): Boolean {
 		return true
 	}
@@ -211,6 +235,9 @@ class MingLiLogger(private val name: String) : Logger {
 		info(msg, t)
 	}
 
+	/**
+	 * 始终返回 true，WARN 级别日志始终启用。
+	 */
 	override fun isWarnEnabled(): Boolean {
 		return true
 	}
@@ -247,6 +274,9 @@ class MingLiLogger(private val name: String) : Logger {
 		}
 	}
 
+	/**
+	 * 始终返回 true，忽略 marker 参数。
+	 */
 	override fun isWarnEnabled(marker: Marker?): Boolean {
 		return true
 	}
@@ -271,6 +301,9 @@ class MingLiLogger(private val name: String) : Logger {
 		warn(msg, t)
 	}
 
+	/**
+	 * 始终返回 true，ERROR 级别日志始终启用。
+	 */
 	override fun isErrorEnabled(): Boolean {
 		return true
 	}
@@ -300,12 +333,18 @@ class MingLiLogger(private val name: String) : Logger {
 		}
 	}
 
+	/**
+	 * 输出 ERROR 级别日志，仅输出消息文本，忽略异常参数。
+	 */
 	override fun error(msg: String?, t: Throwable?) {
 		msg?.let {
 			toPrintln(it, MingLiLoggerLevel.ERROR)
 		}
 	}
 
+	/**
+	 * 始终返回 true，忽略 marker 参数。
+	 */
 	override fun isErrorEnabled(marker: Marker?): Boolean {
 		return true
 	}
@@ -330,6 +369,12 @@ class MingLiLogger(private val name: String) : Logger {
 		error(msg, t)
 	}
 
+	/**
+	 * 按指定日志级别格式化并输出日志消息。
+	 *
+	 * @param message 日志消息内容
+	 * @param level 日志级别
+	 */
 	fun toPrintln(message: String, level: MingLiLoggerLevel) {
 		when (level) {
 			MingLiLoggerLevel.TRACE -> wirteToSteam("[TRACE] [$name] $message\n")
@@ -340,6 +385,11 @@ class MingLiLogger(private val name: String) : Logger {
 		}
 	}
 
+	/**
+	 * 将字符串以字节形式写入标准输出流。
+	 *
+	 * @param string 要输出的字符串
+	 */
 	fun wirteToSteam(string: String) {
 		System.out.write(string.toByteArray())
 	}

@@ -29,6 +29,11 @@ import com.mingliqiye.utils.json.reader.base.BaseJsonObjectReader
 import java.math.BigDecimal
 import java.math.BigInteger
 
+/**
+ * 基于 Jackson2 JsonNode 的 JSON 对象读取器实现，按字段名读取各类型值
+ *
+ * @param treeNode 待读取的 Jackson2 JsonNode 对象节点
+ */
 class JackSonJsonObjectReader(
 	private val treeNode: JsonNode,
 ) : BaseJsonObjectReader, JackSonReaderJudgment(treeNode) {

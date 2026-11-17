@@ -22,6 +22,14 @@
 
 package com.mingliqiye.utils.springboot.annotation
 
+/**
+ * 标记在 Spring 上下文关闭时执行的方法。
+ * 被标注的方法会在 ContextClosedEvent 触发时由
+ * [com.mingliqiye.utils.springboot.listener.ApplicationListener] 反射调用，
+ * 多个方法按 [order] 升序执行。
+ *
+ * @property order 执行顺序，值越小越先执行，默认为 [Int.MIN_VALUE]
+ */
 @Target(AnnotationTarget.FUNCTION)
 annotation class ApplicationDestroyedRunner(
 	val order: Int = Int.MIN_VALUE,

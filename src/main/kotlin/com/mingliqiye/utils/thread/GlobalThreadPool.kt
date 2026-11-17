@@ -71,15 +71,42 @@ object GlobalThreadPool {
 
 	// ---- 便捷提交 ----
 
+	/**
+	 * 向全局 IO 池提交无返回值任务
+	 *
+	 * @param runnable 要执行的任务
+	 * @return 任务句柄，可用于等待完成或取消
+	 */
 	@JvmStatic
 	fun execute(runnable: Runnable): Future<*> = io.submit(runnable)
 
+	/**
+	 * 向全局 IO 池提交带返回值任务
+	 *
+	 * @param T 任务返回值类型
+	 * @param callable 要执行的任务
+	 * @return 任务句柄，可通过 [Future.get] 获取结果
+	 */
 	@JvmStatic
 	fun <T> submit(callable: Callable<T>): Future<T> = io.submit(callable)
 
+	/**
+	 * 向全局 IO 池提交无返回值任务
+	 *
+	 * @param runnable 要执行的任务
+	 * @return 任务句柄，可用于等待完成或取消
+	 */
 	@JvmStatic
 	fun submit(runnable: Runnable): Future<*> = io.submit(runnable)
 
+	/**
+	 * 向全局 IO 池提交任务，并指定完成后返回的固定结果
+	 *
+	 * @param T 结果类型
+	 * @param runnable 要执行的任务
+	 * @param result 任务完成后返回的结果
+	 * @return 任务句柄，完成后通过 [Future.get] 得到 [result]
+	 */
 	@JvmStatic
 	fun <T> submit(runnable: Runnable, result: T): Future<T> = io.submit(runnable, result)
 

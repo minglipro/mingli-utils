@@ -29,20 +29,43 @@ import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.ValueSerializer
 
 
+/**
+ * Jackson3 序列化适配器，将 [BaseJsonConverter] 包装为 Jackson3 的 [ValueSerializer]。
+ *
+ * @property property 当前属性信息，用于读取字段注解，可为null
+ * @property jsonConverter 实际执行序列化逻辑的转换器
+ */
 class JackJson3Serializer<T>(
 	val property: BeanProperty? = null,
 	val jsonConverter: BaseJsonConverter<T>,
 ) : ValueSerializer<T>() {
 
+	/**
+	 * 注解获取器，从当前属性信息中读取字段注解
+	 */
 	val annotationGetter =
 		object : AnnotationGetter {
 			override fun <T : Annotation> getAnnotation(clazz: Class<T>): T? = property?.getAnnotation(clazz)
 		}
 
+	/**
+	 * 序列化方法：将源对象交给转换器写入 JSON。
+	 *
+	 * @param value 源对象。
+	 * @param gen JSON 生成器，用于写入 JSON 数据。
+	 * @param ctxt 序列化上下文。
+	 */
 	override fun serialize(value: T, gen: JsonGenerator, ctxt: SerializationContext) {
 		jsonConverter.convert(value, JackSon3JsonWriter(gen, ctxt), annotationGetter)
 	}
 
+	/**
+	 * 上下文感知方法：设置当前属性信息。
+	 *
+	 * @param ctxt 序列化上下文，可选参数。
+	 * @param property 当前属性信息。
+	 * @return 携带属性信息的新序列化器实例。
+	 */
 	override fun createContextual(ctxt: SerializationContext?, property: BeanProperty?): ValueSerializer<*> {
 		return JackJson3Serializer(property, jsonConverter)
 	}

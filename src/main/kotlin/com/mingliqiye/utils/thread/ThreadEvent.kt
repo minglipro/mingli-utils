@@ -41,6 +41,11 @@ open class ThreadEvent<T> : ReadWriteProperty<Any?, T> {
 	@Volatile
 	private var data: T
 
+	/**
+	 * 构造事件实例
+	 *
+	 * @param data 初始事件数据（事件初始为未触发状态）
+	 */
 	constructor(data: T) {
 		this.data = data
 	}
@@ -126,6 +131,12 @@ open class ThreadEvent<T> : ReadWriteProperty<Any?, T> {
 	 */
 	fun isSet(): Boolean = latch.count == 0L
 
+	/**
+	 * 设置事件数据并立即重置事件状态。
+	 * 已等待的线程会被唤醒，但事件回到未触发状态，后续等待者需再次等待 [set]。
+	 *
+	 * @param data 要设置的事件数据
+	 */
 	fun setAndReset(data: T) {
 		set(data)
 		reset()
@@ -150,6 +161,7 @@ open class ThreadEvent<T> : ReadWriteProperty<Any?, T> {
 	 */
 	fun asDelegate(): ReadWriteProperty<Any?, T> = this
 
+	/** 伴生对象，提供静态工厂方法 */
 	companion object {
 		/**
 		 * 创建事件实例

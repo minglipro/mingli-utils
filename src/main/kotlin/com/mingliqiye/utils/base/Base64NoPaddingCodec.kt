@@ -24,21 +24,26 @@ package com.mingliqiye.utils.base
 
 import java.util.*
 
+/**
+ * 无填充 Base64 URL 编解码器实现类。
+ *
+ * 使用 URL 安全的 Base64 字母表，编码结果不带末尾的 '=' 填充字符。
+ */
 internal class Base64NoPaddingCodec : BaseCodec {
 
-	/*
+	/**
 	 * Base64编码器实例
 	 * 用于执行字节数组到Base64字符串的编码操作
 	 */
 	val encoder: Base64.Encoder = Base64.getUrlEncoder().withoutPadding()
 
-	/*
+	/**
 	 * Base64解码器实例
 	 * 用于执行Base64字符串到字节数组的解码操作
 	 */
 	val decoder: Base64.Decoder = Base64.getUrlDecoder()
 
-	/*
+	/**
 	 * 将字节数组编码为Base64字符串
 	 *
 	 * @param bytes 待编码的字节数组
@@ -48,7 +53,7 @@ internal class Base64NoPaddingCodec : BaseCodec {
 		return encoder.encodeToString(bytes)
 	}
 
-	/*
+	/**
 	 * 将Base64字符串解码为字节数组
 	 *
 	 * @param string 待解码的Base64字符串

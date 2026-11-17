@@ -33,7 +33,16 @@ import com.mingliqiye.utils.json.witer.base.BaseJsonWriter
 import com.mingliqiye.utils.time.DateTime
 import com.mingliqiye.utils.time.Formatter
 
+/**
+ * [DateTime] 的 JSON 字符串转换器。
+ *
+ * 根据字段上的 [DateTimeJsonFormat] 注解选择格式化器，
+ * 在日期时间对象与 JSON 字符串之间进行双向转换。
+ */
 class DateTimeJsonConverter : BaseJsonConverter<DateTime> {
+	/**
+	 * 按 [DateTimeJsonFormat] 注解指定的格式将日期时间写为 JSON 字符串，null 时写入 null
+	 */
 	@Throws(Exception::class)
 	override fun convert(
 		obj: DateTime?,
@@ -56,6 +65,11 @@ class DateTimeJsonConverter : BaseJsonConverter<DateTime> {
 	}
 
 
+	/**
+	 * 按 [DateTimeJsonFormat] 注解指定的格式从 JSON 字符串解析日期时间
+	 *
+	 * @throws JsonParseException 当节点不是字符串类型时抛出
+	 */
 	override fun deConvert(jsonReader: BaseJsonReader, annotationGetter: AnnotationGetter): DateTime? {
 		val dateTimeJsonFormat: DateTimeJsonFormat? = annotationGetter.getAnnotation<DateTimeJsonFormat>()
 		if (jsonReader.isNull) return null

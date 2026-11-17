@@ -33,15 +33,34 @@ import org.springframework.context.event.ContextClosedEvent
 import org.springframework.context.event.EventListener
 
 
+/**
+ * 应用生命周期监听器。
+ * 在应用启动完成时扫描容器中所有 Bean 的方法，收集标注了
+ * [ApplicationStartedRunner] / [ApplicationDestroyedRunner] 的方法并按 order 排序，
+ * 分别在 ApplicationStartedEvent 和 ContextClosedEvent 触发时依次反射执行。
+ */
 @Listener
 class ApplicationListener {
 
+	/**
+	 * 已扫描到的待执行方法集合，键为注解类全名，值为按 order 升序排列的执行数据列表。
+	 */
 	val runningMap = HashMap<String, MutableList<ApplicationRunnerData>>()
 
+	/**
+	 * 伴生对象，持有本监听器的日志记录器。
+	 */
 	companion object {
 		private val log = MingLiLoggerFactory.getLogger<ApplicationListener>()
 	}
 
+	/**
+	 * 扫描容器中的 Bean 方法，收集生命周期回调并按 order 排序。
+	 *
+	 * 跳过 `org.springframework` 包下的 Bean；每次调用会先清空 [runningMap] 再重新扫描。
+	 *
+	 * @param applicationContext 用于遍历 Bean 定义与获取 Bean 实例的容器
+	 */
 	fun init(applicationContext: ListableBeanFactory) {
 		runningMap.clear()
 		for (beanName in applicationContext.beanDefinitionNames) {
@@ -86,6 +105,11 @@ class ApplicationListener {
 		}
 	}
 
+	/**
+	 * 应用启动完成事件回调：先执行 [init] 扫描，再按 order 升序执行所有 [ApplicationStartedRunner] 方法。
+	 *
+	 * @param event 应用启动完成事件
+	 */
 	@EventListener(ApplicationStartedEvent::class)
 	fun applicationStarted(event: ApplicationStartedEvent) {
 		init(event.applicationContext)
@@ -95,6 +119,9 @@ class ApplicationListener {
 		}
 	}
 
+	/**
+	 * 上下文关闭事件回调：按 order 升序执行所有 [ApplicationDestroyedRunner] 方法。
+	 */
 	@EventListener(ContextClosedEvent::class)
 	fun applicationClosed() {
 		runningMap[ApplicationDestroyedRunner::class.java.name]?.forEach {

@@ -22,10 +22,22 @@
 
 package com.mingliqiye.utils.http
 
+/**
+ * HTTP 响应基类，封装时间、消息、数据和状态码等通用响应字段。
+ *
+ * 除 [time] 外字段均可变，本身非线程安全；
+ * 如需不可变更新语义，请使用子类的 with* 系列方法。
+ *
+ * @param T 响应数据的类型
+ */
 open class BaseResponse<T>(
+	/** 响应时间（格式化的字符串），创建后不可修改 */
 	open val time: String,
+	/** 响应消息，可通过 setter 修改 */
 	open var message: String,
+	/** 响应数据，可通过 setter 修改 */
 	open var data: T,
+	/** HTTP 状态码，可通过 setter 修改 */
 	open var statusCode: Int,
 
 	) {

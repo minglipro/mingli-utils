@@ -413,6 +413,9 @@ data class ByteFlags(
 		return "ByteFlags(${toBinaryString()} = ${toHexString()})"
 	}
 
+	/**
+	 * 伴生对象，提供 [ByteFlags] 的多种静态工厂方法。
+	 */
 	companion object {
 		/**
 		 * 创建一个所有位均为 `true` 的 [ByteFlags] 实例。
@@ -456,6 +459,15 @@ data class ByteFlags(
 			)
 		}
 
+		/**
+		 * 从布尔数组创建 [ByteFlags] 实例。
+		 *
+		 * 使用数组的前 8 个元素（索引 0~7），分别对应 b0~b7。
+		 *
+		 * @param booleanArray 布尔数组（长度至少为 8）
+		 * @return 对应的 ByteFlags 实例
+		 * @throws IllegalArgumentException 如果数组长度不足 8
+		 */
 		fun fromBooleanArray(booleanArray: BooleanArray): ByteFlags {
 			return ByteFlags().fromBooleanArray(booleanArray)
 		}

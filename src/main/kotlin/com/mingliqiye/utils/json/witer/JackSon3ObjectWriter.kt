@@ -28,11 +28,23 @@ import com.mingliqiye.utils.json.witer.base.BaseJsonObjectWriter
 import tools.jackson.core.JsonGenerator
 import tools.jackson.databind.SerializationContext
 
+/**
+ * 基于 Jackson3 JsonGenerator 的 JSON 对象写入器实现，按字段名追加各类型值
+ *
+ * @param jsonGenerator Jackson3 的 JSON 生成器
+ * @param serializationContext 序列化上下文
+ */
 class JackSon3ObjectWriter(
 	private val jsonGenerator: JsonGenerator,
 	private val serializationContext: SerializationContext,
 ) : BaseJsonObjectWriter {
 
+	/**
+	 * 写入字段名
+	 *
+	 * @param name 字段名
+	 * @return 当前 JsonGenerator 实例，便于链式调用
+	 */
 	fun writeName(name: String): JsonGenerator = jsonGenerator.writeName(name)
 
 	override fun addNull(name: String): BaseJsonObjectWriter {
