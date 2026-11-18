@@ -16,13 +16,14 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Okhttp3AutoConfiguration.kt
- * LastUpdate 2026-11-16 11:29:35
+ * LastUpdate 2026-11-18 08:22:35
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.springboot.autoconfigure
 
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
+import com.mingliqiye.utils.springboot.annotation.ContextClosedEventListener
 import com.mingliqiye.utils.springboot.autoconfigure.builder.OkhttpBuilder
 import org.slf4j.Logger
 import org.springframework.beans.factory.ObjectProvider
@@ -31,7 +32,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.event.ContextClosedEvent
-import org.springframework.context.event.EventListener
 
 /**
  * OkHttp 3 的 Spring Boot 自动配置。
@@ -118,7 +118,7 @@ open class Okhttp3AutoConfiguration {
 	 * 仅当 [okhttp] 字段非空（即客户端由本配置创建）时执行；
 	 * 调用方自行声明的客户端不会被清理。
 	 */
-	@EventListener(ContextClosedEvent::class)
+	@ContextClosedEventListener
 	open fun handleContextClosed() {
 		okhttp?.let {
 			log.info("Context closed, cleaning up OkHttpClient...")
