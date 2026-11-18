@@ -16,13 +16,12 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-11-17 10:19:02
+ * LastUpdate 2026-11-18 08:42:41
  * UpdateUser MingLiPro
  */
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.math.sign
 
 /*
  * Copyright 2026 mingliqiye
