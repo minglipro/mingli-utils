@@ -118,7 +118,8 @@ open class Okhttp3AutoConfiguration {
 	 * 仅当 [okhttp] 字段非空（即客户端由本配置创建）时执行；
 	 * 调用方自行声明的客户端不会被清理。
 	 */
-	@ContextClosedEventListener
+
+	@EventListener(ContextClosedEvent::class)
 	open fun handleContextClosed() {
 		okhttp?.let {
 			log.info("Context closed, cleaning up OkHttpClient...")
