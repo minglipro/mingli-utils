@@ -31,6 +31,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.event.ContextClosedEvent
+import org.springframework.context.event.EventListener
 
 /**
  * OkHttp 3 的 Spring Boot 自动配置。
