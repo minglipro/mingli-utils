@@ -23,7 +23,6 @@
 package com.mingliqiye.utils.springboot.autoconfigure
 
 import com.mingliqiye.utils.logger.MingLiLoggerFactory
-import com.mingliqiye.utils.springboot.annotation.ContextClosedEventListener
 import com.mingliqiye.utils.springboot.autoconfigure.builder.OkhttpBuilder
 import org.slf4j.Logger
 import org.springframework.beans.factory.ObjectProvider
