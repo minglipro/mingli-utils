@@ -4,6 +4,37 @@
 
 本文件记录 mingli-utils 各版本的主要变更。
 
+## [5.5.4] - 2026-11-18
+
+### 新增
+
+- **hash**：新增 `HashCodec` 哈希编解码器接口——实现类只需重写 `hash(InputStream)` 一个方法，
+  字节数组/字符串/文件/路径重载、十六进制输出（`hashHex`）与基于 `MessageDigest.isEqual`
+  的常量时间校验（`verifyHash`）均由默认实现提供；新增 `MessageDigestCodec` 流式基类
+  （8KB 缓冲、恒定内存、不关闭调用方流）及 13 种 JDK 标准算法实现
+  （MD2、MD5、SHA-1、SHA-224/256/384/512、SHA-512/224、SHA-512/256、SHA3-224/256/384/512）；
+  提供 `HashUtils` 懒加载单例（`MD2`~`SHA512256`）与 `HashType` 枚举；
+  新增 `TestHash` 测试覆盖已知向量、全部算法一致性、流生命周期与文件/路径重载。
+- **test**：新增非官方 Log4j2 配置 XSD（覆盖 21 种 Appender、13 种 Layout、11 种 Filter、
+  滚动策略与清理条件等，未知插件元素以开放内容模型放行），`log4j2.xml` 接入 Schema 校验。
+
+### 变更
+
+- **springboot**：事件监听注解迁移为 Java 实现——新增 `ApplicationReadyEventListener`、
+  `ContextClosedEventListener`；`ApplicationStartedRunner`、`ApplicationDestroyedRunner`
+  标记为废弃；移除 Kotlin 版注解及 `ApplicationListener`、`ApplicationRunnerData`；
+  `Okhttp3AutoConfiguration` 改用 `@ContextClosedEventListener`。
+- **http**：`MediaType` 枚举项之间补充空行（纯格式化，无内容变更）。
+
+### 修复
+
+- **build**：修正 `signing.secretKeyRingFile` 属性名笔误（误插入空格）。
+
+### 文档
+
+- hash 包全部接口、类、枚举与懒加载单例补全中文 KDoc；
+  4 个 Spring Boot 事件监听注解补全 Javadoc。
+
 ## [5.5.2] - 2026-11-17
 
 ### 新增
