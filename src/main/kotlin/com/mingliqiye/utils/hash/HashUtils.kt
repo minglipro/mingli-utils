@@ -16,71 +16,103 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile HashUtils.kt
- * LastUpdate 2026-01-11 09:09:52
+ * LastUpdate 2026-11-18 18:53:11
  * UpdateUser MingLiPro
  */
 @file:JvmName("HashUtils")
 
 package com.mingliqiye.utils.hash
 
+import com.mingliqiye.utils.hash.code.*
 
-import com.mingliqiye.utils.bcrypt.checkpw
-import com.mingliqiye.utils.bcrypt.hashpw
-import com.mingliqiye.utils.bytes.bytesToHex
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 /**
- * 计算指定文件的哈希值。
- *
- * @param file      要计算哈希值的文件对象
- * @param algorithm 使用的哈希算法名称（如 SHA-256、MD5 等）
- * @return 文件的十六进制格式哈希值字符串
- * @throws IOException              当文件不存在或读取过程中发生 I/O 错误时抛出
- * @throws NoSuchAlgorithmException 当指定的哈希算法不可用时抛出
+ * 提供 MD2 哈希器的懒加载实例。
+ * 该哈希器输出 128 位摘要，算法已过时，仅用于兼容遗留系统。
  */
-@Throws(IOException::class, NoSuchAlgorithmException::class)
-fun calculateFileHash(file: File, algorithm: String): String {
-	// 检查文件是否存在
-	if (!file.exists()) {
-		throw IOException("File not found: " + file.absolutePath)
-	}
-
-	val digest = MessageDigest.getInstance(algorithm)
-
-	FileInputStream(file).use { fis ->
-		val buffer = ByteArray(8192)
-		var bytesRead: Int
-
-		// 分块读取文件内容并更新摘要
-		while (fis.read(buffer).also { bytesRead = it } != -1) {
-			digest.update(buffer, 0, bytesRead)
-		}
-	}
-
-	return bytesToHex(digest.digest())
-}
+@get:JvmName("getMd2Codec")
+val MD2 by lazy(::Md2Codec)
 
 /**
- * 使用 BCrypt 算法对字符串进行加密。
- *
- * @param string 需要加密的明文字符串
- * @return 加密后的 BCrypt 哈希字符串
+ * 提供 MD5 哈希器的懒加载实例。
+ * 该哈希器输出 128 位摘要，存在碰撞漏洞，不得用于安全场景，仅建议非安全性校验。
  */
-fun bcrypt(string: String): String {
-	return hashpw(string)
-}
+@get:JvmName("getMd5Codec")
+val MD5 by lazy(::Md5Codec)
 
 /**
- * 验证给定字符串与 BCrypt 哈希是否匹配。
- *
- * @param string   明文字符串
- * @param bcrypted 已经使用 BCrypt 加密的哈希字符串
- * @return 如果匹配返回 true，否则返回 false
+ * 提供 SHA-1 哈希器的懒加载实例。
+ * 该哈希器输出 160 位摘要，存在碰撞攻击，不得用于安全场景，仅建议非安全性校验。
  */
-fun checkBcrypt(string: String, bcrypted: String): Boolean {
-	return checkpw(string, bcrypted)
-}
+@get:JvmName("getSha1Codec")
+val SHA1 by lazy(::Sha1Codec)
+
+/**
+ * 提供 SHA-224 哈希器的懒加载实例。
+ * 该哈希器属于 SHA-2 家族，输出 224 位摘要。
+ */
+@get:JvmName("getSha224Codec")
+val SHA224 by lazy(::Sha224Codec)
+
+/**
+ * 提供 SHA-256 哈希器的懒加载实例。
+ * 该哈希器属于 SHA-2 家族，输出 256 位摘要，适用于文件校验、数字签名等场景。
+ */
+@get:JvmName("getSha256Codec")
+val SHA256 by lazy(::Sha256Codec)
+
+/**
+ * 提供 SHA-384 哈希器的懒加载实例。
+ * 该哈希器属于 SHA-2 家族，输出 384 位摘要。
+ */
+@get:JvmName("getSha384Codec")
+val SHA384 by lazy(::Sha384Codec)
+
+/**
+ * 提供 SHA-512 哈希器的懒加载实例。
+ * 该哈希器属于 SHA-2 家族，输出 512 位摘要，在 64 位平台上通常比 SHA-256 更快。
+ */
+@get:JvmName("getSha512Codec")
+val SHA512 by lazy(::Sha512Codec)
+
+/**
+ * 提供 SHA3-224 哈希器的懒加载实例。
+ * 该哈希器属于 SHA-3 家族（Keccak 结构），输出 224 位摘要。
+ */
+@get:JvmName("getSha3224Codec")
+val SHA3224 by lazy(::Sha3224Codec)
+
+/**
+ * 提供 SHA3-256 哈希器的懒加载实例。
+ * 该哈希器属于 SHA-3 家族（Keccak 结构），输出 256 位摘要。
+ */
+@get:JvmName("getSha3256Codec")
+val SHA3256 by lazy(::Sha3256Codec)
+
+/**
+ * 提供 SHA3-384 哈希器的懒加载实例。
+ * 该哈希器属于 SHA-3 家族（Keccak 结构），输出 384 位摘要。
+ */
+@get:JvmName("getSha3384Codec")
+val SHA3384 by lazy(::Sha3384Codec)
+
+/**
+ * 提供 SHA3-512 哈希器的懒加载实例。
+ * 该哈希器属于 SHA-3 家族（Keccak 结构），输出 512 位摘要。
+ */
+@get:JvmName("getSha3512Codec")
+val SHA3512 by lazy(::Sha3512Codec)
+
+/**
+ * 提供 SHA-512/224 哈希器的懒加载实例。
+ * 该哈希器以 SHA-512 的运算结构截断输出至 224 位，在 64 位平台上性能优于 SHA-224。
+ */
+@get:JvmName("getSha512224Codec")
+val SHA512224 by lazy(::Sha512224Codec)
+
+/**
+ * 提供 SHA-512/256 哈希器的懒加载实例。
+ * 该哈希器以 SHA-512 的运算结构截断输出至 256 位，在 64 位平台上性能优于 SHA-256。
+ */
+@get:JvmName("getSha512256Codec")
+val SHA512256 by lazy(::Sha512256Codec)
