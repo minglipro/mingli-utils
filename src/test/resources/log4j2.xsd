@@ -1,0 +1,1150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2026 mingliqiye
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  ~ ProjectName mingli-utils
+  ~ ModuleName mingli-utils.test
+  ~ CurrentFile log4j2.xsd
+  ~ LastUpdate 2026-11-18 10:00:00
+  ~ UpdateUser MingLiPro
+  -->
+<!--
+  Log4j2 XML 配置 Schema（非官方，覆盖常用插件元素）。
+  Log4j2 配置基于插件体系，允许任意自定义插件元素与属性，
+  本 Schema 对未收录的元素/属性采用开放内容模型，只做已知部分的校验。
+  用法：在 log4j2.xml 根元素上添加
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="log4j2.xsd"
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="unqualified"
+           attributeFormDefault="unqualified">
+
+	<!-- ======================== 基础类型 ======================== -->
+
+	<xs:simpleType name="levelType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OFF"/>
+			<xs:enumeration value="FATAL"/>
+			<xs:enumeration value="ERROR"/>
+			<xs:enumeration value="WARN"/>
+			<xs:enumeration value="INFO"/>
+			<xs:enumeration value="DEBUG"/>
+			<xs:enumeration value="TRACE"/>
+			<xs:enumeration value="ALL"/>
+			<xs:enumeration value="off"/>
+			<xs:enumeration value="fatal"/>
+			<xs:enumeration value="error"/>
+			<xs:enumeration value="warn"/>
+			<xs:enumeration value="info"/>
+			<xs:enumeration value="debug"/>
+			<xs:enumeration value="trace"/>
+			<xs:enumeration value="all"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="booleanType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="false"/>
+			<xs:enumeration value="TRUE"/>
+			<xs:enumeration value="FALSE"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 支持 ${lookup} 表达式的字符串 -->
+	<xs:simpleType name="exprString">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+
+	<xs:simpleType name="filterActionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ACCEPT"/>
+			<xs:enumeration value="DENY"/>
+			<xs:enumeration value="NEUTRAL"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 任意自定义插件元素（开放内容） -->
+	<xs:complexType name="anyPluginType" mixed="true">
+		<xs:sequence>
+			<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+		</xs:sequence>
+		<xs:anyAttribute processContents="skip"/>
+	</xs:complexType>
+
+	<xs:group name="pluginGroup">
+		<xs:choice>
+			<xs:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:group>
+
+	<!-- ======================== 公共属性组 ======================== -->
+
+	<xs:attributeGroup name="namedAttrs">
+		<xs:attribute name="name" type="exprString" use="required"/>
+	</xs:attributeGroup>
+
+	<xs:attributeGroup name="filterAttrs">
+		<xs:attribute name="onMatch" type="filterActionType" default="NEUTRAL"/>
+		<xs:attribute name="onMismatch" type="filterActionType" default="DENY"/>
+	</xs:attributeGroup>
+
+	<!-- ======================== Filters ======================== -->
+
+	<xs:complexType name="thresholdFilterType">
+		<xs:attribute name="level" type="levelType" use="required"/>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="levelRangeFilterType">
+		<xs:attribute name="minLevel" type="levelType" default="OFF"/>
+		<xs:attribute name="maxLevel" type="levelType" default="FATAL"/>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="timeFilterType">
+		<xs:attribute name="start" type="exprString"/>
+		<xs:attribute name="end" type="exprString"/>
+		<xs:attribute name="timezone" type="exprString"/>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="burstFilterType">
+		<xs:attribute name="rate" type="exprString" use="required"/>
+		<xs:attribute name="maxBurst" type="xs:string" use="required"/>
+		<xs:attribute name="filterLevel" type="levelType" default="WARN"/>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="regexFilterType">
+		<xs:attribute name="regex" type="exprString" use="required"/>
+		<xs:attribute name="patternFlags" type="exprString"/>
+		<xs:attribute name="useRawMsg" type="booleanType" default="false"/>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="markerFilterType">
+		<xs:attribute name="marker" type="exprString" use="required"/>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="mapFilterType">
+		<xs:sequence>
+			<xs:element name="KeyValuePair" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="key" type="exprString" use="required"/>
+					<xs:attribute name="value" type="exprString" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="threadContextMapFilterType">
+		<xs:sequence>
+			<xs:element name="KeyValuePair" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="key" type="exprString" use="required"/>
+					<xs:attribute name="value" type="exprString" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="operator" type="exprString" default="or"/>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="structuredDataFilterType">
+		<xs:sequence>
+			<xs:element name="StructuredDataMessage" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="KeyValuePair" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="key" type="exprString" use="required"/>
+								<xs:attribute name="value" type="exprString" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="id" type="exprString"/>
+					<xs:attribute name="idEnterpriseId" type="exprString"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="operator" type="exprString" default="or"/>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="dynamicThresholdFilterType">
+		<xs:sequence>
+			<xs:element name="KeyValuePair" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="key" type="exprString" use="required"/>
+					<xs:attribute name="value" type="levelType" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="key" type="exprString" use="required"/>
+		<xs:attribute name="defaultThreshold" type="levelType" default="ERROR"/>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="scriptFilterType" mixed="true">
+		<xs:sequence>
+			<xs:element name="Script" type="scriptType" minOccurs="0"/>
+			<xs:element name="ScriptRef" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="ref" type="exprString" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ScriptFile" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="path" type="exprString" use="required"/>
+					<xs:attribute name="language" type="exprString"/>
+					<xs:attribute name="charset" type="exprString"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="language" type="exprString"/>
+		<xs:attribute name="scriptText" type="exprString"/>
+		<xs:attributeGroup ref="filterAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="filtersType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="ThresholdFilter" type="thresholdFilterType"/>
+			<xs:element name="LevelRangeFilter" type="levelRangeFilterType"/>
+			<xs:element name="TimeFilter" type="timeFilterType"/>
+			<xs:element name="BurstFilter" type="burstFilterType"/>
+			<xs:element name="RegexFilter" type="regexFilterType"/>
+			<xs:element name="MarkerFilter" type="markerFilterType"/>
+			<xs:element name="MapFilter" type="mapFilterType"/>
+			<xs:element name="ThreadContextMapFilter" type="threadContextMapFilterType"/>
+			<xs:element name="StructuredDataFilter" type="structuredDataFilterType"/>
+			<xs:element name="DynamicThresholdFilter" type="dynamicThresholdFilterType"/>
+			<xs:element name="ScriptFilter" type="scriptFilterType"/>
+			<xs:any namespace="##other" processContents="skip"/>
+		</xs:choice>
+	</xs:complexType>
+
+	<!-- ======================== Layouts ======================== -->
+
+	<xs:complexType name="patternLayoutType">
+		<xs:sequence>
+			<xs:element name="Pattern" type="exprString" minOccurs="0"/>
+			<xs:element name="Replace" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="regex" type="exprString" use="required"/>
+					<xs:attribute name="replacement" type="exprString" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="LevelPatternSelector" type="patternSelectorType" minOccurs="0"/>
+			<xs:element name="MarkerPatternSelector" type="patternSelectorType" minOccurs="0"/>
+			<xs:element name="ScriptPatternSelector" type="scriptPatternSelectorType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="pattern" type="exprString"/>
+		<xs:attribute name="charset" type="exprString" default="UTF-8"/>
+		<xs:attribute name="alwaysWriteExceptions" type="booleanType" default="true"/>
+		<xs:attribute name="header" type="exprString"/>
+		<xs:attribute name="footer" type="exprString"/>
+		<xs:attribute name="noConsoleNoAnsi" type="booleanType" default="false"/>
+		<xs:attribute name="disableAnsi" type="booleanType" default="false"/>
+	</xs:complexType>
+
+	<xs:complexType name="patternSelectorType">
+		<xs:sequence>
+			<xs:element name="PatternMatch" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="key" type="exprString" use="required"/>
+					<xs:attribute name="pattern" type="exprString" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="defaultPattern" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="scriptPatternSelectorType">
+		<xs:sequence>
+			<xs:element name="Script" type="scriptType" minOccurs="0"/>
+			<xs:element name="ScriptRef" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="ref" type="exprString" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PatternMatch" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="key" type="exprString" use="required"/>
+					<xs:attribute name="pattern" type="exprString" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="defaultPattern" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="jsonLayoutType">
+		<xs:sequence>
+			<xs:element name="KeyValuePair" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="key" type="exprString" use="required"/>
+					<xs:attribute name="value" type="exprString" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="charset" type="exprString" default="UTF-8"/>
+		<xs:attribute name="complete" type="booleanType" default="false"/>
+		<xs:attribute name="compact" type="booleanType" default="false"/>
+		<xs:attribute name="eventEol" type="booleanType" default="false"/>
+		<xs:attribute name="endOfLine" type="exprString"/>
+		<xs:attribute name="objectMessageAsJsonObject" type="booleanType" default="false"/>
+		<xs:attribute name="includeStacktrace" type="booleanType" default="true"/>
+		<xs:attribute name="stacktraceAsString" type="booleanType" default="false"/>
+		<xs:attribute name="includeNullDelimiter" type="booleanType" default="false"/>
+		<xs:attribute name="properties" type="booleanType" default="false"/>
+		<xs:attribute name="propertiesAsList" type="booleanType" default="false"/>
+		<xs:attribute name="locationInfo" type="booleanType" default="false"/>
+		<xs:attribute name="includeTimeMillis" type="booleanType" default="false"/>
+		<xs:attribute name="keyPrefix" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="jsonTemplateLayoutType">
+		<xs:sequence>
+			<xs:element name="EventTemplateAdditionalField" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="key" type="exprString" use="required"/>
+					<xs:attribute name="value" type="exprString" use="required"/>
+					<xs:attribute name="type" type="exprString" default="String"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="charset" type="exprString" default="UTF-8"/>
+		<xs:attribute name="eventTemplateUri" type="exprString"/>
+		<xs:attribute name="eventTemplate" type="exprString"/>
+		<xs:attribute name="eventTemplateAdditionalFields" type="exprString"/>
+		<xs:attribute name="stackTraceEnabled" type="booleanType" default="true"/>
+		<xs:attribute name="stackTraceElementTemplateUri" type="exprString"/>
+		<xs:attribute name="stackTraceElementTemplate" type="exprString"/>
+		<xs:attribute name="locationInfoEnabled" type="booleanType" default="false"/>
+		<xs:attribute name="includeNullDelimiter" type="booleanType" default="false"/>
+		<xs:attribute name="recycleInternalObjects" type="booleanType" default="true"/>
+		<xs:attribute name="truncatedStringSuffix" type="exprString"/>
+		<xs:attribute name="maxStringLength" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="xmlLayoutType">
+		<xs:attribute name="charset" type="exprString" default="UTF-8"/>
+		<xs:attribute name="complete" type="booleanType" default="false"/>
+		<xs:attribute name="compact" type="booleanType" default="false"/>
+		<xs:attribute name="properties" type="booleanType" default="false"/>
+		<xs:attribute name="locationInfo" type="booleanType" default="false"/>
+		<xs:attribute name="includeStacktrace" type="booleanType" default="true"/>
+		<xs:attribute name="stacktraceAsString" type="booleanType" default="false"/>
+		<xs:attribute name="includeTimeMillis" type="booleanType" default="false"/>
+		<xs:attribute name="endOfLine" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="htmlLayoutType">
+		<xs:attribute name="charset" type="exprString" default="UTF-8"/>
+		<xs:attribute name="title" type="exprString"/>
+		<xs:attribute name="contentType" type="exprString" default="text/html"/>
+		<xs:attribute name="locationInfo" type="booleanType" default="false"/>
+		<xs:attribute name="includeStacktrace" type="booleanType" default="true"/>
+		<xs:attribute name="stacktraceAsString" type="booleanType" default="false"/>
+		<xs:attribute name="fontSize" type="exprString"/>
+		<xs:attribute name="font" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="yamlLayoutType">
+		<xs:sequence>
+			<xs:element name="KeyValuePair" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="key" type="exprString" use="required"/>
+					<xs:attribute name="value" type="exprString" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="charset" type="exprString" default="UTF-8"/>
+		<xs:attribute name="properties" type="booleanType" default="false"/>
+		<xs:attribute name="locationInfo" type="booleanType" default="false"/>
+		<xs:attribute name="includeStacktrace" type="booleanType" default="true"/>
+		<xs:attribute name="stacktraceAsString" type="booleanType" default="false"/>
+		<xs:attribute name="includeTimeMillis" type="booleanType" default="false"/>
+	</xs:complexType>
+
+	<xs:complexType name="csvLayoutType">
+		<xs:attribute name="charset" type="exprString" default="UTF-8"/>
+		<xs:attribute name="format" type="exprString" default="Default"/>
+		<xs:attribute name="delimiter" type="exprString" default=","/>
+		<xs:attribute name="escape" type="exprString" default="\\"/>
+		<xs:attribute name="quote" type="exprString" default="&quot;"/>
+		<xs:attribute name="quoteMode" type="exprString" default="ALL"/>
+		<xs:attribute name="nullString" type="exprString"/>
+		<xs:attribute name="recordSeparator" type="exprString" default="\r\n"/>
+		<xs:attribute name="header" type="exprString"/>
+		<xs:attribute name="footer" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="gelfLayoutType">
+		<xs:sequence>
+			<xs:element name="KeyValuePair" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="key" type="exprString" use="required"/>
+					<xs:attribute name="value" type="exprString" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Message" type="exprString" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="host" type="exprString"/>
+		<xs:attribute name="compressionType" type="exprString" default="GZIP"/>
+		<xs:attribute name="compressionThreshold" type="xs:string" default="512"/>
+		<xs:attribute name="includeStacktrace" type="booleanType" default="true"/>
+		<xs:attribute name="includeThreadContext" type="booleanType" default="true"/>
+		<xs:attribute name="includeNullDelimiter" type="booleanType" default="false"/>
+		<xs:attribute name="mapMessageExcludes" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="syslogLayoutType">
+		<xs:attribute name="charset" type="exprString" default="UTF-8"/>
+		<xs:attribute name="facility" type="exprString" default="LOCAL0"/>
+		<xs:attribute name="id" type="exprString" default="Audit"/>
+		<xs:attribute name="enterpriseNumber" type="exprString"/>
+		<xs:attribute name="messageId" type="exprString"/>
+		<xs:attribute name="newLine" type="booleanType" default="false"/>
+		<xs:attribute name="escapeNewLine" type="booleanType" default="false"/>
+		<xs:attribute name="rfc5424" type="booleanType" default="false"/>
+	</xs:complexType>
+
+	<xs:complexType name="rfc5424LayoutType">
+		<xs:sequence>
+			<xs:element name="LoggerFields" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="KeyValuePair" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="key" type="exprString" use="required"/>
+								<xs:attribute name="value" type="exprString" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="charset" type="exprString" default="UTF-8"/>
+		<xs:attribute name="facility" type="exprString" default="LOCAL0"/>
+		<xs:attribute name="id" type="exprString" default="Audit"/>
+		<xs:attribute name="enterpriseNumber" type="exprString" default="18060"/>
+		<xs:attribute name="messageId" type="exprString"/>
+		<xs:attribute name="appName" type="exprString"/>
+		<xs:attribute name="mdcId" type="exprString"/>
+		<xs:attribute name="mdcPrefix" type="exprString"/>
+		<xs:attribute name="eventPrefix" type="exprString"/>
+		<xs:attribute name="newLine" type="booleanType" default="false"/>
+		<xs:attribute name="escapeNewLine" type="booleanType" default="false"/>
+		<xs:attribute name="includeMDC" type="booleanType" default="true"/>
+		<xs:attribute name="includeNDC" type="booleanType" default="false"/>
+		<xs:attribute name="useTLMessageFormat" type="booleanType" default="false"/>
+		<xs:attribute name="mdcExcludes" type="exprString"/>
+		<xs:attribute name="mdcIncludes" type="exprString"/>
+		<xs:attribute name="mdcRequired" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="serializedLayoutType">
+		<xs:attribute name="charset" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="messageLayoutType">
+		<xs:attribute name="charset" type="exprString"/>
+	</xs:complexType>
+
+	<xs:group name="layoutGroup">
+		<xs:choice>
+			<xs:element name="PatternLayout" type="patternLayoutType"/>
+			<xs:element name="JsonLayout" type="jsonLayoutType"/>
+			<xs:element name="JsonTemplateLayout" type="jsonTemplateLayoutType"/>
+			<xs:element name="XmlLayout" type="xmlLayoutType"/>
+			<xs:element name="HtmlLayout" type="htmlLayoutType"/>
+			<xs:element name="YamlLayout" type="yamlLayoutType"/>
+			<xs:element name="CsvLayout" type="csvLayoutType"/>
+			<xs:element name="CsvLogEventLayout" type="csvLayoutType"/>
+			<xs:element name="GelfLayout" type="gelfLayoutType"/>
+			<xs:element name="SyslogLayout" type="syslogLayoutType"/>
+			<xs:element name="Rfc5424Layout" type="rfc5424LayoutType"/>
+			<xs:element name="SerializedLayout" type="serializedLayoutType"/>
+			<xs:element name="MessageLayout" type="messageLayoutType"/>
+			<xs:element name="LevelPatternSelector" type="patternSelectorType"/>
+			<xs:element name="MarkerPatternSelector" type="patternSelectorType"/>
+			<xs:element name="ScriptPatternSelector" type="scriptPatternSelectorType"/>
+		</xs:choice>
+	</xs:group>
+
+	<!-- ======================== 滚动策略 ======================== -->
+
+	<xs:complexType name="timeBasedPolicyType">
+		<xs:attribute name="interval" type="xs:string" default="1"/>
+		<xs:attribute name="modulate" type="booleanType" default="false"/>
+	</xs:complexType>
+
+	<xs:complexType name="sizeBasedPolicyType">
+		<xs:attribute name="size" type="exprString" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="onStartupPolicyType">
+		<xs:attribute name="size" type="exprString" default="1"/>
+	</xs:complexType>
+
+	<xs:complexType name="cronPolicyType">
+		<xs:attribute name="expression" type="exprString" use="required"/>
+		<xs:attribute name="timezone" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="policiesType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="TimeBasedTriggeringPolicy" type="timeBasedPolicyType"/>
+			<xs:element name="SizeBasedTriggeringPolicy" type="sizeBasedPolicyType"/>
+			<xs:element name="OnStartupTriggeringPolicy" type="onStartupPolicyType"/>
+			<xs:element name="CronTriggeringPolicy" type="cronPolicyType"/>
+			<xs:element name="CompositeTriggeringPolicy">
+				<xs:complexType>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="TimeBasedTriggeringPolicy" type="timeBasedPolicyType"/>
+						<xs:element name="SizeBasedTriggeringPolicy" type="sizeBasedPolicyType"/>
+						<xs:element name="OnStartupTriggeringPolicy" type="onStartupPolicyType"/>
+						<xs:element name="CronTriggeringPolicy" type="cronPolicyType"/>
+						<xs:any namespace="##other" processContents="skip"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:any namespace="##other" processContents="skip"/>
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="defaultRolloverStrategyType">
+		<xs:sequence>
+			<xs:element name="Delete" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IfFileName" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="IfLastModified" minOccurs="0">
+										<xs:complexType>
+											<xs:attribute name="age" type="exprString" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="IfAccumulatedFileCount" minOccurs="0">
+										<xs:complexType>
+											<xs:attribute name="exceeds" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="IfAccumulatedFileSize" minOccurs="0">
+										<xs:complexType>
+											<xs:attribute name="exceeds" type="exprString" use="required"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="glob" type="exprString"/>
+								<xs:attribute name="regex" type="exprString"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="IfLastModified" minOccurs="0">
+							<xs:complexType>
+								<xs:attribute name="age" type="exprString" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="IfAccumulatedFileCount" minOccurs="0">
+							<xs:complexType>
+								<xs:attribute name="exceeds" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="IfAccumulatedFileSize" minOccurs="0">
+							<xs:complexType>
+								<xs:attribute name="exceeds" type="exprString" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="IfAny" minOccurs="0" maxOccurs="unbounded" type="anyPluginType"/>
+						<xs:element name="IfAll" minOccurs="0" maxOccurs="unbounded" type="anyPluginType"/>
+					</xs:sequence>
+					<xs:attribute name="basePath" type="exprString" use="required"/>
+					<xs:attribute name="maxDepth" type="xs:string" default="1"/>
+					<xs:attribute name="testMode" type="booleanType" default="false"/>
+					<xs:attribute name="sortFiles" type="booleanType" default="true"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="max" type="xs:string" default="7"/>
+		<xs:attribute name="min" type="xs:string" default="1"/>
+		<xs:attribute name="compressionLevel" type="xs:string"/>
+		<xs:attribute name="fileIndex" type="exprString" default="max"/>
+		<xs:attribute name="tempCompressedFilePattern" type="exprString"/>
+		<xs:attribute name="stopCustomActionsOnError" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="directWriteStrategyType">
+		<xs:attribute name="max" type="xs:string"/>
+		<xs:attribute name="compressionLevel" type="xs:string"/>
+		<xs:attribute name="tempCompressedFilePattern" type="exprString"/>
+	</xs:complexType>
+
+	<!-- ======================== Appender 公共子元素 ======================== -->
+
+	<xs:group name="appenderChildren">
+		<xs:sequence>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:group ref="layoutGroup"/>
+				<xs:element name="Filters" type="filtersType"/>
+				<xs:element name="ThresholdFilter" type="thresholdFilterType"/>
+				<xs:element name="LevelRangeFilter" type="levelRangeFilterType"/>
+				<xs:element name="TimeFilter" type="timeFilterType"/>
+				<xs:element name="BurstFilter" type="burstFilterType"/>
+				<xs:element name="RegexFilter" type="regexFilterType"/>
+				<xs:element name="MarkerFilter" type="markerFilterType"/>
+				<xs:element name="MapFilter" type="mapFilterType"/>
+				<xs:element name="ThreadContextMapFilter" type="threadContextMapFilterType"/>
+				<xs:element name="DynamicThresholdFilter" type="dynamicThresholdFilterType"/>
+				<xs:element name="ScriptFilter" type="scriptFilterType"/>
+				<xs:element name="Policies" type="policiesType"/>
+				<xs:element name="DefaultRolloverStrategy" type="defaultRolloverStrategyType"/>
+				<xs:element name="DirectWriteRolloverStrategy" type="directWriteStrategyType"/>
+				<xs:any namespace="##other" processContents="skip"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+
+	<xs:attributeGroup name="appenderCommonAttrs">
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:attributeGroup>
+
+	<!-- ======================== Appenders ======================== -->
+
+	<xs:complexType name="consoleAppenderType">
+		<xs:group ref="appenderChildren"/>
+		<xs:attributeGroup ref="appenderCommonAttrs"/>
+		<xs:attribute name="target" type="exprString" default="SYSTEM_OUT"/>
+		<xs:attribute name="follow" type="booleanType" default="false"/>
+		<xs:attribute name="direct" type="booleanType" default="false"/>
+	</xs:complexType>
+
+	<xs:attributeGroup name="fileAppenderAttrs">
+		<xs:attribute name="fileName" type="exprString"/>
+		<xs:attribute name="append" type="booleanType" default="true"/>
+		<xs:attribute name="bufferedIo" type="booleanType" default="true"/>
+		<xs:attribute name="bufferSize" type="xs:string" default="8192"/>
+		<xs:attribute name="immediateFlush" type="booleanType" default="true"/>
+		<xs:attribute name="locking" type="booleanType" default="false"/>
+		<xs:attribute name="createOnDemand" type="booleanType" default="false"/>
+		<xs:attribute name="filePermissions" type="exprString"/>
+		<xs:attribute name="fileOwner" type="exprString"/>
+		<xs:attribute name="fileGroup" type="exprString"/>
+	</xs:attributeGroup>
+
+	<xs:complexType name="fileAppenderType">
+		<xs:group ref="appenderChildren"/>
+		<xs:attributeGroup ref="appenderCommonAttrs"/>
+		<xs:attributeGroup ref="fileAppenderAttrs"/>
+	</xs:complexType>
+
+	<xs:complexType name="rollingFileType">
+		<xs:group ref="appenderChildren"/>
+		<xs:attributeGroup ref="appenderCommonAttrs"/>
+		<xs:attributeGroup ref="fileAppenderAttrs"/>
+		<xs:attribute name="filePattern" type="exprString" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="randomAccessFileType">
+		<xs:group ref="appenderChildren"/>
+		<xs:attributeGroup ref="appenderCommonAttrs"/>
+		<xs:attribute name="fileName" type="exprString" use="required"/>
+		<xs:attribute name="append" type="booleanType" default="true"/>
+		<xs:attribute name="bufferSize" type="xs:string" default="262144"/>
+		<xs:attribute name="immediateFlush" type="booleanType" default="true"/>
+		<xs:attribute name="createOnDemand" type="booleanType" default="false"/>
+		<xs:attribute name="filePermissions" type="exprString"/>
+		<xs:attribute name="fileOwner" type="exprString"/>
+		<xs:attribute name="fileGroup" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="rollingRandomAccessFileType">
+		<xs:group ref="appenderChildren"/>
+		<xs:attributeGroup ref="appenderCommonAttrs"/>
+		<xs:attribute name="fileName" type="exprString"/>
+		<xs:attribute name="filePattern" type="exprString" use="required"/>
+		<xs:attribute name="append" type="booleanType" default="true"/>
+		<xs:attribute name="bufferSize" type="xs:string" default="262144"/>
+		<xs:attribute name="immediateFlush" type="booleanType" default="true"/>
+		<xs:attribute name="createOnDemand" type="booleanType" default="false"/>
+		<xs:attribute name="filePermissions" type="exprString"/>
+		<xs:attribute name="fileOwner" type="exprString"/>
+		<xs:attribute name="fileGroup" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="memoryMappedFileType">
+		<xs:group ref="appenderChildren"/>
+		<xs:attributeGroup ref="appenderCommonAttrs"/>
+		<xs:attribute name="fileName" type="exprString" use="required"/>
+		<xs:attribute name="append" type="booleanType" default="true"/>
+		<xs:attribute name="regionSize" type="xs:string" default="262144"/>
+		<xs:attribute name="immediateFlush" type="booleanType" default="true"/>
+		<xs:attribute name="createOnDemand" type="booleanType" default="false"/>
+	</xs:complexType>
+
+	<xs:complexType name="socketAppenderType">
+		<xs:group ref="appenderChildren"/>
+		<xs:attributeGroup ref="appenderCommonAttrs"/>
+		<xs:attribute name="host" type="exprString" use="required"/>
+		<xs:attribute name="port" type="exprString" use="required"/>
+		<xs:attribute name="protocol" type="exprString" default="TCP"/>
+		<xs:attribute name="reconnectionDelayMillis" type="xs:string" default="0"/>
+		<xs:attribute name="connectTimeoutMillis" type="xs:string" default="0"/>
+		<xs:attribute name="immediateFlush" type="booleanType" default="true"/>
+		<xs:attribute name="bufferedIo" type="booleanType" default="true"/>
+		<xs:attribute name="bufferSize" type="xs:string" default="8192"/>
+	</xs:complexType>
+
+	<xs:complexType name="sslConfigType">
+		<xs:sequence>
+			<xs:element name="KeyStore" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="location" type="exprString" use="required"/>
+					<xs:attribute name="password" type="exprString"/>
+					<xs:attribute name="passwordFile" type="exprString"/>
+					<xs:attribute name="passwordEnvironmentVariable" type="exprString"/>
+					<xs:attribute name="passwordSystemProperty" type="exprString"/>
+					<xs:attribute name="type" type="exprString" default="JKS"/>
+					<xs:attribute name="keyManagerFactoryAlgorithm" type="exprString"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="TrustStore" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="location" type="exprString" use="required"/>
+					<xs:attribute name="password" type="exprString"/>
+					<xs:attribute name="passwordFile" type="exprString"/>
+					<xs:attribute name="passwordEnvironmentVariable" type="exprString"/>
+					<xs:attribute name="passwordSystemProperty" type="exprString"/>
+					<xs:attribute name="type" type="exprString" default="JKS"/>
+					<xs:attribute name="trustManagerFactoryAlgorithm" type="exprString"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="protocol" type="exprString" default="TLS"/>
+		<xs:attribute name="verifyHostName" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="tlsSyslogAppenderType">
+		<xs:sequence>
+			<xs:element name="Ssl" type="sslConfigType" minOccurs="0"/>
+			<xs:group ref="appenderChildren"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="appenderCommonAttrs"/>
+		<xs:attribute name="host" type="exprString" use="required"/>
+		<xs:attribute name="port" type="exprString" default="6514"/>
+		<xs:attribute name="reconnectionDelayMillis" type="xs:string" default="0"/>
+		<xs:attribute name="connectTimeoutMillis" type="xs:string" default="0"/>
+		<xs:attribute name="immediateFlush" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="syslogAppenderType">
+		<xs:group ref="appenderChildren"/>
+		<xs:attributeGroup ref="appenderCommonAttrs"/>
+		<xs:attribute name="host" type="exprString" default="localhost"/>
+		<xs:attribute name="port" type="exprString" default="514"/>
+		<xs:attribute name="protocol" type="exprString" default="UDP"/>
+		<xs:attribute name="format" type="exprString" default="RFC5424"/>
+		<xs:attribute name="facility" type="exprString" default="LOCAL0"/>
+		<xs:attribute name="appName" type="exprString"/>
+		<xs:attribute name="messageId" type="exprString"/>
+		<xs:attribute name="enterpriseNumber" type="exprString"/>
+		<xs:attribute name="mdcId" type="exprString"/>
+		<xs:attribute name="mdcIncludes" type="exprString"/>
+		<xs:attribute name="mdcExcludes" type="exprString"/>
+		<xs:attribute name="mdcRequired" type="exprString"/>
+		<xs:attribute name="newLine" type="booleanType" default="false"/>
+		<xs:attribute name="escapeNewLine" type="booleanType" default="false"/>
+		<xs:attribute name="reconnectionDelayMillis" type="xs:string" default="0"/>
+		<xs:attribute name="connectTimeoutMillis" type="xs:string" default="0"/>
+		<xs:attribute name="immediateFlush" type="booleanType" default="true"/>
+		<xs:attribute name="bufferedIo" type="booleanType" default="true"/>
+		<xs:attribute name="bufferSize" type="xs:string" default="8192"/>
+		<xs:attribute name="advertise" type="booleanType" default="false"/>
+		<xs:attribute name="advertiseURI" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="asyncAppenderType">
+		<xs:sequence>
+			<xs:element name="AppenderRef" type="appenderRefType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="LinkedTransferQueue" type="anyPluginType"/>
+				<xs:element name="ArrayBlockingQueue" type="anyPluginType"/>
+				<xs:element name="DisruptorBlockingQueue" type="anyPluginType"/>
+				<xs:element name="JCToolsBlockingQueue" type="anyPluginType"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="blocking" type="booleanType" default="true"/>
+		<xs:attribute name="bufferSize" type="xs:string" default="1024"/>
+		<xs:attribute name="shutdownTimeout" type="xs:string" default="0"/>
+		<xs:attribute name="includeLocation" type="booleanType" default="false"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="failoverAppenderType">
+		<xs:sequence>
+			<xs:element name="Failovers" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="AppenderRef" type="appenderRefType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="primary" type="exprString" use="required"/>
+		<xs:attribute name="retryIntervalSeconds" type="xs:string" default="60"/>
+		<xs:attribute name="target" type="exprString" default="SYSTEM_ERR"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="rewriteAppenderType">
+		<xs:sequence>
+			<xs:choice minOccurs="0">
+				<xs:element name="MapRewritePolicy">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="KeyValuePair" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="key" type="exprString" use="required"/>
+									<xs:attribute name="value" type="exprString" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="PropertiesRewritePolicy">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Property" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="name" type="exprString" use="required"/>
+									<xs:attribute name="value" type="exprString" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="LoggerNameLevelRewritePolicy" type="anyPluginType"/>
+				<xs:any namespace="##other" processContents="skip"/>
+			</xs:choice>
+			<xs:element name="AppenderRef" type="appenderRefType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="routingAppenderType">
+		<xs:sequence>
+			<xs:element name="Routes" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Route" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+								</xs:sequence>
+								<xs:attribute name="pattern" type="exprString"/>
+								<xs:attribute name="key" type="exprString"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="pattern" type="exprString"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Script" type="scriptType" minOccurs="0"/>
+			<xs:element name="PurgePolicy" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="timeToLive" type="xs:string"/>
+					<xs:attribute name="timeUnit" type="exprString"/>
+					<xs:attribute name="checkInterval" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="kafkaAppenderType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="Property" type="nameValuePairType"/>
+			<xs:group ref="layoutGroup"/>
+		</xs:choice>
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="topic" type="exprString" use="required"/>
+		<xs:attribute name="key" type="exprString"/>
+		<xs:attribute name="syncSend" type="booleanType" default="true"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="jdbcAppenderType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="Connection" type="anyPluginType"/>
+			<xs:element name="Column">
+				<xs:complexType>
+					<xs:attribute name="name" type="exprString" use="required"/>
+					<xs:attribute name="pattern" type="exprString"/>
+					<xs:attribute name="literal" type="exprString"/>
+					<xs:attribute name="isEventTimestamp" type="booleanType" default="false"/>
+					<xs:attribute name="isClob" type="booleanType" default="false"/>
+					<xs:attribute name="isUnicode" type="booleanType" default="true"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:group ref="layoutGroup"/>
+		</xs:choice>
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="tableName" type="exprString" use="required"/>
+		<xs:attribute name="bufferSize" type="xs:string" default="1"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="jmsAppenderType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="ConnectionFactory" type="anyPluginType"/>
+			<xs:element name="Provider" type="anyPluginType"/>
+			<xs:group ref="layoutGroup"/>
+		</xs:choice>
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="destinationBindingName" type="exprString"/>
+		<xs:attribute name="factoryBindingName" type="exprString"/>
+		<xs:attribute name="factoryName" type="exprString"/>
+		<xs:attribute name="providerURL" type="exprString"/>
+		<xs:attribute name="userName" type="exprString"/>
+		<xs:attribute name="password" type="exprString"/>
+		<xs:attribute name="initialContextFactoryName" type="exprString"/>
+		<xs:attribute name="urlPkgPrefixes" type="exprString"/>
+		<xs:attribute name="securityPrincipalName" type="exprString"/>
+		<xs:attribute name="securityCredentials" type="exprString"/>
+		<xs:attribute name="immediateFlush" type="booleanType" default="true"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="smtpAppenderType">
+		<xs:group ref="layoutGroup"/>
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="to" type="exprString" use="required"/>
+		<xs:attribute name="from" type="exprString"/>
+		<xs:attribute name="cc" type="exprString"/>
+		<xs:attribute name="bcc" type="exprString"/>
+		<xs:attribute name="replyTo" type="exprString"/>
+		<xs:attribute name="subject" type="exprString"/>
+		<xs:attribute name="smtpHost" type="exprString" use="required"/>
+		<xs:attribute name="smtpPort" type="xs:string" default="25"/>
+		<xs:attribute name="smtpProtocol" type="exprString" default="smtp"/>
+		<xs:attribute name="smtpUsername" type="exprString"/>
+		<xs:attribute name="smtpPassword" type="exprString"/>
+		<xs:attribute name="smtpDebug" type="booleanType" default="false"/>
+		<xs:attribute name="bufferSize" type="xs:string" default="512"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="countingNoOpAppenderType">
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="nullAppenderType">
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="ignoreExceptions" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="appenderRefType">
+		<xs:sequence>
+			<xs:element name="Filters" type="filtersType" minOccurs="0"/>
+			<xs:element name="ThresholdFilter" type="thresholdFilterType" minOccurs="0"/>
+			<xs:element name="LevelRangeFilter" type="levelRangeFilterType" minOccurs="0"/>
+			<xs:element name="RegexFilter" type="regexFilterType" minOccurs="0"/>
+			<xs:element name="MarkerFilter" type="markerFilterType" minOccurs="0"/>
+			<xs:element name="ScriptFilter" type="scriptFilterType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="ref" type="exprString" use="required"/>
+		<xs:attribute name="level" type="levelType"/>
+	</xs:complexType>
+
+	<xs:group name="appenderGroup">
+		<xs:choice>
+			<xs:element name="Console" type="consoleAppenderType"/>
+			<xs:element name="File" type="fileAppenderType"/>
+			<xs:element name="RollingFile" type="rollingFileType"/>
+			<xs:element name="RandomAccessFile" type="randomAccessFileType"/>
+			<xs:element name="RollingRandomAccessFile" type="rollingRandomAccessFileType"/>
+			<xs:element name="MemoryMappedFile" type="memoryMappedFileType"/>
+			<xs:element name="Socket" type="socketAppenderType"/>
+			<xs:element name="Syslog" type="syslogAppenderType"/>
+			<xs:element name="TlsSyslog" type="tlsSyslogAppenderType"/>
+			<xs:element name="Async" type="asyncAppenderType"/>
+			<xs:element name="Failover" type="failoverAppenderType"/>
+			<xs:element name="Rewrite" type="rewriteAppenderType"/>
+			<xs:element name="Routing" type="routingAppenderType"/>
+			<xs:element name="Kafka" type="kafkaAppenderType"/>
+			<xs:element name="JDBC" type="jdbcAppenderType"/>
+			<xs:element name="JMS" type="jmsAppenderType"/>
+			<xs:element name="JmsQueue" type="jmsAppenderType"/>
+			<xs:element name="JmsTopic" type="jmsAppenderType"/>
+			<xs:element name="SMTP" type="smtpAppenderType"/>
+			<xs:element name="CountingNoOp" type="countingNoOpAppenderType"/>
+			<xs:element name="Null" type="nullAppenderType"/>
+			<xs:element name="AppenderRef" type="appenderRefType"/>
+			<xs:any namespace="##other" processContents="skip"/>
+		</xs:choice>
+	</xs:group>
+
+	<!-- ======================== Loggers ======================== -->
+
+	<xs:group name="loggerChildren">
+		<xs:sequence>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="AppenderRef" type="appenderRefType"/>
+				<xs:element name="Filters" type="filtersType"/>
+				<xs:element name="ThresholdFilter" type="thresholdFilterType"/>
+				<xs:element name="LevelRangeFilter" type="levelRangeFilterType"/>
+				<xs:element name="BurstFilter" type="burstFilterType"/>
+				<xs:element name="RegexFilter" type="regexFilterType"/>
+				<xs:element name="MarkerFilter" type="markerFilterType"/>
+				<xs:element name="ThreadContextMapFilter" type="threadContextMapFilterType"/>
+				<xs:element name="DynamicThresholdFilter" type="dynamicThresholdFilterType"/>
+				<xs:element name="ScriptFilter" type="scriptFilterType"/>
+				<xs:element name="Property" type="propertyType"/>
+				<xs:any namespace="##other" processContents="skip"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+
+	<xs:complexType name="loggerType">
+		<xs:group ref="loggerChildren"/>
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="level" type="levelType"/>
+		<xs:attribute name="additivity" type="booleanType" default="true"/>
+		<xs:attribute name="includeLocation" type="booleanType" default="false"/>
+	</xs:complexType>
+
+	<xs:complexType name="rootLoggerType">
+		<xs:group ref="loggerChildren"/>
+		<xs:attribute name="level" type="levelType" default="ERROR"/>
+		<xs:attribute name="includeLocation" type="booleanType" default="true"/>
+	</xs:complexType>
+
+	<!-- ======================== 其他组件 ======================== -->
+
+	<xs:complexType name="propertyType">
+		<xs:simpleContent>
+			<xs:extension base="exprString">
+				<xs:attribute name="name" type="exprString" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="scriptType" mixed="true">
+		<xs:attribute name="name" type="exprString"/>
+		<xs:attribute name="language" type="exprString"/>
+		<xs:attribute name="scriptText" type="exprString"/>
+	</xs:complexType>
+
+	<xs:complexType name="scriptFileType">
+		<xs:attribute name="name" type="exprString"/>
+		<xs:attribute name="path" type="exprString" use="required"/>
+		<xs:attribute name="language" type="exprString"/>
+		<xs:attribute name="charset" type="exprString"/>
+		<xs:attribute name="isWatched" type="booleanType" default="false"/>
+	</xs:complexType>
+
+	<xs:complexType name="scriptRefType">
+		<xs:attribute name="ref" type="exprString" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="customLevelType">
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="intLevel" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="keyValuePairType">
+		<xs:attribute name="key" type="exprString" use="required"/>
+		<xs:attribute name="value" type="exprString" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="nameValuePairType" mixed="true">
+		<xs:attribute name="name" type="exprString" use="required"/>
+		<xs:attribute name="value" type="exprString"/>
+	</xs:complexType>
+
+	<!-- ======================== 根元素 ======================== -->
+
+	<xs:element name="Configuration">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Properties" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Property" type="propertyType" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Scripts" minOccurs="0">
+					<xs:complexType>
+						<xs:choice minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="Script" type="scriptType"/>
+							<xs:element name="ScriptFile" type="scriptFileType"/>
+							<xs:element name="ScriptRef" type="scriptRefType"/>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="CustomLevels" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="CustomLevel" type="customLevelType" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Filters" type="filtersType" minOccurs="0"/>
+				<xs:element name="Appenders" minOccurs="0">
+					<xs:complexType>
+						<xs:group ref="appenderGroup" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Loggers" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:choice minOccurs="0" maxOccurs="unbounded">
+								<xs:element name="Logger" type="loggerType"/>
+								<xs:element name="AsyncLogger" type="loggerType"/>
+								<xs:element name="Root" type="rootLoggerType"/>
+								<xs:element name="AsyncRoot" type="rootLoggerType"/>
+							</xs:choice>
+						</xs:sequence>
+						<xs:attribute name="includeLocation" type="booleanType"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="status" type="exprString" default="ERROR"/>
+			<xs:attribute name="name" type="exprString"/>
+			<xs:attribute name="verbose" type="booleanType" default="false"/>
+			<xs:attribute name="packages" type="exprString"/>
+			<xs:attribute name="monitorInterval" type="xs:string"/>
+			<xs:attribute name="shutdownHook" type="exprString" default="disable"/>
+			<xs:attribute name="shutdownTimeout" type="xs:string" default="0"/>
+			<xs:attribute name="dest" type="exprString"/>
+			<xs:attribute name="strict" type="booleanType" default="false"/>
+			<xs:attribute name="schema" type="exprString"/>
+			<xs:anyAttribute processContents="skip"/>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>
