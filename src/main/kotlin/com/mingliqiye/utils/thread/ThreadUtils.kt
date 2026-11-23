@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ThreadUtils.kt
- * LastUpdate 2026-02-09 20:14:22
+ * LastUpdate 2026-11-22 10:03:03
  * UpdateUser MingLiPro
  */
 
@@ -134,4 +134,5 @@ object ThreadUtils {
 			append("\n\n")
 		}
 	}
+
 }

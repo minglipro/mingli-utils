@@ -16,14 +16,21 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.test
  * CurrentFile AsyncTasksTest.kt
- * LastUpdate 2026-10-19 20:58:00
+ * LastUpdate 2026-11-23 09:45:49
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.thread
 
+import kotlinx.coroutines.ExecutorCoroutineDispatcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -254,44 +261,99 @@ class AsyncTasksTest {
 
     // ---- GlobalThreadPool ----
 
-    /** 测试 GlobalThreadPool 的 io/cpu/scheduled 全局线程池已正确初始化 */
+    /** 测试 GlobalThreadPool 的 main/io/cpu/scheduled 全局线程池已正确初始化 */
     @Test
     fun testGlobalPools() {
+        assertFalse(GlobalThreadPool.isShutdown)
+        assertTrue(GlobalThreadPool.main.corePoolSize > 0)
         assertTrue(GlobalThreadPool.io.corePoolSize > 0)
         assertTrue(GlobalThreadPool.cpu.corePoolSize > 0)
         assertTrue(GlobalThreadPool.scheduled.corePoolSize > 0)
     }
 
+    /** 测试全局池注册表与批量快照的名称、顺序一致 */
+    @Test
+    fun testGlobalPoolRegistry() {
+        val pools = GlobalThreadPool.pools()
+        assertEquals(listOf("main", "io", "cpu", "scheduled"), pools.keys.toList())
+        val snapshots = GlobalThreadPool.snapshotAll()
+        assertEquals(pools.keys.toList(), snapshots.keys.toList())
+        assertTrue(snapshots.getValue("io").maximumPoolSize > 0)
+    }
+
+    /** 测试全局池的工作线程为守护线程，不会阻止 JVM 退出 */
+    @Test
+    fun testGlobalPoolThreadsAreDaemon() {
+        val daemon = GlobalThreadPool.callAsync { Thread.currentThread().isDaemon }.get(5, TimeUnit.SECONDS)
+        assertTrue(daemon)
+    }
+
+    /** 测试 mainDispatcher 复用 Dispatchers.Default，而不是 main 线程池 */
+    @Test
+    fun testMainDispatcher() = runBlocking {
+        val caller = Thread.currentThread()
+        val thread = withContext(GlobalThreadPool.mainDispatcher) { Thread.currentThread() }
+        assertNotEquals(caller, thread)
+        assertTrue(thread.name.startsWith("DefaultDispatcher-worker"), "unexpected thread: ${thread.name}")
+        assertTrue(thread.isDaemon)
+    }
+
+    /** 测试 dispatcher 映射：main/io 是共享调度器的命名限流视图，cpu 绑定 cpu 池 */
+    @Test
+    fun testDispatchersMapping() {
+        assertEquals("MingLiGlobalMainDispatcher", GlobalThreadPool.mainDispatcher.toString())
+        assertEquals("MingLiGlobalIODispatcher", GlobalThreadPool.ioDispatcher.toString())
+        val cpuExecutor = (GlobalThreadPool.cpuDispatcher as? ExecutorCoroutineDispatcher)?.executor
+        assertSame(GlobalThreadPool.cpu, cpuExecutor)
+    }
+
+    /** 测试 cpuDispatcher 在 MingLiGlobalCPU 的守护线程上执行 */
+    @Test
+    fun testCpuDispatcher() = runBlocking {
+        val thread = withContext(GlobalThreadPool.cpuDispatcher) { Thread.currentThread() }
+        assertTrue(thread.name.startsWith("MingLiGlobalCPU"), "unexpected thread: ${thread.name}")
+        assertTrue(thread.isDaemon)
+    }
+
+    /** 测试 ioDispatcher 上的 delay 悬起后仍能按时恢复 */
+    @Test
+    fun testIoDispatcherDelay() = runBlocking {
+        val start = System.nanoTime()
+        withContext(GlobalThreadPool.ioDispatcher) { delay(100) }
+        val elapsedMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start)
+        assertTrue(elapsedMillis >= 90, "delay resumed too early: ${elapsedMillis}ms")
+    }
+
     /** 测试 runAsync 异步执行无返回值任务 */
     @Test
     fun testRunAsync() {
-        assertNull(runAsync { }.get(5, TimeUnit.SECONDS))
+        assertNull(GlobalThreadPool.runAsync { }.get(5, TimeUnit.SECONDS))
     }
 
     /** 测试 callAsync 在 IO 线程池异步执行并返回结果 */
     @Test
     fun testCallAsync() {
-        assertEquals("io", callAsync { "io" }.get(5, TimeUnit.SECONDS))
+        assertEquals("io", GlobalThreadPool.callAsync { "io" }.get(5, TimeUnit.SECONDS))
     }
 
     /** 测试 computeAsync 在 CPU 线程池异步计算并返回结果 */
     @Test
     fun testComputeAsync() {
-        assertEquals(4, computeAsync { 2 + 2 }.get(5, TimeUnit.SECONDS))
+        assertEquals(4, GlobalThreadPool.computeAsync { 2 + 2 }.get(5, TimeUnit.SECONDS))
     }
 
     /** 测试 runAsyncAwait 异步执行并阻塞等待完成 */
     @Test
     fun testRunAsyncAwait() {
         val counter = AtomicInteger()
-        runAsyncAwait { counter.incrementAndGet() }
+        GlobalThreadPool.runAsyncAwait { counter.incrementAndGet() }
         assertEquals(1, counter.get())
     }
 
     /** 测试 callAsyncAwait 异步执行并阻塞等待返回结果 */
     @Test
     fun testCallAsyncAwait() {
-        assertEquals("await", callAsyncAwait { "await" })
+        assertEquals("await", GlobalThreadPool.callAsyncAwait { "await" })
     }
 
     /** 测试 GlobalThreadPool.execute 提交任务并被执行 */

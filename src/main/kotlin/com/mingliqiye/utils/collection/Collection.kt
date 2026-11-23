@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 mingliqiye
+ * Copyright 2026 mingliqiye
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Collection.kt
- * LastUpdate 2025-09-21 14:36:57
+ * LastUpdate 2026-11-23 07:33:23
  * UpdateUser MingLiPro
  */
 
@@ -746,6 +746,38 @@ fun <T> newStack(elements: Collection<T>): Stack<T> {
 }
 
 /**
+ * 创建一个新的 ArrayDeque 实例。
+ *
+ * @param T 元素类型
+ * @return 新创建的 ArrayDeque
+ */
+fun <T> newArrayDeque(): ArrayDeque<T> {
+	return ArrayDeque()
+}
+
+/**
+ * 使用可变参数创建一个新的 ArrayDeque 实例。
+ *
+ * @param T 元素类型
+ * @param elements 可变参数列表
+ * @return 新创建的 ArrayDeque
+ */
+fun <T> newArrayDeque(vararg elements: T): ArrayDeque<T> {
+	return newArrayDeque(elements.toList())
+}
+
+/**
+ * 将集合转换为新的 ArrayDeque 实例。
+ *
+ * @param T 元素类型
+ * @param elements 输入集合
+ * @return 新创建的 ArrayDeque
+ */
+fun <T> newArrayDeque(elements: Collection<T>): ArrayDeque<T> {
+	return ArrayDeque(elements)
+}
+
+/**
  * 创建一个新的 TreeSet 实例，并指定比较器。
  *
  * @param T 元素类型
@@ -980,9 +1012,9 @@ fun toArray(list: List<Char>): CharArray {
  * @param list 输入的 List
  * @return 转换后的数组
  */
-inline fun <reified T> toArray(list: List<T>): Array<T> {
+inline fun <reified T : Any> toArray(list: List<T>): Array<T> {
 	if (list.isEmpty())
-		return arrayOf<T>()
+		return arrayOf()
 	return SuperStream.of<T>(list)
 		.toArray(T::class.java)
 }
@@ -995,7 +1027,7 @@ inline fun <reified T> toArray(list: List<T>): Array<T> {
  * @param clazz 数组元素类型对应的 Class 对象
  * @return 转换后的数组
  */
-fun <T> toArray(list: List<T>, clazz: Class<T>): Array<T> {
+fun <T : Any> toArray(list: List<T>, clazz: Class<T>): Array<T> {
 	return SuperStream.of<T>(list)
 		.toArray(clazz)
 }

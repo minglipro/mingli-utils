@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-11-18 08:42:41
+ * LastUpdate 2026-11-22 07:59:57
  * UpdateUser MingLiPro
  */
 
@@ -111,8 +111,11 @@ dependencies {
 	compileOnly("com.baomidou:mybatis-plus-extension:3.5.15")
 	compileOnly("com.baomidou:mybatis-plus-jsqlparser:3.5.15")
 	compileOnly("com.baomidou:mybatis-plus-spring:3.5.9")
+	compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+	compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.2")
 	testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 	testImplementation("com.mingliqiye.logger:logger-log4j2:1.0.9")
 	testImplementation("com.google.code.gson:gson:2.13.2")
 

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SystemUtil.kt
- * LastUpdate 2026-10-28 22:43:54
+ * LastUpdate 2026-11-23 07:50:35
  * UpdateUser MingLiPro
  */
 @file:JvmName("SystemUtils")
@@ -264,7 +264,7 @@ val isNotJswarMode: Boolean get() = protocol != "jswar"
 /**
  * 当前操作系统的行分隔符
  */
-val lineSeparator
+val lineSeparator: String
 	get() = System.lineSeparator()
 
 /**

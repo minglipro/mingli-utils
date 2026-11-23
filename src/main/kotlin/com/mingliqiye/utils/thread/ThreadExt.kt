@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ThreadExt.kt
- * LastUpdate 2026-10-19 20:51:35
+ * LastUpdate 2026-11-23 07:50:35
  * UpdateUser MingLiPro
  */
 
@@ -69,7 +69,7 @@ fun Runnable.asThread(
  * ```
  */
 fun Thread.onUncaught(action: (Thread, Throwable) -> Unit): Thread = apply {
-	setUncaughtExceptionHandler(Thread.UncaughtExceptionHandler { t, e -> action(t, e) })
+	setUncaughtExceptionHandler { t, e -> action(t, e) }
 }
 
 /**

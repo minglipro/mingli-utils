@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * ProjectName FastBaseMapper.kt
+ * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile SuperStream.java
- * LastUpdate 2026-10-26 23:22:18
+ * LastUpdate 2026-11-22 10:10:33
  * UpdateUser MingLiPro
  */
 
@@ -26,6 +26,7 @@ import com.mingliqiye.utils.collection.Collections;
 import com.mingliqiye.utils.functions.P1Function;
 import com.mingliqiye.utils.functions.P2Function;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -987,7 +988,7 @@ public class SuperStream<T> implements Stream<T> {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    public T[] toArray(Class<T> clazz) {
+    public T @NonNull [] toArray(Class<T> clazz) {
         return stream.toArray(i -> (T[]) Array.newInstance(clazz, i));
     }
 
@@ -997,7 +998,7 @@ public class SuperStream<T> implements Stream<T> {
      * @return 转换后的Object数组
      */
     @NotNull
-    public Object[] toArray() {
+    public Object @NonNull [] toArray() {
         return stream.toArray();
     }
 

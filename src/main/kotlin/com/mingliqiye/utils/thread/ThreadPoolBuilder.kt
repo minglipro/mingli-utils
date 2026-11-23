@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile ThreadPoolBuilder.kt
- * LastUpdate 2026-10-19 20:51:35
+ * LastUpdate 2026-11-23 09:31:23
  * UpdateUser MingLiPro
  */
 
@@ -114,21 +114,9 @@ class ThreadPoolBuilder internal constructor() {
 	 * @return 配置完成的 [ThreadPoolExecutor]
 	 */
 	fun build(): ThreadPoolExecutor {
-		val baseFactory = threadFactory ?: NamedThreadFactory.of(name)
-		// 提取局部变量，避免 apply 块内与 Thread 自身属性混淆
-		val daemonThread = daemon
-		val threadPriority = priority
-		val exceptionHandler = uncaughtHandler
-		// 需要定制 daemon/priority/异常处理时包装一层，否则直接复用
-		val factory = if (daemonThread || threadPriority != Thread.NORM_PRIORITY || exceptionHandler != null) {
-			ThreadFactory { runnable ->
-				baseFactory.newThread(runnable).apply {
-					isDaemon = daemonThread
-					this.priority = threadPriority
-					exceptionHandler?.let { setUncaughtExceptionHandler(it) }
-				}
-			}
-		} else baseFactory
+		val factory = threadFactory
+			?.let { decorateThreadFactory(it, daemon, priority, uncaughtHandler) }
+			?: namedThreadFactory(name, daemon, priority, uncaughtHandler)
 		return ThreadPoolExecutor(
 			corePoolSize,
 			maximumPoolSize,
@@ -142,6 +130,51 @@ class ThreadPoolBuilder internal constructor() {
 		}
 	}
 }
+
+/**
+ * 创建带名称的线程工厂，可选配置守护线程、优先级与未捕获异常处理器。
+ *
+ * 适合与 JDK 原生线程池（如 [ScheduledThreadPoolExecutor]）搭配使用：
+ *
+ * ```kotlin
+ * val scheduler = ScheduledThreadPoolExecutor(1, namedThreadFactory("scheduler", daemon = true))
+ * ```
+ *
+ * @param name 线程名称前缀，实际线程名为 `name-1`、`name-2` ...
+ * @param daemon 是否创建守护线程
+ * @param priority 线程优先级
+ * @param uncaughtHandler 未捕获异常处理器，为 null 时使用线程默认处理器
+ */
+@JvmOverloads
+fun namedThreadFactory(
+	name: String = "MingLiPool",
+	daemon: Boolean = false,
+	priority: Int = Thread.NORM_PRIORITY,
+	uncaughtHandler: Thread.UncaughtExceptionHandler? = null,
+): ThreadFactory = decorateThreadFactory(
+	NamedThreadFactory.of(name),
+	daemon,
+	priority,
+	uncaughtHandler,
+)
+
+/**
+ * 按需装饰线程工厂：需要定制守护线程、优先级或异常处理器时包一层，否则原样返回。
+ */
+private fun decorateThreadFactory(
+	base: ThreadFactory,
+	daemon: Boolean,
+	priority: Int,
+	uncaughtHandler: Thread.UncaughtExceptionHandler?,
+): ThreadFactory = if (daemon || priority != Thread.NORM_PRIORITY || uncaughtHandler != null) {
+	ThreadFactory { runnable ->
+		base.newThread(runnable).apply {
+			isDaemon = daemon
+			this.priority = priority
+			uncaughtHandler?.let { setUncaughtExceptionHandler(it) }
+		}
+	}
+} else base
 
 /**
  * 以 DSL 方式构建线程池
@@ -195,22 +228,45 @@ fun cachedThreadPool(name: String = "MingLiCachedPool"): ThreadPoolExecutor =
 
 /**
  * 创建 IO 密集型线程池：更多线程 + 有界队列
+ *
+ * @param name 线程池名称
+ * @param daemon 线程是否为守护线程
+ * @param rejectedHandler 任务拒绝策略，默认为由提交线程执行
  */
-fun ioThreadPool(name: String = "MingLiIoPool"): ThreadPoolExecutor =
+@JvmOverloads
+fun ioThreadPool(
+	name: String = "MingLiIoPool",
+	daemon: Boolean = false,
+	rejectedHandler: RejectedExecutionHandler = ThreadPoolExecutor.CallerRunsPolicy(),
+	corePoolSize: Int = availableProcessors * 2,
+): ThreadPoolExecutor =
 	threadPool(name) {
-		corePoolSize = availableProcessors * 2
+		this.corePoolSize = corePoolSize
 		maximumPoolSize = availableProcessors * 4
 		boundedQueue(1024)
 		allowCoreThreadTimeout = true
+		this.daemon = daemon
+		this.rejectedHandler = rejectedHandler
 	}
 
 /**
  * 创建 CPU 密集型线程池：线程数等于核数，避免上下文切换开销
+ *
+ * @param name 线程池名称
+ * @param daemon 线程是否为守护线程
+ * @param rejectedHandler 任务拒绝策略，默认为由提交线程执行
  */
-fun cpuThreadPool(name: String = "MingLiCpuPool"): ThreadPoolExecutor =
+@JvmOverloads
+fun cpuThreadPool(
+	name: String = "MingLiCpuPool",
+	daemon: Boolean = false,
+	rejectedHandler: RejectedExecutionHandler = ThreadPoolExecutor.CallerRunsPolicy(),
+): ThreadPoolExecutor =
 	threadPool(name) {
 		corePoolSize = availableProcessors
 		maximumPoolSize = availableProcessors
+		this.daemon = daemon
+		this.rejectedHandler = rejectedHandler
 	}
 
 /**
@@ -218,9 +274,12 @@ fun cpuThreadPool(name: String = "MingLiCpuPool"): ThreadPoolExecutor =
  *
  * @param coreSize 核心线程数，默认 CPU 核数 / 2（至少 1）
  * @param name 线程池名称
+ * @param daemon 线程是否为守护线程
  */
+@JvmOverloads
 fun scheduledThreadPool(
 	coreSize: Int = (availableProcessors / 2).coerceAtLeast(1),
 	name: String = "MingLiScheduledPool",
+	daemon: Boolean = false,
 ): ScheduledThreadPoolExecutor =
-	ScheduledThreadPoolExecutor(coreSize, NamedThreadFactory.of(name))
+	ScheduledThreadPoolExecutor(coreSize, namedThreadFactory(name, daemon = daemon))
