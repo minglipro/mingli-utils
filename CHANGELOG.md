@@ -4,6 +4,28 @@
 
 本文件记录 mingli-utils 各版本的主要变更。
 
+## [5.7.0] - 2026-11-23
+
+### 新增
+
+- **lock**：新增 `RedisLock` Redis 分布式锁工具——基于 Redisson 异步 API 实现协程挂起式加锁，
+  等待期间不占用线程；默认启用看门狗自动续期，支持公平锁、自定义 key 前缀与固定租期；
+  提供 `withLock`（等待获取）与 `tryWithLock`（抢不到立即返回 `null`）；
+  新增 `RedisLockTimeoutException`。Redisson 为可选依赖（`compileOnly`），
+  使用方需自行引入（建议 Redisson 3.13+ / 4.x）。
+
+### 变更
+
+- **build**：`build.gradle.kts` 与 `settings.gradle.kts` 移除已废弃的 `project.properties`、
+  `settings.extra` 委托写法，改用 `providers.gradleProperty` 与显式访问器；
+  `processResources` 的模板展开改为显式变量表，消除 Gradle 9 的配置期弃用警告。
+- **build**：`.gitignore` 的 `*lock*` 规则改为 `*.lock`，避免把新增的 `lock` 包整体忽略。
+
+### 测试
+
+- 新增 `RedisLockTest`（7 个用例），通过动态代理模拟 Redisson 客户端，
+  覆盖正常加锁释放、等待超时、跳过执行、公平锁、业务异常仍释放、wait/lease 透传。
+
 ## [5.6.0] - 2026-11-23
 
 ### 新增

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile settings.gradle.kts
- * LastUpdate 2026-02-26 10:52:01
+ * LastUpdate 2026-11-23 10:23:56
  * UpdateUser MingLiPro
  */
 
@@ -24,7 +24,7 @@ plugins {
     id("com.gradleup.nmcp.settings").version("1.4.4")
 }
 
-val ARTIFACTID: String by settings.extra
+val ARTIFACTID = settings.extra["ARTIFACTID"] as String
 rootProject.name = ARTIFACTID
 
 nmcpSettings {

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-11-22 07:59:57
+ * LastUpdate 2026-11-23 10:24:07
  * UpdateUser MingLiPro
  */
 
@@ -59,10 +59,10 @@ plugins {
 	id("org.jetbrains.dokka-javadoc") version "2.1.0"
 	kotlin("plugin.spring") version "2.1.0"
 }
-val GROUPSID = project.properties["GROUPSID"] as String
-val VERSIONS = project.properties["VERSIONS"] as String
-val ARTIFACTID = project.properties["ARTIFACTID"] as String
-val JDKVERSIONS = (project.properties["JDKVERSIONS"] as String).toInt()
+val GROUPSID = providers.gradleProperty("GROUPSID").get()
+val VERSIONS = providers.gradleProperty("VERSIONS").get()
+val ARTIFACTID = providers.gradleProperty("ARTIFACTID").get()
+val JDKVERSIONS = providers.gradleProperty("JDKVERSIONS").get().toInt()
 
 
 group = GROUPSID
@@ -113,9 +113,11 @@ dependencies {
 	compileOnly("com.baomidou:mybatis-plus-spring:3.5.9")
 	compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 	compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.2")
+	compileOnly("org.redisson:redisson:4.8.0")
 	testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+	testImplementation("org.redisson:redisson:4.8.0")
 	testImplementation("com.mingliqiye.logger:logger-log4j2:1.0.9")
 	testImplementation("com.google.code.gson:gson:2.13.2")
 
@@ -255,12 +257,16 @@ tasks.processResources {
 	outputs.upToDateWhen { false }
 	filesMatching(listOf("META-INF/meta-data", "fabric.mod.json")) {
 		expand(
-			project.properties + mapOf(
+			mapOf(
+				"GROUPSID" to GROUPSID,
+				"ARTIFACTID" to ARTIFACTID,
+				"VERSIONS" to VERSIONS,
+				"JDKVERSIONS" to JDKVERSIONS,
 				"buildTime" to LocalDateTime.now().format(
 					DateTimeFormatter.ofPattern(
 						"yyyy-MM-dd HH:mm:ss.SSSSSSS"
 					)
-				)
+				),
 			)
 		)
 	}

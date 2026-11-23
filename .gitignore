@@ -43,6 +43,6 @@ bin/
 log
 .idea
 node_modules
-*lock*
+*.lock
 .kotlin
 secret.gpg
