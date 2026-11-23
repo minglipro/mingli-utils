@@ -4,6 +4,22 @@
 
 本文件记录 mingli-utils 各版本的主要变更。
 
+## [5.7.3] - 2026-11-23
+
+### 新增
+
+- **string**：新增 `stringBuilder { ... }` 工厂函数，通过 `StringBuilder().apply { ... }`
+  创建并初始化 `StringBuilder`。
+
+### 变更
+
+- **exception**：`HttpStatusException`、`HttpStatusExceptionEnum` 及 30 个
+  `httpErrorXXX()` 快捷函数补齐 KDoc（状态码、参数、抛出异常）；快捷函数的默认
+  `message` 从 `null` 改为对应状态短语（如 `"Bad Gateway"`、`"Not Found"`），
+  未显式传参时异常消息不再为空。
+- **exception**：`JsonFormatException` 从 `JsonParserException.kt` 拆分为独立文件，
+  包名和公开 API 不变；`JsonParserException.kt` 只保留解析异常。
+
 ## [5.7.2] - 2026-11-23
 
 ### 新增

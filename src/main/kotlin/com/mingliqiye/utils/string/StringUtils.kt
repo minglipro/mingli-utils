@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile StringUtils.kt
- * LastUpdate 2026-03-12 10:05:22
+ * LastUpdate 2026-11-23 16:31:17
  * UpdateUser MingLiPro
  */
 @file:JvmName("StringUtils")
@@ -201,6 +201,16 @@ fun stringBuilder(i: Int): java.lang.StringBuilder {
 fun String.stringBuilder(): java.lang.StringBuilder {
 	return StringBuilder(this)
 }
+
+/**
+ * 根据当前字符串创建一个StringBuilder实例
+ *
+ * @return 包含当前字符串内容的StringBuilder实例
+ */
+fun stringBuilder(caller: StringBuilder.() -> Unit): StringBuilder {
+	return StringBuilder().apply(caller)
+}
+
 
 /**
  * 将字符串按照指定分隔符进行分割

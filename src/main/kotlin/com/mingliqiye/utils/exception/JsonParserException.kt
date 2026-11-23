@@ -16,11 +16,12 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile JsonParserException.kt
- * LastUpdate 2026-11-17 16:22:52
+ * LastUpdate 2026-11-23 16:14:00
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.exception
+
 
 /**
  * 表示 JSON 解析过程中发生的异常。
@@ -31,22 +32,6 @@ package com.mingliqiye.utils.exception
  * @param writableStackTrace 是否可写入堆栈跟踪信息，默认为 true
  */
 class JsonParserException @JvmOverloads constructor(
-	message: String? = null,
-	throwable: Throwable? = null,
-	enableSuppression: Boolean = false,
-	writableStackTrace: Boolean = true,
-) : JsonException(message, throwable, enableSuppression, writableStackTrace)
-
-
-/**
- * 表示 JSON 格式不正确时抛出的异常。
- *
- * @param message 异常信息，默认为 null
- * @param throwable 异常原因，默认为 null
- * @param enableSuppression 是否启用异常抑制，默认为 false
- * @param writableStackTrace 是否可写入堆栈跟踪信息，默认为 true
- */
-class JsonFormatException @JvmOverloads constructor(
 	message: String? = null,
 	throwable: Throwable? = null,
 	enableSuppression: Boolean = false,

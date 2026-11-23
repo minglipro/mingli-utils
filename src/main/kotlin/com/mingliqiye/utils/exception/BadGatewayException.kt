@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile BadGatewayException.kt
- * LastUpdate 2026-10-22 22:07:34
+ * LastUpdate 2026-11-23 16:14:45
  * UpdateUser MingLiPro
  */
 
