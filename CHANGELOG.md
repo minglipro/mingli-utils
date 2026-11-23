@@ -4,6 +4,45 @@
 
 本文件记录 mingli-utils 各版本的主要变更。
 
+## [5.6.0] - 2026-11-23
+
+### 新增
+
+- **thread**：新增 `SuspendUtils` 协程工具——`CoroutineContext.withContext`、
+  `CoroutineContext.runBlocking`（按接收者上下文执行）与顶层 `runBlocking`
+  （使用调用线程的事件循环）、`asCompletableDeferred`。
+- **thread**：`GlobalThreadPool` 新增 `mainDispatcher` / `ioDispatcher` / `cpuDispatcher`、
+  `pools()`、`snapshotAll()`、`isShutdown`，并自动注册 JVM 关闭钩子——
+  进程正常退出时优雅关闭全部池（最多等待 5 秒，超时强制关闭）。
+- **thread**：`runAsync` / `callAsync` / `computeAsync` / `runAsyncAwait` / `callAsyncAwait`
+  移入 `GlobalThreadPool` 并加 `@JvmStatic`；参数改为 `Runnable` / `Callable`，
+  Kotlin 与 Java 均可直接使用 lambda。
+- **thread**：新增 `namedThreadFactory`；`ioThreadPool` / `cpuThreadPool` /
+  `scheduledThreadPool` 增加 `daemon` 与 `rejectedHandler` 参数。
+- **collection**：新增 `newArrayDeque()` 的三个重载。
+
+### 变更
+
+- **thread**：重构 `GlobalThreadPool`——main / io / cpu / scheduled 统一守护线程与池配置；
+  `shutdownAll` 覆盖全部池、改用统一截止时间、幂等、超时 `shutdownNow` 并返回是否正常终止；
+  全局池关闭后提交任务抛出 `RejectedExecutionException`；scheduled 开启 `removeOnCancelPolicy`、
+  关闭时丢弃未到期延迟任务；补充池与调度器初始化、拒绝策略、关闭流程及关闭钩子的 Debug 日志。
+- **thread**：`mainDispatcher` / `ioDispatcher` 复用 kotlinx-coroutines 共享调度器
+  （命名限流视图），`cpuDispatcher` 绑定独立 cpu 池；`ThreadPoolBuilder` 抽出
+  `namedThreadFactory` 供各线程池复用。
+- **stream**：`SuperStream.toArray` 返回类型补充 jspecify `@NonNull`；
+  `Collection.toArray` 泛型收紧为 `T : Any`。
+- 移除 `ForEach`；更新依赖与版权年份。
+
+### 修复
+
+- **thread**：`CoroutineContext.runBlocking` 未使用接收者上下文，行为与普通 `runBlocking` 相同。
+- **thread**：全局池关闭后任务被静默丢弃、`submit` 返回永不完成 `Future` 的问题。
+
+### 测试
+
+- 新增 `SuspendUtilsTest`；补充 `AsyncTasksTest` 中全局池、调度器与关闭钩子相关用例。
+
 ## [5.5.4] - 2026-11-18
 
 ### 新增
