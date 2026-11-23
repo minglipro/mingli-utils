@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-11-23 10:24:07
+ * LastUpdate 2026-11-23 15:17:59
  * UpdateUser MingLiPro
  */
 
@@ -60,10 +60,12 @@ plugins {
 	kotlin("plugin.spring") version "2.1.0"
 }
 val GROUPSID = providers.gradleProperty("GROUPSID").get()
-val VERSIONS = providers.gradleProperty("VERSIONS").get()
+val VERSION = providers.gradleProperty("VERSIONS").get()
 val ARTIFACTID = providers.gradleProperty("ARTIFACTID").get()
 val JDKVERSIONS = providers.gradleProperty("JDKVERSIONS").get().toInt()
-
+val VERSIONSTYPE = providers.gradleProperty("VERSIONSTYPE").get()
+val VERSIONS =
+	VERSION + if (VERSIONSTYPE == "s") "-SNAPSHOT" else if (VERSIONSTYPE == "r") "" else error("VERSIONSTYPE is not supported in gradle.properties $VERSIONSTYPE")
 
 group = GROUPSID
 version = VERSIONS
@@ -117,6 +119,11 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+	testImplementation(fileTree("libs"))
+	testImplementation("com.baomidou:mybatis-plus-core:3.5.15")
+	testImplementation("com.baomidou:mybatis-plus-extension:3.5.15")
+	testImplementation("com.baomidou:mybatis-plus-spring:3.5.9")
+	testImplementation("org.springframework:spring-context:5.3.39")
 	testImplementation("org.redisson:redisson:4.8.0")
 	testImplementation("com.mingliqiye.logger:logger-log4j2:1.0.9")
 	testImplementation("com.google.code.gson:gson:2.13.2")

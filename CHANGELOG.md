@@ -4,6 +4,43 @@
 
 本文件记录 mingli-utils 各版本的主要变更。
 
+## [5.7.2] - 2026-11-23
+
+### 新增
+
+- **spring**：新增 `@FastServiceScan` 注解及 `FastServiceScanRegistrar`、
+  `FastServiceScannerProcessor`——扫描继承 `FastBaseIService` 或 `FastBaseIServiceNew3518`
+  的具体类并注册为 Spring Bean；仅在启动类/配置类标注该注解时生效，扫描时机在所有
+  `BeanDefinitionRegistryPostProcessor`（包括 `@MapperScan` 的 `MapperScannerConfigurer`）之后。
+  支持 `value` / `basePackages` / `basePackageClasses`，`value` 与 `basePackages` 通过
+  `@AliasFor` 互为别名；未指定包时使用标注类所在包；已标注 `@Component` / `@Service`
+  的类自动跳过，避免重复注册。
+- **test**：新增 `FastServiceScanRegistrarTest`（5 个用例）与
+  `FastServiceScannerProcessorTest`（2 个用例，覆盖两个基类与某个基类缺失时的跳过逻辑）。
+
+### 变更
+
+- **spring**：`ApplicationDestroyedRunner`、`ApplicationReadyEventListener`、
+  `ApplicationStartedRunner`、`ContextClosedEventListener` 由 Java 迁移为 Kotlin 实现，
+  包名、属性及 `@AliasFor` 关系保持不变。
+- **spring**：`ApplicationDestroyedRunner` / `ApplicationStartedRunner` 补全
+  `@Deprecated` + `ReplaceWith`，IDE 可一键替换为 `ContextClosedEventListener` /
+  `ApplicationReadyEventListener`；旧 Java 版本只有 `@Deprecated(since = ...)`。
+- **build**：新增 `VERSIONSTYPE`（`r` = RELEASES，`s` = SNAPSHOT）控制版本后缀；
+  补充 Spring / MyBatis-Plus 测试依赖。
+
+### 修复
+
+- **spring**：`FastServiceScannerProcessor` 改为按类名探测两个服务基类，
+  仅引入一套 MyBatis-Plus 时只跳过缺失的基类，不再因类字面量加载父类失败抛出
+  `NoClassDefFoundError`。
+
+### 注意
+
+- 事件监听注解的 `defaultExecution` 属性仅在 Spring Framework 6.2+ 中提供；
+  在 Spring 5.3 下解析这些组合注解会抛出 `AnnotationConfigurationException`，使用方需按实际
+  Spring 版本选择。
+
 ## [5.7.0] - 2026-11-23
 
 ### 新增
