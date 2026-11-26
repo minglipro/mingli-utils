@@ -4,6 +4,37 @@
 
 本文件记录 mingli-utils 各版本的主要变更。
 
+## [5.7.4] - 2026-11-26
+
+### 新增
+
+- **json**：新增 Gson 2 的 `JsonApi` 实现（`GsonJsonApi`）、JSON 树/Reader/Writer、
+  转换器桥接与 Spring Boot 自动配置；Gson 为 `compileOnly` 可选依赖。
+- **json**：新增 Fastjson2 的 `JsonApi` 实现（`FastJson2JsonApi`）、JSON 树/Reader/Writer、
+  转换器桥接与 Spring Boot 自动配置；Fastjson2 为 `compileOnly` 可选依赖。
+  provider 优先级为 Jackson 3 > Jackson 2 > Gson > Fastjson2。
+- **security**：`AesUtils` 补齐 AES/GCM 解密、随机 IV 加解密、UTF-8 字符串处理、
+  IV/密钥长度校验；修复 `createSecretKeySpec("AES", ...)` 误用 `MessageDigest` 的问题。
+  `SecureUtils` 新增 `constantTimeEquals`，完善随机字节与密钥归一化。
+- **resource**：`ResourceUtils` 新增流、URL、按行读取、ClassLoader 重载与资源存在性判断，
+  统一 UTF-8 默认字符集，修复输入流未关闭问题。
+- **network**：`NetworkAddress` 支持更完整的 IPv4/IPv6 校验与方括号输入；
+  `NetworkEndpoint` 支持 `[IPv6]:port`，补充值对象方法、字节/ByteBuffer 边界校验与测试。
+- **netty**：新增 `NettySportIO`，按平台自动选择 IO_URING / EPOLL / KQUEUE / NIO；
+  `NamedMultiThreadIoEventLoopGroup` 支持传入 `IoHandlerFactory`。
+
+### 变更
+
+- **build**：新增 Fastjson2 可选依赖；元数据资源路径调整为
+  `/assets/mingli-utils/meta-data`，`MetaData` / `Main` 同步更新。
+- **json**：转换器工具拆分到 Gson/Fastjson2 独立文件，避免未引入对应 JSON 库时加载失败。
+- **network**：IPv6 端点字符串输出为 `[address]:port`；IPv4 字节数组创建改为严格长度校验。
+- **test**：新增 Gson、Fastjson2、AES、SecureUtils、ResourceUtils、network 测试。
+
+### 移除
+
+- 移除未使用的 `com.mingliqiye.utils.require.Required` 工具。
+
 ## [5.7.3] - 2026-11-23
 
 ### 新增

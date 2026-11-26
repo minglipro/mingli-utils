@@ -26,5 +26,7 @@ com.mingliqiye.utils.springboot.autoconfigure.JacksonJsonAutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.JacksonJsonApiAutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.Jackson3AutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.Jackson3JsonApiAutoConfiguration
+com.mingliqiye.utils.springboot.autoconfigure.GsonJsonApiAutoConfiguration
+com.mingliqiye.utils.springboot.autoconfigure.FastJson2JsonApiAutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.JSONAAutoConfiguration
 com.mingliqiye.utils.springboot.autoconfigure.Okhttp3AutoConfiguration

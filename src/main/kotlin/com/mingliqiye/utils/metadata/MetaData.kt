@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MetaData.kt
- * LastUpdate 2026-05-22 13:27:28
+ * LastUpdate 2026-11-26 18:20:50
  * UpdateUser MingLiPro
  */
 @file:JvmName("MetaData")
@@ -27,45 +27,46 @@ import com.mingliqiye.utils.resource.ResourceUtils
 import java.util.stream.Collectors.toMap
 
 /**
- * 元数据资源定位锚点类，仅用于定位 `/META-INF/meta-data` 资源所在的类加载器
+ * 元数据资源定位锚点类，仅用于定位 `/assets/mingli-utils/meta-data` 资源所在的类加载器
  */
 class MetaDataResource
 
 /**
- * 读取并解析 `/META-INF/meta-data` 资源文件
+ * 读取并解析 `/assets/mingli-utils/meta-data` 资源文件
  *
  * 文件内容按行解析为 `key=value` 形式的键值对，空行与格式不合法的行会被忽略。
  *
  * @return 元数据键值对映射
  */
 fun getMetaData(): Map<String, String> {
-	return ResourceUtils.getResourceAsString<MetaDataResource>("/META-INF/meta-data").split("\n").stream().map {
-		if (it.isBlank()) {
-			return@map null
-		}
-		val split = it.split("=")
-		if (split.size == 2) {
-			split[0] to split[1]
-		} else {
-			return@map null
-		}
-	}.filter { it != null }.collect(toMap({ it!!.first }, { it!!.second }))
+    return ResourceUtils.getResourceAsString<MetaDataResource>("/assets/mingli-utils/meta-data").split("\n").stream()
+        .map {
+            if (it.isBlank()) {
+                return@map null
+            }
+            val split = it.split("=")
+            if (split.size == 2) {
+                split[0] to split[1]
+            } else {
+                return@map null
+            }
+        }.filter { it != null }.collect(toMap({ it!!.first }, { it!!.second }))
 }
 
 /**
  * mingli-utils 库的构建元数据，延迟初始化
  *
- * 从 `/META-INF/meta-data` 资源解析并填充 [MingliUtilsMetaData]，缺失的字段以空字符串代替。
+ * 从 `/assets/mingli-utils/meta-data` 资源解析并填充 [MingliUtilsMetaData]，缺失的字段以空字符串代替。
  */
 val mingliUtilsMetaData: MingliUtilsMetaData by lazy {
-	val metaData = getMetaData()
-	MingliUtilsMetaData().apply {
-		buildTime = metaData["buildTime"] ?: ""
-		groupId = metaData["groupId"] ?: ""
-		artifactId = metaData["artifactId"] ?: ""
-		version = metaData["version"] ?: ""
-		buildJdkVersion = metaData["buildJdkVersion"] ?: ""
-		author = metaData["author"] ?: ""
-		website = metaData["website"] ?: ""
-	}
+    val metaData = getMetaData()
+    MingliUtilsMetaData().apply {
+        buildTime = metaData["buildTime"] ?: ""
+        groupId = metaData["groupId"] ?: ""
+        artifactId = metaData["artifactId"] ?: ""
+        version = metaData["version"] ?: ""
+        buildJdkVersion = metaData["buildJdkVersion"] ?: ""
+        author = metaData["author"] ?: ""
+        website = metaData["website"] ?: ""
+    }
 }

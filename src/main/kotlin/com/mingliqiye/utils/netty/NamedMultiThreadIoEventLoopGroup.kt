@@ -16,16 +16,16 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NamedMultiThreadIoEventLoopGroup.kt
- * LastUpdate 2026-06-20 22:01:50
+ * LastUpdate 2026-11-26 18:58:21
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.netty
 
 import com.mingliqiye.utils.system.availableProcessors
+import io.netty.channel.IoHandlerFactory
 import io.netty.channel.MultiThreadIoEventLoopGroup
 import io.netty.channel.nio.NioIoHandler
-import java.nio.channels.spi.SelectorProvider
 import java.text.MessageFormat
 
 /**
@@ -35,18 +35,21 @@ import java.text.MessageFormat
  * @param name 线程池的名称，默认为"NioEventLoopGroup"
  * @param template 线程名称的格式模板，默认为"{0}-{2}-{3}"，{0} 名字 {1} 类名 {2} 线程池序号 {3} 线程池内线程的序号
  * @param nThreads 线程数量，默认为核心数的2倍
- * @param selectorProvider NIO 提供者
+ * @param ioHandlerFactory NIO 提供者
  */
 open class NamedMultiThreadIoEventLoopGroup(
-	val template: String = "{0}-{2}-{3}",
-	val name: String = "NamedMultiThreadIoEventLoopGroup",
-	nThreads: Int = availableProcessors * 2,
-	selectorProvider: SelectorProvider = SelectorProvider.provider(),
-) :
-	MultiThreadIoEventLoopGroup(
-		nThreads,
-		NamedThreadFactory(
-			getName = { a, b, c -> MessageFormat.format(template, name, a, b, c) }
-		),
-		NioIoHandler.newFactory(selectorProvider),
-	)
+    val template: String = "{0}-{2}-{3}",
+    val name: String = "NamedMultiThreadIoEventLoopGroup",
+    nThreads: Int = availableProcessors * 2,
+    ioHandlerFactory: IoHandlerFactory? = null,
+) : MultiThreadIoEventLoopGroup(
+        nThreads,
+        NamedThreadFactory(
+            getName = { a, b, c -> MessageFormat.format(template, name, a, b, c) },
+        ),
+        ioHandlerFactory ?: try {
+            NettySportIO.systemSportIO.newFactory()
+        } catch (e: Exception) {
+            NioIoHandler.newFactory()
+        },
+    )

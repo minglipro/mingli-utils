@@ -23,14 +23,12 @@
 
 package com.mingliqiye.utils.json.converters.base
 
-
 import java.math.BigDecimal
 import java.math.BigInteger
 import com.fasterxml.jackson.core.JsonGenerator as JackSon2JsonGenerator
 import com.fasterxml.jackson.databind.module.SimpleModule as JackSon2SimpleModule
 import tools.jackson.core.JsonGenerator as JackSon3JsonGenerator
 import tools.jackson.databind.module.SimpleModule as JackSon3SimpleModule
-
 
 /**
  * 将转换器包装为 Jackson2 的 SimpleModule，注册对应的序列化器与反序列化器。
@@ -52,7 +50,6 @@ fun <T> BaseJsonConverter<T>.getJackson3Module(): JackSon3SimpleModule =
 		.addSerializer(getClazz(), JackJson3Serializer(null, this))
 		.addDeserializer(getClazz(), JackJson3Deserializer(null, this))
 
-
 /**
  * 根据 reified 泛型参数获取指定类型的注解。
  *
@@ -61,7 +58,6 @@ fun <T> BaseJsonConverter<T>.getJackson3Module(): JackSon3SimpleModule =
  */
 inline fun <reified T : Annotation> AnnotationGetter.getAnnotation(): T? =
 	getAnnotation(T::class.java)
-
 
 /**
  * 按数值的实际类型写入 JSON 数字（Jackson3），支持常见数值类型。

@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NetworkPort.kt
- * LastUpdate 2026-02-05 10:20:31
+ * LastUpdate 2026-11-26 18:00:00
  * UpdateUser MingLiPro
  */
 
@@ -26,19 +26,22 @@ import java.io.Serializable
 import java.nio.ByteBuffer
 
 /**
- * 网络端口类，封装合法的端口号（0-65535），并提供字节序列化能力。
+ * 网络端口，取值范围 0-65535。
  *
- * 实例创建后端口号不可变，线程安全。
+ * 实例不可变，可作为 Map key 或集合元素使用；字节序列化统一使用大端序。
+ *
+ * @see NetworkEndpoint
  */
-class NetworkPort : Serializable {
-	/** 端口号，取值范围 0-65535 */
+class NetworkPort : Serializable, Comparable<NetworkPort> {
+
+	/** 端口号，取值范围 0-65535。 */
 	val port: Int
 
 	/**
-	 * 构造端口实例，并校验端口号合法性
+	 * 创建端口实例。
 	 *
 	 * @param port 端口号，必须在 0-65535 之间
-	 * @throws NetworkException 端口号超出合法范围时抛出
+	 * @throws NetworkException 端口号越界时抛出
 	 */
 	constructor(port: Int) {
 		testPort(port)
@@ -46,75 +49,96 @@ class NetworkPort : Serializable {
 	}
 
 	/**
-	 * 将端口号转换为 2 字节数组（大端序，高字节在前）
+	 * 将端口号转换为 2 字节大端序数组。
 	 *
 	 * @return 长度为 2 的字节数组
 	 */
 	fun toByteArray(): ByteArray {
-		val byteArray = ByteArray(2)
-		byteArray[0] = (port shr 8 and 0xFF).toByte()
-		byteArray[1] = (port and 0xFF).toByte()
-		return byteArray
+		return byteArrayOf(
+			(port shr 8 and 0xFF).toByte(),
+			(port and 0xFF).toByte(),
+		)
 	}
 
 	/**
-	 * 将端口号以 2 字节写入指定的 ByteBuffer
+	 * 将端口号以 2 字节大端序写入 [ByteBuffer]。
 	 *
-	 * @param byteBuffer 目标字节缓冲区
-	 * @return 写入后的缓冲区，便于链式调用
+	 * @param byteBuffer 目标缓冲区，剩余空间至少 2 字节
+	 * @return 当前缓冲区，便于链式调用
+	 * @throws NetworkException 缓冲区剩余空间不足时抛出
 	 */
 	fun writeToByteBuffer(byteBuffer: ByteBuffer): ByteBuffer {
+		if (byteBuffer.remaining() < 2) {
+			throw NetworkException("port requires 2 bytes, but only ${byteBuffer.remaining()} available")
+		}
 		return byteBuffer.put(toByteArray())
 	}
 
-	/** 伴生对象，提供工厂方法与端口校验 */
+	override fun compareTo(other: NetworkPort): Int = port.compareTo(other.port)
+
+	override fun equals(other: Any?): Boolean = other is NetworkPort && port == other.port
+
+	override fun hashCode(): Int = port
+
+	override fun toString(): String = port.toString()
+
 	companion object {
 
-		/**
-		 * 创建NetworkPort实例
-		 * @param port 端口号
-		 * @return NetworkPort实例
-		 */
-		@JvmStatic
-		fun of(port: Int): NetworkPort {
-			return NetworkPort(port)
-		}
+		private const val serialVersionUID = 1L
 
 		/**
-		 * 从字节数组创建NetworkPort实例
-		 * @param byteArray 包含端口信息的字节数组（长度至少为2）
-		 * @return NetworkPort实例
+		 * 创建 [NetworkPort]。
+		 *
+		 * @param port 端口号
+		 * @return 端口实例
+		 * @throws NetworkException 端口号越界时抛出
+		 */
+		@JvmStatic
+		fun of(port: Int): NetworkPort = NetworkPort(port)
+
+		/**
+		 * 从字节数组前 2 字节创建端口（大端序）。
+		 *
+		 * @param byteArray 至少 2 字节的数组
+		 * @return 端口实例
+		 * @throws NetworkException 长度不足时抛出
 		 */
 		@JvmStatic
 		fun of(byteArray: ByteArray): NetworkPort {
-			// 将字节数组的前两个字节转换为端口号
+			if (byteArray.size < 2) {
+				throw NetworkException("port requires 2 bytes, but was ${byteArray.size}")
+			}
 			val port = ((byteArray[0].toInt() and 0xFF) shl 8) or (byteArray[1].toInt() and 0xFF)
 			return of(port)
 		}
 
 		/**
-		 * 从ByteBuffer创建NetworkPort实例
-		 * @param byteBuffer 包含端口信息的ByteBuffer
-		 * @return NetworkPort实例
+		 * 从 [ByteBuffer] 读取 2 字节创建端口（大端序）。
+		 *
+		 * @param byteBuffer 至少 2 字节可读数据的缓冲区
+		 * @return 端口实例
+		 * @throws NetworkException 可读数据不足时抛出
 		 */
 		@JvmStatic
 		fun of(byteBuffer: ByteBuffer): NetworkPort {
+			if (byteBuffer.remaining() < 2) {
+				throw NetworkException("port requires 2 bytes, but only ${byteBuffer.remaining()} available")
+			}
 			val byteArray = ByteArray(2)
 			byteBuffer.get(byteArray)
 			return of(byteArray)
 		}
 
 		/**
-		 * 校验端口号是否在合法范围（0-65535）内
+		 * 校验端口号是否在 0-65535 之间。
 		 *
-		 * @param port 待校验的端口号
-		 * @throws NetworkException 端口号非法时抛出
+		 * @param port 端口号
+		 * @throws NetworkException 端口号越界时抛出
 		 */
 		@JvmStatic
 		fun testPort(port: Int) {
-			// 验证端口号范围是否在0-65535之间
 			if (port !in 0..65535) {
-				throw NetworkException("$port 不是正确的端口号")
+				throw NetworkException("[$port] is not a valid port, expected 0-65535")
 			}
 		}
 	}

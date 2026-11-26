@@ -16,27 +16,26 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NetworkException.kt
- * LastUpdate 2026-02-05 10:20:31
+ * LastUpdate 2026-11-26 18:00:00
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.network
 
 /**
- * 网络异常，用于表示 IP 地址、端口号或域名解析等网络相关错误。
+ * 网络相关异常，用于表示 IP 地址、端口、域名解析或字节转换错误。
+ *
+ * 继承 [RuntimeException]，不强制调用方捕获。
  */
-class NetworkException : RuntimeException {
-	/**
-	 * 构造一个带有指定详细消息的网络异常
-	 *
-	 * @param message 异常的详细消息
-	 */
-	constructor(message: String?) : super(message)
+class NetworkException @JvmOverloads constructor(
+	message: String? = null,
+	cause: Throwable? = null,
+) : RuntimeException(message, cause) {
 
 	/**
-	 * 构造一个网络异常，指定原因异常
+	 * 使用原因异常创建网络异常。
 	 *
-	 * @param e 导致此异常的原因异常
+	 * @param e 原因异常
 	 */
-	constructor(e: Exception?) : super(e)
+	constructor(e: Exception?) : this(e?.message, e)
 }

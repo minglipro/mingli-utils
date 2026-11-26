@@ -40,7 +40,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
  * @param jsonApi 容器中已注册的 JSON API 实现
  */
 @AutoConfiguration
-@AutoConfigureAfter(name = ["com.mingliqiye.utils.springboot.autoconfigure.JacksonJsonApiAutoConfiguration", "com.mingliqiye.utils.springboot.autoconfigure.Jackson3JsonApiAutoConfiguration"])
+@AutoConfigureAfter(name = ["com.mingliqiye.utils.springboot.autoconfigure.JacksonJsonApiAutoConfiguration", "com.mingliqiye.utils.springboot.autoconfigure.Jackson3JsonApiAutoConfiguration", "com.mingliqiye.utils.springboot.autoconfigure.GsonJsonApiAutoConfiguration", "com.mingliqiye.utils.springboot.autoconfigure.FastJson2JsonApiAutoConfiguration"])
 @ConditionalOnBean(JsonApi::class)
 open class JSONAAutoConfiguration(
 	jsonApi: JsonApi,

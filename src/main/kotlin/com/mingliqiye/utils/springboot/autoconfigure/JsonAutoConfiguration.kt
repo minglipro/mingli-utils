@@ -25,6 +25,8 @@ package com.mingliqiye.utils.springboot.autoconfigure
 import com.mingliqiye.utils.json.converters.DateTimeJsonConverter
 import com.mingliqiye.utils.json.converters.NetworkEndpointJsonConverter
 import com.mingliqiye.utils.json.converters.UUIDJsonConverter
+import com.mingliqiye.utils.springboot.autoconfigure.builder.FastJson2JsonBuilder
+import com.mingliqiye.utils.springboot.autoconfigure.builder.GsonJsonBuilder
 import com.mingliqiye.utils.springboot.autoconfigure.builder.JacksonBuilder
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.context.annotation.Bean
@@ -46,6 +48,41 @@ open class JsonAutoConfiguration {
 	 */
 	@Bean("mingliUtilsJacksonBuilder")
 	fun jacksonBuilder(): JacksonBuilder = JacksonBuilder {
+		it.apply {
+			addJsonConverters(
+				UUIDJsonConverter(),
+				DateTimeJsonConverter(),
+				NetworkEndpointJsonConverter(),
+			)
+		}
+	}
+
+	/**
+	 * 创建预置默认 JSON 转换器的 [GsonJsonBuilder] Bean。
+	 *
+	 * 与 [jacksonBuilder] 使用同一组默认转换器；仅当 Gson 自动配置生效时才会被
+	 * [GsonJsonApiAutoConfiguration] 收集。
+	 *
+	 * @return 追加了 UUID、DateTime、NetworkEndpoint 转换器的 Gson 构建定制器
+	 */
+	@Bean("mingliUtilsGsonBuilder")
+	fun gsonJsonBuilder(): GsonJsonBuilder = GsonJsonBuilder {
+		it.apply {
+			addJsonConverters(
+				UUIDJsonConverter(),
+				DateTimeJsonConverter(),
+				NetworkEndpointJsonConverter(),
+			)
+		}
+	}
+
+	/**
+	 * 创建预置默认 JSON 转换器的 [FastJson2JsonBuilder] Bean。
+	 *
+	 * @return 追加了 UUID、DateTime、NetworkEndpoint 转换器的 Fastjson2 构建定制器
+	 */
+	@Bean("mingliUtilsFastJson2Builder")
+	fun fastJson2JsonBuilder(): FastJson2JsonBuilder = FastJson2JsonBuilder {
 		it.apply {
 			addJsonConverters(
 				UUIDJsonConverter(),

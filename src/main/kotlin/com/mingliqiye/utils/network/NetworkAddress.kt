@@ -16,66 +16,51 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile NetworkAddress.kt
- * LastUpdate 2026-02-05 10:20:31
+ * LastUpdate 2026-11-26 18:00:00
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.network
 
-import com.mingliqiye.utils.string.join
 import java.io.Serializable
+import java.net.Inet6Address
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.nio.ByteBuffer
-import java.util.regex.Pattern
 
 /**
- * 网络地址类，用于表示一个网络地址（IP或域名），并提供相关操作。
- * 支持IPv4和IPv6地址的解析与验证。
+ * 网络地址，表示一个 IPv4/IPv6 地址，或一个已解析的域名。
  *
- * @author MingLiPro
+ * ### 创建方式
+ * - [of]：接受 IP 或域名；域名会立即解析为 IP；
+ * - [ofIpv4]：从 4 字节数组 / [ByteBuffer] 创建 IPv4 地址；
+ * - [of]（[InetAddress] 重载）：从 JDK 地址对象创建。
+ *
+ * ### 不变性
+ * 实例创建后地址、类型和域名信息不再变化；实例可作为 Map key 或集合元素使用。
+ *
+ * @see NetworkEndpoint
+ * @see NetworkPort
  */
 class NetworkAddress private constructor(domip: String) : Serializable {
 
-	/**
-	 * IPv6标识
-	 */
 	companion object {
-		/** IPv6 版本标识，值为 6 */
-		const val IPV6 = 6
-
-		/**
-		 * IPv4标识
-		 */
+		/** IPv4 版本标识，值为 4。 */
 		const val IPV4 = 4
 
-		/**
-		 * IPv4地址正则表达式
-		 */
-		private const val IPV4REG =
-			"^((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2" + "(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}$"
+		/** IPv6 版本标识，值为 6。 */
+		const val IPV6 = 6
+
+		private const val serialVersionUID = 1L
 
 		/**
-		 * 编译后的IPv4地址匹配模式
-		 */
-		private val IPV4_PATTERN = Pattern.compile(IPV4REG)
-
-		/**
-		 * IPv6地址正则表达式
-		 */
-		private const val IPV6REG =
-			"^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|" + "^(::([0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4})$" + "|" + "^(::)$|" + "^([0-9a-fA-F]{1,4}::([0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4})$|" + "^(([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4})$|" + "^(([0-9a-fA-F]{1,4}:){6}(([0-9]{1,3}\\.){3}[0-9]{1,3}))$|" + "^::([fF]{4}:)?(([0-9]{1,3}\\.){3}[0-9]{1,3})$"
-
-		/**
-		 * 编译后的IPv6地址匹配模式
-		 */
-		private val IPV6_PATTERN = Pattern.compile(IPV6REG)
-
-		/**
-		 * 静态工厂方法，创建 NetworkAddress 实例。
+		 * 创建 [NetworkAddress]。
 		 *
-		 * @param domip 可能是IP地址或域名的字符串
-		 * @return 新建的 NetworkAddress 实例
+		 * 如果输入是合法 IP 则直接使用；否则按域名解析出第一个地址。
+		 *
+		 * @param domip IP 或域名
+		 * @return 网络地址实例
+		 * @throws NetworkException 输入为空、不是合法 IP 且域名无法解析时抛出
 		 */
 		@JvmStatic
 		fun of(domip: String): NetworkAddress {
@@ -83,36 +68,43 @@ class NetworkAddress private constructor(domip: String) : Serializable {
 		}
 
 		/**
-		 * 从 ByteBuffer 读取 4 字节构建 IPv4 地址实例。
+		 * 从 [ByteBuffer] 读取 4 字节创建 IPv4 地址。
 		 *
-		 * @param byteBuffer 包含 IPv4 地址数据的缓冲区（读取 4 字节）
-		 * @return 新建的 NetworkAddress 实例
+		 * @param byteBuffer 包含至少 4 字节可读数据的缓冲区
+		 * @return IPv4 网络地址
+		 * @throws NetworkException 可读数据不足 4 字节时抛出
 		 */
 		@JvmStatic
 		fun ofIpv4(byteBuffer: ByteBuffer): NetworkAddress {
+			if (byteBuffer.remaining() < 4) {
+				throw NetworkException("IPv4 address requires 4 bytes, but only ${byteBuffer.remaining()} available")
+			}
 			val byteArray = ByteArray(4)
 			byteBuffer.get(byteArray)
 			return ofIpv4(byteArray)
 		}
 
 		/**
-		 * 从 4 字节数组构建 IPv4 地址实例。
+		 * 从 4 字节数组创建 IPv4 地址。
 		 *
-		 * @param byteArray 表示 IPv4 地址的字节数组（长度为 4）
-		 * @return 新建的 NetworkAddress 实例
+		 * @param byteArray IPv4 地址字节数组，长度必须为 4
+		 * @return IPv4 网络地址
+		 * @throws NetworkException 长度不为 4 时抛出
 		 */
 		@JvmStatic
 		fun ofIpv4(byteArray: ByteArray): NetworkAddress {
-			return of(".".join(byteArray.map {
-				(it.toInt() and 0xFF).toString()
-			}))
+			if (byteArray.size != 4) {
+				throw NetworkException("IPv4 address requires exactly 4 bytes, but was ${byteArray.size}")
+			}
+			return of(byteArray.joinToString(".") { (it.toInt() and 0xFF).toString() })
 		}
 
 		/**
-		 * 静态工厂方法，通过 InetAddress 创建 NetworkAddress 实例。
+		 * 通过 [InetAddress] 创建 [NetworkAddress]。
 		 *
-		 * @param inetAddress InetAddress 对象
-		 * @return 新建的 NetworkAddress 实例
+		 * @param inetAddress JDK 地址对象
+		 * @return 网络地址实例
+		 * @throws NetworkException 地址字符串无法识别时抛出
 		 */
 		@JvmStatic
 		fun of(inetAddress: InetAddress): NetworkAddress {
@@ -120,141 +112,208 @@ class NetworkAddress private constructor(domip: String) : Serializable {
 		}
 
 		/**
-		 * 从DNS服务器解析域名获取对应的IP地址。
+		 * 解析域名并返回第一个 IP 地址。
 		 *
 		 * @param domain 域名
-		 * @return 解析出的第一个IP地址
-		 * @throws java.net.UnknownHostException 如果域名无法解析
+		 * @return 解析出的第一个 IP
+		 * @throws UnknownHostException 域名无法解析时抛出
 		 */
 		@JvmStatic
 		@Throws(UnknownHostException::class)
 		fun getHostIp(domain: String): String {
-			val addresses = InetAddress.getAllByName(domain.trim())
-			return addresses[0].hostAddress
+			val value = domain.trim()
+			if (value.isEmpty()) {
+				throw UnknownHostException("domain must not be blank")
+			}
+			val addresses = InetAddress.getAllByName(value)
+			return addresses.first().hostAddress
 		}
 
 		/**
-		 * 检测给定字符串是否为有效的IPv4或IPv6地址。
+		 * 判断字符串是 IPv4 还是 IPv6。
 		 *
-		 * @param ip 要检测的IP地址字符串
-		 * @return 4 表示IPv4，6 表示IPv6
-		 * @throws NetworkException 如果IP格式无效
+		 * IPv6 使用 JDK 的地址解析器校验，支持压缩形式、IPv4 映射地址和
+		 * 带作用域的地址；IPv4 使用逐段校验，支持 4 段 0-255。
+		 *
+		 * @param ip 待检测字符串
+		 * @return [IPV4] 或 [IPV6]
+		 * @throws NetworkException 不是合法 IP 地址时抛出
 		 */
 		@JvmStatic
 		fun testIp(ip: String?): Int {
-			if (ip == null) {
-				throw NetworkException("IP地址不能为null")
+			val value = ip?.trim()?.removeSurrounding("[", "]")
+			if (value.isNullOrEmpty()) {
+				throw NetworkException("IP address must not be null or blank")
 			}
-			val trimmedIp = ip.trim()
 
-			// 判断是否匹配IPv4格式
-			if (IPV4_PATTERN.matcher(trimmedIp).matches()) {
+			if (value.contains(':')) {
+				return try {
+					InetAddress.getByName(value)
+					IPV6
+				} catch (e: UnknownHostException) {
+					throw NetworkException("[$value] is not a valid IPv6 address", e)
+				}
+			}
+
+			if (isValidIpv4(value)) {
 				return IPV4
 			}
+			throw NetworkException("[$value] is not a valid IPv4 or IPv6 address")
+		}
 
-			// 判断是否匹配IPv6格式
-			if (IPV6_PATTERN.matcher(trimmedIp).matches()) {
-				return IPV6
+		/**
+		 * 校验 IPv4 四个十进制段是否都在 0-255 内。
+		 *
+		 * @param value IPv4 字符串
+		 * @return 合法返回 `true`
+		 */
+		private fun isValidIpv4(value: String): Boolean {
+			val parts = value.split('.')
+			if (parts.size != 4) {
+				return false
 			}
-
-			// 不符合任一格式时抛出异常
-			throw NetworkException(
-				"[$ip] 不是有效的IPv4或IPv6地址"
-			)
+			return parts.all { part ->
+				part.isNotEmpty() &&
+						part.length <= 3 &&
+						part.all(Char::isDigit) &&
+						part.toInt() in 0..255
+			}
 		}
 	}
 
 	/**
-	 * IP地址类型：4 表示 IPv4，6 表示 IPv6
+	 * IP 版本：4 或 6。
 	 */
 	var iPv: Int = 0
 		private set
 
 	/**
-	 * IP地址字符串
+	 * 解析后的 IP 地址；域名输入时会替换为解析结果。
 	 */
 	var ip: String? = null
 		private set
 
 	/**
-	 * 域名（如果输入的是域名）
+	 * 原始域名；IP 输入时为 `null`。
 	 */
 	private var domain: String? = null
 
 	/**
-	 * 标识是否是域名解析来的IP
+	 * 是否由域名解析得到。
 	 */
 	private var isdom = false
 
-	/**
-	 * 构造方法，根据传入的字符串判断是IP地址还是域名，并进行相应处理。
-	 *
-	 * @param domip 可能是IP地址或域名的字符串
-	 */
 	init {
-		try {
-			// 尝试将输入识别为IP地址
-			this.iPv = testIp(domip)
-			this.ip = domip
-		} catch (e: NetworkException) {
+		val value = domip.trim().removeSurrounding("[", "]")
+		if (value.isEmpty()) {
+			throw NetworkException("address must not be blank")
+		}
+
+		val ipVersion = try {
+			testIp(value)
+		} catch (_: NetworkException) {
+			null
+		}
+
+		if (ipVersion != null) {
+			iPv = ipVersion
+			ip = value
+		} else {
 			try {
-				// 如果不是有效IP，则尝试作为域名解析
-				val ips = getHostIp(domip)
-				this.iPv = testIp(ips)
-				this.ip = ips
-				this.isdom = true
-				this.domain = domip
-			} catch (ex: UnknownHostException) {
-				throw NetworkException(ex)
+				val addresses = InetAddress.getAllByName(value)
+				val resolved = addresses.first()
+				iPv = testIp(resolved.hostAddress)
+				ip = resolved.hostAddress
+				domain = value
+				isdom = true
+			} catch (e: UnknownHostException) {
+				throw NetworkException("[$value] is neither a valid IP nor a resolvable domain", e)
 			}
 		}
 	}
 
 	/**
-	 * 将IPv4地址转换为字节数组
+	 * 是否为 IPv4 地址。
 	 *
-	 * @return 返回表示IPv4地址的4字节数组
-	 * @throws NetworkException 当当前地址不是IPv4地址时抛出异常
+	 * @return IPv4 返回 `true`
+	 */
+	fun isIpv4(): Boolean = iPv == IPV4
+
+	/**
+	 * 是否为 IPv6 地址。
+	 *
+	 * @return IPv6 返回 `true`
+	 */
+	fun isIpv6(): Boolean = iPv == IPV6
+
+	/**
+	 * 是否由域名解析而来。
+	 *
+	 * @return 域名输入返回 `true`
+	 */
+	fun isDomain(): Boolean = isdom
+
+	/**
+	 * 获取原始域名；IP 输入时返回 `null`。
+	 *
+	 * @return 域名或 `null`
+	 */
+	fun getDomain(): String? = domain
+
+	/**
+	 * 将 IPv4 地址转换为 4 字节数组。
+	 *
+	 * @return IPv4 字节数组
+	 * @throws NetworkException 当前地址不是 IPv4 时抛出
 	 */
 	fun toIpv4ByteArray(): ByteArray {
-		// 验证地址类型是否为IPv4
-		if (iPv != IPV4) {
-			throw NetworkException("该地址 不是IPv4地址")
+		if (!isIpv4()) {
+			throw NetworkException("[$ip] is not an IPv4 address")
 		}
-		// 将IP地址字符串按点分割，转换为整数并进行位运算处理，最后转为字节数组
-		return ip!!.split(".").map { it.toInt() and 0xFF }.map { it.toByte() }.toByteArray()
+		return ip!!.split(".").map { it.toInt().toByte() }.toByteArray()
 	}
 
 	/**
-	 * 将IPv4地址写入到指定的ByteBuffer中
+	 * 将 IPv4 地址写入 [ByteBuffer]。
 	 *
-	 * @param byteBuffer 要写入的ByteBuffer对象，IPv4地址将以字节数组形式写入到该缓冲区
-	 * @return 返回写入了IPv4地址的ByteBuffer对象，便于链式调用
+	 * @param byteBuffer 目标缓冲区，剩余空间至少 4 字节
+	 * @return 当前 [ByteBuffer]，便于链式调用
+	 * @throws NetworkException 当前地址不是 IPv4 时抛出
 	 */
 	fun writeIpv4ToByteBuffer(byteBuffer: ByteBuffer): ByteBuffer {
 		return byteBuffer.put(toIpv4ByteArray())
 	}
 
 	/**
-	 * 将当前 NetworkAddress 转换为 InetAddress 对象。
+	 * 转换为 [InetAddress]。
 	 *
-	 * @return InetAddress 对象
+	 * @return JDK 地址对象
+	 * @throws NetworkException 解析失败时抛出
 	 */
 	fun toInetAddress(): InetAddress {
-		try {
-			return InetAddress.getByName(if (ip != null) ip else domain)
+		return try {
+			InetAddress.getByName(ip ?: domain)
 		} catch (e: UnknownHostException) {
-			throw RuntimeException(e)
+			throw NetworkException("cannot resolve [$ip]", e)
 		}
 	}
 
 	/**
-	 * 返回 NetworkAddress 的字符串表示形式。
-	 *
-	 * @return 字符串表示
+	 * 判断两个地址是否指向同一个 IP 和版本。
 	 */
+	override fun equals(other: Any?): Boolean {
+		return other is NetworkAddress && ip == other.ip && iPv == other.iPv
+	}
+
+	override fun hashCode(): Int {
+		return 31 * (ip?.hashCode() ?: 0) + iPv
+	}
+
 	override fun toString(): String {
-		return if (isdom) "NetworkAddress(IP='$ip',type='$iPv',domain='$domain')"
-		else "NetworkAddress(IP='$ip',type='$iPv')"
+		return if (isdom) {
+			"NetworkAddress(IP='$ip',type='$iPv',domain='$domain')"
+		} else {
+			"NetworkAddress(IP='$ip',type='$iPv')"
+		}
 	}
 }

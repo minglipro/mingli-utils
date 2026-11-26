@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile Main.java
- * LastUpdate 2026-02-26 15:04:49
+ * LastUpdate 2026-11-26 18:20:50
  * UpdateUser MingLiPro
  */
 
@@ -129,7 +129,7 @@ public class Main {
      * @throws IOException 读取元数据资源失败时抛出
      */
     public static void printb() throws IOException {
-        InputStream inputStream = Main.class.getResourceAsStream("/META-INF/meta-data");
+        InputStream inputStream = Main.class.getResourceAsStream("/assets/mingli-utils/meta-data");
         if (inputStream == null) return;
         String data = new String(inputStream.readAllBytes());
         inputStream.close();
