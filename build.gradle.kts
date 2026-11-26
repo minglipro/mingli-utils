@@ -16,7 +16,7 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils
  * CurrentFile build.gradle.kts
- * LastUpdate 2026-11-26 18:21:31
+ * LastUpdate 2026-11-26 23:31:24
  * UpdateUser MingLiPro
  */
 
@@ -105,6 +105,7 @@ dependencies {
     api("com.mingliqiye.utils.aliasfor:alias-for:1.0.1")
     compileOnly("org.mindrot:jbcrypt:0.4")
     compileOnly("com.squareup.okhttp3:okhttp:5.3.2")
+    api("com.mingliqiye.exception:mingli-exception:1.1.1-Final")
     compileOnly("com.fasterxml.jackson.core:jackson-databind:2.21.0")
     compileOnly("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
     compileOnly("org.springframework:spring-context:5.3.0")

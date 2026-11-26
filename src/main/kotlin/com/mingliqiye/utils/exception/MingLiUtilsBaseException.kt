@@ -16,23 +16,27 @@
  * ProjectName mingli-utils
  * ModuleName mingli-utils.main
  * CurrentFile MingLiUtilsBaseException.kt
- * LastUpdate 2026-10-11 16:39:21
+ * LastUpdate 2026-11-26 23:31:44
  * UpdateUser MingLiPro
  */
 
 package com.mingliqiye.utils.exception
 
+import com.mingliqiye.exception.MingLiBaseException
+
 /**
- * mingli-utils 工具库所有异常的基类，继承自 [RuntimeException]。
+ * mingli-utils 工具库所有异常的基类，继承自 [MingLiBaseException]。
  *
  * @param message 异常信息，默认为 null
  * @param cause 异常原因，默认为 null
  * @param enableSuppression 是否启用异常抑制，默认为 false
  * @param writableStackTrace 是否可写入堆栈跟踪信息，默认为 true
  */
-open class MingLiUtilsBaseException @JvmOverloads constructor(
-	message: String? = null,
-	cause: Throwable? = null,
-	enableSuppression: Boolean = false,
-	writableStackTrace: Boolean = true,
-) : RuntimeException(message, cause, enableSuppression, writableStackTrace)
+open class MingLiUtilsBaseException
+    @JvmOverloads
+    constructor(
+        message: String? = null,
+        cause: Throwable? = null,
+        enableSuppression: Boolean = false,
+        writableStackTrace: Boolean = true,
+    ) : MingLiBaseException(message, cause, enableSuppression, writableStackTrace)

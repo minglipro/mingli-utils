@@ -4,6 +4,14 @@
 
 本文件记录 mingli-utils 各版本的主要变更。
 
+## [5.8.0] - 2026-11-26
+
+### 变更
+
+- **exception**：异常体系接入 `com.mingliqiye.exception:mingli-exception:1.1.1-Final`，
+  `MingLiUtilsBaseException` 继承公共基类 `MingLiBaseException`；依赖以 `api` 暴露，
+  使用方可以统一捕获公共异常基类。
+
 ## [5.7.4] - 2026-11-26
 
 ### 新增
